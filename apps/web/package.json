@@ -1,0 +1,45 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@NewsFlow/api": "workspace:*",
+    "@NewsFlow/auth": "workspace:*",
+    "@NewsFlow/env": "workspace:*",
+    "@nuxt/content": "^3.11.2",
+    "@nuxt/ui": "4.4.0",
+    "@nuxtjs/mdc": "^0.20.1",
+    "@orpc/client": "^1.13.5",
+    "@orpc/server": "^1.13.5",
+    "@orpc/tanstack-query": "^1.13.5",
+    "@prisma/client": "^7.4.0",
+    "@tanstack/vue-query": "^5.92.9",
+    "@vue/devtools-api": "^8.0.6",
+    "@vueuse/core": "^14.2.1",
+    "better-auth": "^1.4.18",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
+    "nuxt": "^4.3.1",
+    "reka-ui": "^2.8.0",
+    "shadcn-nuxt": "^2.4.3",
+    "shadcn-vue": "^2.4.3",
+    "tailwind-merge": "^3.5.0",
+    "vue": "^3.5.28",
+    "vue-router": "^5.0.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@NewsFlow/config": "workspace:*",
+    "@iconify-json/lucide": "^1.2.91",
+    "@tanstack/vue-query-devtools": "^6.1.5",
+    "tailwindcss": "^4.2.0",
+    "typescript": "^5.9.3"
+  }
+}

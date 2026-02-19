@@ -1,0 +1,52 @@
+{
+  "name": "NewsFlow",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "dotenv": "^17.2.2",
+      "zod": "^4.1.13",
+      "typescript": "^5",
+      "@types/bun": "^1.3.4",
+      "@orpc/server": "^1.12.2",
+      "@orpc/openapi": "^1.12.2",
+      "@orpc/zod": "^1.12.2",
+      "better-auth": "^1.4.18",
+      "@types/express": "^5.0.1",
+      "@prisma/client": "^7.2.0",
+      "@orpc/client": "^1.12.2"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @NewsFlow/db db:push",
+    "db:studio": "turbo -F @NewsFlow/db db:studio",
+    "db:generate": "turbo -F @NewsFlow/db db:generate",
+    "db:migrate": "turbo -F @NewsFlow/db db:migrate",
+    "db:start": "turbo -F @NewsFlow/db db:start",
+    "db:watch": "turbo -F @NewsFlow/db db:watch",
+    "db:stop": "turbo -F @NewsFlow/db db:stop",
+    "db:down": "turbo -F @NewsFlow/db db:down"
+  },
+  "dependencies": {
+    "@NewsFlow/env": "workspace:*",
+    "dotenv": "^17.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@NewsFlow/config": "workspace:*",
+    "@types/bun": "^1.3.9",
+    "turbo": "^2.8.10",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "bun@1.3.5"
+}

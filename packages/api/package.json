@@ -1,0 +1,30 @@
+{
+  "name": "@NewsFlow/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@NewsFlow/auth": "workspace:*",
+    "@NewsFlow/db": "workspace:*",
+    "@NewsFlow/env": "workspace:*",
+    "@orpc/client": "^1.13.5",
+    "@orpc/openapi": "^1.13.5",
+    "@orpc/server": "^1.13.5",
+    "@orpc/zod": "^1.13.5",
+    "better-auth": "^1.4.18",
+    "dotenv": "^17.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@NewsFlow/config": "workspace:*",
+    "@types/express": "^5.0.6",
+    "typescript": "^5.9.3"
+  }
+}
