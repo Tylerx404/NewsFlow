@@ -1,7 +1,6 @@
 import { env } from "@NewsFlow/env/server";
 
 const ALGORITHM = "AES-256-GCM";
-const KEY_LENGTH = 32;
 const IV_LENGTH = 16;
 const AUTH_TAG_LENGTH = 16;
 

@@ -1,6 +1,8 @@
 import Parser from "rss-parser";
-import type { PrismaClient } from "@NewsFlow/db";
+import prisma from "@NewsFlow/db";
 import { ORPCError } from "@orpc/server";
+
+type PrismaClient = typeof prisma;
 
 const parser = new Parser({
   timeout: 10000,

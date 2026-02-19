@@ -59,7 +59,7 @@ ${content.slice(0, 8000)}`; // Limit content length
     model,
     prompt,
     maxTokens: 500,
-  });
+  } as any);
 
   return {
     summary: text,
