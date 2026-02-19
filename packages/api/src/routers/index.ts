@@ -2,6 +2,7 @@ import type { RouterClient } from "@orpc/server";
 
 import { protectedProcedure, publicProcedure } from "../index";
 import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
+import { aiRouter } from "../modules/ai/ai.router";
 import { articleRouter } from "../modules/article/article.router";
 import { feedRouter } from "../modules/feed/feed.router";
 
@@ -18,6 +19,7 @@ export const appRouter = {
   ...aiConfigRouter,
   ...feedRouter,
   ...articleRouter,
+  ...aiRouter,
 };
 
 export type AppRouter = typeof appRouter;
