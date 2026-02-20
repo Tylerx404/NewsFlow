@@ -1,6 +1,9 @@
-import { startWorkers, stopWorkers } from './workers';
+import { createWorker, QUEUES } from './queue.service';
+import { createRssWorker, createContentWorker, setupWorkerEventHandlers, stopWorkers } from './workers';
 import { startScheduler, stopScheduler } from './scheduler';
 
+let rssWorker: any;
+let contentWorker: any;
 let isRunning = false;
 
 export const startJobRunner = () => {
@@ -12,8 +15,12 @@ export const startJobRunner = () => {
   console.log('Starting NewsFlow job runner...');
 
   try {
-    // Start workers
-    startWorkers();
+    // Create workers
+    rssWorker = createRssWorker(createWorker, QUEUES);
+    contentWorker = createContentWorker(createWorker, QUEUES);
+
+    // Setup event handlers
+    setupWorkerEventHandlers(rssWorker, contentWorker);
 
     // Start cron scheduler
     startScheduler();
@@ -38,7 +45,7 @@ export const stopJobRunner = async () => {
   try {
     // Stop in reverse order
     stopScheduler();
-    await stopWorkers();
+    await stopWorkers(rssWorker, contentWorker);
 
     isRunning = false;
     console.log('Job runner stopped successfully');

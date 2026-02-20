@@ -1,12 +1,12 @@
 import cron from 'node-cron';
 import db from '@NewsFlow/db';
-import { createQueue, QUEUES } from './index';
-
-const rssQueue = createQueue(QUEUES.RSS_FETCH);
-const contentQueue = createQueue(QUEUES.CONTENT_EXTRACT);
+import { createQueue, QUEUES } from './queue.service';
 
 export const startScheduler = () => {
   console.log('Starting RSS cron scheduler...');
+
+  const rssQueue = createQueue(QUEUES.RSS_FETCH);
+  const contentQueue = createQueue(QUEUES.CONTENT_EXTRACT);
 
   // Run every 30 minutes
   cron.schedule('*/30 * * * *', async () => {

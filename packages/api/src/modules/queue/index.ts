@@ -1,39 +1,14 @@
-import { Queue, Worker } from 'bullmq';
-import { redisConnection } from '@NewsFlow/db';
+// Re-export from schema
+export * from './queue.schema';
 
-// Queue names
-export const QUEUES = {
-  RSS_FETCH: 'rss-fetch',
-  CONTENT_EXTRACT: 'content-extract',
-} as const;
+// Re-export from service
+export * from './queue.service';
 
-// Create queue factory
-export const createQueue = (name: string) => {
-  return new Queue(name, {
-    connection: redisConnection,
-    defaultJobOptions: {
-      removeOnComplete: 100,
-      removeOnFail: 50,
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 2000,
-      },
-    },
-  });
-};
+// Re-export from router
+export * from './queue.router';
 
-// Create worker factory
-export const createWorker = (name: string, processor: any) => {
-  return new Worker(name, processor, {
-    connection: redisConnection,
-    concurrency: 5,
-    limiter: {
-      max: 10,
-      duration: 1000,
-    },
-  });
-};
-
+// Re-export from scheduler
 export * from './scheduler';
+
+// Re-export from runner
 export * from './runner';

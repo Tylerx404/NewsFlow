@@ -10,6 +10,7 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express from "express";
+import { startJobRunner, getJobRunnerStatus } from "@NewsFlow/api/queue";
 
 const app = express();
 
@@ -66,6 +67,19 @@ app.get("/", (_req, res) => {
   res.status(200).send("OK");
 });
 
+// Add health check route for workers
+app.get('/health/workers', (_req, res) => {
+  const status = getJobRunnerStatus();
+  res.json({
+    status: 'ok',
+    workers: status,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
+
+  // Start job runner after database connection
+  startJobRunner();
 });
