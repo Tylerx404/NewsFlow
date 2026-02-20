@@ -1,5 +1,5 @@
-import { createWorker, QUEUES, rssFetchProcessor, contentExtractProcessor, type WorkerInstance } from './queue.service';
-import { startScheduler, stopScheduler } from './queue.scheduler';
+import { createWorker, QUEUES, rssFetchProcessor, contentExtractProcessor, type WorkerInstance } from './service';
+import { startScheduler, stopScheduler } from './scheduler';
 
 let rssWorker: WorkerInstance;
 let contentWorker: WorkerInstance;
@@ -92,11 +92,6 @@ export const stopJobRunner = async () => {
     throw error;
   }
 };
-
-export const getJobRunnerStatus = () => ({
-  running: isRunning,
-  timestamp: new Date().toISOString(),
-});
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {

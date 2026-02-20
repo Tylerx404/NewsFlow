@@ -23,6 +23,7 @@
         "@NewsFlow/auth": "workspace:*",
         "@NewsFlow/db": "workspace:*",
         "@NewsFlow/env": "workspace:*",
+        "@NewsFlow/queue": "workspace:*",
         "@orpc/openapi": "^1.13.5",
         "@orpc/server": "^1.13.5",
         "@orpc/zod": "^1.13.5",
@@ -83,21 +84,18 @@
         "@NewsFlow/auth": "workspace:*",
         "@NewsFlow/db": "workspace:*",
         "@NewsFlow/env": "workspace:*",
+        "@NewsFlow/queue": "workspace:*",
         "@ai-sdk/anthropic": "^3.0.45",
         "@ai-sdk/google": "^3.0.29",
         "@ai-sdk/openai": "^3.0.30",
-        "@extractus/article-extractor": "^8.0.20",
         "@orpc/client": "^1.13.5",
         "@orpc/openapi": "^1.13.5",
         "@orpc/server": "^1.13.5",
         "@orpc/zod": "^1.13.5",
         "ai": "^6.0.91",
         "better-auth": "^1.4.18",
-        "bullmq": "^5.69.3",
         "dotenv": "^17.3.1",
         "ioredis": "^5.9.3",
-        "node-cron": "^4.2.1",
-        "rss-parser": "^3.13.0",
         "zod": "^4.3.6",
       },
       "devDependencies": {
@@ -157,6 +155,21 @@
         "typescript": "^5.9.3",
       },
     },
+    "packages/queue": {
+      "name": "@NewsFlow/queue",
+      "dependencies": {
+        "@NewsFlow/db": "workspace:*",
+        "@extractus/article-extractor": "^8.0.20",
+        "bullmq": "^5.69.3",
+        "node-cron": "^4.2.1",
+        "rss-parser": "^3.13.0",
+        "zod": "^4.3.6",
+      },
+      "devDependencies": {
+        "@NewsFlow/config": "workspace:*",
+        "typescript": "^5.9.3",
+      },
+    },
   },
   "catalog": {
     "@orpc/client": "^1.12.2",
@@ -181,6 +194,8 @@
     "@NewsFlow/db": ["@NewsFlow/db@workspace:packages/db"],
 
     "@NewsFlow/env": ["@NewsFlow/env@workspace:packages/env"],
+
+    "@NewsFlow/queue": ["@NewsFlow/queue@workspace:packages/queue"],
 
     "@ai-sdk/anthropic": ["@ai-sdk/anthropic@3.0.45", "", { "dependencies": { "@ai-sdk/provider": "3.0.8", "@ai-sdk/provider-utils": "4.0.15" }, "peerDependencies": { "zod": "^3.25.76 || ^4.1.8" } }, "sha512-bpIS3RakSsaUhCRTIvL9bcVNeeUMDXWbndpYdXNeMJIIPcElTcvwktvla+JxIfbeK1AdQjB8ggYVChepeXPGwQ=="],
 

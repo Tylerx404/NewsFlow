@@ -3,7 +3,7 @@ import { redisConnection } from '@NewsFlow/db';
 import Parser from 'rss-parser';
 import { extract } from '@extractus/article-extractor';
 import db from '@NewsFlow/db';
-import type { RssFetchJobData, ContentExtractJobData } from './queue.schema';
+import type { RssFetchJobData, ContentExtractJobData } from './schema';
 
 // Queue names
 export const QUEUES = {

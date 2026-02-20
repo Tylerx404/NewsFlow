@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import db from '@NewsFlow/db';
-import { createQueue, QUEUES } from './queue.service';
+import { createQueue, QUEUES } from './service';
 
 export const startScheduler = () => {
   console.log('Starting RSS cron scheduler...');
