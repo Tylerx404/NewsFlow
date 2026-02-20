@@ -10,6 +10,10 @@ model Feed {
   language    String?
   isActive    Boolean   @default(true)
   lastFetched DateTime?
+  // Job tracking fields
+  lastError   String? // Last RSS fetch error message
+  errorCount  Int       @default(0) // Consecutive error count
+  nextFetchAt DateTime? // Scheduled next fetch time
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   articles    Article[]
@@ -17,30 +21,35 @@ model Feed {
 
   @@unique([userId, url])
   @@index([userId])
+  @@index([nextFetchAt]) // Index for scheduled jobs
   @@map("feed")
 }
 
 model Article {
-  id               String   @id @default(cuid())
-  feedId           String
-  guid             String
-  title            String
-  link             String
-  author           String?
-  pubDate          DateTime
-  content          String?
-  excerpt          String?
-  image            String?
-  categories       String[]
-  read             Boolean  @default(false)
-  saved            Boolean  @default(false)
-  contentExtracted Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  feed             Feed     @relation(fields: [feedId], references: [id], onDelete: Cascade)
+  id                  String   @id @default(cuid())
+  feedId              String
+  guid                String
+  title               String
+  link                String
+  author              String?
+  pubDate             DateTime
+  content             String?
+  excerpt             String?
+  image               String?
+  categories          String[]
+  read                Boolean  @default(false)
+  saved               Boolean  @default(false)
+  contentExtracted    Boolean  @default(false)
+  // Content extraction tracking
+  extractionAttempts  Int      @default(0) // Number of extraction attempts
+  lastExtractionError String? // Last extraction error
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  feed                Feed     @relation(fields: [feedId], references: [id], onDelete: Cascade)
 
   @@unique([feedId, guid])
   @@index([feedId, pubDate(sort: Desc)])
+  @@index([contentExtracted]) // Index for extraction jobs
   @@map("article")
 }
 
