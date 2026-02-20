@@ -1,4 +1,5 @@
 import { createContext } from "@NewsFlow/api/context";
+import { startJobRunner } from "@NewsFlow/queue";
 import { appRouter } from "@NewsFlow/api/routers/index";
 import { auth } from "@NewsFlow/auth";
 import { env } from "@NewsFlow/env/server";
@@ -68,4 +69,5 @@ app.get("/", (_req, res) => {
 
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
+  startJobRunner();
 });
