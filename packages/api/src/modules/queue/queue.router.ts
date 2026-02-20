@@ -1,5 +1,5 @@
 import { publicProcedure } from "../../index";
-import { getJobRunnerStatus } from "./runner";
+import { getJobRunnerStatus } from "./queue.runner";
 import { jobStatusSchema } from "./queue.schema";
 
 export const queueRouter = {

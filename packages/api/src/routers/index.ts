@@ -5,6 +5,7 @@ import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
 import { aiRouter } from "../modules/ai/ai.router";
 import { articleRouter } from "../modules/article/article.router";
 import { feedRouter } from "../modules/feed/feed.router";
+import { queueRouter } from "../modules/queue/queue.router";
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
@@ -20,6 +21,7 @@ export const appRouter = {
   ...feedRouter,
   ...articleRouter,
   ...aiRouter,
+  ...queueRouter,
 };
 
 export type AppRouter = typeof appRouter;
