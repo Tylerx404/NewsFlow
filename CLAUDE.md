@@ -8,6 +8,7 @@ Mục tiêu: sửa đúng chỗ, giữ type safety, và tránh phá luồng mono
 NewsFlow là Turborepo monorepo với:
 - Frontend: Nuxt 4 (`apps/web`)
 - Backend: Express 5 + oRPC (`apps/server`)
+- Worker process: BullMQ runner/scheduler (`apps/worker`)
 - Business logic/API contracts: `packages/api`
 - Auth: Better Auth (`packages/auth`)
 - Data layer: Prisma + PostgreSQL (`packages/db`)
@@ -26,7 +27,9 @@ NewsFlow/
 │   │   │   ├── layouts/
 │   │   │   └── lib/
 │   │   └── server/
-│   └── server/              # Express server entry
+│   ├── server/              # Express server entry
+│       └── src/index.ts
+│   └── worker/              # Queue worker entry
 │       └── src/index.ts
 ├── packages/
 │   ├── api/                 # oRPC procedures + modules
@@ -75,7 +78,8 @@ Trong `packages/api/src/modules/*`, ưu tiên pattern:
 - `*.router.ts`: oRPC procedure wiring
 
 Router tổng tại `packages/api/src/routers/index.ts`:
-- merge các module routers bằng spread (`...aiConfigRouter`, ...)
+- expose router theo namespace (`aiConfig`, `feed`, `article`, `ai`)
+- có thể giữ alias flat tạm thời cho legacy clients, phải đồng bộ với router gốc
 
 Procedure levels:
 - `publicProcedure`: route công khai
@@ -90,7 +94,10 @@ Trong `apps/server/src/index.ts`:
 - Better Auth route: `/api/auth{/*path}`
 - RPC endpoint prefix: `/rpc`
 - API reference prefix: `/api-reference`
-- Job runner khởi động bằng `startJobRunner()`
+
+Worker runtime:
+- Job runner được khởi động ở `apps/worker/src/index.ts` qua `startJobRunner()`.
+- Dùng `bun run dev:worker` để chạy worker riêng khi phát triển local.
 
 Không đổi các prefix trên nếu chưa có yêu cầu rõ.
 
@@ -104,6 +111,7 @@ Không đổi các prefix trên nếu chưa có yêu cầu rõ.
 
 Khi thêm/đổi job:
 - Cập nhật schema + processor + nơi enqueue đồng bộ.
+- Đảm bảo lifecycle idempotent (không start scheduler lặp, stop phải close queue/worker sạch).
 
 ## 7) Code Style & Presentation
 
@@ -192,6 +200,7 @@ bunx shadcn-vue add button card input
 bun run dev
 bun run dev:web
 bun run dev:server
+bun run dev:worker
 
 # Build / types
 bun run build

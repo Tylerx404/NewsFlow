@@ -7,6 +7,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 
 - `apps/web`: Nuxt 4 frontend.
 - `apps/server`: Express 5 server, mount oRPC và OpenAPI reference.
+- `apps/worker`: tiến trình worker riêng để chạy BullMQ runner/scheduler.
 - `packages/api`: business logic và router/procedure cho API.
 - `packages/auth`: cấu hình Better Auth.
 - `packages/db`: Prisma client, schema/migrations, kết nối Postgres/Redis.
@@ -18,6 +19,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 
 - Type-safe mặc định: dùng TypeScript + Zod, hạn chế tối đa `any`.
 - Đúng boundary package: auth ở `packages/auth`, data ở `packages/db`, API ở `packages/api`, queue ở `packages/queue`.
+- Server và worker tách process: `apps/server` không tự khởi động queue runner.
 - Internal dependency phải dùng `workspace:*`.
 - Env phải qua schema của `@NewsFlow/env/server` hoặc `@NewsFlow/env/web`.
 - Thay đổi DB phải đi qua Prisma schema/migration, không SQL tay nếu không có yêu cầu rõ.
@@ -32,6 +34,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - `*.service.ts`: business logic tái sử dụng.
 - `*.router.ts`: procedure wiring, auth, gọi service.
 - Router tổng nằm ở `packages/api/src/routers/index.ts`.
+- Ưu tiên router theo namespace (`aiConfig`, `feed`, `article`, `ai`); nếu giữ alias flat cho legacy client thì phải ghi rõ là tạm thời.
 - Route public dùng `publicProcedure`, route auth dùng `protectedProcedure`.
 - Lỗi nghiệp vụ trả về bằng `ORPCError`.
 
@@ -91,6 +94,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 
 - Nếu thêm job mới: cập nhật schema job, processor, scheduler/runner.
 - Nếu đổi tên queue/job: cập nhật đồng bộ tất cả nơi enqueue/dequeue.
+- Nếu đổi lifecycle queue: kiểm tra cả `apps/worker` (bootstrap) và `packages/queue` (start/stop scheduler, close queue/worker).
 
 ## 7) Lệnh chuẩn
 
@@ -104,6 +108,7 @@ bun run dev
 ```bash
 bun run dev:web
 bun run dev:server
+bun run dev:worker
 bun run build
 bun run check-types
 bun run db:migrate
