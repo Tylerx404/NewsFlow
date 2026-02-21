@@ -14,7 +14,6 @@
     "@NewsFlow/auth": "workspace:*",
     "@NewsFlow/db": "workspace:*",
     "@NewsFlow/env": "workspace:*",
-    "@NewsFlow/queue": "workspace:*",
     "@orpc/openapi": "^1.13.5",
     "@orpc/server": "^1.13.5",
     "@orpc/zod": "^1.13.5",

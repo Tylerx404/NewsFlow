@@ -4,6 +4,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "check-types": "tsc -b"
+  },
   "dependencies": {
     "@NewsFlow/db": "workspace:*",
     "@extractus/article-extractor": "^8.0.20",

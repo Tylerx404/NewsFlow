@@ -58,11 +58,11 @@ ${content.slice(0, 8000)}`; // Limit content length
   const { text, usage } = await generateText({
     model,
     prompt,
-    maxTokens: 500,
-  } as any);
+    maxOutputTokens: 500,
+  });
 
   return {
     summary: text,
-    tokens: usage.totalTokens,
+    tokens: usage?.totalTokens ?? 0,
   };
 }

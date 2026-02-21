@@ -16,10 +16,19 @@ export const appRouter = {
       user: context.session?.user,
     };
   }),
-  ...aiConfigRouter,
-  ...feedRouter,
-  ...articleRouter,
-  ...aiRouter,
+  aiConfig: aiConfigRouter,
+  feed: feedRouter,
+  article: articleRouter,
+  ai: aiRouter,
+  // Temporary compatibility layer for legacy flat clients.
+  create: feedRouter.create,
+  list: articleRouter.list,
+  update: feedRouter.update,
+  delete: feedRouter.delete,
+  get: articleRouter.get,
+  markRead: articleRouter.markRead,
+  toggleSaved: articleRouter.toggleSaved,
+  summarize: aiRouter.summarize,
 };
 
 export type AppRouter = typeof appRouter;
