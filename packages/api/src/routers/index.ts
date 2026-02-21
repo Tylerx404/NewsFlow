@@ -16,10 +16,10 @@ export const appRouter = {
       user: context.session?.user,
     };
   }),
-  ...aiConfigRouter,
-  ...feedRouter,
-  ...articleRouter,
-  ...aiRouter,
+  aiConfig: aiConfigRouter,
+  feed: feedRouter,
+  article: articleRouter,
+  ai: aiRouter,
 };
 
 export type AppRouter = typeof appRouter;

@@ -1,14 +1,16 @@
-import prisma from "@NewsFlow/db";
 import { ORPCError } from "@orpc/server";
+
+import prisma from "@NewsFlow/db";
 import { protectedProcedure } from "../../index";
 import { EncryptionService } from "../ai-config/ai-config.service";
 import { extractFullContent } from "../article/article.service";
-import { summarizeSchema } from "./ai.schema";
+import { summarizeOutputSchema, summarizeSchema } from "./ai.schema";
 import { generateSummary } from "./ai.service";
 
 export const aiRouter = {
   summarize: protectedProcedure
     .input(summarizeSchema)
+    .output(summarizeOutputSchema)
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 

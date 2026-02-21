@@ -1,28 +1,28 @@
-import { Queue, Worker } from 'bullmq';
-import { redisConnection } from '@NewsFlow/db';
-import Parser from 'rss-parser';
-import { extract } from '@extractus/article-extractor';
-import db from '@NewsFlow/db';
-import type { RssFetchJobData, ContentExtractJobData } from './schema';
+import { extract } from "@extractus/article-extractor";
+import { Queue, Worker, type Job } from "bullmq";
+import Parser from "rss-parser";
+
+import db, { redisConnection } from "@NewsFlow/db";
+import type { Prisma } from "@NewsFlow/db";
+import type { ContentExtractJobData, RssFetchJobData } from "./schema";
 
 // Queue names
 export const QUEUES = {
-  RSS_FETCH: 'rss-fetch',
-  CONTENT_EXTRACT: 'content-extract',
+  RSS_FETCH: "rss-fetch",
+  CONTENT_EXTRACT: "content-extract",
 } as const;
 
 // Worker processor types
-export type WorkerProcessor<T = any> = (job: { data: T }) => Promise<any>;
+export type WorkerProcessor<TData = unknown, TResult = unknown> = (
+  job: Job<TData>
+) => Promise<TResult>;
 
 // Worker instance types
-export interface WorkerInstance {
-  on(event: string, handler: (...args: any[]) => void): void;
-  close(): Promise<void>;
-}
+export type WorkerInstance = Worker;
 
 // Create queue factory
-export const createQueue = (name: string) => {
-  return new Queue(name, {
+export const createQueue = <TData = unknown>(name: string) => {
+  return new Queue<TData>(name, {
     connection: redisConnection,
     defaultJobOptions: {
       removeOnComplete: 100,
@@ -37,8 +37,11 @@ export const createQueue = (name: string) => {
 };
 
 // Create worker factory
-export const createWorker = (name: string, processor: WorkerProcessor) => {
-  return new Worker(name, processor, {
+export const createWorker = <TData = unknown, TResult = unknown>(
+  name: string,
+  processor: WorkerProcessor<TData, TResult>
+) => {
+  return new Worker<TData, TResult>(name, processor, {
     connection: redisConnection,
     concurrency: 5,
     limiter: {
@@ -57,6 +60,14 @@ const rssParser = new Parser({
     ],
   },
 });
+
+type ParsedRssItem = Parser.Item & {
+  creator?: string;
+  author?: string;
+  summary?: string;
+  description?: string;
+  "content:encoded"?: string;
+};
 
 // Worker processors
 export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) => {
@@ -91,16 +102,19 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
 
     // Process new articles
     const existingGuids = new Set(
-      (await db.article.findMany({
-        where: { feedId },
-        select: { guid: true },
-      })).map((a: { guid: string }) => a.guid)
+      (
+        await db.article.findMany({
+          where: { feedId },
+          select: { guid: true },
+        })
+      ).map((article) => article.guid)
     );
 
-    const newArticles = [];
-    for (const item of feedData.items || []) {
-      if (!item.guid && !item.link) continue;
-      const guid = item.guid || item.link!;
+    const newArticles: Prisma.ArticleCreateManyInput[] = [];
+    const rssItems = (feedData.items ?? []) as ParsedRssItem[];
+    for (const item of rssItems) {
+      if (!item.link) continue;
+      const guid = item.guid || item.link;
 
       if (!force && existingGuids.has(guid)) continue;
 
@@ -109,12 +123,12 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
       newArticles.push({
         feedId,
         guid,
-        title: item.title || 'Untitled',
-        link: item.link!,
-        author: (item as any).creator || (item as any).author,
+        title: item.title || "Untitled",
+        link: item.link,
+        author: item.creator || item.author || null,
         pubDate,
-        content: item.content || (item as any)['content:encoded'],
-        excerpt: (item as any).summary || (item as any).description,
+        content: item.content || item["content:encoded"] || null,
+        excerpt: item.summary || item.description || null,
         categories: item.categories || [],
       });
     }
@@ -134,7 +148,7 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
     };
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
     // Update feed error tracking
     await db.feed.update({
@@ -164,18 +178,14 @@ export const contentExtractProcessor: WorkerProcessor<ContentExtractJobData> = a
     }
 
     if (article.contentExtracted) {
-      return { skipped: true, reason: 'Already extracted' };
+      return { skipped: true, reason: "Already extracted" };
     }
 
     // Extract full content
-    const extracted = await extract(url, {
-      headers: {
-        'User-Agent': 'NewsFlow/1.0',
-      },
-    } as any);
+    const extracted = await extract(url);
 
     if (!extracted) {
-      throw new Error('Content extraction failed - no content returned');
+      throw new Error("Content extraction failed - no content returned");
     }
 
     // Update article with extracted content
@@ -199,7 +209,7 @@ export const contentExtractProcessor: WorkerProcessor<ContentExtractJobData> = a
     };
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
     // Update extraction tracking
     await db.article.update({

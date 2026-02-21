@@ -1,8 +1,11 @@
-import prisma from "@NewsFlow/db";
 import { ORPCError } from "@orpc/server";
+
+import prisma from "@NewsFlow/db";
+import type { Prisma } from "@NewsFlow/db";
 import { protectedProcedure } from "../../index";
 import {
   articleIdSchema,
+  articleListOutputSchema,
   listArticlesSchema,
 } from "./article.schema";
 import { extractFullContent } from "./article.service";
@@ -10,28 +13,50 @@ import { extractFullContent } from "./article.service";
 export const articleRouter = {
   list: protectedProcedure
     .input(listArticlesSchema)
+    .output(articleListOutputSchema)
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      const where: any = {
+      const where: Prisma.ArticleWhereInput = {
         feed: { userId },
         ...(input.feedId ? { feedId: input.feedId } : {}),
         ...(input.saved !== undefined ? { saved: input.saved } : {}),
         ...(input.read !== undefined ? { read: input.read } : {}),
-        ...(input.cursor ? { id: { lt: input.cursor } } : {}),
       };
+
+      if (input.cursor) {
+        const cursorPubDate = new Date(input.cursor.pubDate);
+        where.OR = [
+          { pubDate: { lt: cursorPubDate } },
+          {
+            pubDate: cursorPubDate,
+            id: { lt: input.cursor.id },
+          },
+        ];
+      }
 
       const articles = await prisma.article.findMany({
         where,
         take: input.limit + 1, // +1 to check for next cursor
-        orderBy: { pubDate: "desc" },
+        orderBy: [{ pubDate: "desc" }, { id: "desc" }],
         include: { feed: { select: { title: true, iconUrl: true } } },
       });
 
-      let nextCursor: string | undefined;
+      let nextCursor:
+        | {
+            id: string;
+            pubDate: string;
+          }
+        | undefined;
+
       if (articles.length > input.limit) {
         const nextItem = articles.pop();
-        nextCursor = nextItem?.id;
+        if (nextItem) {
+          nextCursor = {
+            id: nextItem.id,
+            pubDate: nextItem.pubDate.toISOString(),
+          };
+        }
       }
 
       return { items: articles, nextCursor };

@@ -1,14 +1,22 @@
 import { ORPCError } from "@orpc/server";
+import { z } from "zod";
+
 import prisma from "@NewsFlow/db";
+import type { AiConfig, Prisma } from "@NewsFlow/db";
 import { protectedProcedure } from "../../index";
 import { EncryptionService } from "./ai-config.service";
 import {
   aiConfigIdSchema,
   createAiConfigSchema,
+  maskedAiConfigSchema,
   updateAiConfigSchema,
 } from "./ai-config.schema";
 
-const maskConfig = (config: any) => ({
+type MaskedAiConfig = Omit<AiConfig, "apiKey"> & {
+  apiKey: string;
+};
+
+const maskConfig = (config: AiConfig): MaskedAiConfig => ({
   ...config,
   apiKey: EncryptionService.maskApiKey(config.apiKey),
 });
@@ -16,6 +24,7 @@ const maskConfig = (config: any) => ({
 export const aiConfigRouter = {
   create: protectedProcedure
     .input(createAiConfigSchema)
+    .output(maskedAiConfigSchema)
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
@@ -38,6 +47,7 @@ export const aiConfigRouter = {
     }),
 
   list: protectedProcedure
+    .output(z.array(maskedAiConfigSchema))
     .handler(async ({ context }) => {
       const userId = context.session.user.id;
 
@@ -51,6 +61,7 @@ export const aiConfigRouter = {
 
   update: protectedProcedure
     .input(updateAiConfigSchema)
+    .output(maskedAiConfigSchema)
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
       const { id, apiKey, ...rest } = input;
@@ -63,7 +74,7 @@ export const aiConfigRouter = {
         throw new ORPCError("NOT_FOUND", { message: "AI config not found" });
       }
 
-      const updateData: any = { ...rest };
+      const updateData: Prisma.AiConfigUpdateInput = { ...rest };
 
       if (apiKey) {
         updateData.apiKey = await EncryptionService.encrypt(apiKey);
@@ -89,6 +100,10 @@ export const aiConfigRouter = {
       }
 
       const updated = await prisma.aiConfig.findUnique({ where: { id } });
+      if (!updated) {
+        throw new ORPCError("NOT_FOUND", { message: "AI config not found" });
+      }
+
       return maskConfig(updated);
     }),
 
