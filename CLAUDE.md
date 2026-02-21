@@ -1,310 +1,251 @@
-# NewsFlow - Project Guidelines
+# NewsFlow - Claude Guide
 
-NewsFlow là ứng dụng tin tức được xây dựng với Turborepo monorepo, sử dụng Nuxt cho frontend và Express/oRPC cho backend.
+Tài liệu này là hướng dẫn làm việc cho Claude/Coding Agents trong repo `NewsFlow`.
+Mục tiêu: sửa đúng chỗ, giữ type safety, và tránh phá luồng monorepo.
 
-## Quick Navigation
+## 1) Project Snapshot
 
-- `apps/web/` - Frontend Nuxt application
-- `apps/server/` - Backend Express API với oRPC
-- `packages/api/` - API layer & business logic
-- `packages/auth/` - Better-Auth configuration
-- `packages/db/` - Prisma schema & database queries
-- `packages/env/` - Environment variables validation
-- `packages/config/` - Shared TypeScript configs
+NewsFlow là Turborepo monorepo với:
+- Frontend: Nuxt 4 (`apps/web`)
+- Backend: Express 5 + oRPC (`apps/server`)
+- Business logic/API contracts: `packages/api`
+- Auth: Better Auth (`packages/auth`)
+- Data layer: Prisma + PostgreSQL (`packages/db`)
+- Queue layer: BullMQ + Redis (`packages/queue`)
+- Env validation: `packages/env`
 
-## Core Principles
+## 2) Repo Map
 
-1. **Type Safety First** - Sử dụng TypeScript strict mode, tận dụng oRPC cho end-to-end type safety
-2. **Monorepo Structure** - Mỗi package có trách nhiệm rõ ràng, tránh circular dependencies
-3. **Workspace Protocol** - Luôn dùng `workspace:*` cho internal dependencies
-4. **Environment Variables** - Validate tất cả env vars qua Zod schema trong `packages/env`
-5. **Database First** - Schema changes phải qua Prisma migrations, không direct SQL
-6. **Authentication Centralized** - Tất cả auth logic trong `packages/auth`, dùng Better-Auth
-7. **API Type Safety** - Mọi API endpoint phải định nghĩa qua oRPC với Zod validation
-
-## Tech Stack
-
-### Frontend (apps/web)
-- **Nuxt 4** - Vue framework với SSR/SSG
-- **@nuxt/ui 4.4** - UI component library
-- **shadcn-vue** - UI component library (thêm vào như alternative)
-- **TailwindCSS 4** - Utility-first CSS
-- **@tanstack/vue-query** - Data fetching & caching
-- **@orpc/client** - Type-safe API client
-
-### Backend (apps/server)
-- **Express 5** - Web framework
-- **oRPC** - Type-safe RPC framework với OpenAPI
-- **Better-Auth** - Authentication solution
-- **Bun** - Runtime environment
-
-### Database (packages/db)
-- **Prisma 7** - ORM với PostgreSQL adapter
-- **PostgreSQL** - Database engine
-- **Docker Compose** - Local database container
-
-### Shared
-- **TypeScript 5** - Type system
-- **Zod** - Schema validation
-- **Turborepo** - Monorepo build orchestration
-
-## Project Structure
-
-```
+```text
 NewsFlow/
 ├── apps/
-│   ├── web/              # Nuxt frontend
-│   │   ├── app/          # Nuxt app directory
-│   │   │   ├── components/ui/  # shadcn-vue components
-│   │   │   └── lib/utils.ts    # cn() utility
-│   │   ├── pages/        # Route pages
-│   │   ├── components/   # Vue components
-│   │   ├── components.json    # shadcn config
-│   │   └── nuxt.config.ts
-│   └── server/           # Express backend
-│       ├── src/
-│       │   ├── index.ts  # Entry point
-│       │   └── routes/   # API routes
-│       └── package.json
+│   ├── web/                 # Nuxt app
+│   │   ├── app/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── layouts/
+│   │   │   └── lib/
+│   │   └── server/
+│   └── server/              # Express server entry
+│       └── src/index.ts
 ├── packages/
-│   ├── api/              # Business logic & oRPC procedures
-│   ├── auth/             # Better-Auth setup
-│   ├── db/               # Prisma schema & client
-│   │   ├── prisma/
-│   │   │   └── schema.prisma
-│   │   ├── docker-compose.yml
-│   │   └── src/index.ts
-│   ├── env/              # Environment validation
-│   └── config/           # Shared configs (tsconfig, etc)
-└── turbo.json            # Turborepo configuration
+│   ├── api/                 # oRPC procedures + modules
+│   ├── auth/                # Better Auth setup
+│   ├── db/                  # Prisma schema, migrations, client
+│   ├── env/                 # env schema validation
+│   ├── queue/               # BullMQ jobs/scheduler/runner
+│   └── config/              # shared tsconfig
+└── turbo.json
 ```
 
-## Workflow Instructions
+## 3) Non-Negotiable Rules
 
-### Starting Development
+1. Type safety first:
+- Ưu tiên Zod + `z.infer`.
+- Tránh `any`; nếu cần linh hoạt thì dùng `unknown`.
+
+2. Respect package boundaries:
+- Auth logic ở `packages/auth`.
+- DB access ở `packages/db`.
+- API contracts/handlers ở `packages/api`.
+- Queue orchestration ở `packages/queue`.
+
+3. Workspace protocol:
+- Internal dependencies luôn dùng `workspace:*`.
+
+4. Env validation:
+- Server env: `@NewsFlow/env/server`.
+- Web env: `@NewsFlow/env/web`.
+- Không bypass schema validation.
+
+5. Database-first changes:
+- Sửa schema qua Prisma.
+- Không dùng SQL tay trừ khi có yêu cầu cụ thể.
+
+6. Security hygiene:
+- Không commit secrets.
+- Validate toàn bộ input ở boundary.
+- Không log token/api key/credential thô.
+
+## 4) API Architecture Pattern
+
+Trong `packages/api/src/modules/*`, ưu tiên pattern:
+- `*.schema.ts`: Zod schema + types
+- `*.service.ts`: business logic
+- `*.router.ts`: oRPC procedure wiring
+
+Router tổng tại `packages/api/src/routers/index.ts`:
+- merge các module routers bằng spread (`...aiConfigRouter`, ...)
+
+Procedure levels:
+- `publicProcedure`: route công khai
+- `protectedProcedure`: route bắt buộc authenticated session
+
+Business errors:
+- Dùng `ORPCError` (không dùng generic throw string/error mơ hồ).
+
+## 5) Server Runtime Notes
+
+Trong `apps/server/src/index.ts`:
+- Better Auth route: `/api/auth{/*path}`
+- RPC endpoint prefix: `/rpc`
+- API reference prefix: `/api-reference`
+- Job runner khởi động bằng `startJobRunner()`
+
+Không đổi các prefix trên nếu chưa có yêu cầu rõ.
+
+## 6) Queue Pattern
+
+`packages/queue` gồm:
+- `schema.ts`: định nghĩa job names + payload schema
+- `service.ts`: queue/worker factory + processors
+- `scheduler.ts`: lịch enqueue jobs
+- `runner.ts`: bootstrap worker/scheduler lifecycle
+
+Khi thêm/đổi job:
+- Cập nhật schema + processor + nơi enqueue đồng bộ.
+
+## 7) Code Style & Presentation
+
+Naming:
+- Files TS: `kebab-case.ts`
+- Vue components: `PascalCase.vue`
+- Schemas: hậu tố `Schema`
+- Constants: `UPPER_SNAKE_CASE`
+- Functions/variables: `camelCase`, tên theo domain
+
+Readability:
+- Ưu tiên early return.
+- Tránh hàm quá dài; tách helper theo từng bước.
+- Mỗi block xử lý một mục tiêu rõ ràng.
+
+Comments:
+- Chỉ comment phần "vì sao".
+- Tránh comment mô tả điều hiển nhiên.
+
+Imports:
+- Thứ tự: external -> `@NewsFlow/*` -> local files.
+- Tránh circular dependency.
+
+## 8) Environment Setup
 
 ```bash
-# 1. Install dependencies
+cp apps/server/.env.example apps/server/.env
+cp apps/web/.env.example apps/web/.env
+```
+
+Server env chính:
+- `DATABASE_URL`
+- `REDIS_URL`
+- `BETTER_AUTH_SECRET`
+- `BETTER_AUTH_URL`
+- `CORS_ORIGIN`
+- `AI_KEY_ENCRYPTION_SECRET`
+
+Web env chính:
+- `NUXT_PUBLIC_SERVER_URL`
+
+## 9) Common Workflows
+
+### Start local dev
+
+```bash
 bun install
-
-# 2. Start PostgreSQL database
 bun run db:start
-
-# 3. Push schema to database
 bun run db:push
-
-# 4. Start all apps in dev mode
 bun run dev
 ```
 
-### Making Database Changes
+### Add new API endpoint
+
+1. Tạo/sửa module trong `packages/api/src/modules/*`.
+2. Định nghĩa input/output schema bằng Zod.
+3. Triển khai logic trong service.
+4. Expose procedure trong router.
+5. Merge router vào `packages/api/src/routers/index.ts`.
+
+### Database changes
 
 ```bash
-# 1. Edit packages/db/prisma/schema.prisma
-# 2. Generate migration
-bun run db:migrate
-
-# 3. For quick prototyping (no migration file)
-bun run db:push
-
-# 4. Regenerate Prisma client
+# Sau khi sửa Prisma schema
 bun run db:generate
+bun run db:migrate
 ```
 
-### Adding New API Endpoint
-
-1. Định nghĩa procedure trong `packages/api/src/`
-2. Sử dụng Zod cho input/output validation
-3. Export procedure qua oRPC router
-4. Type safety tự động sync sang frontend
-
-### Adding shadcn-vue Components
+Prototype nhanh (không tạo migration file):
 
 ```bash
-# Thêm component mới
-cd apps/web
-bunx shadcn-vue add [component-name]
+bun run db:push
+```
 
-# Ví dụ
+### Add Nuxt UI/shadcn component
+
+```bash
+cd apps/web
 bunx shadcn-vue add button card input
 ```
 
-Sử dụng trong Vue:
-```vue
-<script setup lang="ts">
-import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-</script>
-
-<template>
-  <Card>
-    <CardHeader>
-      <CardTitle>Title</CardTitle>
-    </CardHeader>
-    <CardContent>Content</CardContent>
-  </Card>
-  <Button variant="default">Click me</Button>
-</template>
-```
-
-**Lưu ý:** Components được install trong `app/components/ui/`
-
-### Adding New Package
+## 10) Commands
 
 ```bash
-# 1. Create package directory
-mkdir -p packages/new-package/src
+# Dev
+bun run dev
+bun run dev:web
+bun run dev:server
 
-# 2. Create package.json với workspace protocol
-{
-  "name": "@NewsFlow/new-package",
-  "type": "module",
-  "exports": {
-    ".": "./src/index.ts"
-  }
-}
-
-# 3. Add to dependent packages
-"@NewsFlow/new-package": "workspace:*"
-```
-
-## Common Commands
-
-```bash
-# Development
-bun run dev              # Start all apps
-bun run dev:web          # Start only frontend
-bun run dev:server       # Start only backend
-
-# Build
-bun run build            # Build all apps
-bun run check-types      # Type check all packages
+# Build / types
+bun run build
+bun run check-types
 
 # Database
-bun run db:start         # Start PostgreSQL container
-bun run db:stop          # Stop container
-bun run db:down          # Remove container
-bun run db:push          # Push schema changes
-bun run db:generate      # Generate Prisma client
-bun run db:migrate       # Create migration
-bun run db:studio        # Open Prisma Studio
-
-# Server specific
-cd apps/server
-bun run compile          # Compile to standalone binary
+bun run db:start
+bun run db:stop
+bun run db:down
+bun run db:push
+bun run db:migrate
+bun run db:generate
+bun run db:studio
 ```
 
-## Testing Requirements
+Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
 
-- Viết tests cho business logic trong `packages/api`
-- Test database queries với Prisma mock
-- E2E tests cho critical user flows
-- Validate API contracts với oRPC schema
+## 11) Error Handling
 
-## Error Handling Patterns
+API layer:
+- Throw `ORPCError` với code phù hợp (`BAD_REQUEST`, `NOT_FOUND`, `UNAUTHORIZED`, ...).
 
-### API Errors (oRPC)
+Database layer:
+- Bắt lỗi Prisma khi cần map sang domain error.
+- Không swallow lỗi.
 
-```typescript
-import { TRPCError } from '@orpc/server'
+Frontend layer:
+- Dùng error state từ TanStack Query.
+- Không nuốt lỗi silent trong UI logic.
 
-throw new TRPCError({
-  code: 'BAD_REQUEST',
-  message: 'Invalid input'
-})
-```
+## 12) Definition of Done
 
-### Database Errors
+Trước khi kết thúc task:
+1. `bun run check-types` pass với phần code bị tác động.
+2. Nếu đổi DB schema: đã chạy `db:generate` và `db:migrate`/`db:push`.
+3. Nếu đổi API contract: client usage liên quan đã được cập nhật.
+4. Không lộ secrets trong source/log/docs.
+5. Chỉ sửa trong phạm vi yêu cầu, không refactor lan rộng.
 
-```typescript
-import { Prisma } from '@prisma/client'
+## 13) Quick Troubleshooting
 
-try {
-  await db.user.create({ data })
-} catch (error) {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === 'P2002') {
-      // Unique constraint violation
-    }
-  }
-}
-```
-
-### Frontend Errors
-
-```typescript
-// Sử dụng @tanstack/vue-query error handling
-const { error, isError } = useQuery({
-  queryKey: ['users'],
-  queryFn: fetchUsers
-})
-```
-
-## Code Style Guidelines
-
-- Sử dụng `bun` thay vì `npm` hoặc `yarn`
-- Import paths: Dùng `@NewsFlow/*` cho workspace packages
-- File naming: `kebab-case.ts` cho files, `PascalCase.vue` cho components
-- Async/await thay vì promises chains
-- Destructure imports: `import { func } from 'module'`
-- Tránh `any` type, dùng `unknown` nếu cần
-
-## Environment Variables
-
-Tất cả env vars phải được validate trong `packages/env`:
-
-```typescript
-// packages/env/src/index.ts
-import { z } from 'zod'
-
-export const env = z.object({
-  DATABASE_URL: z.string().url(),
-  BETTER_AUTH_SECRET: z.string().min(32),
-  NODE_ENV: z.enum(['development', 'production', 'test'])
-}).parse(process.env)
-```
-
-## Security Guidelines
-
-- Không commit `.env` files
-- Validate tất cả user inputs với Zod
-- Sử dụng Better-Auth cho authentication
-- Sanitize database queries qua Prisma (tránh raw SQL)
-- CORS configuration trong Express server
-- Rate limiting cho API endpoints
-
-## Performance Considerations
-
-- Sử dụng Turborepo caching cho builds
-- Database indexes cho frequent queries
-- Vue Query caching cho API calls
-- Lazy load components trong Nuxt
-- Optimize Prisma queries (select only needed fields)
-
-## Common Issues
-
-### Port Already in Use
+Port conflict:
 ```bash
-# Kill process on port 3000/3001
 lsof -ti:3000 | xargs kill -9
+lsof -ti:3001 | xargs kill -9
 ```
 
-### Prisma Client Out of Sync
+Prisma client out-of-sync:
 ```bash
 bun run db:generate
 ```
 
-### Type Errors After Package Update
+DB container issues:
 ```bash
-bun run check-types
-# Fix errors, then rebuild
-bun run build
-```
-
-### Docker Database Connection Failed
-```bash
-# Check container status
-docker ps
-# Restart database
-bun run db:down && bun run db:start
+bun run db:down
+bun run db:start
 ```
