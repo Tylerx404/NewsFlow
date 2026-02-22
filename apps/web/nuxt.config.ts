@@ -4,9 +4,10 @@ import "@NewsFlow/env/web";
 export default defineNuxtConfig({
   compatibilityDate: "latest",
   devtools: { enabled: true },
-  modules: ["shadcn-nuxt"],
+  modules: ["shadcn-nuxt", '@nuxtjs/tailwindcss'],
   css: ["~/assets/css/main.css"],
   shadcn: {
+    prefix: '',
     componentDir: "./app/components/ui",
   },
   alias: {
