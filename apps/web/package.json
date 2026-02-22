@@ -14,7 +14,6 @@
     "@NewsFlow/auth": "workspace:*",
     "@NewsFlow/env": "workspace:*",
     "@nuxt/content": "^3.11.2",
-    "@nuxt/ui": "4.4.0",
     "@nuxtjs/mdc": "^0.20.1",
     "@orpc/client": "^1.13.5",
     "@orpc/server": "^1.13.5",
@@ -37,7 +36,6 @@
   },
   "devDependencies": {
     "@NewsFlow/config": "workspace:*",
-    "@iconify-json/lucide": "^1.2.91",
     "@tanstack/vue-query-devtools": "^6.1.5",
     "tailwindcss": "^4.2.0",
     "typescript": "^5.9.3"

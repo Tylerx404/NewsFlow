@@ -4,10 +4,8 @@ import { VueQueryDevtools } from "@tanstack/vue-query-devtools";
 
 <template>
   <NuxtLoadingIndicator />
-  <UApp>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </UApp>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
   <VueQueryDevtools />
 </template>

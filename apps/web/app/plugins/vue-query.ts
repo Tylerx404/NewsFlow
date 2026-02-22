@@ -5,19 +5,14 @@ import { dehydrate, hydrate, QueryCache, QueryClient, VueQueryPlugin } from "@ta
 export default defineNuxtPlugin((nuxt) => {
   const vueQueryState = useState<DehydratedState | null>("vue-query");
 
-  const toast = useToast();
-
   const queryClient = new QueryClient({
     queryCache: new QueryCache({
       onError: (error) => {
-        console.log(error);
-        toast.add({
-          title: "Error",
-          description: error?.message || "An unexpected error occurred.",
-        });
+        console.error("Vue Query error:", error);
       },
     }),
   });
+
   const options: VueQueryPluginOptions = { queryClient };
 
   nuxt.vueApp.use(VueQueryPlugin, options);

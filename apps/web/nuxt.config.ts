@@ -4,7 +4,7 @@ import "@NewsFlow/env/web";
 export default defineNuxtConfig({
   compatibilityDate: "latest",
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "shadcn-nuxt"],
+  modules: ["shadcn-nuxt"],
   css: ["~/assets/css/main.css"],
   shadcn: {
     componentDir: "./app/components/ui",
