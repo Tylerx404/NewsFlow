@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
+import { reactive, ref } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -15,13 +17,53 @@ import { Input } from '@/components/ui/input'
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const { $authClient } = useNuxtApp()
+
+const form = reactive({
+  email: "",
+  password: "",
+})
+const isSubmitting = ref(false)
+const submitError = ref("")
+
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
+  return "Unable to sign in right now. Please try again."
+}
+
+const handleSubmit = async () => {
+  submitError.value = ""
+  isSubmitting.value = true
+
+  try {
+    const { error } = await $authClient.signIn.email({
+      email: form.email.trim(),
+      password: form.password,
+    })
+
+    if (error) {
+      submitError.value = error.message ?? "Invalid email or password."
+      return
+    }
+
+    await navigateTo("/")
+  } catch (error) {
+    submitError.value = getErrorMessage(error)
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <template>
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card class="overflow-hidden p-0">
       <CardContent class="grid p-0 md:grid-cols-2">
-        <form class="p-6 md:p-8">
+        <form class="p-6 md:p-8" @submit.prevent="handleSubmit">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
@@ -39,6 +81,8 @@ const props = defineProps<{
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autocomplete="email"
+                v-model="form.email"
                 required
               />
             </Field>
@@ -54,11 +98,20 @@ const props = defineProps<{
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                v-model="form.password"
+                required
+              />
+            </Field>
+            <Field v-if="submitError">
+              <FieldError :errors="[submitError]" />
             </Field>
             <Field>
-              <Button type="submit">
-                Login
+              <Button type="submit" :disabled="isSubmitting">
+                {{ isSubmitting ? "Logging in..." : "Login" }}
               </Button>
             </Field>
             <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
@@ -95,9 +148,9 @@ const props = defineProps<{
             </Field>
             <FieldDescription class="text-center">
               Don't have an account?
-              <a href="#">
+              <NuxtLink to="/signup">
                 Sign up
-              </a>
+              </NuxtLink>
             </FieldDescription>
           </FieldGroup>
         </form>
