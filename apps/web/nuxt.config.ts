@@ -4,16 +4,16 @@ import "@NewsFlow/env/web";
 export default defineNuxtConfig({
   compatibilityDate: "latest",
   devtools: { enabled: true },
-  modules: ["shadcn-nuxt", '@nuxtjs/tailwindcss'],
+  modules: ["shadcn-nuxt"],
   css: ["~/assets/css/main.css"],
+  postcss: {
+    plugins: {
+      '@tailwindcss/postcss': {},
+    },
+  },
   shadcn: {
     prefix: '',
     componentDir: "./app/components/ui",
-  },
-  alias: {
-    "@": "./app",
-    "@/components": "./app/components",
-    "@/lib": "./app/lib",
   },
   devServer: {
     port: 3001,

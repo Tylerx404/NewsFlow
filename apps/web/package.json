@@ -23,10 +23,12 @@
     "@vue/devtools-api": "^8.0.6",
     "@vueuse/core": "^14.2.1",
     "better-auth": "^1.4.18",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
+    "lucide-vue-next": "^0.575.0",
     "nuxt": "^4.3.1",
-    "reka-ui": "^2.8.0",
+    "reka-ui": "^2.8.2",
     "shadcn-nuxt": "^2.4.3",
     "shadcn-vue": "^2.4.3",
     "tailwind-merge": "^3.5.0",
@@ -37,8 +39,10 @@
   "devDependencies": {
     "@NewsFlow/config": "workspace:*",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@tailwindcss/postcss": "^4.2.0",
     "@tanstack/vue-query-devtools": "^6.1.5",
     "tailwindcss": "^4.2.0",
+    "tw-animate-css": "^1.4.0",
     "typescript": "^5.9.3"
   }
 }
