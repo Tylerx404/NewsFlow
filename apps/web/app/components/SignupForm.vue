@@ -60,7 +60,7 @@ const handleSubmit = async () => {
     }
 
     const { data: session } = await $authClient.getSession()
-    await navigateTo(session ? "/" : "/login")
+    await navigateTo(session ? "/dashboard" : "/login")
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {

@@ -50,7 +50,7 @@ const handleSubmit = async () => {
       return
     }
 
-    await navigateTo("/")
+    await navigateTo("/dashboard")
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {

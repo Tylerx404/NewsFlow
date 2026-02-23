@@ -5,6 +5,7 @@ import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
 import { aiRouter } from "../modules/ai/ai.router";
 import { articleRouter } from "../modules/article/article.router";
 import { feedRouter } from "../modules/feed/feed.router";
+import { subscriptionRouter } from "../modules/subscription/subscription.router";
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
@@ -20,6 +21,7 @@ export const appRouter = {
   feed: feedRouter,
   article: articleRouter,
   ai: aiRouter,
+  subscription: subscriptionRouter,
   // Temporary compatibility layer for legacy flat clients.
   create: feedRouter.create,
   list: articleRouter.list,

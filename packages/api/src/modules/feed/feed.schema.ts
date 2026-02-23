@@ -19,6 +19,18 @@ export const listFeedsSchema = z.object({
   category: z.string().optional(),
 });
 
+export const listSidebarFeedsSchema = z.object({
+  includeInactive: z.boolean().optional().default(false),
+});
+
+export const discoverFeedsSchema = z.object({
+  category: z.string().optional(),
+});
+
+export const refreshFeedSchema = z.object({
+  id: z.string(),
+});
+
 export const feedSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -33,4 +45,20 @@ export const feedSchema = z.object({
   lastFetched: z.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+});
+
+export const sidebarFeedSchema = feedSchema.extend({
+  unreadCount: z.number().int(),
+  lastError: z.string().nullable(),
+  errorCount: z.number().int(),
+  nextFetchAt: z.date().nullable(),
+});
+
+export const discoverFeedItemSchema = z.object({
+  title: z.string(),
+  url: z.string().url(),
+  description: z.string().nullable(),
+  category: z.string().nullable(),
+  language: z.string().nullable(),
+  siteUrl: z.string().nullable(),
 });
