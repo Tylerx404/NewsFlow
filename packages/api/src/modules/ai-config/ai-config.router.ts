@@ -4,11 +4,14 @@ import { z } from "zod";
 import prisma from "@NewsFlow/db";
 import type { AiConfig, Prisma } from "@NewsFlow/db";
 import { protectedProcedure } from "../../index";
-import { EncryptionService } from "./ai-config.service";
+import { EncryptionService, fetchProviderModels } from "./ai-config.service";
 import {
   aiConfigIdSchema,
   createAiConfigSchema,
+  fetchModelsOutputSchema,
+  fetchModelsSchema,
   maskedAiConfigSchema,
+  ProviderEnum,
   updateAiConfigSchema,
 } from "./ai-config.schema";
 
@@ -16,10 +19,20 @@ type MaskedAiConfig = Omit<AiConfig, "apiKey"> & {
   apiKey: string;
 };
 
-const maskConfig = (config: AiConfig): MaskedAiConfig => ({
-  ...config,
-  apiKey: EncryptionService.maskApiKey(config.apiKey),
-});
+const maskConfig = async (config: AiConfig): Promise<MaskedAiConfig> => {
+  try {
+    const decrypted = await EncryptionService.decrypt(config.apiKey);
+    return {
+      ...config,
+      apiKey: EncryptionService.maskApiKey(decrypted),
+    };
+  } catch {
+    return {
+      ...config,
+      apiKey: "****",
+    };
+  }
+};
 
 export const aiConfigRouter = {
   create: protectedProcedure
@@ -56,7 +69,66 @@ export const aiConfigRouter = {
         orderBy: { createdAt: "desc" },
       });
 
-      return configs.map(maskConfig);
+      return Promise.all(configs.map(maskConfig));
+    }),
+
+  fetchModels: protectedProcedure
+    .input(fetchModelsSchema)
+    .output(fetchModelsOutputSchema)
+    .handler(async ({ input, context }) => {
+      const userId = context.session.user.id;
+
+      let provider: z.infer<typeof ProviderEnum>;
+      let apiKey: string | undefined;
+      let baseUrl: string | null | undefined;
+
+      if (input.aiConfigId) {
+        const existingConfig = await prisma.aiConfig.findFirst({
+          where: {
+            id: input.aiConfigId,
+            userId,
+          },
+        });
+
+        if (!existingConfig) {
+          throw new ORPCError("NOT_FOUND", { message: "AI config not found" });
+        }
+
+        const parsedProvider = ProviderEnum.safeParse(existingConfig.provider);
+        if (!parsedProvider.success) {
+          throw new ORPCError("BAD_REQUEST", {
+            message: "Unsupported provider in saved config.",
+          });
+        }
+
+        provider = parsedProvider.data;
+        apiKey = await EncryptionService.decrypt(existingConfig.apiKey);
+        baseUrl = existingConfig.baseUrl;
+      } else {
+        if (!input.provider) {
+          throw new ORPCError("BAD_REQUEST", {
+            message: "Provider is required.",
+          });
+        }
+
+        provider = input.provider;
+        apiKey = input.apiKey;
+        baseUrl = input.baseUrl;
+      }
+
+      if (provider !== "ollama" && !apiKey) {
+        throw new ORPCError("BAD_REQUEST", {
+          message: "API key is required for this provider.",
+        });
+      }
+
+      const models = await fetchProviderModels({
+        provider,
+        apiKey,
+        baseUrl,
+      });
+
+      return { models };
     }),
 
   update: protectedProcedure

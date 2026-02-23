@@ -1,0 +1,13 @@
+<script setup lang="ts">
+import ArticleListPanel from "@/components/dashboard/ArticleListPanel.vue";
+
+definePageMeta({
+  layout: "dashboard",
+  middleware: "dashboard-auth",
+  title: "Dashboard",
+});
+</script>
+
+<template>
+  <ArticleListPanel title="All feeds" />
+</template>

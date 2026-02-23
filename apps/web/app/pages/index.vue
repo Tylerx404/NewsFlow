@@ -1,55 +1,29 @@
 <script setup lang="ts">
-const { $orpc } = useNuxtApp();
-import { useQuery } from "@tanstack/vue-query";
+const { $authClient } = useNuxtApp();
 
-const TITLE_TEXT = `███╗   ██╗███████╗██╗    ██╗███████╗███████╗██╗      ██████╗ ██╗    ██╗
-████╗  ██║██╔════╝██║    ██║██╔════╝██╔════╝██║     ██╔═══██╗██║    ██║
-██╔██╗ ██║█████╗  ██║ █╗ ██║███████╗█████╗  ██║     ██║   ██║██║ █╗ ██║
-██║╚██╗██║██╔══╝  ██║███╗██║╚════██║██╔══╝  ██║     ██║   ██║██║███╗██║
-██║ ╚████║███████╗╚███╔███╔╝███████║██║     ███████╗╚██████╔╝╚███╔███╔╝
-╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝ ╚══════╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ 
-                                                                       `;
-
-const healthCheck = useQuery($orpc.healthCheck.queryOptions());
+onMounted(async () => {
+  const { data } = await $authClient.getSession();
+  if (data?.session) {
+    await navigateTo("/dashboard");
+  }
+});
 </script>
 
 <template>
-  <UContainer class="py-8">
-    <pre class="overflow-x-auto font-mono text-sm whitespace-pre-wrap">{{ TITLE_TEXT }}</pre>
-
-    <div class="grid gap-6 mt-6">
-      <UCard>
-        <template #header>
-          <div class="font-medium">API Status</div>
-        </template>
-
-        <div class="flex items-center gap-2">
-          <UIcon
-            :name="
-              healthCheck.isLoading.value
-                ? 'i-lucide-loader-2'
-                : healthCheck.isSuccess.value
-                  ? 'i-lucide-check-circle'
-                  : 'i-lucide-x-circle'
-            "
-            :class="[
-              healthCheck.isLoading.value ? 'animate-spin text-muted' : '',
-              healthCheck.isSuccess.value ? 'text-success' : '',
-              healthCheck.isError.value ? 'text-error' : '',
-            ]"
-          />
-          <span class="text-sm">
-            <template v-if="healthCheck.isLoading.value"> Checking... </template>
-            <template v-else-if="healthCheck.isSuccess.value">
-              Connected ({{ healthCheck.data.value }})
-            </template>
-            <template v-else-if="healthCheck.isError.value">
-              Error: {{ healthCheck.error.value?.message || "Failed to connect" }}
-            </template>
-            <template v-else> Idle </template>
-          </span>
-        </div>
-      </UCard>
+  <div class="flex min-h-screen items-center justify-center bg-background p-6">
+    <div class="w-full max-w-xl space-y-4 rounded-xl border bg-card p-8 text-center">
+      <h1 class="text-3xl font-semibold">NewsFlow</h1>
+      <p class="text-muted-foreground">
+        Personalized AI-powered RSS reader.
+      </p>
+      <div class="flex justify-center gap-3">
+        <NuxtLink to="/login" class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground">
+          Login
+        </NuxtLink>
+        <NuxtLink to="/signup" class="inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium">
+          Sign up
+        </NuxtLink>
+      </div>
     </div>
-  </UContainer>
+  </div>
 </template>

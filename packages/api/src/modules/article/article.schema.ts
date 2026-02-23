@@ -8,6 +8,7 @@ export const listArticlesSchema = z.object({
   feedId: z.string().optional(),
   saved: z.boolean().optional(),
   read: z.boolean().optional(),
+  query: z.string().trim().min(1).optional(),
   cursor: z
     .object({
       id: z.string(),
@@ -50,4 +51,14 @@ export const articleListOutputSchema = z.object({
       pubDate: z.string().datetime(),
     })
     .optional(),
+});
+
+export const articleStatsSchema = z.object({
+  feedId: z.string().optional(),
+});
+
+export const articleStatsOutputSchema = z.object({
+  all: z.number().int(),
+  unread: z.number().int(),
+  saved: z.number().int(),
 });

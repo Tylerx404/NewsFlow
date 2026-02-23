@@ -61,7 +61,39 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Chỉ comment phần "vì sao", không comment điều hiển nhiên.
 - Với logic nghiệp vụ quan trọng, ghi rõ ràng constraint gần đoạn code đó.
 
-## 5) Error handling và logging
+## 5) Phong cách UI Web dùng lại cho trang mới
+
+Áp dụng cho các trang mới trong `apps/web` để giữ đồng nhất visual.
+
+### Bố cục
+
+- Ưu tiên layout rõ hierarchy, kiểu SaaS thực dụng: header gọn, content chia khối, khoảng trắng đều.
+- Auth/form page: khung giữa màn hình, card làm trung tâm, desktop có thể split 2 cột, mobile ưu tiên 1 cột.
+- Dashboard/data page: sidebar làm trục điều hướng chính, content theo các panel/card bo góc.
+
+### Màu sắc
+
+- Dùng token màu trung tính từ `apps/web/app/assets/css/main.css` (OKLCH variables: `background`, `muted`, `card`, `sidebar`, `border`).
+- Giữ palette nhẹ, tương phản rõ, hạn chế gradient hoặc accent quá gắt nếu không có yêu cầu branding riêng.
+- Light/dark mode phải bám token hiện có, không hard-code màu rời rạc.
+
+### Component & spacing
+
+- Ưu tiên `shadcn-nuxt` components + Tailwind utility (`Card`, `Button`, `Input`, `Sidebar`, `Dropdown`, `Field`).
+- Border nhẹ, radius vừa, typography đơn giản dễ đọc; tránh trang trí dư.
+- Dùng spacing nhất quán theo cụm `p-4/p-6`, `gap-4/gap-6`; không trộn nhiều scale ngẫu nhiên trong cùng view.
+
+### Responsive & interaction
+
+- Mobile-first: collapse layout hợp lý, không để vỡ form hoặc overflow panel.
+- Animation vừa đủ cho state (dropdown/collapsible/sidebar), tránh motion nặng.
+
+### Research component cho trang mới
+
+- Khi thiếu component phù hợp, ưu tiên research qua `shadcn-vue MCP` để tìm pattern/component trước khi tự viết mới.
+- Chỉ custom component khi không có lựa chọn hợp lý từ hệ `shadcn`.
+
+## 6) Error handling và logging
 
 - Không dùng `catch` rỗng, không nuốt lỗi.
 - Convert lỗi thành `ORPCError` ở boundary API khi phù hợp.
@@ -69,7 +101,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Log theo context thực thi (ví dụ `userId`, `feedId`, `jobId`) để dễ trace.
 - Tránh log trùng nhiều tầng cho cùng một lỗi.
 
-## 6) Workflow theo loại thay đổi
+## 7) Workflow theo loại thay đổi
 
 ### A. API contract/business logic
 
@@ -96,7 +128,7 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Nếu đổi tên queue/job: cập nhật đồng bộ tất cả nơi enqueue/dequeue.
 - Nếu đổi lifecycle queue: kiểm tra cả `apps/worker` (bootstrap) và `packages/queue` (start/stop scheduler, close queue/worker).
 
-## 7) Lệnh chuẩn
+## 8) Lệnh chuẩn
 
 ```bash
 bun install
@@ -120,7 +152,7 @@ bun run db:down
 
 Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
 
-## 8) Definition of Done
+## 9) Definition of Done
 
 - Đã sửa đúng phạm vi task, không refactor lan ngoài yêu cầu.
 - `bun run check-types` pass với phần code bị tác động.
@@ -128,7 +160,7 @@ Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
 - Không để lộ secret trong code, logs, docs.
 - Code mới nhất quán style với module hiện hữu.
 
-## 9) Không làm
+## 10) Không làm
 
 - Không thêm dependency trùng vai trò khi đã có package nội bộ.
 - Không đổi cấu trúc monorepo hoặc rename package nếu chưa được yêu cầu.

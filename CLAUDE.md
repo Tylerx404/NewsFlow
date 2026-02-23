@@ -135,7 +135,34 @@ Imports:
 - Thứ tự: external -> `@NewsFlow/*` -> local files.
 - Tránh circular dependency.
 
-## 8) Environment Setup
+## 8) Web UI Style Baseline (Reuse For New Pages)
+
+Mục tiêu: giữ một visual language nhất quán khi phát triển các trang mới trong `apps/web`.
+
+Layout:
+- Ưu tiên bố cục rõ hierarchy, kiểu SaaS thực dụng: header gọn, content chia khối, khoảng trắng đều.
+- Trang form/auth: card làm trọng tâm, desktop có thể split 2 cột, mobile giữ 1 cột.
+- Trang dashboard/data: sidebar là trục điều hướng chính, content theo panel/card.
+
+Color system:
+- Dùng token trung tính từ `apps/web/app/assets/css/main.css` (OKLCH variables: `background`, `muted`, `card`, `sidebar`, `border`).
+- Giữ palette nhẹ và tương phản rõ; tránh gradient/accent quá mạnh nếu chưa có yêu cầu branding.
+- Light/dark mode phải bám token, hạn chế hard-code màu riêng lẻ.
+
+Components & spacing:
+- Ưu tiên `shadcn-nuxt` components + Tailwind utility classes.
+- Style nền tảng: border nhẹ, radius vừa, typography rõ ràng, ít trang trí.
+- Dùng spacing nhất quán theo scale phổ biến (`p-4/p-6`, `gap-4/gap-6`), tránh nhảy scale ngẫu nhiên.
+
+Responsive & motion:
+- Mobile-first, tránh vỡ layout và overflow.
+- Animation chỉ dùng cho state cần thiết (sidebar/collapsible/dropdown), tránh motion dư.
+
+Component research:
+- Nếu cần mở rộng UI cho trang mới, ưu tiên dùng `shadcn-vue MCP` để research component/pattern trước khi tự custom.
+- Chỉ viết component mới khi không có lựa chọn phù hợp từ hệ `shadcn`.
+
+## 9) Environment Setup
 
 ```bash
 cp apps/server/.env.example apps/server/.env
@@ -153,7 +180,7 @@ Server env chính:
 Web env chính:
 - `NUXT_PUBLIC_SERVER_URL`
 
-## 9) Common Workflows
+## 10) Common Workflows
 
 ### Start local dev
 
@@ -193,7 +220,7 @@ cd apps/web
 bunx shadcn-vue add button card input
 ```
 
-## 10) Commands
+## 11) Commands
 
 ```bash
 # Dev
@@ -218,7 +245,7 @@ bun run db:studio
 
 Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
 
-## 11) Error Handling
+## 12) Error Handling
 
 API layer:
 - Throw `ORPCError` với code phù hợp (`BAD_REQUEST`, `NOT_FOUND`, `UNAUTHORIZED`, ...).
@@ -231,7 +258,7 @@ Frontend layer:
 - Dùng error state từ TanStack Query.
 - Không nuốt lỗi silent trong UI logic.
 
-## 12) Definition of Done
+## 13) Definition of Done
 
 Trước khi kết thúc task:
 1. `bun run check-types` pass với phần code bị tác động.
@@ -240,7 +267,7 @@ Trước khi kết thúc task:
 4. Không lộ secrets trong source/log/docs.
 5. Chỉ sửa trong phạm vi yêu cầu, không refactor lan rộng.
 
-## 13) Quick Troubleshooting
+## 14) Quick Troubleshooting
 
 Port conflict:
 ```bash
