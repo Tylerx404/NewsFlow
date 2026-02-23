@@ -31,6 +31,40 @@ export const aiConfigIdSchema = z.object({
   id: z.string(),
 });
 
+export const fetchModelsSchema = z
+  .object({
+    aiConfigId: z.string().optional(),
+    provider: ProviderEnum.optional(),
+    apiKey: z.string().min(1).optional(),
+    baseUrl: z.string().url().optional().nullable(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.aiConfigId) {
+      return;
+    }
+
+    if (!value.provider) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["provider"],
+        message: "Provider is required when aiConfigId is not provided.",
+      });
+      return;
+    }
+
+    if (value.provider !== "ollama" && !value.apiKey) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["apiKey"],
+        message: "API key is required for this provider.",
+      });
+    }
+  });
+
+export const fetchModelsOutputSchema = z.object({
+  models: z.array(z.string()),
+});
+
 export const maskedAiConfigSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -46,3 +80,4 @@ export const maskedAiConfigSchema = z.object({
 
 export type CreateAiConfigInput = z.infer<typeof createAiConfigSchema>;
 export type UpdateAiConfigInput = z.infer<typeof updateAiConfigSchema>;
+export type Provider = z.infer<typeof ProviderEnum>;
