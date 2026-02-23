@@ -16,10 +16,20 @@ type MaskedAiConfig = Omit<AiConfig, "apiKey"> & {
   apiKey: string;
 };
 
-const maskConfig = (config: AiConfig): MaskedAiConfig => ({
-  ...config,
-  apiKey: EncryptionService.maskApiKey(config.apiKey),
-});
+const maskConfig = async (config: AiConfig): Promise<MaskedAiConfig> => {
+  try {
+    const decrypted = await EncryptionService.decrypt(config.apiKey);
+    return {
+      ...config,
+      apiKey: EncryptionService.maskApiKey(decrypted),
+    };
+  } catch {
+    return {
+      ...config,
+      apiKey: "****",
+    };
+  }
+};
 
 export const aiConfigRouter = {
   create: protectedProcedure
@@ -56,7 +66,7 @@ export const aiConfigRouter = {
         orderBy: { createdAt: "desc" },
       });
 
-      return configs.map(maskConfig);
+      return Promise.all(configs.map(maskConfig));
     }),
 
   update: protectedProcedure
