@@ -28,6 +28,11 @@ export const dashboardQueryKeys = {
   ai: {
     configs: () => ["dashboard", "ai", "configs"] as const,
   },
+  auth: {
+    session: () => ["dashboard", "auth", "session"] as const,
+    sessionSummary: () => ["dashboard", "auth", "session-summary"] as const,
+    sessions: () => ["dashboard", "auth", "sessions"] as const,
+  },
   subscription: {
     current: () => ["dashboard", "subscription", "current"] as const,
   },
