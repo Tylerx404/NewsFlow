@@ -183,7 +183,7 @@ const handleSignOut = async () => {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard/settings')">
-                <NuxtLink to="/dashboard/settings/ai">
+                <NuxtLink to="/dashboard/settings/personal">
                   <Settings />
                   <span>Settings</span>
                 </NuxtLink>
@@ -256,6 +256,14 @@ const handleSignOut = async () => {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton as-child>
+                <NuxtLink to="/dashboard/settings/personal">
+                  <UserCircle />
+                  <span>Personal</span>
+                </NuxtLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton as-child>
                 <NuxtLink to="/dashboard/settings/ai">
                   <Sparkles />
                   <span>AI Profiles</span>
@@ -267,14 +275,6 @@ const handleSignOut = async () => {
                 <NuxtLink to="/dashboard/settings/feeds">
                   <Rss />
                   <span>Feed Management</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child>
-                <NuxtLink to="/dashboard/settings/subscription">
-                  <UserCircle />
-                  <span>Subscription</span>
                 </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
