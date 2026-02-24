@@ -115,17 +115,6 @@ const currentSession = computed(() =>
   activeSessions.value.find((session) => session.token === currentSessionToken.value) ?? null
 );
 
-const profileCompletion = computed(() => {
-  const checks = [
-    Boolean(profileForm.name.trim()),
-    Boolean(sessionQuery.data.value?.user?.email),
-    Boolean(profileForm.image.trim()),
-  ];
-
-  const completed = checks.filter(Boolean).length;
-  return Math.round((completed / checks.length) * 100);
-});
-
 const avatarFallback = computed(() => {
   const trimmed = profileForm.name.trim();
   if (!trimmed) {
@@ -390,59 +379,6 @@ const formatSessionToken = (token: string) => {
 
 <template>
   <div class="mx-auto w-full max-w-6xl space-y-6">
-    <section class="rounded-lg border bg-card p-4 md:p-6">
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div class="flex items-center gap-4">
-          <Avatar class="size-16 border">
-            <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
-            <AvatarFallback class="text-base font-semibold">
-              {{ avatarFallback }}
-            </AvatarFallback>
-          </Avatar>
-
-          <div class="space-y-1">
-            <p class="text-xs uppercase tracking-wide text-muted-foreground">
-              Personal settings
-            </p>
-            <h1 class="text-xl font-semibold">
-              {{ sessionQuery.data.value?.user?.name || "Your account" }}
-            </h1>
-            <p class="text-sm text-muted-foreground">
-              {{ sessionQuery.data.value?.user?.email || "Loading account..." }}
-            </p>
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-              <Badge variant="outline">
-                Tier: {{ subscriptionQuery.data.value?.tier ?? "free" }}
-              </Badge>
-              <Badge variant="outline">
-                Status: {{ subscriptionQuery.data.value?.status ?? "active" }}
-              </Badge>
-              <Badge variant="outline">
-                Sessions: {{ activeSessions.length }}
-              </Badge>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid gap-2 rounded-md border bg-muted/30 p-3 text-sm sm:min-w-64">
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-muted-foreground">Profile completion</span>
-            <span class="font-medium">{{ profileCompletion }}%</span>
-          </div>
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-muted-foreground">Other devices</span>
-            <span class="font-medium">{{ otherSessionCount }}</span>
-          </div>
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-muted-foreground">Current session</span>
-            <span class="font-medium">
-              {{ currentSession ? "Active" : "Unavailable" }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <div class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
       <div class="space-y-6">
         <Card>
