@@ -464,8 +464,8 @@ const formatSessionToken = (token: string) => {
               }}
             </p>
 
-            <div v-else-if="sessionQuery.data.value?.user" class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
-              <div class="rounded-md border bg-muted/20 p-4">
+            <div v-else-if="sessionQuery.data.value?.user" class="grid gap-4 md:grid-cols-[240px_minmax(0,1fr)]">
+              <div class="rounded-lg border bg-muted/20 p-4">
                 <input
                   ref="avatarInputRef"
                   type="file"
@@ -474,36 +474,46 @@ const formatSessionToken = (token: string) => {
                   @change="handleAvatarUpload"
                 >
 
-                <button
-                  type="button"
-                  class="group mx-auto block rounded-full"
-                  @click="handleAvatarPick"
-                >
-                  <Avatar class="size-24 border">
-                    <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
-                    <AvatarFallback class="text-lg font-semibold">
-                      {{ avatarFallback }}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span class="mt-2 block text-xs text-muted-foreground group-hover:text-foreground">
-                    Click to change avatar
-                  </span>
-                </button>
+                <div class="flex flex-col items-center gap-4 text-center">
+                  <button
+                    type="button"
+                    class="group relative inline-flex size-28 items-center justify-center rounded-full border-2 border-dashed border-border/70 bg-background p-2 transition hover:border-primary/70"
+                    @click="handleAvatarPick"
+                  >
+                    <Avatar class="size-full border bg-card shadow-sm">
+                      <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
+                      <AvatarFallback class="text-lg font-semibold">
+                        {{ avatarFallback }}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span class="pointer-events-none absolute -bottom-1 rounded-full border bg-background px-2 py-0.5 text-[11px] font-medium text-muted-foreground transition group-hover:text-foreground">
+                      Change
+                    </span>
+                  </button>
 
-                <p class="mt-3 text-xs text-muted-foreground">
-                  PNG/JPG, max 2MB.
-                </p>
+                  <p class="text-sm font-medium">
+                    Upload profile photo
+                  </p>
 
-                <Button
-                  v-if="profileForm.image"
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  class="mt-3 w-full"
-                  @click="clearAvatar"
-                >
-                  Remove avatar
-                </Button>
+                  <div class="grid w-full gap-2">
+                    <Button type="button" variant="secondary" class="w-full" @click="handleAvatarPick">
+                      {{ profileForm.image ? "Replace photo" : "Choose photo" }}
+                    </Button>
+                    <Button
+                      v-if="profileForm.image"
+                      type="button"
+                      variant="ghost"
+                      class="w-full text-muted-foreground hover:text-foreground"
+                      @click="clearAvatar"
+                    >
+                      Remove current photo
+                    </Button>
+                  </div>
+
+                  <p v-if="avatarUploadError" class="w-full rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-left text-xs text-destructive">
+                    {{ avatarUploadError }}
+                  </p>
+                </div>
               </div>
 
               <div class="space-y-4">
@@ -522,9 +532,6 @@ const formatSessionToken = (token: string) => {
                   <Input id="profile-name" v-model="profileForm.name" />
                 </div>
 
-                <p v-if="avatarUploadError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-                  {{ avatarUploadError }}
-                </p>
                 <p v-if="profileError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
                   {{ profileError }}
                 </p>
