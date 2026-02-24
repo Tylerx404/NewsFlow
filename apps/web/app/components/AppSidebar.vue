@@ -8,7 +8,7 @@ import {
   Sparkles,
   UserCircle,
 } from "lucide-vue-next";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 import { Button } from "@/components/ui/button";
@@ -34,10 +34,23 @@ const queryClient = useQueryClient();
 
 const addFeedUrl = ref("");
 const addFeedError = ref("");
-const user = ref<{
-  name: string;
-  email: string;
-} | null>(null);
+
+const sessionQuery = useQuery({
+  queryKey: dashboardQueryKeys.auth.session(),
+  queryFn: async () => {
+    const { data } = await $authClient.getSession();
+    if (!data?.user) {
+      return null;
+    }
+
+    return {
+      name: data.user.name,
+      email: data.user.email,
+    };
+  },
+});
+
+const user = computed(() => sessionQuery.data.value ?? null);
 
 const sidebarFeedsQuery = useQuery(
   computed(() =>
@@ -113,16 +126,6 @@ const handleSignOut = async () => {
   await $authClient.signOut();
   await navigateTo("/login");
 };
-
-onMounted(async () => {
-  const { data } = await $authClient.getSession();
-  if (data?.user) {
-    user.value = {
-      name: data.user.name,
-      email: data.user.email,
-    };
-  }
-});
 </script>
 
 <template>
