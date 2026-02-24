@@ -18,7 +18,14 @@ export function getModel(config: AiConfig): LanguageModel {
   const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, config.baseUrl);
 
   switch (provider) {
-    case "openai":
+    case "openai": {
+      const openai = createOpenAI({
+        apiKey,
+        baseURL: resolvedBaseUrl,
+      });
+      return openai.chat(config.model);
+    }
+
     case "deepseek":
     case "groq": {
       const openai = createOpenAI({
