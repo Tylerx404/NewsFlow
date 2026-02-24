@@ -14,16 +14,6 @@ const activeSection = computed(
 
 <template>
   <div class="w-full space-y-6">
-    <div class="space-y-2">
-      <p class="text-sm font-medium text-muted-foreground">Settings</p>
-      <h1 class="text-2xl font-semibold tracking-tight">
-        {{ activeSection.label }}
-      </h1>
-      <p class="text-sm text-muted-foreground">
-        {{ activeSection.description }}
-      </p>
-    </div>
-
     <div class="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside class="lg:sticky lg:top-6 lg:self-start">
         <nav
