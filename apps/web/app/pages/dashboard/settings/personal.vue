@@ -2,9 +2,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref, watch } from "vue";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 
@@ -93,6 +100,31 @@ watch(
 const currentSessionToken = computed(
   () => sessionQuery.data.value?.session?.token ?? ""
 );
+
+const activeSessions = computed(() => sessionsQuery.data.value ?? []);
+
+const hasCurrentSessionInList = computed(() =>
+  activeSessions.value.some((session) => session.token === currentSessionToken.value)
+);
+
+const otherSessionCount = computed(() =>
+  Math.max(activeSessions.value.length - (hasCurrentSessionInList.value ? 1 : 0), 0)
+);
+
+const currentSession = computed(() =>
+  activeSessions.value.find((session) => session.token === currentSessionToken.value) ?? null
+);
+
+const profileCompletion = computed(() => {
+  const checks = [
+    Boolean(profileForm.name.trim()),
+    Boolean(sessionQuery.data.value?.user?.email),
+    Boolean(profileForm.image.trim()),
+  ];
+
+  const completed = checks.filter(Boolean).length;
+  return Math.round((completed / checks.length) * 100);
+});
 
 const avatarFallback = computed(() => {
   const trimmed = profileForm.name.trim();
@@ -354,279 +386,392 @@ const formatSessionToken = (token: string) => {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-3xl space-y-6">
-    <Card>
-      <CardHeader>
-        <CardTitle>Subscription</CardTitle>
-        <CardDescription>
-          Billing integration is not enabled yet. This section is read-only.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p v-if="subscriptionQuery.isLoading.value" class="text-sm text-muted-foreground">
-          Loading subscription...
-        </p>
-        <div v-else-if="subscriptionQuery.data.value" class="space-y-4">
-          <div class="flex flex-wrap items-center gap-3">
-            <Badge variant="outline">Tier: {{ subscriptionQuery.data.value.tier }}</Badge>
-            <Badge variant="outline">Status: {{ subscriptionQuery.data.value.status }}</Badge>
-          </div>
+  <div class="mx-auto w-full max-w-6xl space-y-6">
+    <section class="rounded-lg border bg-card p-4 md:p-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="flex items-center gap-4">
+          <Avatar class="size-16 border">
+            <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
+            <AvatarFallback class="text-base font-semibold">
+              {{ avatarFallback }}
+            </AvatarFallback>
+          </Avatar>
 
-          <div class="grid gap-3 md:grid-cols-2">
-            <div class="rounded-md border p-3">
-              <p class="text-xs text-muted-foreground">Expires at</p>
-              <p class="text-sm font-medium">
-                {{ formatDate(subscriptionQuery.data.value.expiresAt) }}
-              </p>
-            </div>
-            <div class="rounded-md border p-3">
-              <p class="text-xs text-muted-foreground">Updated at</p>
-              <p class="text-sm font-medium">
-                {{ formatDate(subscriptionQuery.data.value.updatedAt) }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-
-    <Card>
-      <CardHeader>
-        <CardTitle>Basic Profile</CardTitle>
-        <CardDescription>
-          Update your basic account information like name and avatar.
-        </CardDescription>
-      </CardHeader>
-      <CardContent class="space-y-4">
-        <p v-if="sessionQuery.isLoading.value" class="text-sm text-muted-foreground">
-          Loading profile...
-        </p>
-        <p v-else-if="sessionQuery.error.value" class="text-sm text-destructive">
-          {{
-            sessionQuery.error.value instanceof Error
-              ? sessionQuery.error.value.message
-              : "Unable to load profile."
-          }}
-        </p>
-        <div v-else-if="sessionQuery.data.value?.user" class="space-y-4">
-          <div class="flex flex-col items-center gap-3 rounded-md border p-4">
-            <input
-              ref="avatarInputRef"
-              type="file"
-              accept="image/*"
-              class="hidden"
-              @change="handleAvatarUpload"
-            >
-            <button
-              type="button"
-              class="group relative overflow-hidden rounded-full"
-              @click="handleAvatarPick"
-            >
-              <div class="flex size-20 items-center justify-center overflow-hidden rounded-full bg-muted text-lg font-semibold">
-                <img
-                  v-if="profileForm.image"
-                  :src="profileForm.image"
-                  alt="Avatar preview"
-                  class="size-full object-cover"
-                >
-                <span v-else>{{ avatarFallback }}</span>
-              </div>
-              <span class="absolute inset-0 flex items-center justify-center bg-black/45 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">
-                Change
-              </span>
-            </button>
-            <p class="text-xs text-muted-foreground">
-              Click the avatar to upload a new image (max 2MB).
+          <div class="space-y-1">
+            <p class="text-xs uppercase tracking-wide text-muted-foreground">
+              Personal settings
             </p>
-            <Button
-              v-if="profileForm.image"
-              type="button"
-              variant="outline"
-              size="sm"
-              @click="clearAvatar"
-            >
-              Remove avatar
-            </Button>
+            <h1 class="text-xl font-semibold">
+              {{ sessionQuery.data.value?.user?.name || "Your account" }}
+            </h1>
+            <p class="text-sm text-muted-foreground">
+              {{ sessionQuery.data.value?.user?.email || "Loading account..." }}
+            </p>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <Badge variant="outline">
+                Tier: {{ subscriptionQuery.data.value?.tier ?? "free" }}
+              </Badge>
+              <Badge variant="outline">
+                Status: {{ subscriptionQuery.data.value?.status ?? "active" }}
+              </Badge>
+              <Badge variant="outline">
+                Sessions: {{ activeSessions.length }}
+              </Badge>
+            </div>
           </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="profile-email">Email</label>
-            <Input
-              id="profile-email"
-              :model-value="sessionQuery.data.value.user.email"
-              readonly
-              disabled
-            />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="profile-name">Name</label>
-            <Input id="profile-name" v-model="profileForm.name" />
-          </div>
-
-          <p v-if="avatarUploadError" class="text-sm text-destructive">
-            {{ avatarUploadError }}
-          </p>
-          <p v-if="profileError" class="text-sm text-destructive">
-            {{ profileError }}
-          </p>
-          <p v-else-if="profileSuccess" class="text-sm text-emerald-600">
-            {{ profileSuccess }}
-          </p>
-
-          <Button
-            :disabled="profileMutation.isPending.value"
-            @click="handleSaveProfile"
-          >
-            {{ profileMutation.isPending.value ? "Saving..." : "Save profile" }}
-          </Button>
         </div>
-      </CardContent>
-    </Card>
 
-    <Card>
-      <CardHeader class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <CardTitle>Session Management</CardTitle>
-          <CardDescription>
-            Review active sessions and revoke any session you do not trust.
-          </CardDescription>
+        <div class="grid gap-2 rounded-md border bg-muted/30 p-3 text-sm sm:min-w-64">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Profile completion</span>
+            <span class="font-medium">{{ profileCompletion }}%</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Other devices</span>
+            <span class="font-medium">{{ otherSessionCount }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Current session</span>
+            <span class="font-medium">
+              {{ currentSession ? "Active" : "Unavailable" }}
+            </span>
+          </div>
         </div>
-        <Button
-          variant="outline"
-          :disabled="revokeOtherSessionsMutation.isPending.value"
-          @click="handleRevokeOtherSessions"
-        >
-          {{
-            revokeOtherSessionsMutation.isPending.value
-              ? "Revoking..."
-              : "Revoke other sessions"
-          }}
-        </Button>
-      </CardHeader>
-      <CardContent class="space-y-4">
-        <p v-if="sessionsQuery.isLoading.value" class="text-sm text-muted-foreground">
-          Loading sessions...
-        </p>
-        <p v-else-if="sessionsQuery.error.value" class="text-sm text-destructive">
-          {{
-            sessionsQuery.error.value instanceof Error
-              ? sessionsQuery.error.value.message
-              : "Unable to load sessions."
-          }}
-        </p>
-        <div v-else-if="(sessionsQuery.data.value?.length ?? 0) > 0" class="space-y-3">
-          <div
-            v-for="session in sessionsQuery.data.value"
-            :key="session.token"
-            class="space-y-3 rounded-md border p-3"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p class="text-sm font-medium">
-                  {{ formatSessionToken(session.token) }}
+      </div>
+    </section>
+
+    <div class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div class="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Profile</CardTitle>
+            <CardDescription>
+              Keep your public identity up to date. Name and avatar are used across the dashboard.
+            </CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <p v-if="sessionQuery.isLoading.value" class="text-sm text-muted-foreground">
+              Loading profile...
+            </p>
+            <p v-else-if="sessionQuery.error.value" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {{
+                sessionQuery.error.value instanceof Error
+                  ? sessionQuery.error.value.message
+                  : "Unable to load profile."
+              }}
+            </p>
+
+            <div v-else-if="sessionQuery.data.value?.user" class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div class="rounded-md border bg-muted/20 p-4">
+                <input
+                  ref="avatarInputRef"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  @change="handleAvatarUpload"
+                >
+
+                <button
+                  type="button"
+                  class="group mx-auto block rounded-full"
+                  @click="handleAvatarPick"
+                >
+                  <Avatar class="size-24 border">
+                    <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
+                    <AvatarFallback class="text-lg font-semibold">
+                      {{ avatarFallback }}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span class="mt-2 block text-xs text-muted-foreground group-hover:text-foreground">
+                    Click to change avatar
+                  </span>
+                </button>
+
+                <p class="mt-3 text-xs text-muted-foreground">
+                  PNG/JPG, max 2MB.
                 </p>
-                <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <Badge
-                    v-if="session.token === currentSessionToken"
-                    variant="outline"
+
+                <Button
+                  v-if="profileForm.image"
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  class="mt-3 w-full"
+                  @click="clearAvatar"
+                >
+                  Remove avatar
+                </Button>
+              </div>
+
+              <div class="space-y-4">
+                <div class="space-y-2">
+                  <label class="text-sm font-medium" for="profile-email">Email</label>
+                  <Input
+                    id="profile-email"
+                    :model-value="sessionQuery.data.value.user.email"
+                    readonly
+                    disabled
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-sm font-medium" for="profile-name">Name</label>
+                  <Input id="profile-name" v-model="profileForm.name" />
+                </div>
+
+                <p v-if="avatarUploadError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                  {{ avatarUploadError }}
+                </p>
+                <p v-if="profileError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                  {{ profileError }}
+                </p>
+                <p v-else-if="profileSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+                  {{ profileSuccess }}
+                </p>
+
+                <div class="flex justify-end">
+                  <Button
+                    :disabled="profileMutation.isPending.value"
+                    @click="handleSaveProfile"
                   >
-                    Current
-                  </Badge>
-                  <span>Created: {{ formatDate(session.createdAt) }}</span>
-                  <span>Expires: {{ formatDate(session.expiresAt) }}</span>
+                    {{ profileMutation.isPending.value ? "Saving..." : "Save profile" }}
+                  </Button>
                 </div>
               </div>
-              <Button
-                size="sm"
-                variant="outline"
-                :disabled="session.token === currentSessionToken || revokeSessionMutation.isPending.value"
-                @click="handleRevokeSession(session.token)"
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Password & Access</CardTitle>
+            <CardDescription>
+              Update your password regularly to keep your account secure.
+            </CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-sm font-medium" for="current-password">Current password</label>
+              <Input
+                id="current-password"
+                v-model="passwordForm.currentPassword"
+                type="password"
+                autocomplete="current-password"
+              />
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-medium" for="new-password">New password</label>
+                <Input
+                  id="new-password"
+                  v-model="passwordForm.newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-medium" for="confirm-password">Confirm new password</label>
+                <Input
+                  id="confirm-password"
+                  v-model="passwordForm.confirmPassword"
+                  type="password"
+                  autocomplete="new-password"
+                />
+              </div>
+            </div>
+
+            <label class="flex items-center gap-2 text-sm">
+              <input
+                v-model="passwordForm.revokeOtherSessions"
+                type="checkbox"
+                class="size-4 rounded border-input"
               >
-                Revoke
+              Revoke other active sessions after password change
+            </label>
+
+            <p v-if="passwordError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {{ passwordError }}
+            </p>
+            <p v-else-if="passwordSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+              {{ passwordSuccess }}
+            </p>
+
+            <div class="flex justify-end">
+              <Button
+                :disabled="passwordMutation.isPending.value"
+                @click="handleChangePassword"
+              >
+                {{
+                  passwordMutation.isPending.value
+                    ? "Updating..."
+                    : "Update password"
+                }}
               </Button>
             </div>
+          </CardContent>
+        </Card>
 
-            <div class="grid gap-2 text-xs text-muted-foreground md:grid-cols-2">
-              <p>User agent: {{ session.userAgent || "Unknown" }}</p>
-              <p>IP address: {{ session.ipAddress || "Unknown" }}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Active Sessions</CardTitle>
+            <CardDescription>
+              Review devices signed in to your account and revoke any session you do not trust.
+            </CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <p v-if="sessionsQuery.isLoading.value" class="text-sm text-muted-foreground">
+              Loading sessions...
+            </p>
+            <p v-else-if="sessionsQuery.error.value" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {{
+                sessionsQuery.error.value instanceof Error
+                  ? sessionsQuery.error.value.message
+                  : "Unable to load sessions."
+              }}
+            </p>
+
+            <div v-else-if="activeSessions.length > 0" class="space-y-3">
+              <div
+                v-for="session in activeSessions"
+                :key="session.token"
+                class="space-y-3 rounded-md border p-3"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium">
+                      {{ formatSessionToken(session.token) }}
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      <Badge
+                        v-if="session.token === currentSessionToken"
+                        variant="outline"
+                      >
+                        Current device
+                      </Badge>
+                      <span>Created: {{ formatDate(session.createdAt) }}</span>
+                      <span>Expires: {{ formatDate(session.expiresAt) }}</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    :disabled="session.token === currentSessionToken || revokeSessionMutation.isPending.value"
+                    @click="handleRevokeSession(session.token)"
+                  >
+                    Revoke
+                  </Button>
+                </div>
+
+                <div class="grid gap-2 text-xs text-muted-foreground md:grid-cols-2">
+                  <p>User agent: {{ session.userAgent || "Unknown" }}</p>
+                  <p>IP address: {{ session.ipAddress || "Unknown" }}</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <p v-else class="text-sm text-muted-foreground">
-          No active sessions found.
-        </p>
+            <p v-else class="text-sm text-muted-foreground">
+              No active sessions found.
+            </p>
 
-        <p v-if="sessionActionError" class="text-sm text-destructive">
-          {{ sessionActionError }}
-        </p>
-        <p v-else-if="sessionActionSuccess" class="text-sm text-emerald-600">
-          {{ sessionActionSuccess }}
-        </p>
-      </CardContent>
-    </Card>
+            <p v-if="sessionActionError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {{ sessionActionError }}
+            </p>
+            <p v-else-if="sessionActionSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+              {{ sessionActionSuccess }}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-    <Card>
-      <CardHeader>
-        <CardTitle>Password</CardTitle>
-        <CardDescription>
-          Change your account password securely.
-        </CardDescription>
-      </CardHeader>
-      <CardContent class="space-y-4">
-        <div class="space-y-2">
-          <label class="text-sm font-medium" for="current-password">Current password</label>
-          <Input
-            id="current-password"
-            v-model="passwordForm.currentPassword"
-            type="password"
-          />
-        </div>
+      <div class="space-y-6 xl:sticky xl:top-6 xl:self-start">
+        <Card>
+          <CardHeader>
+            <CardTitle>Subscription</CardTitle>
+            <CardDescription>
+              Billing integration is not enabled yet. This section is read-only.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p v-if="subscriptionQuery.isLoading.value" class="text-sm text-muted-foreground">
+              Loading subscription...
+            </p>
 
-        <div class="space-y-2">
-          <label class="text-sm font-medium" for="new-password">New password</label>
-          <Input
-            id="new-password"
-            v-model="passwordForm.newPassword"
-            type="password"
-          />
-        </div>
+            <div v-else-if="subscriptionQuery.data.value" class="space-y-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <Badge variant="outline">
+                  Tier: {{ subscriptionQuery.data.value.tier }}
+                </Badge>
+                <Badge variant="outline">
+                  Status: {{ subscriptionQuery.data.value.status }}
+                </Badge>
+              </div>
 
-        <div class="space-y-2">
-          <label class="text-sm font-medium" for="confirm-password">Confirm new password</label>
-          <Input
-            id="confirm-password"
-            v-model="passwordForm.confirmPassword"
-            type="password"
-          />
-        </div>
+              <div class="space-y-3 rounded-md border p-3">
+                <div>
+                  <p class="text-xs text-muted-foreground">Expires at</p>
+                  <p class="text-sm font-medium">
+                    {{ formatDate(subscriptionQuery.data.value.expiresAt) }}
+                  </p>
+                </div>
 
-        <label class="flex items-center gap-2 text-sm">
-          <input
-            v-model="passwordForm.revokeOtherSessions"
-            type="checkbox"
-          />
-          Revoke other active sessions
-        </label>
+                <div>
+                  <p class="text-xs text-muted-foreground">Updated at</p>
+                  <p class="text-sm font-medium">
+                    {{ formatDate(subscriptionQuery.data.value.updatedAt) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <p v-if="passwordError" class="text-sm text-destructive">
-          {{ passwordError }}
-        </p>
-        <p v-else-if="passwordSuccess" class="text-sm text-emerald-600">
-          {{ passwordSuccess }}
-        </p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Security Summary</CardTitle>
+            <CardDescription>
+              Quick checks and actions for account safety.
+            </CardDescription>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <div class="space-y-2 rounded-md border p-3 text-sm">
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-muted-foreground">Active sessions</span>
+                <span class="font-medium">{{ activeSessions.length }}</span>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-muted-foreground">Other sessions</span>
+                <span class="font-medium">{{ otherSessionCount }}</span>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-muted-foreground">Current expires</span>
+                <span class="font-medium">
+                  {{ formatDate(currentSession?.expiresAt) }}
+                </span>
+              </div>
+            </div>
 
-        <Button
-          :disabled="passwordMutation.isPending.value"
-          @click="handleChangePassword"
-        >
-          {{
-            passwordMutation.isPending.value
-              ? "Updating..."
-              : "Update password"
-          }}
-        </Button>
-      </CardContent>
-    </Card>
+            <Button
+              variant="outline"
+              class="w-full"
+              :disabled="otherSessionCount === 0 || revokeOtherSessionsMutation.isPending.value"
+              @click="handleRevokeOtherSessions"
+            >
+              {{
+                revokeOtherSessionsMutation.isPending.value
+                  ? "Revoking..."
+                  : "Revoke other sessions"
+              }}
+            </Button>
+
+            <p class="text-xs text-muted-foreground">
+              Revoke all sessions except the one currently in use.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   </div>
 </template>
