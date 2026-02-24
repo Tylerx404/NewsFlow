@@ -31,6 +31,10 @@ const profileForm = reactive({
 });
 const profileError = ref("");
 const profileSuccess = ref("");
+const avatarUploadError = ref("");
+const avatarInputRef = ref<HTMLInputElement | null>(null);
+
+const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
 const passwordForm = reactive({
   currentPassword: "",
@@ -137,6 +141,7 @@ const profileMutation = useMutation({
   onSuccess: async () => {
     profileError.value = "";
     profileSuccess.value = "Profile updated successfully.";
+    avatarUploadError.value = "";
     await invalidateAuthQueries();
   },
   onError: (error) => {
@@ -145,6 +150,61 @@ const profileMutation = useMutation({
       error instanceof Error ? error.message : "Unable to update profile.";
   },
 });
+
+const handleAvatarPick = () => {
+  avatarInputRef.value?.click();
+};
+
+const handleAvatarUpload = async (event: Event) => {
+  avatarUploadError.value = "";
+
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    avatarUploadError.value = "Please choose an image file.";
+    input.value = "";
+    return;
+  }
+
+  if (file.size > MAX_AVATAR_BYTES) {
+    avatarUploadError.value = "Image size must be 2MB or smaller.";
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+        return;
+      }
+      reject(new Error("Unable to read image."));
+    };
+    reader.onerror = () => reject(new Error("Unable to read image."));
+    reader.readAsDataURL(file);
+  }).catch((error) => {
+    avatarUploadError.value =
+      error instanceof Error ? error.message : "Unable to read image.";
+    return "";
+  });
+
+  if (dataUrl) {
+    profileForm.image = dataUrl;
+  }
+
+  input.value = "";
+};
+
+const clearAvatar = () => {
+  avatarUploadError.value = "";
+  profileForm.image = "";
+};
 
 const passwordMutation = useMutation({
   mutationFn: async () => {
@@ -362,7 +422,7 @@ const formatSessionToken = (token: string) => {
             <div>
               <p class="text-sm font-medium">Avatar preview</p>
               <p class="text-xs text-muted-foreground">
-                Update the URL below to change your avatar.
+                Upload an image from your device, then save profile to apply.
               </p>
             </div>
           </div>
@@ -383,14 +443,39 @@ const formatSessionToken = (token: string) => {
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-medium" for="profile-image">Avatar URL</label>
-            <Input
-              id="profile-image"
-              v-model="profileForm.image"
-              placeholder="https://example.com/avatar.png"
-            />
+            <label class="text-sm font-medium">Avatar image</label>
+            <input
+              ref="avatarInputRef"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleAvatarUpload"
+            >
+            <div class="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                @click="handleAvatarPick"
+              >
+                Upload image
+              </Button>
+              <Button
+                v-if="profileForm.image"
+                type="button"
+                variant="outline"
+                @click="clearAvatar"
+              >
+                Remove avatar
+              </Button>
+            </div>
+            <p class="text-xs text-muted-foreground">
+              PNG, JPG, GIF, WEBP up to 2MB.
+            </p>
           </div>
 
+          <p v-if="avatarUploadError" class="text-sm text-destructive">
+            {{ avatarUploadError }}
+          </p>
           <p v-if="profileError" class="text-sm text-destructive">
             {{ profileError }}
           </p>
