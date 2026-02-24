@@ -8,7 +8,7 @@ import {
   Sparkles,
   UserCircle,
 } from "lucide-vue-next";
-import { computed, ref } from "vue";
+import { type Component, computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import {
+  settingsSections,
+  type SettingsSectionId,
+} from "@/lib/settings-sections";
 
 const { $authClient, $orpc } = useNuxtApp();
 const route = useRoute();
@@ -84,6 +88,14 @@ const discoverFeeds = computed(() => {
     .filter((item) => !existingFeedUrls.has(normalizeFeedUrl(item.url)))
     .slice(0, 6);
 });
+
+const defaultSettingsHref = settingsSections[0]?.href ?? "/dashboard/settings/personal";
+
+const settingsSectionIcons: Record<SettingsSectionId, Component> = {
+  personal: UserCircle,
+  ai: Sparkles,
+  feeds: Rss,
+};
 
 const addFeedMutation = useMutation(
   $orpc.feed.create.mutationOptions({
@@ -183,7 +195,7 @@ const handleSignOut = async () => {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard/settings')">
-                <NuxtLink to="/dashboard/settings/personal">
+                <NuxtLink :to="defaultSettingsHref">
                   <Settings />
                   <span>Settings</span>
                 </NuxtLink>
@@ -254,27 +266,14 @@ const handleSignOut = async () => {
         <SidebarGroupLabel>Settings</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child>
-                <NuxtLink to="/dashboard/settings/personal">
-                  <UserCircle />
-                  <span>Personal</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child>
-                <NuxtLink to="/dashboard/settings/ai">
-                  <Sparkles />
-                  <span>AI Profiles</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child>
-                <NuxtLink to="/dashboard/settings/feeds">
-                  <Rss />
-                  <span>Feed Management</span>
+            <SidebarMenuItem
+              v-for="section in settingsSections"
+              :key="section.id"
+            >
+              <SidebarMenuButton as-child :data-active="isRouteActive(section.href)">
+                <NuxtLink :to="section.href">
+                  <component :is="settingsSectionIcons[section.id]" />
+                  <span>{{ section.label }}</span>
                 </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -5,6 +5,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import SettingsShell from "@/components/settings/SettingsShell.vue";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 
 definePageMeta({
@@ -321,8 +322,9 @@ watch(
 </script>
 
 <template>
-  <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-    <Card>
+  <SettingsShell section="ai">
+    <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
+      <Card>
       <CardHeader>
         <CardTitle>Create profile</CardTitle>
         <CardDescription>
@@ -501,6 +503,7 @@ watch(
           </div>
         </div>
       </CardContent>
-    </Card>
-  </div>
+      </Card>
+    </div>
+  </SettingsShell>
 </template>
