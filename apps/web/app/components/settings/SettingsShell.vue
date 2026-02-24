@@ -13,7 +13,7 @@ const activeSection = computed(
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-6xl space-y-6">
+  <div class="w-full space-y-6">
     <div class="space-y-2">
       <p class="text-sm font-medium text-muted-foreground">Settings</p>
       <h1 class="text-2xl font-semibold tracking-tight">
