@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,14 +16,64 @@ definePageMeta({
 const { $orpc } = useNuxtApp();
 const queryClient = useQueryClient();
 
-const providers = ["openai", "anthropic", "google", "deepseek", "groq", "ollama"] as const;
+type Provider = "openai" | "anthropic" | "google" | "deepseek" | "groq" | "ollama";
+
+const providerConfigs: Record<
+  Provider,
+  {
+    label: string;
+    defaultBaseUrl: string;
+    supportsByokBaseUrl: boolean;
+    apiKeyRequired: boolean;
+  }
+> = {
+  openai: {
+    label: "OpenAI",
+    defaultBaseUrl: "https://api.openai.com/v1",
+    supportsByokBaseUrl: true,
+    apiKeyRequired: true,
+  },
+  anthropic: {
+    label: "Anthropic",
+    defaultBaseUrl: "https://api.anthropic.com/v1",
+    supportsByokBaseUrl: true,
+    apiKeyRequired: true,
+  },
+  google: {
+    label: "Google Gemini",
+    defaultBaseUrl: "https://generativelanguage.googleapis.com/v1beta",
+    supportsByokBaseUrl: true,
+    apiKeyRequired: true,
+  },
+  deepseek: {
+    label: "DeepSeek",
+    defaultBaseUrl: "https://api.deepseek.com/v1",
+    supportsByokBaseUrl: false,
+    apiKeyRequired: true,
+  },
+  groq: {
+    label: "Groq",
+    defaultBaseUrl: "https://api.groq.com/openai/v1",
+    supportsByokBaseUrl: false,
+    apiKeyRequired: true,
+  },
+  ollama: {
+    label: "Ollama",
+    defaultBaseUrl: "http://localhost:11434/api",
+    supportsByokBaseUrl: false,
+    apiKeyRequired: false,
+  },
+};
+
+const providers = Object.keys(providerConfigs) as Provider[];
+const getProviderConfig = (provider: Provider) => providerConfigs[provider];
 
 const createForm = reactive({
   name: "",
-  provider: "openai",
+  provider: "openai" as Provider,
   model: "",
   apiKey: "",
-  baseUrl: "",
+  baseUrl: getProviderConfig("openai").defaultBaseUrl,
 });
 const createError = ref("");
 const fetchCreateModelsError = ref("");
@@ -33,6 +83,13 @@ const actionError = ref("");
 const modelDraftByConfigId = reactive<Record<string, string>>({});
 const modelOptionsByConfigId = reactive<Record<string, string[]>>({});
 const rowErrorByConfigId = reactive<Record<string, string>>({});
+const currentProviderConfig = computed(() => getProviderConfig(createForm.provider));
+const canCustomizeBaseUrl = computed(
+  () => currentProviderConfig.value.supportsByokBaseUrl
+);
+const isApiKeyRequired = computed(
+  () => currentProviderConfig.value.apiKeyRequired
+);
 
 const aiConfigsQuery = useQuery(
   $orpc.aiConfig.list.queryOptions({
@@ -46,7 +103,7 @@ const createMutation = useMutation(
       createForm.name = "";
       createForm.model = "";
       createForm.apiKey = "";
-      createForm.baseUrl = "";
+      createForm.baseUrl = getProviderConfig(createForm.provider).defaultBaseUrl;
       createError.value = "";
       fetchCreateModelsError.value = "";
       modelOptionsForCreate.value = [];
@@ -174,9 +231,10 @@ const getModelOptionsForConfig = (id: string): string[] => {
 const loadCreateModels = async () => {
   fetchCreateModelsError.value = "";
   const apiKey = createForm.apiKey.trim();
-  const baseUrl = createForm.baseUrl.trim();
+  const baseUrl =
+    createForm.baseUrl.trim() || getProviderConfig(createForm.provider).defaultBaseUrl;
 
-  if (createForm.provider !== "ollama" && !apiKey) {
+  if (isApiKeyRequired.value && !apiKey) {
     modelOptionsForCreate.value = [];
     createForm.model = "";
     return;
@@ -205,6 +263,14 @@ const loadCreateModels = async () => {
 };
 
 let createModelFetchTimer: ReturnType<typeof setTimeout> | undefined;
+watch(
+  () => createForm.provider,
+  (provider) => {
+    createForm.baseUrl = getProviderConfig(provider).defaultBaseUrl;
+  },
+  { immediate: true }
+);
+
 watch(
   () => [createForm.provider, createForm.apiKey, createForm.baseUrl],
   () => {
@@ -239,7 +305,7 @@ watch(
             class="w-full rounded-md border bg-background px-3 py-2 text-sm"
           >
             <option v-for="provider in providers" :key="provider" :value="provider">
-              {{ provider }}
+              {{ getProviderConfig(provider).label }}
             </option>
           </select>
         </div>
@@ -268,12 +334,29 @@ watch(
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-sm font-medium" for="api-key">API key</label>
+          <label class="text-sm font-medium" for="api-key">
+            API key
+            <span v-if="!isApiKeyRequired" class="text-muted-foreground">(optional)</span>
+          </label>
           <Input id="api-key" v-model="createForm.apiKey" type="password" placeholder="sk-..." />
         </div>
         <div class="space-y-1">
-          <label class="text-sm font-medium" for="base-url">Base URL (optional)</label>
-          <Input id="base-url" v-model="createForm.baseUrl" placeholder="https://api.openai.com/v1" />
+          <label class="text-sm font-medium" for="base-url">Base URL</label>
+          <Input
+            id="base-url"
+            v-model="createForm.baseUrl"
+            :disabled="!canCustomizeBaseUrl"
+            :placeholder="currentProviderConfig.defaultBaseUrl"
+          />
+          <p class="text-xs text-muted-foreground">
+            Default: {{ currentProviderConfig.defaultBaseUrl }}
+            <span v-if="canCustomizeBaseUrl">
+              (can customize for BYOK)
+            </span>
+            <span v-else>
+              (managed automatically)
+            </span>
+          </p>
         </div>
         <p v-if="fetchCreateModelsError" class="text-xs text-destructive">
           {{ fetchCreateModelsError }}
@@ -323,6 +406,9 @@ watch(
               </p>
               <p class="text-xs text-muted-foreground">
                 Key: {{ config.apiKey }}
+              </p>
+              <p class="text-xs text-muted-foreground">
+                Base URL: {{ config.baseUrl || "Default provider URL" }}
               </p>
             </div>
             <div class="flex gap-2">

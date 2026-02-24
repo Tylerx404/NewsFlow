@@ -3,35 +3,51 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText, type LanguageModel } from "ai";
 import type { AiConfig } from "@NewsFlow/db";
+import { ProviderEnum } from "../ai-config/ai-config.schema";
+import { resolveProviderBaseUrl } from "../ai-config/provider-base-url";
 
 export function getModel(config: AiConfig): LanguageModel {
   const apiKey = config.apiKey; // Already decrypted before calling
+  const parsedProvider = ProviderEnum.safeParse(config.provider);
 
-  switch (config.provider) {
+  if (!parsedProvider.success) {
+    throw new Error(`Unsupported provider: ${config.provider}`);
+  }
+
+  const provider = parsedProvider.data;
+  const resolvedBaseUrl = resolveProviderBaseUrl(provider, config.baseUrl);
+
+  switch (provider) {
     case "openai":
     case "deepseek":
     case "groq": {
       const openai = createOpenAI({
         apiKey,
-        baseURL: config.baseUrl || undefined,
+        baseURL: resolvedBaseUrl,
       });
       return openai(config.model);
     }
 
     case "anthropic": {
-      const anthropic = createAnthropic({ apiKey });
+      const anthropic = createAnthropic({
+        apiKey,
+        baseURL: resolvedBaseUrl,
+      });
       return anthropic(config.model);
     }
 
     case "google": {
-      const google = createGoogleGenerativeAI({ apiKey });
+      const google = createGoogleGenerativeAI({
+        apiKey,
+        baseURL: resolvedBaseUrl,
+      });
       return google(config.model);
     }
 
     case "ollama": {
       const ollama = createOpenAI({
         apiKey: "ollama",
-        baseURL: config.baseUrl || "http://localhost:11434/api",
+        baseURL: resolvedBaseUrl,
       });
       return ollama(config.model);
     }
