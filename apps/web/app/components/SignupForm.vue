@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { reactive, ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -19,6 +19,9 @@ const props = defineProps<{
 }>()
 
 const { $authClient } = useNuxtApp()
+const route = useRoute()
+
+const DEFAULT_REDIRECT_PATH = "/dashboard"
 
 const form = reactive({
   name: "",
@@ -36,6 +39,30 @@ const getErrorMessage = (error: unknown) => {
 
   return "Unable to create account right now. Please try again."
 }
+
+const getSafeRedirectPath = () => {
+  const rawRedirect = route.query.redirect
+  const redirect = Array.isArray(rawRedirect) ? rawRedirect[0] : rawRedirect
+
+  if (typeof redirect !== "string" || redirect.length === 0) {
+    return ""
+  }
+
+  if (!redirect.startsWith("/") || redirect.startsWith("//")) {
+    return ""
+  }
+
+  return redirect
+}
+
+const postAuthRedirectPath = computed(
+  () => getSafeRedirectPath() || DEFAULT_REDIRECT_PATH
+)
+
+const authSwitchQuery = computed(() => {
+  const redirect = getSafeRedirectPath()
+  return redirect ? { redirect } : {}
+})
 
 const handleSubmit = async () => {
   submitError.value = ""
@@ -60,7 +87,12 @@ const handleSubmit = async () => {
     }
 
     const { data: session } = await $authClient.getSession()
-    await navigateTo(session ? "/dashboard" : "/login")
+    if (session) {
+      await navigateTo(postAuthRedirectPath.value)
+      return
+    }
+
+    await navigateTo({ path: "/login", query: authSwitchQuery.value })
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {
@@ -185,7 +217,8 @@ const handleSubmit = async () => {
               </Button>
             </Field>
             <FieldDescription class="text-center">
-              Already have an account? <NuxtLink to="/login">Sign in</NuxtLink>
+              Already have an account?
+              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">Sign in</NuxtLink>
             </FieldDescription>
           </FieldGroup>
         </form>
