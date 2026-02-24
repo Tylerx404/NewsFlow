@@ -147,6 +147,9 @@ const invalidateAuthQueries = async () => {
       queryKey: dashboardQueryKeys.auth.session(),
     }),
     queryClient.invalidateQueries({
+      queryKey: dashboardQueryKeys.auth.sessionSummary(),
+    }),
+    queryClient.invalidateQueries({
       queryKey: dashboardQueryKeys.auth.sessions(),
     }),
   ]);

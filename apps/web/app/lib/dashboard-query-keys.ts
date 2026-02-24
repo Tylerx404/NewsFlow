@@ -30,6 +30,7 @@ export const dashboardQueryKeys = {
   },
   auth: {
     session: () => ["dashboard", "auth", "session"] as const,
+    sessionSummary: () => ["dashboard", "auth", "session-summary"] as const,
     sessions: () => ["dashboard", "auth", "sessions"] as const,
   },
   subscription: {

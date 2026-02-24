@@ -36,7 +36,7 @@ const addFeedUrl = ref("");
 const addFeedError = ref("");
 
 const sessionQuery = useQuery({
-  queryKey: dashboardQueryKeys.auth.session(),
+  queryKey: dashboardQueryKeys.auth.sessionSummary(),
   queryFn: async () => {
     const { data } = await $authClient.getSession();
     if (!data?.user) {
