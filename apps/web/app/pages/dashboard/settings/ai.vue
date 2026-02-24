@@ -352,7 +352,6 @@ watch(
             id="model"
             v-model="createForm.model"
             class="w-full rounded-md border bg-background px-3 py-2 text-sm"
-            :disabled="isLoadingCreateModels"
             @focus="handleCreateModelSelectFocus"
           >
             <option value="">
@@ -477,7 +476,6 @@ watch(
                 :id="`model-select-${config.id}`"
                 v-model="modelDraftByConfigId[config.id]"
                 class="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
-                :disabled="isLoadingModelOptionsByConfigId[config.id]"
                 @focus="handleConfigModelSelectFocus(config.id)"
               >
                 <option
