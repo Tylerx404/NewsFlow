@@ -409,22 +409,44 @@ const formatSessionToken = (token: string) => {
           }}
         </p>
         <div v-else-if="sessionQuery.data.value?.user" class="space-y-4">
-          <div class="flex items-center gap-3 rounded-md border p-3">
-            <div class="flex size-12 items-center justify-center overflow-hidden rounded-full bg-muted text-sm font-semibold">
-              <img
-                v-if="profileForm.image"
-                :src="profileForm.image"
-                alt="Avatar preview"
-                class="size-full object-cover"
-              />
-              <span v-else>{{ avatarFallback }}</span>
-            </div>
-            <div>
-              <p class="text-sm font-medium">Avatar preview</p>
-              <p class="text-xs text-muted-foreground">
-                Upload an image from your device, then save profile to apply.
-              </p>
-            </div>
+          <div class="flex flex-col items-center gap-3 rounded-md border p-4">
+            <input
+              ref="avatarInputRef"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleAvatarUpload"
+            >
+            <button
+              type="button"
+              class="group relative overflow-hidden rounded-full"
+              @click="handleAvatarPick"
+            >
+              <div class="flex size-20 items-center justify-center overflow-hidden rounded-full bg-muted text-lg font-semibold">
+                <img
+                  v-if="profileForm.image"
+                  :src="profileForm.image"
+                  alt="Avatar preview"
+                  class="size-full object-cover"
+                >
+                <span v-else>{{ avatarFallback }}</span>
+              </div>
+              <span class="absolute inset-0 flex items-center justify-center bg-black/45 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">
+                Change
+              </span>
+            </button>
+            <p class="text-xs text-muted-foreground">
+              Click the avatar to upload a new image (max 2MB).
+            </p>
+            <Button
+              v-if="profileForm.image"
+              type="button"
+              variant="outline"
+              size="sm"
+              @click="clearAvatar"
+            >
+              Remove avatar
+            </Button>
           </div>
 
           <div class="space-y-2">
@@ -440,37 +462,6 @@ const formatSessionToken = (token: string) => {
           <div class="space-y-2">
             <label class="text-sm font-medium" for="profile-name">Name</label>
             <Input id="profile-name" v-model="profileForm.name" />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium">Avatar image</label>
-            <input
-              ref="avatarInputRef"
-              type="file"
-              accept="image/*"
-              class="hidden"
-              @change="handleAvatarUpload"
-            >
-            <div class="flex flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                @click="handleAvatarPick"
-              >
-                Upload image
-              </Button>
-              <Button
-                v-if="profileForm.image"
-                type="button"
-                variant="outline"
-                @click="clearAvatar"
-              >
-                Remove avatar
-              </Button>
-            </div>
-            <p class="text-xs text-muted-foreground">
-              PNG, JPG, GIF, WEBP up to 2MB.
-            </p>
           </div>
 
           <p v-if="avatarUploadError" class="text-sm text-destructive">
