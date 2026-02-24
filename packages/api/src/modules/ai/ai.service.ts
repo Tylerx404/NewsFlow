@@ -4,7 +4,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText, type LanguageModel } from "ai";
 import type { AiConfig } from "@NewsFlow/db";
 import { ProviderEnum } from "../ai-config/ai-config.schema";
-import { resolveProviderBaseUrl } from "../ai-config/provider-base-url";
+import { resolveProviderApiBaseUrl } from "../ai-config/provider-base-url";
 
 export function getModel(config: AiConfig): LanguageModel {
   const apiKey = config.apiKey; // Already decrypted before calling
@@ -15,7 +15,7 @@ export function getModel(config: AiConfig): LanguageModel {
   }
 
   const provider = parsedProvider.data;
-  const resolvedBaseUrl = resolveProviderBaseUrl(provider, config.baseUrl);
+  const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, config.baseUrl);
 
   switch (provider) {
     case "openai":

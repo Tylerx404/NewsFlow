@@ -2,7 +2,7 @@ import { env } from "@NewsFlow/env/server";
 import { ORPCError } from "@orpc/server";
 
 import type { Provider } from "./ai-config.schema";
-import { resolveProviderBaseUrl } from "./provider-base-url";
+import { resolveProviderApiBaseUrl } from "./provider-base-url";
 
 const ALGORITHM = "AES-GCM";
 const IV_LENGTH = 16;
@@ -196,7 +196,7 @@ export async function fetchProviderModels(
     let models: string[] = [];
 
     if (provider === "openai" || provider === "deepseek" || provider === "groq") {
-      const resolvedBaseUrl = resolveProviderBaseUrl(provider, baseUrl);
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
       const payload = await requestModels(`${resolvedBaseUrl}/models`, {
         headers: {
           Authorization: `Bearer ${apiKey ?? ""}`,
@@ -204,7 +204,7 @@ export async function fetchProviderModels(
       });
       models = parseOpenAICompatibleModels(payload);
     } else if (provider === "anthropic") {
-      const resolvedBaseUrl = resolveProviderBaseUrl(provider, baseUrl);
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
       const payload = await requestModels(`${resolvedBaseUrl}/models`, {
         headers: {
           "x-api-key": apiKey ?? "",
@@ -213,7 +213,7 @@ export async function fetchProviderModels(
       });
       models = parseAnthropicModels(payload);
     } else if (provider === "google") {
-      const resolvedBaseUrl = resolveProviderBaseUrl(provider, baseUrl);
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
       const payload = await requestModels(`${resolvedBaseUrl}/models`, {
         headers: {
           "x-goog-api-key": apiKey ?? "",
@@ -221,7 +221,7 @@ export async function fetchProviderModels(
       });
       models = parseGoogleModels(payload);
     } else if (provider === "ollama") {
-      const resolvedBaseUrl = resolveProviderBaseUrl(provider, baseUrl);
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
       const payload = await requestModels(`${resolvedBaseUrl}/tags`);
       models = parseOllamaModels(payload);
     }

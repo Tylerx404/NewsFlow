@@ -29,37 +29,37 @@ const providerConfigs: Record<
 > = {
   openai: {
     label: "OpenAI",
-    defaultBaseUrl: "https://api.openai.com/v1",
+    defaultBaseUrl: "https://api.openai.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   anthropic: {
     label: "Anthropic",
-    defaultBaseUrl: "https://api.anthropic.com/v1",
+    defaultBaseUrl: "https://api.anthropic.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   google: {
     label: "Google Gemini",
-    defaultBaseUrl: "https://generativelanguage.googleapis.com/v1beta",
+    defaultBaseUrl: "https://generativelanguage.googleapis.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   deepseek: {
     label: "DeepSeek",
-    defaultBaseUrl: "https://api.deepseek.com/v1",
+    defaultBaseUrl: "https://api.deepseek.com",
     supportsByokBaseUrl: false,
     apiKeyRequired: true,
   },
   groq: {
     label: "Groq",
-    defaultBaseUrl: "https://api.groq.com/openai/v1",
+    defaultBaseUrl: "https://api.groq.com",
     supportsByokBaseUrl: false,
     apiKeyRequired: true,
   },
   ollama: {
     label: "Ollama",
-    defaultBaseUrl: "http://localhost:11434/api",
+    defaultBaseUrl: "http://localhost:11434",
     supportsByokBaseUrl: false,
     apiKeyRequired: false,
   },
@@ -79,9 +79,11 @@ const createError = ref("");
 const fetchCreateModelsError = ref("");
 const modelOptionsForCreate = ref<string[]>([]);
 const isLoadingCreateModels = ref(false);
+const createModelFetchKey = ref("");
 const actionError = ref("");
 const modelDraftByConfigId = reactive<Record<string, string>>({});
 const modelOptionsByConfigId = reactive<Record<string, string[]>>({});
+const isLoadingModelOptionsByConfigId = reactive<Record<string, boolean>>({});
 const rowErrorByConfigId = reactive<Record<string, string>>({});
 const currentProviderConfig = computed(() => getProviderConfig(createForm.provider));
 const canCustomizeBaseUrl = computed(
@@ -134,27 +136,10 @@ const deleteMutation = useMutation(
 
 watch(
   () => aiConfigsQuery.data.value,
-  async (configs) => {
+  (configs) => {
     for (const config of configs ?? []) {
       if (!modelDraftByConfigId[config.id]) {
         modelDraftByConfigId[config.id] = config.model;
-      }
-
-      if ((modelOptionsByConfigId[config.id]?.length ?? 0) === 0) {
-        rowErrorByConfigId[config.id] = "";
-        try {
-          const result = await $orpc.aiConfig.fetchModels.call({
-            aiConfigId: config.id,
-          });
-          modelOptionsByConfigId[config.id] = result.models;
-          if (!result.models.includes(modelDraftByConfigId[config.id] ?? "")) {
-            modelDraftByConfigId[config.id] = result.models[0] ?? config.model;
-          }
-        } catch (error) {
-          rowErrorByConfigId[config.id] =
-            error instanceof Error ? error.message : "Unable to load models.";
-          modelOptionsByConfigId[config.id] = [config.model];
-        }
       }
     }
   },
@@ -228,6 +213,13 @@ const getModelOptionsForConfig = (id: string): string[] => {
   return current ? [current] : [];
 };
 
+const getCreateModelFetchKey = () => {
+  const apiKey = createForm.apiKey.trim();
+  const baseUrl =
+    createForm.baseUrl.trim() || getProviderConfig(createForm.provider).defaultBaseUrl;
+  return [createForm.provider, apiKey, baseUrl].join("::");
+};
+
 const loadCreateModels = async () => {
   fetchCreateModelsError.value = "";
   const apiKey = createForm.apiKey.trim();
@@ -262,7 +254,53 @@ const loadCreateModels = async () => {
   }
 };
 
-let createModelFetchTimer: ReturnType<typeof setTimeout> | undefined;
+const handleCreateModelSelectFocus = async () => {
+  const nextFetchKey = getCreateModelFetchKey();
+  const hasLoadedCurrentKey =
+    createModelFetchKey.value === nextFetchKey && modelOptionsForCreate.value.length > 0;
+
+  if (isLoadingCreateModels.value || hasLoadedCurrentKey) {
+    return;
+  }
+
+  createModelFetchKey.value = nextFetchKey;
+  await loadCreateModels();
+};
+
+const loadModelsForConfig = async (id: string) => {
+  if (isLoadingModelOptionsByConfigId[id]) {
+    return;
+  }
+
+  const hasLoadedModels = (modelOptionsByConfigId[id]?.length ?? 0) > 0;
+  if (hasLoadedModels && !rowErrorByConfigId[id]) {
+    return;
+  }
+
+  isLoadingModelOptionsByConfigId[id] = true;
+  rowErrorByConfigId[id] = "";
+
+  try {
+    const result = await $orpc.aiConfig.fetchModels.call({
+      aiConfigId: id,
+    });
+    modelOptionsByConfigId[id] = result.models;
+    const currentModel = modelDraftByConfigId[id];
+    if (!result.models.includes(currentModel ?? "")) {
+      modelDraftByConfigId[id] = result.models[0] ?? currentModel ?? "";
+    }
+  } catch (error) {
+    rowErrorByConfigId[id] =
+      error instanceof Error ? error.message : "Unable to load models.";
+  } finally {
+    isLoadingModelOptionsByConfigId[id] = false;
+  }
+};
+
+const handleConfigModelSelectFocus = async (id: string) => {
+  await loadModelsForConfig(id);
+};
+
 watch(
   () => createForm.provider,
   (provider) => {
@@ -274,12 +312,11 @@ watch(
 watch(
   () => [createForm.provider, createForm.apiKey, createForm.baseUrl],
   () => {
-    clearTimeout(createModelFetchTimer);
-    createModelFetchTimer = setTimeout(() => {
-      void loadCreateModels();
-    }, 350);
-  },
-  { immediate: true }
+    createModelFetchKey.value = "";
+    modelOptionsForCreate.value = [];
+    fetchCreateModelsError.value = "";
+    createForm.model = "";
+  }
 );
 </script>
 
@@ -315,13 +352,14 @@ watch(
             id="model"
             v-model="createForm.model"
             class="w-full rounded-md border bg-background px-3 py-2 text-sm"
-            :disabled="isLoadingCreateModels || modelOptionsForCreate.length === 0"
+            :disabled="isLoadingCreateModels"
+            @focus="handleCreateModelSelectFocus"
           >
             <option value="">
               {{
                 isLoadingCreateModels
                   ? "Loading models..."
-                  : "No models available"
+                  : "Select to load models"
               }}
             </option>
             <option
@@ -439,6 +477,8 @@ watch(
                 :id="`model-select-${config.id}`"
                 v-model="modelDraftByConfigId[config.id]"
                 class="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
+                :disabled="isLoadingModelOptionsByConfigId[config.id]"
+                @focus="handleConfigModelSelectFocus(config.id)"
               >
                 <option
                   v-for="model in getModelOptionsForConfig(config.id)"
