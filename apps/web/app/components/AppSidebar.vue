@@ -42,8 +42,8 @@ const user = ref<{
 const sidebarFeedsQuery = useQuery(
   computed(() =>
     $orpc.feed.listSidebar.queryOptions({
-      input: { includeInactive: false },
-      queryKey: dashboardQueryKeys.feeds.sidebar(false),
+      input: { includeInactive: true },
+      queryKey: dashboardQueryKeys.feeds.sidebar(true),
     })
   )
 );
@@ -54,6 +54,23 @@ const discoverFeedsQuery = useQuery(
     queryKey: dashboardQueryKeys.feeds.discover(),
   })
 );
+
+const normalizeFeedUrl = (url: string) =>
+  url.trim().replace(/\/+$/, "").toLowerCase();
+
+const activeSidebarFeeds = computed(() =>
+  (sidebarFeedsQuery.data.value ?? []).filter((feed) => feed.isActive)
+);
+
+const discoverFeeds = computed(() => {
+  const existingFeedUrls = new Set(
+    (sidebarFeedsQuery.data.value ?? []).map((feed) => normalizeFeedUrl(feed.url))
+  );
+
+  return (discoverFeedsQuery.data.value ?? [])
+    .filter((item) => !existingFeedUrls.has(normalizeFeedUrl(item.url)))
+    .slice(0, 6);
+});
 
 const addFeedMutation = useMutation(
   $orpc.feed.create.mutationOptions({
@@ -176,9 +193,9 @@ onMounted(async () => {
       <SidebarGroup>
         <SidebarGroupLabel>Your feeds</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu v-if="sidebarFeedsQuery.data.value?.length">
+          <SidebarMenu v-if="activeSidebarFeeds.length">
             <SidebarMenuItem
-              v-for="feed in sidebarFeedsQuery.data.value"
+              v-for="feed in activeSidebarFeeds"
               :key="feed.id"
             >
               <SidebarMenuButton as-child>
@@ -207,9 +224,9 @@ onMounted(async () => {
       <SidebarGroup>
         <SidebarGroupLabel>Discover</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu>
+          <SidebarMenu v-if="discoverFeeds.length">
             <SidebarMenuItem
-              v-for="item in discoverFeedsQuery.data.value?.slice(0, 6) ?? []"
+              v-for="item in discoverFeeds"
               :key="item.url"
             >
               <SidebarMenuButton
@@ -224,6 +241,9 @@ onMounted(async () => {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          <p v-else class="px-2 py-1 text-xs text-muted-foreground">
+            All suggested feeds are already added.
+          </p>
         </SidebarGroupContent>
       </SidebarGroup>
 

@@ -2,6 +2,7 @@ import { env } from "@NewsFlow/env/server";
 import { ORPCError } from "@orpc/server";
 
 import type { Provider } from "./ai-config.schema";
+import { resolveProviderApiBaseUrl } from "./provider-base-url";
 
 const ALGORITHM = "AES-GCM";
 const IV_LENGTH = 16;
@@ -66,17 +67,6 @@ export class EncryptionService {
     return `${prefix}****${visible}`;
   }
 }
-
-const OPENAI_COMPATIBLE_DEFAULT_BASE_URL: Record<
-  "openai" | "deepseek" | "groq",
-  string
-> = {
-  openai: "https://api.openai.com/v1",
-  deepseek: "https://api.deepseek.com/v1",
-  groq: "https://api.groq.com/openai/v1",
-};
-
-const normalizeBaseUrl = (url: string) => url.replace(/\/+$/, "");
 
 const parseOpenAICompatibleModels = (payload: unknown): string[] => {
   if (
@@ -206,9 +196,7 @@ export async function fetchProviderModels(
     let models: string[] = [];
 
     if (provider === "openai" || provider === "deepseek" || provider === "groq") {
-      const resolvedBaseUrl = normalizeBaseUrl(
-        baseUrl || OPENAI_COMPATIBLE_DEFAULT_BASE_URL[provider]
-      );
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
       const payload = await requestModels(`${resolvedBaseUrl}/models`, {
         headers: {
           Authorization: `Bearer ${apiKey ?? ""}`,
@@ -216,8 +204,8 @@ export async function fetchProviderModels(
       });
       models = parseOpenAICompatibleModels(payload);
     } else if (provider === "anthropic") {
-      const resolvedBaseUrl = normalizeBaseUrl(baseUrl || "https://api.anthropic.com");
-      const payload = await requestModels(`${resolvedBaseUrl}/v1/models`, {
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
+      const payload = await requestModels(`${resolvedBaseUrl}/models`, {
         headers: {
           "x-api-key": apiKey ?? "",
           "anthropic-version": "2023-06-01",
@@ -225,18 +213,16 @@ export async function fetchProviderModels(
       });
       models = parseAnthropicModels(payload);
     } else if (provider === "google") {
-      const resolvedBaseUrl = normalizeBaseUrl(
-        baseUrl || "https://generativelanguage.googleapis.com/v1beta"
-      );
-      const url = new URL(`${resolvedBaseUrl}/models`);
-      if (apiKey) {
-        url.searchParams.set("key", apiKey);
-      }
-      const payload = await requestModels(url.toString());
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
+      const payload = await requestModels(`${resolvedBaseUrl}/models`, {
+        headers: {
+          "x-goog-api-key": apiKey ?? "",
+        },
+      });
       models = parseGoogleModels(payload);
     } else if (provider === "ollama") {
-      const resolvedBaseUrl = normalizeBaseUrl(baseUrl || "http://localhost:11434");
-      const payload = await requestModels(`${resolvedBaseUrl}/api/tags`);
+      const resolvedBaseUrl = resolveProviderApiBaseUrl(provider, baseUrl);
+      const payload = await requestModels(`${resolvedBaseUrl}/tags`);
       models = parseOllamaModels(payload);
     }
 
