@@ -2,7 +2,7 @@
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Personal Settings",
+  title: "Settings",
 });
 
 await navigateTo("/dashboard/settings/personal", { replace: true });
@@ -10,6 +10,6 @@ await navigateTo("/dashboard/settings/personal", { replace: true });
 
 <template>
   <p class="text-sm text-muted-foreground">
-    Redirecting to personal settings...
+    Redirecting to settings...
   </p>
 </template>

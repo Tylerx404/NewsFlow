@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { reactive, ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -19,6 +19,9 @@ const props = defineProps<{
 }>()
 
 const { $authClient } = useNuxtApp()
+const route = useRoute()
+
+const DEFAULT_REDIRECT_PATH = "/dashboard"
 
 const form = reactive({
   email: "",
@@ -35,6 +38,30 @@ const getErrorMessage = (error: unknown) => {
   return "Unable to sign in right now. Please try again."
 }
 
+const getSafeRedirectPath = () => {
+  const rawRedirect = route.query.redirect
+  const redirect = Array.isArray(rawRedirect) ? rawRedirect[0] : rawRedirect
+
+  if (typeof redirect !== "string" || redirect.length === 0) {
+    return ""
+  }
+
+  if (!redirect.startsWith("/") || redirect.startsWith("//")) {
+    return ""
+  }
+
+  return redirect
+}
+
+const postAuthRedirectPath = computed(
+  () => getSafeRedirectPath() || DEFAULT_REDIRECT_PATH
+)
+
+const authSwitchQuery = computed(() => {
+  const redirect = getSafeRedirectPath()
+  return redirect ? { redirect } : {}
+})
+
 const handleSubmit = async () => {
   submitError.value = ""
   isSubmitting.value = true
@@ -50,7 +77,7 @@ const handleSubmit = async () => {
       return
     }
 
-    await navigateTo("/dashboard")
+    await navigateTo(postAuthRedirectPath.value)
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {
@@ -148,7 +175,7 @@ const handleSubmit = async () => {
             </Field>
             <FieldDescription class="text-center">
               Don't have an account?
-              <NuxtLink to="/signup">
+              <NuxtLink :to="{ path: '/signup', query: authSwitchQuery }">
                 Sign up
               </NuxtLink>
             </FieldDescription>
