@@ -6,6 +6,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -55,6 +66,14 @@ const passwordSuccess = ref("");
 
 const sessionActionError = ref("");
 const sessionActionSuccess = ref("");
+const sessionToRevokeToken = ref<string | null>(null);
+const isRevokeSessionDialogOpen = ref(false);
+const isRevokeOtherDialogOpen = ref(false);
+
+const errorBannerClass =
+  "rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive";
+const successBannerClass =
+  "rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300";
 
 const sessionQuery = useQuery({
   queryKey: dashboardQueryKeys.auth.session(),
@@ -114,6 +133,10 @@ const otherSessionCount = computed(() =>
 
 const currentSession = computed(() =>
   activeSessions.value.find((session) => session.token === currentSessionToken.value) ?? null
+);
+
+const selectedSessionForRevoke = computed(() =>
+  activeSessions.value.find((session) => session.token === sessionToRevokeToken.value) ?? null
 );
 
 const avatarFallback = computed(() => {
@@ -339,13 +362,15 @@ const handleRevokeSession = async (token: string) => {
   sessionActionSuccess.value = "";
 
   if (token === currentSessionToken.value) {
-    return;
+    return false;
   }
 
   try {
     await revokeSessionMutation.mutateAsync(token);
+    return true;
   } catch {
     // Error is already mapped in mutation onError.
+    return false;
   }
 };
 
@@ -355,8 +380,47 @@ const handleRevokeOtherSessions = async () => {
 
   try {
     await revokeOtherSessionsMutation.mutateAsync();
+    return true;
   } catch {
     // Error is already mapped in mutation onError.
+    return false;
+  }
+};
+
+const openRevokeSessionDialog = (token: string) => {
+  if (token === currentSessionToken.value) {
+    return;
+  }
+
+  sessionToRevokeToken.value = token;
+  isRevokeSessionDialogOpen.value = true;
+};
+
+const handleRevokeSessionDialogToggle = (open: boolean) => {
+  isRevokeSessionDialogOpen.value = open;
+
+  if (!open) {
+    sessionToRevokeToken.value = null;
+  }
+};
+
+const confirmRevokeSession = async () => {
+  if (!sessionToRevokeToken.value) {
+    return;
+  }
+
+  const success = await handleRevokeSession(sessionToRevokeToken.value);
+  if (!success) {
+    return;
+  }
+
+  handleRevokeSessionDialogToggle(false);
+};
+
+const confirmRevokeOtherSessions = async () => {
+  const success = await handleRevokeOtherSessions();
+  if (success) {
+    isRevokeOtherDialogOpen.value = false;
   }
 };
 
@@ -393,7 +457,7 @@ const formatSessionToken = (token: string) => {
             <p v-if="sessionQuery.isLoading.value" class="text-sm text-muted-foreground">
               Loading profile...
             </p>
-            <p v-else-if="sessionQuery.error.value" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <p v-else-if="sessionQuery.error.value" :class="errorBannerClass">
               {{
                 sessionQuery.error.value instanceof Error
                   ? sessionQuery.error.value.message
@@ -469,10 +533,10 @@ const formatSessionToken = (token: string) => {
                   <Input id="profile-name" v-model="profileForm.name" />
                 </div>
 
-                <p v-if="profileError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                <p v-if="profileError" :class="errorBannerClass">
                   {{ profileError }}
                 </p>
-                <p v-else-if="profileSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+                <p v-else-if="profileSuccess" :class="successBannerClass">
                   {{ profileSuccess }}
                 </p>
 
@@ -529,19 +593,22 @@ const formatSessionToken = (token: string) => {
               </div>
             </div>
 
-            <label class="flex items-center gap-2 text-sm">
-              <input
+            <label
+              for="revoke-other-sessions-on-password-change"
+              class="flex items-start gap-3 rounded-md border p-3 text-sm"
+            >
+              <Checkbox
+                id="revoke-other-sessions-on-password-change"
                 v-model="passwordForm.revokeOtherSessions"
-                type="checkbox"
-                class="size-4 rounded border-input"
-              >
-              Revoke other active sessions after password change
+                class="mt-0.5"
+              />
+              <span>Revoke other active sessions after password change</span>
             </label>
 
-            <p v-if="passwordError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <p v-if="passwordError" :class="errorBannerClass">
               {{ passwordError }}
             </p>
-            <p v-else-if="passwordSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+            <p v-else-if="passwordSuccess" :class="successBannerClass">
               {{ passwordSuccess }}
             </p>
 
@@ -571,7 +638,7 @@ const formatSessionToken = (token: string) => {
             <p v-if="sessionsQuery.isLoading.value" class="text-sm text-muted-foreground">
               Loading sessions...
             </p>
-            <p v-else-if="sessionsQuery.error.value" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <p v-else-if="sessionsQuery.error.value" :class="errorBannerClass">
               {{
                 sessionsQuery.error.value instanceof Error
                   ? sessionsQuery.error.value.message
@@ -585,9 +652,9 @@ const formatSessionToken = (token: string) => {
                 :key="session.token"
                 class="space-y-3 rounded-md border p-3"
               >
-                <div class="flex items-start justify-between gap-3">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div class="space-y-1">
-                    <p class="text-sm font-medium">
+                    <p class="break-all text-sm font-medium sm:break-normal">
                       {{ formatSessionToken(session.token) }}
                     </p>
 
@@ -607,7 +674,7 @@ const formatSessionToken = (token: string) => {
                     size="sm"
                     variant="outline"
                     :disabled="session.token === currentSessionToken || revokeSessionMutation.isPending.value"
-                    @click="handleRevokeSession(session.token)"
+                    @click="openRevokeSessionDialog(session.token)"
                   >
                     Revoke
                   </Button>
@@ -623,10 +690,10 @@ const formatSessionToken = (token: string) => {
               No active sessions found.
             </p>
 
-            <p v-if="sessionActionError" class="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <p v-if="sessionActionError" :class="errorBannerClass">
               {{ sessionActionError }}
             </p>
-            <p v-else-if="sessionActionSuccess" class="rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+            <p v-else-if="sessionActionSuccess" :class="successBannerClass">
               {{ sessionActionSuccess }}
             </p>
           </CardContent>
@@ -704,7 +771,7 @@ const formatSessionToken = (token: string) => {
               variant="outline"
               class="w-full"
               :disabled="otherSessionCount === 0 || revokeOtherSessionsMutation.isPending.value"
-              @click="handleRevokeOtherSessions"
+              @click="isRevokeOtherDialogOpen = true"
             >
               {{
                 revokeOtherSessionsMutation.isPending.value
@@ -720,5 +787,62 @@ const formatSessionToken = (token: string) => {
         </Card>
       </div>
     </div>
+
+    <AlertDialog
+      :open="isRevokeSessionDialogOpen"
+      @update:open="handleRevokeSessionDialogToggle"
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Revoke this session?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This device will be signed out immediately.
+            <span v-if="selectedSessionForRevoke">
+              Token: {{ formatSessionToken(selectedSessionForRevoke.token) }}.
+            </span>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel :disabled="revokeSessionMutation.isPending.value">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            :disabled="revokeSessionMutation.isPending.value"
+            @click="confirmRevokeSession"
+          >
+            {{ revokeSessionMutation.isPending.value ? "Revoking..." : "Revoke session" }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <AlertDialog
+      :open="isRevokeOtherDialogOpen"
+      @update:open="(open) => (isRevokeOtherDialogOpen = open)"
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Revoke all other sessions?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This keeps only your current device signed in.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel :disabled="revokeOtherSessionsMutation.isPending.value">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            :disabled="revokeOtherSessionsMutation.isPending.value"
+            @click="confirmRevokeOtherSessions"
+          >
+            {{
+              revokeOtherSessionsMutation.isPending.value
+                ? "Revoking..."
+                : "Revoke other sessions"
+            }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </SettingsShell>
 </template>
