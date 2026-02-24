@@ -479,6 +479,7 @@ const formatSessionToken = (token: string) => {
                   <button
                     type="button"
                     class="group relative inline-flex size-28 items-center justify-center rounded-full border-2 border-dashed border-border/70 bg-background p-2 transition hover:border-primary/70"
+                    aria-label="Change profile photo"
                     @click="handleAvatarPick"
                   >
                     <Avatar class="size-full border bg-card shadow-sm">
@@ -511,7 +512,7 @@ const formatSessionToken = (token: string) => {
                     </Button>
                   </div>
 
-                  <p v-if="avatarUploadError" class="w-full rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-left text-xs text-destructive">
+                  <p v-if="avatarUploadError" aria-live="polite" class="w-full rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-left text-xs text-destructive">
                     {{ avatarUploadError }}
                   </p>
                 </div>
@@ -533,10 +534,10 @@ const formatSessionToken = (token: string) => {
                   <Input id="profile-name" v-model="profileForm.name" />
                 </div>
 
-                <p v-if="profileError" :class="errorBannerClass">
+                <p v-if="profileError" aria-live="polite" :class="errorBannerClass">
                   {{ profileError }}
                 </p>
-                <p v-else-if="profileSuccess" :class="successBannerClass">
+                <p v-else-if="profileSuccess" aria-live="polite" :class="successBannerClass">
                   {{ profileSuccess }}
                 </p>
 
@@ -605,10 +606,10 @@ const formatSessionToken = (token: string) => {
               <span>Revoke other active sessions after password change</span>
             </label>
 
-            <p v-if="passwordError" :class="errorBannerClass">
+            <p v-if="passwordError" aria-live="polite" :class="errorBannerClass">
               {{ passwordError }}
             </p>
-            <p v-else-if="passwordSuccess" :class="successBannerClass">
+            <p v-else-if="passwordSuccess" aria-live="polite" :class="successBannerClass">
               {{ passwordSuccess }}
             </p>
 
@@ -674,6 +675,7 @@ const formatSessionToken = (token: string) => {
                     size="sm"
                     variant="outline"
                     :disabled="session.token === currentSessionToken || revokeSessionMutation.isPending.value"
+                    :aria-label="`Revoke session ${formatSessionToken(session.token)}`"
                     @click="openRevokeSessionDialog(session.token)"
                   >
                     Revoke
@@ -690,10 +692,10 @@ const formatSessionToken = (token: string) => {
               No active sessions found.
             </p>
 
-            <p v-if="sessionActionError" :class="errorBannerClass">
+            <p v-if="sessionActionError" aria-live="polite" :class="errorBannerClass">
               {{ sessionActionError }}
             </p>
-            <p v-else-if="sessionActionSuccess" :class="successBannerClass">
+            <p v-else-if="sessionActionSuccess" aria-live="polite" :class="successBannerClass">
               {{ sessionActionSuccess }}
             </p>
           </CardContent>

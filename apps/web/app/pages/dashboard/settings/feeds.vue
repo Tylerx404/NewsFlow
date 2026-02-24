@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -235,6 +236,9 @@ const formatDate = (value: Date | string | null) => {
         <div v-else class="space-y-4">
           <div class="hidden overflow-x-auto rounded-md border md:block">
             <Table>
+              <TableCaption class="sr-only">
+                Feed management table with metadata and feed actions.
+              </TableCaption>
               <TableHeader class="bg-muted/60 text-left">
                 <TableRow>
                   <TableHead class="px-3 py-2">Title</TableHead>
@@ -308,12 +312,13 @@ const formatDate = (value: Date | string | null) => {
                           size="sm"
                           variant="outline"
                           :disabled="isRowBusy(feed.id)"
+                          :aria-label="`Delete feed ${feed.title}`"
                           @click="openDeleteDialog(feed.id)"
                         >
                           Delete
                         </Button>
                       </div>
-                      <p v-if="rowErrorByFeedId[feed.id]" class="text-xs text-destructive">
+                      <p v-if="rowErrorByFeedId[feed.id]" aria-live="polite" class="text-xs text-destructive">
                         {{ rowErrorByFeedId[feed.id] }}
                       </p>
                     </div>
@@ -388,13 +393,14 @@ const formatDate = (value: Date | string | null) => {
                   size="sm"
                   variant="outline"
                   :disabled="isRowBusy(feed.id)"
+                  :aria-label="`Delete feed ${feed.title}`"
                   @click="openDeleteDialog(feed.id)"
                 >
                   Delete
                 </Button>
               </div>
 
-              <p v-if="rowErrorByFeedId[feed.id]" class="text-sm text-destructive">
+              <p v-if="rowErrorByFeedId[feed.id]" aria-live="polite" class="text-sm text-destructive">
                 {{ rowErrorByFeedId[feed.id] }}
               </p>
             </div>

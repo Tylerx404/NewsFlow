@@ -574,10 +574,10 @@ watch(
             </p>
           </div>
 
-          <p v-if="fetchCreateModelsError" class="text-xs text-destructive">
+          <p v-if="fetchCreateModelsError" aria-live="polite" class="text-xs text-destructive">
             {{ fetchCreateModelsError }}
           </p>
-          <p v-if="createError" class="text-sm text-destructive">
+          <p v-if="createError" aria-live="polite" class="text-sm text-destructive">
             {{ createError }}
           </p>
 
@@ -643,6 +643,7 @@ watch(
                   size="sm"
                   variant="outline"
                   :disabled="isRowBusy(config.id)"
+                  :aria-label="`Delete profile ${config.name}`"
                   @click="openDeleteDialog(config.id)"
                 >
                   Delete
@@ -709,7 +710,7 @@ watch(
               </div>
             </div>
 
-            <p v-if="rowErrorByConfigId[config.id]" class="text-sm text-destructive">
+            <p v-if="rowErrorByConfigId[config.id]" aria-live="polite" class="text-sm text-destructive">
               {{ rowErrorByConfigId[config.id] }}
             </p>
 

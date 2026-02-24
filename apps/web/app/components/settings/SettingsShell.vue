@@ -14,7 +14,7 @@ const activeSection = computed(
 
 <template>
   <div class="mx-auto w-full max-w-6xl space-y-6">
-    <div class="space-y-1">
+    <div class="space-y-2">
       <p class="text-sm font-medium text-muted-foreground">Settings</p>
       <h1 class="text-2xl font-semibold tracking-tight">
         {{ activeSection.label }}
@@ -27,6 +27,7 @@ const activeSection = computed(
     <div class="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside class="lg:sticky lg:top-6 lg:self-start">
         <nav
+          aria-label="Settings sections"
           class="flex gap-2 overflow-x-auto rounded-lg border bg-card p-2 lg:flex-col lg:overflow-visible"
         >
           <NuxtLink
@@ -34,6 +35,7 @@ const activeSection = computed(
             :key="item.id"
             :to="item.href"
             class="rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors"
+            :aria-current="item.id === section ? 'page' : undefined"
             :class="
               item.id === section
                 ? 'bg-secondary text-secondary-foreground'
