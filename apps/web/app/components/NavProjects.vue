@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { LucideIcon } from "lucide-vue-next"
 import { MoreHorizontal, Plus } from "lucide-vue-next"
+import { ref } from "vue"
 
 import {
   DropdownMenu,
@@ -50,6 +51,7 @@ const emit = defineEmits<{
 }>()
 
 const { isMobile } = useSidebar()
+const openActionsByItemId = ref<Record<string, boolean>>({})
 
 const handleSelect = (item: NavProjectsItem) => {
   if (props.mode !== "action") {
@@ -60,6 +62,10 @@ const handleSelect = (item: NavProjectsItem) => {
 
 const handleItemAction = (item: NavProjectsItem, actionId: string) => {
   emit("itemAction", { item, actionId })
+}
+
+const setItemActionsOpen = (itemId: string, open: boolean) => {
+  openActionsByItemId.value[itemId] = open
 }
 </script>
 
@@ -85,10 +91,16 @@ const handleItemAction = (item: NavProjectsItem, actionId: string) => {
             <span>{{ item.title }}</span>
           </NuxtLink>
         </SidebarMenuButton>
-        <SidebarMenuBadge v-if="typeof item.badge === 'number' && item.badge > 0">
+        <SidebarMenuBadge
+          v-if="typeof item.badge === 'number' && item.badge > 0 && !openActionsByItemId[item.id]"
+        >
           {{ item.badge }}
         </SidebarMenuBadge>
-        <DropdownMenu v-if="mode === 'link' && item.actions?.length">
+        <DropdownMenu
+          v-if="mode === 'link' && item.actions?.length"
+          :open="openActionsByItemId[item.id]"
+          @update:open="(open) => setItemActionsOpen(item.id, open)"
+        >
           <DropdownMenuTrigger as-child>
             <SidebarMenuAction show-on-hover>
               <MoreHorizontal />
