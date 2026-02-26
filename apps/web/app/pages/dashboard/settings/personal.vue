@@ -24,7 +24,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import SettingsShell from "@/components/settings/SettingsShell.vue";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 
 definePageMeta({
@@ -443,8 +442,7 @@ const formatSessionToken = (token: string) => {
 </script>
 
 <template>
-  <SettingsShell section="personal">
-    <div class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
       <div class="space-y-6">
         <Card>
           <CardHeader>
@@ -846,5 +844,4 @@ const formatSessionToken = (token: string) => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  </SettingsShell>
 </template>

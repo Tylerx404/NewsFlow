@@ -1,84 +1,132 @@
 <script setup lang="ts">
 import type { LucideIcon } from "lucide-vue-next"
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-vue-next"
+import { MoreHorizontal, Plus } from "lucide-vue-next"
+import { ref } from "vue"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarMenu,
   SidebarMenuAction,
+  SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
 
-defineProps<{
-  projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
+type NavProjectsItemAction = {
+  id: string
+  label: string
+  icon?: LucideIcon
+  variant?: "default" | "destructive"
+  disabled?: boolean
+}
+
+type NavProjectsItem = {
+  id: string
+  title: string
+  icon?: LucideIcon
+  to?: string
+  badge?: number
+  actions?: NavProjectsItemAction[]
+}
+
+const props = withDefaults(defineProps<{
+  groupLabel: string
+  items: NavProjectsItem[]
+  mode?: "link" | "action"
+}>(), {
+  mode: "link",
+})
+
+const emit = defineEmits<{
+  select: [item: NavProjectsItem]
+  itemAction: [payload: { item: NavProjectsItem; actionId: string }]
 }>()
 
 const { isMobile } = useSidebar()
+const openActionsByItemId = ref<Record<string, boolean>>({})
+
+const handleSelect = (item: NavProjectsItem) => {
+  if (props.mode !== "action") {
+    return
+  }
+  emit("select", item)
+}
+
+const handleItemAction = (item: NavProjectsItem, actionId: string) => {
+  emit("itemAction", { item, actionId })
+}
+
+const setItemActionsOpen = (itemId: string, open: boolean) => {
+  openActionsByItemId.value[itemId] = open
+}
 </script>
 
 <template>
-  <SidebarGroup class="group-data-[collapsible=icon]:hidden">
-    <SidebarGroupLabel>Projects</SidebarGroupLabel>
+  <SidebarGroup>
+    <SidebarGroupLabel>{{ groupLabel }}</SidebarGroupLabel>
     <SidebarMenu>
-      <SidebarMenuItem v-for="item in projects" :key="item.name">
-        <SidebarMenuButton as-child>
-          <a :href="item.url">
-            <component :is="item.icon" />
-            <span>{{ item.name }}</span>
-          </a>
+      <SidebarMenuItem v-for="item in items" :key="item.id">
+        <SidebarMenuButton
+          v-if="mode === 'action'"
+          class="justify-between"
+          @click.prevent="handleSelect(item)"
+        >
+          <div class="flex min-w-0 items-center gap-2">
+            <component :is="item.icon ?? Plus" />
+            <span class="truncate">{{ item.title }}</span>
+          </div>
+          <Plus class="size-4 shrink-0" />
         </SidebarMenuButton>
-        <DropdownMenu>
+        <SidebarMenuButton v-else as-child>
+          <NuxtLink :to="item.to ?? '#'">
+            <component :is="item.icon ?? Plus" />
+            <span>{{ item.title }}</span>
+          </NuxtLink>
+        </SidebarMenuButton>
+        <SidebarMenuBadge
+          v-if="typeof item.badge === 'number' && item.badge > 0 && !openActionsByItemId[item.id]"
+        >
+          {{ item.badge }}
+        </SidebarMenuBadge>
+        <DropdownMenu
+          v-if="mode === 'link' && item.actions?.length"
+          :open="openActionsByItemId[item.id]"
+          @update:open="(open) => setItemActionsOpen(item.id, open)"
+        >
           <DropdownMenuTrigger as-child>
-            <SidebarMenuAction show-on-hover>
+            <SidebarMenuAction
+              show-on-hover
+              class="group-focus-within/menu-item:opacity-0 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100"
+            >
               <MoreHorizontal />
-              <span class="sr-only">More</span>
+              <span class="sr-only">More actions</span>
             </SidebarMenuAction>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            class="w-48 rounded-lg"
+            class="w-44 rounded-lg"
             :side="isMobile ? 'bottom' : 'right'"
             :align="isMobile ? 'end' : 'start'"
           >
-            <DropdownMenuItem>
-              <Folder class="text-muted-foreground" />
-              <span>View Project</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Forward class="text-muted-foreground" />
-              <span>Share Project</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Trash2 class="text-muted-foreground" />
-              <span>Delete Project</span>
+            <DropdownMenuItem
+              v-for="action in item.actions"
+              :key="action.id"
+              :variant="action.variant ?? 'default'"
+              :disabled="action.disabled"
+              @select="handleItemAction(item, action.id)"
+            >
+              <component :is="action.icon ?? MoreHorizontal" />
+              <span>{{ action.label }}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton>
-          <MoreHorizontal />
-          <span>More</span>
-        </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
   </SidebarGroup>

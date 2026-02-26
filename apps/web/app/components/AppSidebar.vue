@@ -3,14 +3,18 @@ import {
   Compass,
   LayoutDashboard,
   Plus,
+  RefreshCw,
   Rss,
   Settings,
-  Sparkles,
-  UserCircle,
+  SlidersHorizontal,
+  Trash2,
 } from "lucide-vue-next";
-import { type Component, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
+import NavMain from "@/components/NavMain.vue";
+import NavProjects from "@/components/NavProjects.vue";
+import NavUser from "@/components/NavUser.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,15 +26,11 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
-import {
-  settingsSections,
-  type SettingsSectionId,
-} from "@/lib/settings-sections";
+import { settingsSections } from "@/lib/settings-sections";
 
 const { $authClient, $orpc } = useNuxtApp();
 const route = useRoute();
@@ -38,6 +38,7 @@ const queryClient = useQueryClient();
 
 const addFeedUrl = ref("");
 const addFeedError = ref("");
+const feedActionError = ref("");
 
 const sessionQuery = useQuery({
   queryKey: dashboardQueryKeys.auth.sessionSummary(),
@@ -50,11 +51,17 @@ const sessionQuery = useQuery({
     return {
       name: data.user.name,
       email: data.user.email,
+      avatar: data.user.image,
     };
   },
 });
 
 const user = computed(() => sessionQuery.data.value ?? null);
+const sidebarUser = computed(() => ({
+  name: user.value?.name ?? "NewsFlow User",
+  email: user.value?.email ?? "Loading...",
+  avatar: user.value?.avatar ?? null,
+}));
 
 const sidebarFeedsQuery = useQuery(
   computed(() =>
@@ -91,11 +98,33 @@ const discoverFeeds = computed(() => {
 
 const defaultSettingsHref = settingsSections[0]?.href ?? "/dashboard/settings/personal";
 
-const settingsSectionIcons: Record<SettingsSectionId, Component> = {
-  personal: UserCircle,
-  ai: Sparkles,
-  feeds: Rss,
-};
+const navigationItems = computed(() => [
+  {
+    title: "Dashboard",
+    to: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: isRouteActive("/dashboard"),
+  },
+  {
+    title: "Settings",
+    to: defaultSettingsHref,
+    icon: Settings,
+    isActive: isRouteActive("/dashboard/settings"),
+    items: settingsSections.map((section) => ({
+      title: section.label,
+      to: section.href,
+      isActive: isRouteActive(section.href),
+    })),
+  },
+]);
+
+const discoverNavItems = computed(() =>
+  discoverFeeds.value.map((item) => ({
+    id: item.url,
+    title: item.title,
+    icon: Compass,
+  }))
+);
 
 const addFeedMutation = useMutation(
   $orpc.feed.create.mutationOptions({
@@ -111,6 +140,56 @@ const addFeedMutation = useMutation(
         error instanceof Error ? error.message : "Unable to add feed.";
     },
   })
+);
+
+const refreshFeedMutation = useMutation(
+  $orpc.feed.refresh.mutationOptions({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const deleteFeedMutation = useMutation(
+  $orpc.feed.delete.mutationOptions({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const isFeedActionPending = computed(
+  () => refreshFeedMutation.isPending.value || deleteFeedMutation.isPending.value
+);
+
+const feedNavItems = computed(() =>
+  activeSidebarFeeds.value.map((feed) => ({
+    id: feed.id,
+    title: feed.title,
+    to: `/dashboard/feed/${feed.id}`,
+    icon: Rss,
+    badge: feed.unreadCount,
+    actions: [
+      {
+        id: "refresh",
+        label: "Refresh now",
+        icon: RefreshCw,
+        disabled: isFeedActionPending.value,
+      },
+      {
+        id: "manage",
+        label: "Manage feeds",
+        icon: SlidersHorizontal,
+      },
+      {
+        id: "remove",
+        label: "Remove feed",
+        icon: Trash2,
+        variant: "destructive" as const,
+        disabled: isFeedActionPending.value,
+      },
+    ],
+  }))
 );
 
 const isRouteActive = (path: string) => {
@@ -132,6 +211,48 @@ const handleAddFeed = async () => {
 const handleSubscribeDiscover = async (url: string) => {
   addFeedError.value = "";
   await addFeedMutation.mutateAsync({ url });
+};
+
+const handleFeedItemAction = async (payload: {
+  item: { id: string; title: string };
+  actionId: string;
+}) => {
+  feedActionError.value = "";
+
+  if (payload.actionId === "manage") {
+    await navigateTo("/dashboard/settings/feeds");
+    return;
+  }
+
+  if (payload.actionId === "refresh") {
+    try {
+      await refreshFeedMutation.mutateAsync({ id: payload.item.id });
+    } catch (error) {
+      feedActionError.value =
+        error instanceof Error ? error.message : "Unable to refresh feed.";
+    }
+    return;
+  }
+
+  if (payload.actionId === "remove") {
+    if (import.meta.client) {
+      const shouldRemove = window.confirm(`Remove feed "${payload.item.title}"?`);
+      if (!shouldRemove) {
+        return;
+      }
+    }
+
+    try {
+      await deleteFeedMutation.mutateAsync({ id: payload.item.id });
+    } catch (error) {
+      feedActionError.value =
+        error instanceof Error ? error.message : "Unable to remove feed.";
+    }
+  }
+};
+
+const handleDiscoverSelect = async (item: { id: string }) => {
+  await handleSubscribeDiscover(item.id);
 };
 
 const handleSignOut = async () => {
@@ -181,51 +302,24 @@ const handleSignOut = async () => {
     </SidebarHeader>
 
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard')">
-                <NuxtLink to="/dashboard">
-                  <LayoutDashboard />
-                  <span>Dashboard</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard/settings')">
-                <NuxtLink :to="defaultSettingsHref">
-                  <Settings />
-                  <span>Settings</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <NavMain label="Navigation" :items="navigationItems" />
 
-      <SidebarGroup>
+      <template v-if="feedNavItems.length">
+        <NavProjects
+          group-label="Your feeds"
+          mode="link"
+          :items="feedNavItems"
+          @item-action="handleFeedItemAction"
+        />
+        <p v-if="feedActionError" class="px-2 py-1 text-xs text-destructive">
+          {{ feedActionError }}
+        </p>
+      </template>
+      <SidebarGroup v-else>
         <SidebarGroupLabel>Your feeds</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu v-if="activeSidebarFeeds.length">
-            <SidebarMenuItem
-              v-for="feed in activeSidebarFeeds"
-              :key="feed.id"
-            >
-              <SidebarMenuButton as-child>
-                <NuxtLink :to="`/dashboard/feed/${feed.id}`">
-                  <Rss />
-                  <span>{{ feed.title }}</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-              <SidebarMenuBadge v-if="feed.unreadCount > 0">
-                {{ feed.unreadCount }}
-              </SidebarMenuBadge>
-            </SidebarMenuItem>
-          </SidebarMenu>
           <p
-            v-else-if="sidebarFeedsQuery.isLoading.value"
+            v-if="sidebarFeedsQuery.isLoading.value"
             class="px-2 py-1 text-xs text-muted-foreground"
           >
             Loading feeds...
@@ -236,67 +330,26 @@ const handleSignOut = async () => {
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <SidebarGroup>
+      <NavProjects
+        v-if="discoverNavItems.length"
+        group-label="Discover"
+        mode="action"
+        :items="discoverNavItems"
+        @select="handleDiscoverSelect"
+      />
+      <SidebarGroup v-else>
         <SidebarGroupLabel>Discover</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu v-if="discoverFeeds.length">
-            <SidebarMenuItem
-              v-for="item in discoverFeeds"
-              :key="item.url"
-            >
-              <SidebarMenuButton
-                class="justify-between"
-                @click.prevent="handleSubscribeDiscover(item.url)"
-              >
-                <div class="flex items-center gap-2 truncate">
-                  <Compass />
-                  <span class="truncate">{{ item.title }}</span>
-                </div>
-                <Plus class="size-4 shrink-0" />
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          <p v-else class="px-2 py-1 text-xs text-muted-foreground">
+          <p class="px-2 py-1 text-xs text-muted-foreground">
             All suggested feeds are already added.
           </p>
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <SidebarGroup class="mt-auto">
-        <SidebarGroupLabel>Settings</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem
-              v-for="section in settingsSections"
-              :key="section.id"
-            >
-              <SidebarMenuButton as-child :data-active="isRouteActive(section.href)">
-                <NuxtLink :to="section.href">
-                  <component :is="settingsSectionIcons[section.id]" />
-                  <span>{{ section.label }}</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
     </SidebarContent>
 
     <SidebarFooter>
-      <div class="space-y-2 rounded-lg border p-3 text-sm">
-        <p class="font-medium">{{ user?.name ?? "NewsFlow User" }}</p>
-        <p class="truncate text-xs text-muted-foreground">
-          {{ user?.email ?? "Loading..." }}
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          class="w-full"
-          @click="handleSignOut"
-        >
-          Log out
-        </Button>
-      </div>
+      <NavUser :user="sidebarUser" @sign-out="handleSignOut" />
     </SidebarFooter>
   </Sidebar>
 </template>
