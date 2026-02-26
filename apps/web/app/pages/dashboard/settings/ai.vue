@@ -2,7 +2,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref, watch } from "vue";
 
-import SettingsShell from "@/components/settings/SettingsShell.vue";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -486,8 +485,7 @@ watch(
 </script>
 
 <template>
-  <SettingsShell section="ai">
-    <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
+  <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
       <Card>
         <CardHeader>
           <CardTitle>Create profile</CardTitle>
@@ -761,5 +759,4 @@ watch(
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  </SettingsShell>
 </template>

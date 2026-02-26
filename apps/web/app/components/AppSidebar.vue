@@ -5,15 +5,12 @@ import {
   Plus,
   Rss,
   Settings,
-  Sparkles,
-  UserCircle,
 } from "lucide-vue-next";
-import { type Component, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
 import NavMain from "@/components/NavMain.vue";
 import NavProjects from "@/components/NavProjects.vue";
-import NavSecondary from "@/components/NavSecondary.vue";
 import NavUser from "@/components/NavUser.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +27,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
-import {
-  settingsSections,
-  type SettingsSectionId,
-} from "@/lib/settings-sections";
+import { settingsSections } from "@/lib/settings-sections";
 
 const { $authClient, $orpc } = useNuxtApp();
 const route = useRoute();
@@ -100,12 +94,6 @@ const discoverFeeds = computed(() => {
 
 const defaultSettingsHref = settingsSections[0]?.href ?? "/dashboard/settings/personal";
 
-const settingsSectionIcons: Record<SettingsSectionId, Component> = {
-  personal: UserCircle,
-  ai: Sparkles,
-  feeds: Rss,
-};
-
 const navigationItems = computed(() => [
   {
     title: "Dashboard",
@@ -141,15 +129,6 @@ const discoverNavItems = computed(() =>
     id: item.url,
     title: item.title,
     icon: Compass,
-  }))
-);
-
-const settingsNavItems = computed(() =>
-  settingsSections.map((section) => ({
-    title: section.label,
-    to: section.href,
-    icon: settingsSectionIcons[section.id],
-    isActive: isRouteActive(section.href),
   }))
 );
 
@@ -280,7 +259,6 @@ const handleSignOut = async () => {
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <NavSecondary class="mt-auto" group-label="Settings" :items="settingsNavItems" />
     </SidebarContent>
 
     <SidebarFooter>

@@ -2,7 +2,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref, watch } from "vue";
 
-import SettingsShell from "@/components/settings/SettingsShell.vue";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -217,8 +216,7 @@ const formatDate = (value: Date | string | null) => {
 </script>
 
 <template>
-  <SettingsShell section="feeds">
-    <Card>
+  <Card>
       <CardHeader>
         <CardTitle>Feed Management</CardTitle>
         <CardDescription>
@@ -443,5 +441,4 @@ const formatDate = (value: Date | string | null) => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  </SettingsShell>
 </template>
