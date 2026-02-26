@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
+  UserCircle,
 } from "lucide-vue-next"
+import { computed } from "vue"
 
 import {
   Avatar,
@@ -33,11 +31,32 @@ const props = defineProps<{
   user: {
     name: string
     email: string
-    avatar: string
+    avatar?: string | null
   }
 }>()
 
+const emit = defineEmits<{
+  signOut: []
+}>()
+
 const { isMobile } = useSidebar()
+
+const avatarFallback = computed(() => {
+  const trimmedName = props.user.name.trim()
+  if (!trimmedName) {
+    return "U"
+  }
+
+  return trimmedName
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("")
+})
+
+const handleSignOut = () => {
+  emit("signOut")
+}
 </script>
 
 <template>
@@ -50,9 +69,9 @@ const { isMobile } = useSidebar()
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
+              <AvatarImage :src="user.avatar ?? undefined" :alt="user.name" />
               <AvatarFallback class="rounded-lg">
-                CN
+                {{ avatarFallback }}
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
@@ -71,9 +90,9 @@ const { isMobile } = useSidebar()
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
+                <AvatarImage :src="user.avatar ?? undefined" :alt="user.name" />
                 <AvatarFallback class="rounded-lg">
-                  CN
+                  {{ avatarFallback }}
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
@@ -84,28 +103,15 @@ const { isMobile } = useSidebar()
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Sparkles />
-              Upgrade to Pro
+            <DropdownMenuItem as-child>
+              <NuxtLink to="/dashboard/settings/personal">
+                <UserCircle />
+                Personal Settings
+              </NuxtLink>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BadgeCheck />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell />
-              Notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @select="handleSignOut">
             <LogOut />
             Log out
           </DropdownMenuItem>

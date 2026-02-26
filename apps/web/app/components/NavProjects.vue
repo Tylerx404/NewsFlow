@@ -1,84 +1,69 @@
 <script setup lang="ts">
 import type { LucideIcon } from "lucide-vue-next"
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-vue-next"
+import { Plus } from "lucide-vue-next"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '@/components/ui/sidebar'
 
-defineProps<{
-  projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
+type NavProjectsItem = {
+  id: string
+  title: string
+  icon?: LucideIcon
+  to?: string
+  badge?: number
+}
+
+const props = withDefaults(defineProps<{
+  groupLabel: string
+  items: NavProjectsItem[]
+  mode?: "link" | "action"
+}>(), {
+  mode: "link",
+})
+
+const emit = defineEmits<{
+  select: [item: NavProjectsItem]
 }>()
 
-const { isMobile } = useSidebar()
+const handleSelect = (item: NavProjectsItem) => {
+  if (props.mode !== "action") {
+    return
+  }
+  emit("select", item)
+}
 </script>
 
 <template>
-  <SidebarGroup class="group-data-[collapsible=icon]:hidden">
-    <SidebarGroupLabel>Projects</SidebarGroupLabel>
+  <SidebarGroup>
+    <SidebarGroupLabel>{{ groupLabel }}</SidebarGroupLabel>
     <SidebarMenu>
-      <SidebarMenuItem v-for="item in projects" :key="item.name">
-        <SidebarMenuButton as-child>
-          <a :href="item.url">
-            <component :is="item.icon" />
-            <span>{{ item.name }}</span>
-          </a>
+      <SidebarMenuItem v-for="item in items" :key="item.id">
+        <SidebarMenuButton
+          v-if="mode === 'action'"
+          class="justify-between"
+          @click.prevent="handleSelect(item)"
+        >
+          <div class="flex min-w-0 items-center gap-2">
+            <component :is="item.icon ?? Plus" />
+            <span class="truncate">{{ item.title }}</span>
+          </div>
+          <Plus class="size-4 shrink-0" />
         </SidebarMenuButton>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <SidebarMenuAction show-on-hover>
-              <MoreHorizontal />
-              <span class="sr-only">More</span>
-            </SidebarMenuAction>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            class="w-48 rounded-lg"
-            :side="isMobile ? 'bottom' : 'right'"
-            :align="isMobile ? 'end' : 'start'"
-          >
-            <DropdownMenuItem>
-              <Folder class="text-muted-foreground" />
-              <span>View Project</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Forward class="text-muted-foreground" />
-              <span>Share Project</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Trash2 class="text-muted-foreground" />
-              <span>Delete Project</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <SidebarMenuButton>
-          <MoreHorizontal />
-          <span>More</span>
+        <SidebarMenuButton v-else as-child>
+          <NuxtLink :to="item.to ?? '#'">
+            <component :is="item.icon ?? Plus" />
+            <span>{{ item.title }}</span>
+          </NuxtLink>
         </SidebarMenuButton>
+        <SidebarMenuBadge v-if="typeof item.badge === 'number' && item.badge > 0">
+          {{ item.badge }}
+        </SidebarMenuBadge>
       </SidebarMenuItem>
     </SidebarMenu>
   </SidebarGroup>
