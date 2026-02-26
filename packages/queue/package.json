@@ -10,7 +10,7 @@
   "dependencies": {
     "@NewsFlow/db": "workspace:*",
     "@extractus/article-extractor": "^8.0.20",
-    "bullmq": "^5.69.3",
+    "bullmq": "^5.70.1",
     "node-cron": "^4.2.1",
     "rss-parser": "^3.13.0",
     "zod": "^4.3.6"
