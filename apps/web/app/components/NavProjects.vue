@@ -102,7 +102,10 @@ const setItemActionsOpen = (itemId: string, open: boolean) => {
           @update:open="(open) => setItemActionsOpen(item.id, open)"
         >
           <DropdownMenuTrigger as-child>
-            <SidebarMenuAction show-on-hover>
+            <SidebarMenuAction
+              show-on-hover
+              class="group-focus-within/menu-item:opacity-0 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100"
+            >
               <MoreHorizontal />
               <span class="sr-only">More actions</span>
             </SidebarMenuAction>
