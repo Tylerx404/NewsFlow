@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import NavMain from "@/components/NavMain.vue";
 import NavProjects from "@/components/NavProjects.vue";
 import NavSecondary from "@/components/NavSecondary.vue";
+import NavUser from "@/components/NavUser.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,7 +26,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
@@ -53,11 +53,17 @@ const sessionQuery = useQuery({
     return {
       name: data.user.name,
       email: data.user.email,
+      avatar: data.user.image,
     };
   },
 });
 
 const user = computed(() => sessionQuery.data.value ?? null);
+const sidebarUser = computed(() => ({
+  name: user.value?.name ?? "NewsFlow User",
+  email: user.value?.email ?? "Loading...",
+  avatar: user.value?.avatar ?? null,
+}));
 
 const sidebarFeedsQuery = useQuery(
   computed(() =>
@@ -278,20 +284,7 @@ const handleSignOut = async () => {
     </SidebarContent>
 
     <SidebarFooter>
-      <div class="space-y-2 rounded-lg border p-3 text-sm">
-        <p class="font-medium">{{ user?.name ?? "NewsFlow User" }}</p>
-        <p class="truncate text-xs text-muted-foreground">
-          {{ user?.email ?? "Loading..." }}
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          class="w-full"
-          @click="handleSignOut"
-        >
-          Log out
-        </Button>
-      </div>
+      <NavUser :user="sidebarUser" @sign-out="handleSignOut" />
     </SidebarFooter>
   </Sidebar>
 </template>
