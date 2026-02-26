@@ -3,8 +3,11 @@ import {
   Compass,
   LayoutDashboard,
   Plus,
+  RefreshCw,
   Rss,
   Settings,
+  SlidersHorizontal,
+  Trash2,
 } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
@@ -35,6 +38,7 @@ const queryClient = useQueryClient();
 
 const addFeedUrl = ref("");
 const addFeedError = ref("");
+const feedActionError = ref("");
 
 const sessionQuery = useQuery({
   queryKey: dashboardQueryKeys.auth.sessionSummary(),
@@ -114,16 +118,6 @@ const navigationItems = computed(() => [
   },
 ]);
 
-const feedNavItems = computed(() =>
-  activeSidebarFeeds.value.map((feed) => ({
-    id: feed.id,
-    title: feed.title,
-    to: `/dashboard/feed/${feed.id}`,
-    icon: Rss,
-    badge: feed.unreadCount,
-  }))
-);
-
 const discoverNavItems = computed(() =>
   discoverFeeds.value.map((item) => ({
     id: item.url,
@@ -148,6 +142,56 @@ const addFeedMutation = useMutation(
   })
 );
 
+const refreshFeedMutation = useMutation(
+  $orpc.feed.refresh.mutationOptions({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const deleteFeedMutation = useMutation(
+  $orpc.feed.delete.mutationOptions({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const isFeedActionPending = computed(
+  () => refreshFeedMutation.isPending.value || deleteFeedMutation.isPending.value
+);
+
+const feedNavItems = computed(() =>
+  activeSidebarFeeds.value.map((feed) => ({
+    id: feed.id,
+    title: feed.title,
+    to: `/dashboard/feed/${feed.id}`,
+    icon: Rss,
+    badge: feed.unreadCount,
+    actions: [
+      {
+        id: "refresh",
+        label: "Refresh now",
+        icon: RefreshCw,
+        disabled: isFeedActionPending.value,
+      },
+      {
+        id: "manage",
+        label: "Manage feeds",
+        icon: SlidersHorizontal,
+      },
+      {
+        id: "remove",
+        label: "Remove feed",
+        icon: Trash2,
+        variant: "destructive" as const,
+        disabled: isFeedActionPending.value,
+      },
+    ],
+  }))
+);
+
 const isRouteActive = (path: string) => {
   if (path === "/dashboard") {
     return route.path === "/dashboard";
@@ -167,6 +211,44 @@ const handleAddFeed = async () => {
 const handleSubscribeDiscover = async (url: string) => {
   addFeedError.value = "";
   await addFeedMutation.mutateAsync({ url });
+};
+
+const handleFeedItemAction = async (payload: {
+  item: { id: string; title: string };
+  actionId: string;
+}) => {
+  feedActionError.value = "";
+
+  if (payload.actionId === "manage") {
+    await navigateTo("/dashboard/settings/feeds");
+    return;
+  }
+
+  if (payload.actionId === "refresh") {
+    try {
+      await refreshFeedMutation.mutateAsync({ id: payload.item.id });
+    } catch (error) {
+      feedActionError.value =
+        error instanceof Error ? error.message : "Unable to refresh feed.";
+    }
+    return;
+  }
+
+  if (payload.actionId === "remove") {
+    if (import.meta.client) {
+      const shouldRemove = window.confirm(`Remove feed "${payload.item.title}"?`);
+      if (!shouldRemove) {
+        return;
+      }
+    }
+
+    try {
+      await deleteFeedMutation.mutateAsync({ id: payload.item.id });
+    } catch (error) {
+      feedActionError.value =
+        error instanceof Error ? error.message : "Unable to remove feed.";
+    }
+  }
 };
 
 const handleDiscoverSelect = async (item: { id: string }) => {
@@ -222,12 +304,17 @@ const handleSignOut = async () => {
     <SidebarContent>
       <NavMain label="Navigation" :items="navigationItems" />
 
-      <NavProjects
-        v-if="feedNavItems.length"
-        group-label="Your feeds"
-        mode="link"
-        :items="feedNavItems"
-      />
+      <template v-if="feedNavItems.length">
+        <NavProjects
+          group-label="Your feeds"
+          mode="link"
+          :items="feedNavItems"
+          @item-action="handleFeedItemAction"
+        />
+        <p v-if="feedActionError" class="px-2 py-1 text-xs text-destructive">
+          {{ feedActionError }}
+        </p>
+      </template>
       <SidebarGroup v-else>
         <SidebarGroupLabel>Your feeds</SidebarGroupLabel>
         <SidebarGroupContent>

@@ -1,15 +1,31 @@
 <script setup lang="ts">
 import type { LucideIcon } from "lucide-vue-next"
-import { Plus } from "lucide-vue-next"
+import { MoreHorizontal, Plus } from "lucide-vue-next"
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarMenuAction,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
+
+type NavProjectsItemAction = {
+  id: string
+  label: string
+  icon?: LucideIcon
+  variant?: "default" | "destructive"
+  disabled?: boolean
+}
 
 type NavProjectsItem = {
   id: string
@@ -17,6 +33,7 @@ type NavProjectsItem = {
   icon?: LucideIcon
   to?: string
   badge?: number
+  actions?: NavProjectsItemAction[]
 }
 
 const props = withDefaults(defineProps<{
@@ -29,13 +46,20 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   select: [item: NavProjectsItem]
+  itemAction: [payload: { item: NavProjectsItem; actionId: string }]
 }>()
+
+const { isMobile } = useSidebar()
 
 const handleSelect = (item: NavProjectsItem) => {
   if (props.mode !== "action") {
     return
   }
   emit("select", item)
+}
+
+const handleItemAction = (item: NavProjectsItem, actionId: string) => {
+  emit("itemAction", { item, actionId })
 }
 </script>
 
@@ -64,6 +88,30 @@ const handleSelect = (item: NavProjectsItem) => {
         <SidebarMenuBadge v-if="typeof item.badge === 'number' && item.badge > 0">
           {{ item.badge }}
         </SidebarMenuBadge>
+        <DropdownMenu v-if="mode === 'link' && item.actions?.length">
+          <DropdownMenuTrigger as-child>
+            <SidebarMenuAction show-on-hover>
+              <MoreHorizontal />
+              <span class="sr-only">More actions</span>
+            </SidebarMenuAction>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            class="w-44 rounded-lg"
+            :side="isMobile ? 'bottom' : 'right'"
+            :align="isMobile ? 'end' : 'start'"
+          >
+            <DropdownMenuItem
+              v-for="action in item.actions"
+              :key="action.id"
+              :variant="action.variant ?? 'default'"
+              :disabled="action.disabled"
+              @select="handleItemAction(item, action.id)"
+            >
+              <component :is="action.icon ?? MoreHorizontal" />
+              <span>{{ action.label }}</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
   </SidebarGroup>
