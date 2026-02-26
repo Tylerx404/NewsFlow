@@ -41,6 +41,16 @@ const emit = defineEmits<{
 
 const { isMobile } = useSidebar()
 
+const avatarSrc = computed(() => {
+  const raw = props.user.avatar
+  if (typeof raw !== "string") {
+    return null
+  }
+
+  const normalized = raw.trim()
+  return normalized.length > 0 ? normalized : null
+})
+
 const avatarFallback = computed(() => {
   const trimmedName = props.user.name.trim()
   if (!trimmedName) {
@@ -69,7 +79,7 @@ const handleSignOut = () => {
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="user.avatar ?? undefined" :alt="user.name" />
+              <AvatarImage v-if="avatarSrc" :src="avatarSrc" :alt="user.name" />
               <AvatarFallback class="rounded-lg">
                 {{ avatarFallback }}
               </AvatarFallback>
@@ -90,7 +100,7 @@ const handleSignOut = () => {
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar ?? undefined" :alt="user.name" />
+                <AvatarImage v-if="avatarSrc" :src="avatarSrc" :alt="user.name" />
                 <AvatarFallback class="rounded-lg">
                   {{ avatarFallback }}
                 </AvatarFallback>
