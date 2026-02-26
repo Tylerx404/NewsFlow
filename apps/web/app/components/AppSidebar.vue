@@ -11,6 +11,9 @@ import {
 import { type Component, computed, ref } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 
+import NavMain from "@/components/NavMain.vue";
+import NavProjects from "@/components/NavProjects.vue";
+import NavSecondary from "@/components/NavSecondary.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -97,6 +100,53 @@ const settingsSectionIcons: Record<SettingsSectionId, Component> = {
   feeds: Rss,
 };
 
+const navigationItems = computed(() => [
+  {
+    title: "Dashboard",
+    to: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: isRouteActive("/dashboard"),
+  },
+  {
+    title: "Settings",
+    to: defaultSettingsHref,
+    icon: Settings,
+    isActive: isRouteActive("/dashboard/settings"),
+    items: settingsSections.map((section) => ({
+      title: section.label,
+      to: section.href,
+      isActive: isRouteActive(section.href),
+    })),
+  },
+]);
+
+const feedNavItems = computed(() =>
+  activeSidebarFeeds.value.map((feed) => ({
+    id: feed.id,
+    title: feed.title,
+    to: `/dashboard/feed/${feed.id}`,
+    icon: Rss,
+    badge: feed.unreadCount,
+  }))
+);
+
+const discoverNavItems = computed(() =>
+  discoverFeeds.value.map((item) => ({
+    id: item.url,
+    title: item.title,
+    icon: Compass,
+  }))
+);
+
+const settingsNavItems = computed(() =>
+  settingsSections.map((section) => ({
+    title: section.label,
+    to: section.href,
+    icon: settingsSectionIcons[section.id],
+    isActive: isRouteActive(section.href),
+  }))
+);
+
 const addFeedMutation = useMutation(
   $orpc.feed.create.mutationOptions({
     onSuccess: async () => {
@@ -132,6 +182,10 @@ const handleAddFeed = async () => {
 const handleSubscribeDiscover = async (url: string) => {
   addFeedError.value = "";
   await addFeedMutation.mutateAsync({ url });
+};
+
+const handleDiscoverSelect = async (item: { id: string }) => {
+  await handleSubscribeDiscover(item.id);
 };
 
 const handleSignOut = async () => {
@@ -181,51 +235,19 @@ const handleSignOut = async () => {
     </SidebarHeader>
 
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard')">
-                <NuxtLink to="/dashboard">
-                  <LayoutDashboard />
-                  <span>Dashboard</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton as-child :data-active="isRouteActive('/dashboard/settings')">
-                <NuxtLink :to="defaultSettingsHref">
-                  <Settings />
-                  <span>Settings</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <NavMain label="Navigation" :items="navigationItems" />
 
-      <SidebarGroup>
+      <NavProjects
+        v-if="feedNavItems.length"
+        group-label="Your feeds"
+        mode="link"
+        :items="feedNavItems"
+      />
+      <SidebarGroup v-else>
         <SidebarGroupLabel>Your feeds</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu v-if="activeSidebarFeeds.length">
-            <SidebarMenuItem
-              v-for="feed in activeSidebarFeeds"
-              :key="feed.id"
-            >
-              <SidebarMenuButton as-child>
-                <NuxtLink :to="`/dashboard/feed/${feed.id}`">
-                  <Rss />
-                  <span>{{ feed.title }}</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-              <SidebarMenuBadge v-if="feed.unreadCount > 0">
-                {{ feed.unreadCount }}
-              </SidebarMenuBadge>
-            </SidebarMenuItem>
-          </SidebarMenu>
           <p
-            v-else-if="sidebarFeedsQuery.isLoading.value"
+            v-if="sidebarFeedsQuery.isLoading.value"
             class="px-2 py-1 text-xs text-muted-foreground"
           >
             Loading feeds...
@@ -236,50 +258,23 @@ const handleSignOut = async () => {
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <SidebarGroup>
+      <NavProjects
+        v-if="discoverNavItems.length"
+        group-label="Discover"
+        mode="action"
+        :items="discoverNavItems"
+        @select="handleDiscoverSelect"
+      />
+      <SidebarGroup v-else>
         <SidebarGroupLabel>Discover</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu v-if="discoverFeeds.length">
-            <SidebarMenuItem
-              v-for="item in discoverFeeds"
-              :key="item.url"
-            >
-              <SidebarMenuButton
-                class="justify-between"
-                @click.prevent="handleSubscribeDiscover(item.url)"
-              >
-                <div class="flex items-center gap-2 truncate">
-                  <Compass />
-                  <span class="truncate">{{ item.title }}</span>
-                </div>
-                <Plus class="size-4 shrink-0" />
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          <p v-else class="px-2 py-1 text-xs text-muted-foreground">
+          <p class="px-2 py-1 text-xs text-muted-foreground">
             All suggested feeds are already added.
           </p>
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <SidebarGroup class="mt-auto">
-        <SidebarGroupLabel>Settings</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem
-              v-for="section in settingsSections"
-              :key="section.id"
-            >
-              <SidebarMenuButton as-child :data-active="isRouteActive(section.href)">
-                <NuxtLink :to="section.href">
-                  <component :is="settingsSectionIcons[section.id]" />
-                  <span>{{ section.label }}</span>
-                </NuxtLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <NavSecondary class="mt-auto" group-label="Settings" :items="settingsNavItems" />
     </SidebarContent>
 
     <SidebarFooter>
