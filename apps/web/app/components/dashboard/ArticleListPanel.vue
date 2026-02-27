@@ -194,7 +194,7 @@ const formatDate = (value: Date | string) => {
         <CardContent class="space-y-4 p-5">
           <div class="space-y-2">
             <NuxtLink
-              :to="`/dashboard/article/${article.id}`"
+              :to="`/articles/${article.id}`"
               class="text-lg font-medium leading-tight hover:underline"
             >
               {{ article.title }}
@@ -228,7 +228,7 @@ const formatDate = (value: Date | string) => {
               {{ article.saved ? "Unsave" : "Save" }}
             </Button>
             <Button as-child size="sm">
-              <NuxtLink :to="`/dashboard/article/${article.id}`">
+              <NuxtLink :to="`/articles/${article.id}`">
                 Open reader
               </NuxtLink>
             </Button>

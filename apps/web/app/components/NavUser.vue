@@ -114,7 +114,7 @@ const handleSignOut = () => {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem as-child>
-              <NuxtLink to="/dashboard/settings/personal">
+              <NuxtLink to="/settings/personal">
                 <UserCircle />
                 Personal Settings
               </NuxtLink>

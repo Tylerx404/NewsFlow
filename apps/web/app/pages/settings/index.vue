@@ -5,7 +5,7 @@ definePageMeta({
   title: "Settings",
 });
 
-await navigateTo("/dashboard/settings/personal", { replace: true });
+await navigateTo("/settings/personal", { replace: true });
 </script>
 
 <template>

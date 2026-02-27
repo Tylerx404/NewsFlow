@@ -194,7 +194,7 @@ const handleSummarize = async () => {
               Add an AI profile to enable summarization.
             </p>
             <Button as-child size="sm">
-              <NuxtLink to="/dashboard/settings/ai">
+              <NuxtLink to="/settings/ai">
                 Go to AI settings
               </NuxtLink>
             </Button>

@@ -2,6 +2,7 @@
 import {
   Compass,
   LayoutDashboard,
+  Newspaper,
   Plus,
   RefreshCw,
   Rss,
@@ -96,7 +97,7 @@ const discoverFeeds = computed(() => {
     .slice(0, 6);
 });
 
-const defaultSettingsHref = settingsSections[0]?.href ?? "/dashboard/settings/personal";
+const defaultSettingsHref = settingsSections[0]?.href ?? "/settings/personal";
 
 const navigationItems = computed(() => [
   {
@@ -106,10 +107,16 @@ const navigationItems = computed(() => [
     isActive: isRouteActive("/dashboard"),
   },
   {
+    title: "Articles",
+    to: "/articles",
+    icon: Newspaper,
+    isActive: isRouteActive("/articles"),
+  },
+  {
     title: "Settings",
     to: defaultSettingsHref,
     icon: Settings,
-    isActive: isRouteActive("/dashboard/settings"),
+    isActive: isRouteActive("/settings"),
     items: settingsSections.map((section) => ({
       title: section.label,
       to: section.href,
@@ -166,7 +173,7 @@ const feedNavItems = computed(() =>
   activeSidebarFeeds.value.map((feed) => ({
     id: feed.id,
     title: feed.title,
-    to: `/dashboard/feed/${feed.id}`,
+    to: `/feeds/${feed.id}`,
     icon: Rss,
     badge: feed.unreadCount,
     actions: [
@@ -196,7 +203,8 @@ const isRouteActive = (path: string) => {
   if (path === "/dashboard") {
     return route.path === "/dashboard";
   }
-  return route.path.startsWith(path);
+
+  return route.path === path || route.path.startsWith(`${path}/`);
 };
 
 const handleAddFeed = async () => {
@@ -220,7 +228,7 @@ const handleFeedItemAction = async (payload: {
   feedActionError.value = "";
 
   if (payload.actionId === "manage") {
-    await navigateTo("/dashboard/settings/feeds");
+    await navigateTo("/settings/feeds");
     return;
   }
 
