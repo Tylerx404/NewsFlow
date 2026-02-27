@@ -14,8 +14,16 @@ const pageTitle = computed(() => {
     return route.meta.title;
   }
 
-  if (route.path.startsWith("/dashboard/settings")) {
+  if (route.path.startsWith("/settings")) {
     return "Settings";
+  }
+
+  if (route.path.startsWith("/articles")) {
+    return "Articles";
+  }
+
+  if (route.path.startsWith("/feeds")) {
+    return "Reader";
   }
 
   return "Dashboard";
