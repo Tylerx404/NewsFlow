@@ -4,7 +4,7 @@ import ArticleListPanel from "@/components/dashboard/ArticleListPanel.vue";
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Feed",
+  title: "Feed Articles",
 });
 
 const route = useRoute();
