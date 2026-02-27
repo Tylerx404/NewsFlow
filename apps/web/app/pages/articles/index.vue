@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ArticleListPanel from "@/components/dashboard/ArticleListPanel.vue";
+import ArticleListPanel from "@/components/articles/ArticleListPanel.vue";
 
 definePageMeta({
   layout: "dashboard",
