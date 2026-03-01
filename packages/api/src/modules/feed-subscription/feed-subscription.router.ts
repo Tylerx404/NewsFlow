@@ -2,7 +2,7 @@ import prisma from "@NewsFlow/db";
 import { QUEUES, createQueue, type RssFetchJobData } from "@NewsFlow/queue";
 import { ORPCError } from "@orpc/server";
 import { protectedProcedure } from "../../index";
-import { DISCOVER_FEEDS } from "../feed/feed.discover";
+import { DISCOVER_FEEDS } from "./feed-subscription.discover";
 import {
   createFeedSubscriptionSchema,
   discoverFeedSubscriptionItemSchema,
