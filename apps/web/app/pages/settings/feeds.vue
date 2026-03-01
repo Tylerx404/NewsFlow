@@ -4,7 +4,6 @@ import { computed, reactive, ref, watch } from "vue";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -435,7 +434,9 @@ const formatDate = (value: Date | string | null) => {
           <AlertDialogCancel :disabled="deleteDialogFeedId ? rowPendingDeleteByFeedId[deleteDialogFeedId] : false">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            type="button"
+            variant="destructive"
             :disabled="deleteDialogFeedId ? rowPendingDeleteByFeedId[deleteDialogFeedId] : false"
             @click="confirmDeleteFeed"
           >
@@ -444,7 +445,7 @@ const formatDate = (value: Date | string | null) => {
                 ? "Deleting..."
                 : "Delete feed"
             }}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
