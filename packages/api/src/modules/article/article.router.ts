@@ -12,6 +12,66 @@ import {
 } from "./article.schema";
 import { extractFullContent } from "./article.service";
 
+type UserSubscription = {
+  id: string;
+  feedSourceId: string;
+  customTitle: string | null;
+  feedSource: {
+    title: string;
+    iconUrl: string | null;
+  };
+};
+
+const resolveUserSubscriptions = async (
+  userId: string,
+  feedSubscriptionId?: string
+): Promise<UserSubscription[]> => {
+  if (feedSubscriptionId) {
+    const subscription = await prisma.feedSubscription.findFirst({
+      where: {
+        id: feedSubscriptionId,
+        userId,
+      },
+      select: {
+        id: true,
+        feedSourceId: true,
+        customTitle: true,
+        feedSource: {
+          select: {
+            title: true,
+            iconUrl: true,
+          },
+        },
+      },
+    });
+
+    if (!subscription) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Feed subscription not found",
+      });
+    }
+
+    return [subscription];
+  }
+
+  return prisma.feedSubscription.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+      feedSourceId: true,
+      customTitle: true,
+      feedSource: {
+        select: {
+          title: true,
+          iconUrl: true,
+        },
+      },
+    },
+  });
+};
+
 export const articleRouter = {
   list: protectedProcedure
     .input(listArticlesSchema)
@@ -19,14 +79,63 @@ export const articleRouter = {
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      const where: Prisma.ArticleWhereInput = {
-        feed: { userId },
-        ...(input.feedId ? { feedId: input.feedId } : {}),
-        ...(input.saved !== undefined ? { saved: input.saved } : {}),
-        ...(input.read !== undefined ? { read: input.read } : {}),
+      const subscriptions = await resolveUserSubscriptions(
+        userId,
+        input.feedSubscriptionId
+      );
+
+      if (subscriptions.length === 0) {
+        return {
+          items: [],
+        };
+      }
+
+      const sourceIds = subscriptions.map((subscription) => subscription.feedSourceId);
+      const subscriptionBySourceId = new Map(
+        subscriptions.map((subscription) => [subscription.feedSourceId, subscription])
+      );
+
+      const where: Prisma.SourceArticleWhereInput = {
+        feedSourceId: { in: sourceIds },
       };
 
-      const andFilters: Prisma.ArticleWhereInput[] = [];
+      const andFilters: Prisma.SourceArticleWhereInput[] = [];
+
+      if (input.read !== undefined) {
+        andFilters.push({
+          userStates: input.read
+            ? {
+                some: {
+                  userId,
+                  read: true,
+                },
+              }
+            : {
+                none: {
+                  userId,
+                  read: true,
+                },
+              },
+        });
+      }
+
+      if (input.saved !== undefined) {
+        andFilters.push({
+          userStates: input.saved
+            ? {
+                some: {
+                  userId,
+                  saved: true,
+                },
+              }
+            : {
+                none: {
+                  userId,
+                  saved: true,
+                },
+              },
+        });
+      }
 
       if (input.query) {
         andFilters.push({
@@ -55,11 +164,27 @@ export const articleRouter = {
         where.AND = andFilters;
       }
 
-      const articles = await prisma.article.findMany({
+      const sourceArticles = await prisma.sourceArticle.findMany({
         where,
-        take: input.limit + 1, // +1 to check for next cursor
+        take: input.limit + 1,
         orderBy: [{ pubDate: "desc" }, { id: "desc" }],
-        include: { feed: { select: { title: true, iconUrl: true } } },
+        include: {
+          feedSource: {
+            select: {
+              id: true,
+              title: true,
+              iconUrl: true,
+            },
+          },
+          userStates: {
+            where: { userId },
+            select: {
+              read: true,
+              saved: true,
+            },
+            take: 1,
+          },
+        },
       });
 
       let nextCursor:
@@ -69,8 +194,8 @@ export const articleRouter = {
           }
         | undefined;
 
-      if (articles.length > input.limit) {
-        const nextItem = articles.pop();
+      if (sourceArticles.length > input.limit) {
+        const nextItem = sourceArticles.pop();
         if (nextItem) {
           nextCursor = {
             id: nextItem.id,
@@ -79,7 +204,48 @@ export const articleRouter = {
         }
       }
 
-      return { items: articles, nextCursor };
+      const items = sourceArticles.map((article) => {
+        const subscription = subscriptionBySourceId.get(article.feedSourceId);
+        const state = article.userStates[0];
+
+        if (!subscription) {
+          throw new ORPCError("NOT_FOUND", {
+            message: "Feed subscription not found",
+          });
+        }
+
+        return {
+          id: article.id,
+          feedSourceId: article.feedSourceId,
+          feedSubscriptionId: subscription.id,
+          articleKey: article.articleKey,
+          guid: article.guid,
+          title: article.title,
+          link: article.link,
+          author: article.author,
+          pubDate: article.pubDate,
+          content: article.content,
+          excerpt: article.excerpt,
+          image: article.image,
+          categories: article.categories,
+          read: state?.read ?? false,
+          saved: state?.saved ?? false,
+          contentExtracted: article.contentExtracted,
+          extractionAttempts: article.extractionAttempts,
+          lastExtractionError: article.lastExtractionError,
+          createdAt: article.createdAt,
+          updatedAt: article.updatedAt,
+          feed: {
+            title: subscription.customTitle || article.feedSource.title,
+            iconUrl: article.feedSource.iconUrl,
+          },
+        };
+      });
+
+      return {
+        items,
+        nextCursor,
+      };
     }),
 
   stats: protectedProcedure
@@ -88,23 +254,49 @@ export const articleRouter = {
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      const baseWhere: Prisma.ArticleWhereInput = {
-        feed: { userId },
-        ...(input.feedId ? { feedId: input.feedId } : {}),
+      const subscriptions = await resolveUserSubscriptions(
+        userId,
+        input.feedSubscriptionId
+      );
+
+      if (subscriptions.length === 0) {
+        return {
+          all: 0,
+          unread: 0,
+          saved: 0,
+        };
+      }
+
+      const sourceIds = subscriptions.map((subscription) => subscription.feedSourceId);
+
+      const baseWhere: Prisma.SourceArticleWhereInput = {
+        feedSourceId: {
+          in: sourceIds,
+        },
       };
 
       const [all, unread, saved] = await Promise.all([
-        prisma.article.count({ where: baseWhere }),
-        prisma.article.count({
+        prisma.sourceArticle.count({ where: baseWhere }),
+        prisma.sourceArticle.count({
           where: {
             ...baseWhere,
-            read: false,
+            userStates: {
+              none: {
+                userId,
+                read: true,
+              },
+            },
           },
         }),
-        prisma.article.count({
+        prisma.sourceArticle.count({
           where: {
             ...baseWhere,
-            saved: true,
+            userStates: {
+              some: {
+                userId,
+                saved: true,
+              },
+            },
           },
         }),
       ]);
@@ -127,7 +319,61 @@ export const articleRouter = {
         throw new ORPCError("NOT_FOUND", { message: "Article not found" });
       }
 
-      return article;
+      const [subscription, state] = await Promise.all([
+        prisma.feedSubscription.findFirst({
+          where: {
+            userId,
+            feedSourceId: article.feedSourceId,
+          },
+          select: {
+            id: true,
+            customTitle: true,
+          },
+        }),
+        prisma.userArticleState.findUnique({
+          where: {
+            userId_sourceArticleId: {
+              userId,
+              sourceArticleId: article.id,
+            },
+          },
+          select: {
+            read: true,
+            saved: true,
+          },
+        }),
+      ]);
+
+      if (!subscription) {
+        throw new ORPCError("NOT_FOUND", { message: "Feed subscription not found" });
+      }
+
+      return {
+        id: article.id,
+        feedSourceId: article.feedSourceId,
+        feedSubscriptionId: subscription.id,
+        articleKey: article.articleKey,
+        guid: article.guid,
+        title: article.title,
+        link: article.link,
+        author: article.author,
+        pubDate: article.pubDate,
+        content: article.content,
+        excerpt: article.excerpt,
+        image: article.image,
+        categories: article.categories,
+        read: state?.read ?? false,
+        saved: state?.saved ?? false,
+        contentExtracted: article.contentExtracted,
+        extractionAttempts: article.extractionAttempts,
+        lastExtractionError: article.lastExtractionError,
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+        feed: {
+          title: subscription.customTitle || article.feedSource.title,
+          iconUrl: article.feedSource.iconUrl,
+        },
+      };
     }),
 
   markRead: protectedProcedure
@@ -135,20 +381,47 @@ export const articleRouter = {
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      const existing = await prisma.article.findFirst({
-        where: { id: input.id, feed: { userId } },
+      const existing = await prisma.sourceArticle.findFirst({
+        where: {
+          id: input.id,
+          feedSource: {
+            subscriptions: {
+              some: { userId },
+            },
+          },
+        },
       });
 
       if (!existing) {
         throw new ORPCError("NOT_FOUND", { message: "Article not found" });
       }
 
-      const updated = await prisma.article.update({
-        where: { id: input.id },
-        data: { read: true },
+      const updated = await prisma.userArticleState.upsert({
+        where: {
+          userId_sourceArticleId: {
+            userId,
+            sourceArticleId: existing.id,
+          },
+        },
+        create: {
+          userId,
+          sourceArticleId: existing.id,
+          read: true,
+          readAt: new Date(),
+          saved: false,
+          savedAt: null,
+        },
+        update: {
+          read: true,
+          readAt: new Date(),
+        },
       });
 
-      return updated;
+      return {
+        id: existing.id,
+        read: updated.read,
+        saved: updated.saved,
+      };
     }),
 
   toggleSaved: protectedProcedure
@@ -156,19 +429,58 @@ export const articleRouter = {
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      const existing = await prisma.article.findFirst({
-        where: { id: input.id, feed: { userId } },
+      const existing = await prisma.sourceArticle.findFirst({
+        where: {
+          id: input.id,
+          feedSource: {
+            subscriptions: {
+              some: { userId },
+            },
+          },
+        },
       });
 
       if (!existing) {
         throw new ORPCError("NOT_FOUND", { message: "Article not found" });
       }
 
-      const updated = await prisma.article.update({
-        where: { id: input.id },
-        data: { saved: !existing.saved },
+      const currentState = await prisma.userArticleState.findUnique({
+        where: {
+          userId_sourceArticleId: {
+            userId,
+            sourceArticleId: existing.id,
+          },
+        },
       });
 
-      return updated;
+      const nextSaved = !(currentState?.saved ?? false);
+      const nextRead = currentState?.read ?? false;
+
+      const updated = await prisma.userArticleState.upsert({
+        where: {
+          userId_sourceArticleId: {
+            userId,
+            sourceArticleId: existing.id,
+          },
+        },
+        create: {
+          userId,
+          sourceArticleId: existing.id,
+          read: nextRead,
+          readAt: currentState?.readAt ?? null,
+          saved: nextSaved,
+          savedAt: nextSaved ? new Date() : null,
+        },
+        update: {
+          saved: nextSaved,
+          savedAt: nextSaved ? new Date() : null,
+        },
+      });
+
+      return {
+        id: existing.id,
+        read: updated.read,
+        saved: updated.saved,
+      };
     }),
 };

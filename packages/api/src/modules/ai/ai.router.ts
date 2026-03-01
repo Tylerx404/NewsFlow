@@ -14,7 +14,6 @@ export const aiRouter = {
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
 
-      // Get and verify article
       const article = await extractFullContent(prisma, input.articleId, userId);
 
       if (!article) {
@@ -27,7 +26,6 @@ export const aiRouter = {
         });
       }
 
-      // Resolve AI config
       let config;
       if (input.aiConfigId) {
         config = await prisma.aiConfig.findFirst({
@@ -45,18 +43,15 @@ export const aiRouter = {
         });
       }
 
-      // Decrypt API key
       const decryptedKey = await EncryptionService.decrypt(config.apiKey);
       const configWithDecryptedKey = { ...config, apiKey: decryptedKey };
 
-      // Generate summary
       const { summary, tokens } = await generateSummary(
         article.content,
         configWithDecryptedKey,
-        article.feed?.language
+        article.feedSource?.language
       );
 
-      // Log usage
       await prisma.aiUsage.create({
         data: {
           userId,
