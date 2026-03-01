@@ -51,16 +51,16 @@ const rowPendingDeleteByFeedId = reactive<Record<string, boolean>>({});
 const deleteDialogFeedId = ref<string | null>(null);
 
 const feedListQuery = useQuery(
-  $orpc.feed.listSidebar.queryOptions({
+  $orpc.feedSubscription.listSidebar.queryOptions({
     input: { includeInactive: true },
-    queryKey: dashboardQueryKeys.feeds.sidebar(true),
+    queryKey: dashboardQueryKeys.feedSubscriptions.sidebar(true),
   })
 );
 
 const feedList = computed(() => feedListQuery.data.value ?? []);
 
 const updateMutation = useMutation(
-  $orpc.feed.update.mutationOptions({
+  $orpc.feedSubscription.update.mutationOptions({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
@@ -68,7 +68,7 @@ const updateMutation = useMutation(
 );
 
 const refreshMutation = useMutation(
-  $orpc.feed.refresh.mutationOptions({
+  $orpc.feedSubscription.refresh.mutationOptions({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
@@ -76,7 +76,7 @@ const refreshMutation = useMutation(
 );
 
 const deleteMutation = useMutation(
-  $orpc.feed.delete.mutationOptions({
+  $orpc.feedSubscription.delete.mutationOptions({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
@@ -96,7 +96,7 @@ watch(
 
       if (!draftByFeedId[feed.id] || !isBusy) {
         draftByFeedId[feed.id] = {
-          title: feed.title,
+          title: feed.customTitle ?? "",
           category: feed.category ?? "",
           isActive: feed.isActive,
         };
@@ -142,17 +142,13 @@ const handleUpdate = async (id: string) => {
   rowErrorByFeedId[id] = "";
 
   const title = draft.title.trim();
-  if (!title) {
-    rowErrorByFeedId[id] = "Title is required.";
-    return;
-  }
 
   rowPendingUpdateByFeedId[id] = true;
 
   try {
     await updateMutation.mutateAsync({
       id,
-      title,
+      customTitle: title || null,
       category: draft.category.trim() || null,
       isActive: draft.isActive,
     });
@@ -239,7 +235,7 @@ const formatDate = (value: Date | string | null) => {
               </TableCaption>
               <TableHeader class="bg-muted/60 text-left">
                 <TableRow>
-                  <TableHead class="px-3 py-2">Title</TableHead>
+                  <TableHead class="px-3 py-2">Custom title</TableHead>
                   <TableHead class="px-3 py-2">Category</TableHead>
                   <TableHead class="px-3 py-2">Unread</TableHead>
                   <TableHead class="px-3 py-2">Last fetched</TableHead>
@@ -256,7 +252,13 @@ const formatDate = (value: Date | string | null) => {
                 >
                   <TableCell class="px-3 py-3 align-top">
                     <div class="space-y-2">
-                      <Input v-model="draftByFeedId[feed.id].title" />
+                      <Input
+                        v-model="draftByFeedId[feed.id].title"
+                        placeholder="Use source title"
+                      />
+                      <p class="text-xs text-muted-foreground">
+                        Source title: {{ feed.sourceTitle }}
+                      </p>
                       <p class="break-all text-xs text-muted-foreground">
                         {{ feed.url }}
                       </p>
@@ -333,8 +335,13 @@ const formatDate = (value: Date | string | null) => {
               class="space-y-4 rounded-lg border p-4"
             >
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`feed-title-${feed.id}`">Title</label>
-                <Input :id="`feed-title-${feed.id}`" v-model="draftByFeedId[feed.id].title" />
+                <label class="text-sm font-medium" :for="`feed-title-${feed.id}`">Custom title</label>
+                <Input
+                  :id="`feed-title-${feed.id}`"
+                  v-model="draftByFeedId[feed.id].title"
+                  placeholder="Use source title"
+                />
+                <p class="text-xs text-muted-foreground">Source title: {{ feed.sourceTitle }}</p>
                 <p class="break-all text-xs text-muted-foreground">{{ feed.url }}</p>
               </div>
 

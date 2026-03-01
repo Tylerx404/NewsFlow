@@ -15,7 +15,7 @@ type Cursor = {
 };
 
 const props = defineProps<{
-  feedId?: string;
+  feedSubscriptionId?: string;
   title?: string;
 }>();
 
@@ -38,8 +38,12 @@ watch(searchInput, (value) => {
 const articleStatsQuery = useQuery(
   computed(() =>
     $orpc.article.stats.queryOptions({
-      input: props.feedId ? { feedId: props.feedId } : {},
-      queryKey: dashboardQueryKeys.feeds.stats(props.feedId),
+      input: props.feedSubscriptionId
+        ? { feedSubscriptionId: props.feedSubscriptionId }
+        : {},
+      queryKey: dashboardQueryKeys.feedSubscriptions.stats(
+        props.feedSubscriptionId
+      ),
     })
   )
 );
@@ -48,12 +52,12 @@ const articleListQuery = useInfiniteQuery(
   computed(() =>
     $orpc.article.list.infiniteOptions({
       queryKey: dashboardQueryKeys.articles.list(
-        props.feedId,
+        props.feedSubscriptionId,
         filter.value,
         query.value
       ),
       input: (cursor: Cursor | undefined) => ({
-        feedId: props.feedId,
+        feedSubscriptionId: props.feedSubscriptionId,
         limit: 20,
         cursor,
         ...(query.value ? { query: query.value } : {}),

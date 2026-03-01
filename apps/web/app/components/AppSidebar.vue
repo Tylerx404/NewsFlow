@@ -66,17 +66,17 @@ const sidebarUser = computed(() => ({
 
 const sidebarFeedsQuery = useQuery(
   computed(() =>
-    $orpc.feed.listSidebar.queryOptions({
+    $orpc.feedSubscription.listSidebar.queryOptions({
       input: { includeInactive: true },
-      queryKey: dashboardQueryKeys.feeds.sidebar(true),
+      queryKey: dashboardQueryKeys.feedSubscriptions.sidebar(true),
     })
   )
 );
 
 const discoverFeedsQuery = useQuery(
-  $orpc.feed.discover.queryOptions({
+  $orpc.feedSubscription.discover.queryOptions({
     input: {},
-    queryKey: dashboardQueryKeys.feeds.discover(),
+    queryKey: dashboardQueryKeys.feedSubscriptions.discover(),
   })
 );
 
@@ -89,7 +89,7 @@ const activeSidebarFeeds = computed(() =>
 
 const discoverFeeds = computed(() => {
   const existingFeedUrls = new Set(
-    (sidebarFeedsQuery.data.value ?? []).map((feed) => normalizeFeedUrl(feed.url))
+    (sidebarFeedsQuery.data.value ?? []).map((feed) => feed.normalizedUrl)
   );
 
   return (discoverFeedsQuery.data.value ?? [])
@@ -134,7 +134,7 @@ const discoverNavItems = computed(() =>
 );
 
 const addFeedMutation = useMutation(
-  $orpc.feed.create.mutationOptions({
+  $orpc.feedSubscription.create.mutationOptions({
     onSuccess: async () => {
       addFeedUrl.value = "";
       addFeedError.value = "";
@@ -150,7 +150,7 @@ const addFeedMutation = useMutation(
 );
 
 const refreshFeedMutation = useMutation(
-  $orpc.feed.refresh.mutationOptions({
+  $orpc.feedSubscription.refresh.mutationOptions({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
@@ -158,7 +158,7 @@ const refreshFeedMutation = useMutation(
 );
 
 const deleteFeedMutation = useMutation(
-  $orpc.feed.delete.mutationOptions({
+  $orpc.feedSubscription.delete.mutationOptions({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
