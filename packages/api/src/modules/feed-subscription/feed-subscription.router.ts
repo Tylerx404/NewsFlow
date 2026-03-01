@@ -218,7 +218,7 @@ export const feedSubscriptionRouter = {
           force: true,
         },
         {
-          jobId: `rss-fetch:${existing.feedSourceId}`,
+          jobId: `rss-fetch-${existing.feedSourceId}`,
         }
       );
 

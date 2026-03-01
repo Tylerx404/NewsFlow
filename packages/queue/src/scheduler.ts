@@ -49,7 +49,7 @@ export const startScheduler = () => {
           feedSourceId: source.id,
         },
         opts: {
-          jobId: `rss-fetch:${source.id}`,
+          jobId: `rss-fetch-${source.id}`,
         },
       }));
 
@@ -95,7 +95,7 @@ export const startScheduler = () => {
           url: article.link,
         },
         opts: {
-          jobId: `content-extract:${article.id}`,
+          jobId: `content-extract-${article.id}`,
         },
       }));
 
