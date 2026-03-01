@@ -95,7 +95,7 @@ watch(
 
       if (!draftByFeedId[feed.id] || !isBusy) {
         draftByFeedId[feed.id] = {
-          title: feed.customTitle ?? "",
+          title: feed.title,
           category: feed.category ?? "",
           isActive: feed.isActive,
         };
@@ -134,20 +134,24 @@ const selectedDeleteFeed = computed(() => {
 
 const handleUpdate = async (id: string) => {
   const draft = draftByFeedId[id];
-  if (!draft) {
+  const feed = getFeedById(id);
+
+  if (!draft || !feed) {
     return;
   }
 
   rowErrorByFeedId[id] = "";
 
   const title = draft.title.trim();
+  const sourceTitle = feed.sourceTitle.trim();
+  const customTitle = title && title !== sourceTitle ? title : null;
 
   rowPendingUpdateByFeedId[id] = true;
 
   try {
     await updateMutation.mutateAsync({
       id,
-      customTitle: title || null,
+      customTitle,
       category: draft.category.trim() || null,
       isActive: draft.isActive,
     });
@@ -255,9 +259,6 @@ const formatDate = (value: Date | string | null) => {
                         v-model="draftByFeedId[feed.id].title"
                         placeholder="Use source title"
                       />
-                      <p class="text-xs text-muted-foreground">
-                        Source title: {{ feed.sourceTitle }}
-                      </p>
                       <p class="break-all text-xs text-muted-foreground">
                         {{ feed.url }}
                       </p>
@@ -340,7 +341,6 @@ const formatDate = (value: Date | string | null) => {
                   v-model="draftByFeedId[feed.id].title"
                   placeholder="Use source title"
                 />
-                <p class="text-xs text-muted-foreground">Source title: {{ feed.sourceTitle }}</p>
                 <p class="break-all text-xs text-muted-foreground">{{ feed.url }}</p>
               </div>
 
