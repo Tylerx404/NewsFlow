@@ -4,7 +4,7 @@ import { protectedProcedure, publicProcedure } from "../index";
 import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
 import { aiRouter } from "../modules/ai/ai.router";
 import { articleRouter } from "../modules/article/article.router";
-import { feedRouter } from "../modules/feed/feed.router";
+import { feedSubscriptionRouter } from "../modules/feed-subscription/feed-subscription.router";
 import { subscriptionRouter } from "../modules/subscription/subscription.router";
 
 export const appRouter = {
@@ -18,19 +18,10 @@ export const appRouter = {
     };
   }),
   aiConfig: aiConfigRouter,
-  feed: feedRouter,
+  feedSubscription: feedSubscriptionRouter,
   article: articleRouter,
   ai: aiRouter,
   subscription: subscriptionRouter,
-  // Temporary compatibility layer for legacy flat clients.
-  create: feedRouter.create,
-  list: articleRouter.list,
-  update: feedRouter.update,
-  delete: feedRouter.delete,
-  get: articleRouter.get,
-  markRead: articleRouter.markRead,
-  toggleSaved: articleRouter.toggleSaved,
-  summarize: aiRouter.summarize,
 };
 
 export type AppRouter = typeof appRouter;

@@ -1,16 +1,16 @@
 export const dashboardQueryKeys = {
   root: () => ["dashboard"] as const,
-  feeds: {
+  feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
-      ["dashboard", "feeds", "sidebar", includeInactive] as const,
+      ["dashboard", "feed-subscriptions", "sidebar", includeInactive] as const,
     discover: (category?: string) =>
-      ["dashboard", "feeds", "discover", category ?? "all"] as const,
-    stats: (feedId?: string) =>
-      ["dashboard", "articles", "stats", feedId ?? "all"] as const,
+      ["dashboard", "feed-subscriptions", "discover", category ?? "all"] as const,
+    stats: (feedSubscriptionId?: string) =>
+      ["dashboard", "articles", "stats", feedSubscriptionId ?? "all"] as const,
   },
   articles: {
     list: (
-      feedId: string | undefined,
+      feedSubscriptionId: string | undefined,
       filter: "all" | "unread" | "saved",
       query: string
     ) =>
@@ -18,7 +18,7 @@ export const dashboardQueryKeys = {
         "dashboard",
         "articles",
         "list",
-        feedId ?? "all",
+        feedSubscriptionId ?? "all",
         filter,
         query || "",
       ] as const,

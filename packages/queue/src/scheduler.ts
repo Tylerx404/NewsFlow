@@ -26,38 +26,36 @@ export const startScheduler = () => {
     try {
       console.log("Running RSS fetch cron job...");
 
-      // Find feeds that need refreshing
-      const feedsToRefresh = await db.feed.findMany({
+      const sourcesToRefresh = await db.feedSource.findMany({
         where: {
-          isActive: true,
-          OR: [
-            { nextFetchAt: null },
-            { nextFetchAt: { lte: new Date() } },
-          ],
+          subscriptions: {
+            some: {
+              isActive: true,
+            },
+          },
+          OR: [{ nextFetchAt: null }, { nextFetchAt: { lte: new Date() } }],
         },
         select: {
           id: true,
-          userId: true,
-          url: true,
         },
-        take: 100, // Limit batch size
+        take: 100,
       });
 
-      console.log(`Found ${feedsToRefresh.length} feeds to refresh`);
+      console.log(`Found ${sourcesToRefresh.length} feed sources to refresh`);
 
-      // Queue RSS fetch jobs
-      const jobs = feedsToRefresh.map((feed) => ({
+      const jobs = sourcesToRefresh.map((source) => ({
         name: "rss-fetch",
         data: {
-          feedId: feed.id,
-          userId: feed.userId,
+          feedSourceId: source.id,
+        },
+        opts: {
+          jobId: `rss-fetch-${source.id}`,
         },
       }));
 
       await rssQueue?.addBulk(jobs);
 
       console.log(`Queued ${jobs.length} RSS fetch jobs`);
-
     } catch (error) {
       console.error("RSS cron job failed:", error);
     }
@@ -68,35 +66,42 @@ export const startScheduler = () => {
     try {
       console.log("Running content extraction cron job...");
 
-      // Find articles that need content extraction
-      const articlesToExtract = await db.article.findMany({
+      const articlesToExtract = await db.sourceArticle.findMany({
         where: {
           contentExtracted: false,
           content: null,
-          extractionAttempts: { lt: 3 }, // Max 3 attempts
+          extractionAttempts: { lt: 3 },
+          feedSource: {
+            subscriptions: {
+              some: {
+                isActive: true,
+              },
+            },
+          },
         },
         select: {
           id: true,
           link: true,
         },
-        take: 50, // Limit batch size
+        take: 50,
       });
 
-      console.log(`Found ${articlesToExtract.length} articles to extract`);
+      console.log(`Found ${articlesToExtract.length} source articles to extract`);
 
-      // Queue content extraction jobs
       const jobs = articlesToExtract.map((article) => ({
         name: "content-extract",
         data: {
-          articleId: article.id,
+          sourceArticleId: article.id,
           url: article.link,
+        },
+        opts: {
+          jobId: `content-extract-${article.id}`,
         },
       }));
 
       await contentQueue?.addBulk(jobs);
 
       console.log(`Queued ${jobs.length} content extraction jobs`);
-
     } catch (error) {
       console.error("Content extraction cron job failed:", error);
     }

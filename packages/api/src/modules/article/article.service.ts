@@ -1,26 +1,28 @@
 import { extract } from "@extractus/article-extractor";
+import db from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
-type ArticleWithFeed = Prisma.ArticleGetPayload<{
-  include: { feed: true };
+type SourceArticleWithFeedSource = Prisma.SourceArticleGetPayload<{
+  include: { feedSource: true };
 }>;
 
-type PrismaClient = {
-  article: Prisma.ArticleDelegate;
-};
+type PrismaClient = Pick<typeof db, "sourceArticle">;
 
 export async function extractFullContent(
   prisma: PrismaClient,
   articleId: string,
   userId: string
-): Promise<ArticleWithFeed | null> {
-  // Verify ownership via feed relation
-  const article = await prisma.article.findFirst({
+): Promise<SourceArticleWithFeedSource | null> {
+  const article = await prisma.sourceArticle.findFirst({
     where: {
       id: articleId,
-      feed: { userId },
+      feedSource: {
+        subscriptions: {
+          some: { userId },
+        },
+      },
     },
-    include: { feed: true },
+    include: { feedSource: true },
   });
 
   if (!article) {
@@ -28,7 +30,7 @@ export async function extractFullContent(
   }
 
   if (article.contentExtracted) {
-    return article as ArticleWithFeed;
+    return article;
   }
 
   try {
@@ -38,15 +40,17 @@ export async function extractFullContent(
     });
 
     if (!extracted || !extracted.content) {
-      // Mark as attempted but failed
-      await prisma.article.update({
+      const updated = await prisma.sourceArticle.update({
         where: { id: articleId },
-        data: { contentExtracted: true }, // Don't retry
+        data: {
+          contentExtracted: true,
+        },
+        include: { feedSource: true },
       });
-      return article as ArticleWithFeed;
+      return updated;
     }
 
-    await prisma.article.update({
+    const updated = await prisma.sourceArticle.update({
       where: { id: articleId },
       data: {
         content: extracted.content,
@@ -54,21 +58,19 @@ export async function extractFullContent(
         image: extracted.image || article.image,
         contentExtracted: true,
       },
+      include: { feedSource: true },
     });
 
-    const updatedWithFeed = await prisma.article.findFirst({
+    return updated;
+  } catch {
+    const updated = await prisma.sourceArticle.update({
       where: { id: articleId },
-      include: { feed: true },
+      data: {
+        contentExtracted: true,
+      },
+      include: { feedSource: true },
     });
 
-    return updatedWithFeed as ArticleWithFeed;
-  } catch (error) {
-    // Mark as attempted to avoid repeated failures
-    await prisma.article.update({
-      where: { id: articleId },
-      data: { contentExtracted: true },
-    });
-
-    return article as ArticleWithFeed;
+    return updated;
   }
 }

@@ -19,14 +19,14 @@ const STALE_FEED_HOURS = 24;
 const articleStatsQuery = useQuery(
   $orpc.article.stats.queryOptions({
     input: {},
-    queryKey: dashboardQueryKeys.feeds.stats(),
+    queryKey: dashboardQueryKeys.feedSubscriptions.stats(),
   })
 );
 
 const feedListQuery = useQuery(
-  $orpc.feed.listSidebar.queryOptions({
+  $orpc.feedSubscription.listSidebar.queryOptions({
     input: { includeInactive: true },
-    queryKey: dashboardQueryKeys.feeds.sidebar(true),
+    queryKey: dashboardQueryKeys.feedSubscriptions.sidebar(true),
   })
 );
 

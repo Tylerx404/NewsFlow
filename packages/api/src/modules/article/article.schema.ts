@@ -5,7 +5,7 @@ export const articleIdSchema = z.object({
 });
 
 export const listArticlesSchema = z.object({
-  feedId: z.string().optional(),
+  feedSubscriptionId: z.string().optional(),
   saved: z.boolean().optional(),
   read: z.boolean().optional(),
   query: z.string().trim().min(1).optional(),
@@ -20,8 +20,10 @@ export const listArticlesSchema = z.object({
 
 export const articleListItemSchema = z.object({
   id: z.string(),
-  feedId: z.string(),
-  guid: z.string(),
+  feedSourceId: z.string(),
+  feedSubscriptionId: z.string(),
+  articleKey: z.string(),
+  guid: z.string().nullable(),
   title: z.string(),
   link: z.string(),
   author: z.string().nullable(),
@@ -54,7 +56,7 @@ export const articleListOutputSchema = z.object({
 });
 
 export const articleStatsSchema = z.object({
-  feedId: z.string().optional(),
+  feedSubscriptionId: z.string().optional(),
 });
 
 export const articleStatsOutputSchema = z.object({

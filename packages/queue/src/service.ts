@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { extract } from "@extractus/article-extractor";
 import { Queue, Worker, type Job } from "bullmq";
 import Parser from "rss-parser";
@@ -29,7 +30,7 @@ export const createQueue = <TData = unknown>(name: string) => {
       removeOnFail: 50,
       attempts: 3,
       backoff: {
-        type: 'exponential',
+        type: "exponential",
         delay: 2000,
       },
     },
@@ -54,10 +55,7 @@ export const createWorker = <TData = unknown, TResult = unknown>(
 // RSS parser instance
 const rssParser = new Parser({
   customFields: {
-    item: [
-      ['media:content', 'media:content'],
-      ['media:thumbnail', 'media:thumbnail'],
-    ],
+    item: [["media:content", "media:content"], ["media:thumbnail", "media:thumbnail"]],
   },
 });
 
@@ -69,60 +67,86 @@ type ParsedRssItem = Parser.Item & {
   "content:encoded"?: string;
 };
 
+const normalizeUrl = (rawUrl: string) => {
+  const parsed = new URL(rawUrl.trim());
+  const pathname = parsed.pathname.replace(/\/+$/, "") || "/";
+  const normalizedSearch = parsed.searchParams.toString();
+  return `${parsed.protocol}//${parsed.host.toLowerCase()}${pathname}${normalizedSearch ? `?${normalizedSearch}` : ""}`;
+};
+
+const createArticleKey = (item: ParsedRssItem) => {
+  const guid = item.guid?.trim();
+  if (guid) {
+    return createHash("sha256").update(`guid:${guid}`).digest("hex");
+  }
+
+  const link = item.link?.trim();
+  if (link) {
+    return createHash("sha256").update(`link:${normalizeUrl(link)}`).digest("hex");
+  }
+
+  const title = item.title?.trim() || "untitled";
+  const pubDate = item.pubDate ? new Date(item.pubDate).toISOString() : "no-date";
+  return createHash("sha256").update(`title:${title}|pubDate:${pubDate}`).digest("hex");
+};
+
 // Worker processors
 export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) => {
-  const { feedId, userId, force = false } = job.data;
+  const { feedSourceId, force = false } = job.data;
 
   try {
-    // Get feed with last fetch time
-    const feed = await db.feed.findUnique({
-      where: { id: feedId, userId },
+    const feedSource = await db.feedSource.findUnique({
+      where: { id: feedSourceId },
     });
 
-    if (!feed) {
-      throw new Error(`Feed ${feedId} not found for user ${userId}`);
+    if (!feedSource) {
+      throw new Error(`Feed source ${feedSourceId} not found`);
     }
 
-    // Fetch RSS feed
-    const feedData = await rssParser.parseURL(feed.url);
+    const feedData = await rssParser.parseURL(feedSource.url);
 
-    // Update feed metadata
-    await db.feed.update({
-      where: { id: feedId },
+    await db.feedSource.update({
+      where: { id: feedSourceId },
       data: {
-        title: feedData.title || feed.title,
-        description: feedData.description || feed.description,
-        siteUrl: feedData.link || feed.siteUrl,
+        title: feedData.title || feedSource.title,
+        description: feedData.description || feedSource.description,
+        siteUrl: feedData.link || feedSource.siteUrl,
+        language: feedData.language || feedSource.language,
+        iconUrl: feedData.image?.url || feedSource.iconUrl,
         lastFetched: new Date(),
         lastError: null,
         errorCount: 0,
-        nextFetchAt: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
+        nextFetchAt: new Date(Date.now() + 30 * 60 * 1000),
       },
     });
 
-    // Process new articles
-    const existingGuids = new Set(
+    const existingKeys = new Set(
       (
-        await db.article.findMany({
-          where: { feedId },
-          select: { guid: true },
+        await db.sourceArticle.findMany({
+          where: { feedSourceId },
+          select: { articleKey: true },
         })
-      ).map((article) => article.guid)
+      ).map((article) => article.articleKey)
     );
 
-    const newArticles: Prisma.ArticleCreateManyInput[] = [];
+    const newArticles: Prisma.SourceArticleCreateManyInput[] = [];
     const rssItems = (feedData.items ?? []) as ParsedRssItem[];
     for (const item of rssItems) {
-      if (!item.link) continue;
-      const guid = item.guid || item.link;
+      if (!item.link) {
+        continue;
+      }
 
-      if (!force && existingGuids.has(guid)) continue;
+      const articleKey = createArticleKey(item);
+      if (!force && existingKeys.has(articleKey)) {
+        continue;
+      }
 
       const pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
 
       newArticles.push({
-        feedId,
-        guid,
+        feedSourceId,
+        articleKey,
+        guid: item.guid || null,
         title: item.title || "Untitled",
         link: item.link,
         author: item.creator || item.author || null,
@@ -133,30 +157,27 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
       });
     }
 
-    // Bulk insert new articles
     if (newArticles.length > 0) {
-      await db.article.createMany({
+      await db.sourceArticle.createMany({
         data: newArticles,
         skipDuplicates: true,
       });
     }
 
     return {
-      feedId,
+      feedSourceId,
       newArticlesCount: newArticles.length,
       totalItems: feedData.items?.length || 0,
     };
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-    // Update feed error tracking
-    await db.feed.update({
-      where: { id: feedId },
+    await db.feedSource.update({
+      where: { id: feedSourceId },
       data: {
         lastError: errorMessage,
         errorCount: { increment: 1 },
-        nextFetchAt: new Date(Date.now() + 60 * 60 * 1000), // Retry in 1 hour on error
+        nextFetchAt: new Date(Date.now() + 60 * 60 * 1000),
       },
     });
 
@@ -165,32 +186,29 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
 };
 
 export const contentExtractProcessor: WorkerProcessor<ContentExtractJobData> = async (job) => {
-  const { articleId, url } = job.data;
+  const { sourceArticleId, url } = job.data;
 
   try {
-    // Get article
-    const article = await db.article.findUnique({
-      where: { id: articleId },
+    const article = await db.sourceArticle.findUnique({
+      where: { id: sourceArticleId },
     });
 
     if (!article) {
-      throw new Error(`Article ${articleId} not found`);
+      throw new Error(`Source article ${sourceArticleId} not found`);
     }
 
     if (article.contentExtracted) {
       return { skipped: true, reason: "Already extracted" };
     }
 
-    // Extract full content
     const extracted = await extract(url);
 
     if (!extracted) {
       throw new Error("Content extraction failed - no content returned");
     }
 
-    // Update article with extracted content
-    await db.article.update({
-      where: { id: articleId },
+    await db.sourceArticle.update({
+      where: { id: sourceArticleId },
       data: {
         content: extracted.content || article.content,
         image: extracted.image || article.image,
@@ -202,29 +220,26 @@ export const contentExtractProcessor: WorkerProcessor<ContentExtractJobData> = a
     });
 
     return {
-      articleId,
+      sourceArticleId,
       extracted: true,
       hasContent: !!extracted.content,
       wordCount: extracted.content?.split(/\s+/).length || 0,
     };
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-    // Update extraction tracking
-    await db.article.update({
-      where: { id: articleId },
+    await db.sourceArticle.update({
+      where: { id: sourceArticleId },
       data: {
         extractionAttempts: { increment: 1 },
         lastExtractionError: errorMessage,
       },
     });
 
-    // Don't throw - content extraction failures are not critical
-    console.warn(`Content extraction failed for ${articleId}: ${errorMessage}`);
+    console.warn(`Content extraction failed for ${sourceArticleId}: ${errorMessage}`);
 
     return {
-      articleId,
+      sourceArticleId,
       extracted: false,
       error: errorMessage,
     };

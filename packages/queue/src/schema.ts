@@ -2,30 +2,29 @@ import { z } from "zod";
 
 // Job definitions and data types
 export interface RssFetchJobData {
-  feedId: string;
-  userId: string;
+  feedSourceId: string;
   force?: boolean;
 }
 
 export interface ContentExtractJobData {
-  articleId: string;
+  sourceArticleId: string;
   url: string;
 }
 
 // Job constants
-export const RSS_FETCH_JOB = 'rss-fetch';
-export const CONTENT_EXTRACT_JOB = 'content-extract';
+export const RSS_FETCH_JOB = "rss-fetch";
+export const CONTENT_EXTRACT_JOB = "content-extract";
 
 // Zod schemas
 export const queueNamesSchema = z.enum(["rss-fetch", "content-extract"]);
 
 export const rssFetchJobSchema = z.object({
-  feedId: z.string(),
-  userId: z.string(),
+  feedSourceId: z.string(),
+  force: z.boolean().optional(),
 });
 
 export const contentExtractJobSchema = z.object({
-  articleId: z.string(),
+  sourceArticleId: z.string(),
   url: z.string().url(),
 });
 

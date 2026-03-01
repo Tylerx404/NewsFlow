@@ -9,12 +9,15 @@ definePageMeta({
 
 const route = useRoute();
 
-const feedId = computed(() => {
+const feedSubscriptionId = computed(() => {
   const raw = route.params.feedId;
   return typeof raw === "string" ? raw : "";
 });
 </script>
 
 <template>
-  <ArticleListPanel :feed-id="feedId" title="Feed articles" />
+  <ArticleListPanel
+    :feed-subscription-id="feedSubscriptionId"
+    title="Feed articles"
+  />
 </template>
