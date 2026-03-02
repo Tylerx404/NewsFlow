@@ -94,13 +94,14 @@ const getProviderConfig = (provider: Provider) => providerConfigs[provider];
 const isProvider = (value: string): value is Provider => value in providerConfigs;
 const getProviderLabel = (provider: string) =>
   isProvider(provider) ? providerConfigs[provider].label : provider;
+const DEFAULT_CREATE_PROVIDER: Provider = "openai";
 
 const createForm = reactive({
   name: "",
-  provider: "openai" as Provider,
+  provider: DEFAULT_CREATE_PROVIDER,
   model: "",
   apiKey: "",
-  baseUrl: getProviderConfig("openai").defaultBaseUrl,
+  baseUrl: getProviderConfig(DEFAULT_CREATE_PROVIDER).defaultBaseUrl,
 });
 
 const createError = ref("");
@@ -118,6 +119,7 @@ const rowPendingByConfigId = reactive<Record<string, boolean>>({});
 const rowDeletingByConfigId = reactive<Record<string, boolean>>({});
 const rowSettingDefaultByConfigId = reactive<Record<string, boolean>>({});
 
+const isCreateDialogOpen = ref(false);
 const deleteDialogConfigId = ref<string | null>(null);
 
 const currentProviderConfig = computed(() => getProviderConfig(createForm.provider));
@@ -134,16 +136,23 @@ const aiConfigsQuery = useQuery(
   })
 );
 
+const resetCreateForm = () => {
+  createForm.name = "";
+  createForm.provider = DEFAULT_CREATE_PROVIDER;
+  createForm.model = "";
+  createForm.apiKey = "";
+  createForm.baseUrl = getProviderConfig(DEFAULT_CREATE_PROVIDER).defaultBaseUrl;
+  createError.value = "";
+  fetchCreateModelsError.value = "";
+  modelOptionsForCreate.value = [];
+  createModelFetchKey.value = "";
+};
+
 const createMutation = useMutation(
   $orpc.aiConfig.create.mutationOptions({
     onSuccess: async () => {
-      createForm.name = "";
-      createForm.model = "";
-      createForm.apiKey = "";
-      createForm.baseUrl = getProviderConfig(createForm.provider).defaultBaseUrl;
-      createError.value = "";
-      fetchCreateModelsError.value = "";
-      modelOptionsForCreate.value = [];
+      resetCreateForm();
+      isCreateDialogOpen.value = false;
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
     onError: (error) => {
@@ -383,6 +392,23 @@ const handleCreate = async () => {
   }
 };
 
+const openCreateDialog = () => {
+  createError.value = "";
+  isCreateDialogOpen.value = true;
+};
+
+const handleCreateDialogToggle = (open: boolean) => {
+  if (createMutation.isPending.value) {
+    return;
+  }
+
+  isCreateDialogOpen.value = open;
+
+  if (!open) {
+    resetCreateForm();
+  }
+};
+
 const handleSetDefault = async (id: string) => {
   rowErrorByConfigId[id] = "";
   rowSettingDefaultByConfigId[id] = true;
@@ -517,112 +543,21 @@ watch(
 </script>
 
 <template>
-  <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
-      <Card>
+  <div class="space-y-6">
+    <Card>
         <CardHeader>
-          <CardTitle>Create profile</CardTitle>
-          <CardDescription>
-            Configure your provider and model. API key is encrypted on server.
-          </CardDescription>
-        </CardHeader>
-        <CardContent class="space-y-4">
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-name">Name</label>
-            <Input id="create-profile-name" v-model="createForm.name" placeholder="Main OpenAI" />
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="space-y-1">
+              <CardTitle>AI profiles</CardTitle>
+              <CardDescription>
+                Manage default profile for reader summarize action.
+              </CardDescription>
+            </div>
+
+            <Button size="sm" class="w-full sm:w-auto" @click="openCreateDialog">
+              Create profile
+            </Button>
           </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-provider">Provider</label>
-            <Select
-              :model-value="createForm.provider"
-              @update:model-value="(value) => (createForm.provider = String(value) as Provider)"
-            >
-              <SelectTrigger id="create-profile-provider" class="w-full">
-                <SelectValue placeholder="Select provider" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="provider in providers"
-                  :key="provider"
-                  :value="provider"
-                >
-                  {{ getProviderConfig(provider).label }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-model">Model</label>
-            <Select
-              :model-value="createForm.model"
-              @update:model-value="(value) => (createForm.model = String(value ?? ''))"
-              @update:open="handleCreateModelSelectOpen"
-            >
-              <SelectTrigger id="create-profile-model" class="w-full">
-                <SelectValue
-                  :placeholder="isLoadingCreateModels ? 'Loading models...' : 'Select to load models'"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="model in modelOptionsForCreate"
-                  :key="model"
-                  :value="model"
-                >
-                  {{ model }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-api-key">
-              API key
-              <span v-if="!isApiKeyRequired" class="text-muted-foreground">(optional)</span>
-            </label>
-            <Input
-              id="create-profile-api-key"
-              v-model="createForm.apiKey"
-              type="password"
-              placeholder="sk-..."
-            />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-base-url">Base URL</label>
-            <Input
-              id="create-profile-base-url"
-              v-model="createForm.baseUrl"
-              :disabled="!canCustomizeBaseUrl"
-              :placeholder="currentProviderConfig.defaultBaseUrl"
-            />
-            <p class="text-xs text-muted-foreground">
-              Default: {{ currentProviderConfig.defaultBaseUrl }}
-              <span v-if="canCustomizeBaseUrl">(can customize for BYOK)</span>
-              <span v-else>(managed automatically)</span>
-            </p>
-          </div>
-
-          <p v-if="fetchCreateModelsError" aria-live="polite" class="text-xs text-destructive">
-            {{ fetchCreateModelsError }}
-          </p>
-          <p v-if="createError" aria-live="polite" class="text-sm text-destructive">
-            {{ createError }}
-          </p>
-
-          <Button class="w-full" :disabled="createMutation.isPending.value" @click="handleCreate">
-            {{ createMutation.isPending.value ? "Creating..." : "Create profile" }}
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>AI profiles</CardTitle>
-          <CardDescription>
-            Manage default profile for reader summarize action.
-          </CardDescription>
         </CardHeader>
 
         <CardContent class="space-y-4">
@@ -755,8 +690,117 @@ watch(
             </div>
           </div>
         </CardContent>
-      </Card>
-    </div>
+    </Card>
+
+    <AlertDialog
+      :open="isCreateDialogOpen"
+      @update:open="handleCreateDialogToggle"
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Create profile</AlertDialogTitle>
+          <AlertDialogDescription>
+            Configure your provider and model. API key is encrypted on server.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="create-profile-name">Name</label>
+            <Input id="create-profile-name" v-model="createForm.name" placeholder="Main OpenAI" />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="create-profile-provider">Provider</label>
+            <Select
+              :model-value="createForm.provider"
+              @update:model-value="(value) => (createForm.provider = String(value) as Provider)"
+            >
+              <SelectTrigger id="create-profile-provider" class="w-full">
+                <SelectValue placeholder="Select provider" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="provider in providers"
+                  :key="provider"
+                  :value="provider"
+                >
+                  {{ getProviderConfig(provider).label }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="create-profile-model">Model</label>
+            <Select
+              :model-value="createForm.model"
+              @update:model-value="(value) => (createForm.model = String(value ?? ''))"
+              @update:open="handleCreateModelSelectOpen"
+            >
+              <SelectTrigger id="create-profile-model" class="w-full">
+                <SelectValue
+                  :placeholder="isLoadingCreateModels ? 'Loading models...' : 'Select to load models'"
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="model in modelOptionsForCreate"
+                  :key="model"
+                  :value="model"
+                >
+                  {{ model }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="create-profile-api-key">
+              API key
+              <span v-if="!isApiKeyRequired" class="text-muted-foreground">(optional)</span>
+            </label>
+            <Input
+              id="create-profile-api-key"
+              v-model="createForm.apiKey"
+              type="password"
+              placeholder="sk-..."
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="create-profile-base-url">Base URL</label>
+            <Input
+              id="create-profile-base-url"
+              v-model="createForm.baseUrl"
+              :disabled="!canCustomizeBaseUrl"
+              :placeholder="currentProviderConfig.defaultBaseUrl"
+            />
+            <p class="text-xs text-muted-foreground">
+              Default: {{ currentProviderConfig.defaultBaseUrl }}
+              <span v-if="canCustomizeBaseUrl">(can customize for BYOK)</span>
+              <span v-else>(managed automatically)</span>
+            </p>
+          </div>
+
+          <p v-if="fetchCreateModelsError" aria-live="polite" class="text-xs text-destructive">
+            {{ fetchCreateModelsError }}
+          </p>
+          <p v-if="createError" aria-live="polite" class="text-sm text-destructive">
+            {{ createError }}
+          </p>
+        </div>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel :disabled="createMutation.isPending.value">
+            Cancel
+          </AlertDialogCancel>
+          <Button :disabled="createMutation.isPending.value" @click="handleCreate">
+            {{ createMutation.isPending.value ? "Creating..." : "Create profile" }}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
 
     <AlertDialog
       :open="Boolean(deleteDialogConfigId)"
@@ -791,4 +835,5 @@ watch(
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  </div>
 </template>
