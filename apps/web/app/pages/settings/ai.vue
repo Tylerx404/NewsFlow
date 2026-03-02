@@ -111,6 +111,7 @@ const createModelFetchKey = ref("");
 
 const draftByConfigId = reactive<Record<string, ConfigDraft>>({});
 const modelOptionsByConfigId = reactive<Record<string, string[]>>({});
+const modelFetchKeyByConfigId = reactive<Record<string, string>>({});
 const isLoadingModelOptionsByConfigId = reactive<Record<string, boolean>>({});
 const rowErrorByConfigId = reactive<Record<string, string>>({});
 const rowPendingByConfigId = reactive<Record<string, boolean>>({});
@@ -193,6 +194,7 @@ watch(
       if (!activeIds.has(id)) {
         delete draftByConfigId[id];
         delete modelOptionsByConfigId[id];
+        delete modelFetchKeyByConfigId[id];
         delete isLoadingModelOptionsByConfigId[id];
         delete rowErrorByConfigId[id];
         delete rowPendingByConfigId[id];
@@ -239,6 +241,24 @@ const getCreateModelFetchKey = () => {
     createForm.baseUrl.trim() || getProviderConfig(createForm.provider).defaultBaseUrl;
 
   return [createForm.provider, apiKey, baseUrl].join("::");
+};
+
+const getConfigModelFetchKey = (id: string) => {
+  const config = getConfigById(id);
+  const draft = draftByConfigId[id];
+
+  if (!config || !draft) {
+    return "";
+  }
+
+  const apiKey = draft.apiKey.trim();
+  const baseUrl = draft.baseUrl.trim();
+
+  return [
+    config.provider,
+    baseUrl || "__provider_default__",
+    apiKey || "__stored_key__",
+  ].join("::");
 };
 
 const loadCreateModels = async () => {
@@ -300,10 +320,19 @@ const loadModelsForConfig = async (id: string) => {
     return;
   }
 
-  const hasLoadedModels = (modelOptionsByConfigId[id]?.length ?? 0) > 0;
-  if (hasLoadedModels && !rowErrorByConfigId[id]) {
+  const currentFetchKey = getConfigModelFetchKey(id);
+  const hasLoadedCurrentKey =
+    modelFetchKeyByConfigId[id] === currentFetchKey
+    && (modelOptionsByConfigId[id]?.length ?? 0) > 0
+    && !rowErrorByConfigId[id];
+
+  if (hasLoadedCurrentKey) {
     return;
   }
+
+  const draft = draftByConfigId[id];
+  const nextApiKey = draft?.apiKey.trim() ?? "";
+  const nextBaseUrl = draft?.baseUrl.trim() ?? "";
 
   isLoadingModelOptionsByConfigId[id] = true;
   rowErrorByConfigId[id] = "";
@@ -311,9 +340,12 @@ const loadModelsForConfig = async (id: string) => {
   try {
     const result = await $orpc.aiConfig.fetchModels.call({
       aiConfigId: id,
+      ...(nextApiKey ? { apiKey: nextApiKey } : {}),
+      baseUrl: nextBaseUrl || null,
     });
 
     modelOptionsByConfigId[id] = result.models;
+    modelFetchKeyByConfigId[id] = currentFetchKey;
 
     const currentModel = draftByConfigId[id]?.model;
     if (currentModel && !result.models.includes(currentModel)) {
