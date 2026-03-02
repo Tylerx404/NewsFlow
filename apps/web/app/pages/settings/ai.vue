@@ -234,7 +234,16 @@ const isRowBusy = (id: string) =>
   );
 
 const getModelOptionsForConfig = (id: string): string[] => {
-  const options = new Set(modelOptionsByConfigId[id] ?? []);
+  const options = new Set<string>();
+  const currentFetchKey = getConfigModelFetchKey(id);
+  const hasFreshOptions = modelFetchKeyByConfigId[id] === currentFetchKey;
+
+  if (hasFreshOptions) {
+    for (const model of modelOptionsByConfigId[id] ?? []) {
+      options.add(model);
+    }
+  }
+
   const draftModel = draftByConfigId[id]?.model?.trim();
 
   if (draftModel) {
@@ -361,6 +370,8 @@ const loadModelsForConfig = async (id: string) => {
       draftByConfigId[id].model = result.models[0] ?? currentModel;
     }
   } catch (error) {
+    // Prevent stale model list from previous credentials/base URL.
+    modelOptionsByConfigId[id] = [];
     rowErrorByConfigId[id] =
       error instanceof Error ? error.message : "Unable to load models.";
   } finally {

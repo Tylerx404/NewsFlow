@@ -174,8 +174,44 @@ const requestModels = async (
 ): Promise<unknown> => {
   const response = await fetch(url, init);
   if (!response.ok) {
+    let providerErrorMessage = "";
+
+    try {
+      const payload = await response.json();
+      if (
+        typeof payload === "object" &&
+        payload !== null &&
+        "error" in payload &&
+        typeof payload.error === "object" &&
+        payload.error !== null &&
+        "message" in payload.error &&
+        typeof payload.error.message === "string"
+      ) {
+        providerErrorMessage = payload.error.message;
+      } else if (
+        typeof payload === "object" &&
+        payload !== null &&
+        "message" in payload &&
+        typeof payload.message === "string"
+      ) {
+        providerErrorMessage = payload.message;
+      }
+    } catch {
+      // Ignore body parsing failures and use generic fallback message.
+    }
+
+    if (response.status === 401) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: providerErrorMessage
+          ? `Authentication failed (401): ${providerErrorMessage}`
+          : "Authentication failed (401). Check API key and base URL.",
+      });
+    }
+
     throw new ORPCError("BAD_REQUEST", {
-      message: `Unable to fetch models (${response.status})`,
+      message: providerErrorMessage
+        ? `Unable to fetch models (${response.status}): ${providerErrorMessage}`
+        : `Unable to fetch models (${response.status})`,
     });
   }
   return response.json();
