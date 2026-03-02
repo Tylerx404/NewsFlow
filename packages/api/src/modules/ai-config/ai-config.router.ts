@@ -102,8 +102,8 @@ export const aiConfigRouter = {
         }
 
         provider = parsedProvider.data;
-        apiKey = await EncryptionService.decrypt(existingConfig.apiKey);
-        baseUrl = existingConfig.baseUrl;
+        apiKey = input.apiKey ?? await EncryptionService.decrypt(existingConfig.apiKey);
+        baseUrl = input.baseUrl === undefined ? existingConfig.baseUrl : input.baseUrl;
       } else {
         if (!input.provider) {
           throw new ORPCError("BAD_REQUEST", {
