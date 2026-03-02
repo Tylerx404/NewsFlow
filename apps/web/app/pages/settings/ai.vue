@@ -4,7 +4,6 @@ import { computed, reactive, ref, watch } from "vue";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -833,7 +832,8 @@ watch(
           <AlertDialogCancel :disabled="deleteDialogConfigId ? rowDeletingByConfigId[deleteDialogConfigId] : false">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            variant="destructive"
             :disabled="deleteDialogConfigId ? rowDeletingByConfigId[deleteDialogConfigId] : false"
             @click="confirmDeleteConfig"
           >
@@ -842,7 +842,7 @@ watch(
                 ? "Deleting..."
                 : "Delete profile"
             }}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
