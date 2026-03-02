@@ -4,7 +4,6 @@ import { computed, reactive, ref, watch } from "vue";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -234,7 +233,16 @@ const isRowBusy = (id: string) =>
   );
 
 const getModelOptionsForConfig = (id: string): string[] => {
-  const options = new Set(modelOptionsByConfigId[id] ?? []);
+  const options = new Set<string>();
+  const currentFetchKey = getConfigModelFetchKey(id);
+  const hasFreshOptions = modelFetchKeyByConfigId[id] === currentFetchKey;
+
+  if (hasFreshOptions) {
+    for (const model of modelOptionsByConfigId[id] ?? []) {
+      options.add(model);
+    }
+  }
+
   const draftModel = draftByConfigId[id]?.model?.trim();
 
   if (draftModel) {
@@ -361,6 +369,8 @@ const loadModelsForConfig = async (id: string) => {
       draftByConfigId[id].model = result.models[0] ?? currentModel;
     }
   } catch (error) {
+    // Prevent stale model list from previous credentials/base URL.
+    modelOptionsByConfigId[id] = [];
     rowErrorByConfigId[id] =
       error instanceof Error ? error.message : "Unable to load models.";
   } finally {
@@ -822,7 +832,8 @@ watch(
           <AlertDialogCancel :disabled="deleteDialogConfigId ? rowDeletingByConfigId[deleteDialogConfigId] : false">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            variant="destructive"
             :disabled="deleteDialogConfigId ? rowDeletingByConfigId[deleteDialogConfigId] : false"
             @click="confirmDeleteConfig"
           >
@@ -831,7 +842,7 @@ watch(
                 ? "Deleting..."
                 : "Delete profile"
             }}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
