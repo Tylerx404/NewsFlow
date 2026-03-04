@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,55 @@ type UserSession = {
   ipAddress?: string | null;
 };
 
+type SubscriptionPlanKey = "basic" | "pro" | "max";
+type SubscriptionBillingInterval = "monthly" | "yearly";
+
+type StripeSessionRedirectResponse = {
+  url?: string;
+  redirect?: boolean;
+  id?: string;
+  object?: string;
+  client_secret?: string | null;
+};
+
+type SubscriptionPlanOption = {
+  key: SubscriptionPlanKey;
+  label: string;
+  monthlyLabel: string;
+  yearlyLabel: string;
+  note: string;
+};
+
+const subscriptionPlanOptions: SubscriptionPlanOption[] = [
+  {
+    key: "basic",
+    label: "Basic",
+    monthlyLabel: "$5.99 / month",
+    yearlyLabel: "$59.99 / year",
+    note: "Entry-level for personal testing.",
+  },
+  {
+    key: "pro",
+    label: "Pro",
+    monthlyLabel: "$9.99 / month",
+    yearlyLabel: "$99.00 / year",
+    note: "Best fit for regular AI summarization.",
+  },
+  {
+    key: "max",
+    label: "Max",
+    monthlyLabel: "$19.99 / month",
+    yearlyLabel: "$199.00 / year",
+    note: "Advanced usage with highest quota.",
+  },
+];
+
 const { $authClient, $orpc } = useNuxtApp();
+const config = useRuntimeConfig();
+const route = useRoute();
+const authRequestHeaders = import.meta.server
+  ? useRequestHeaders(["cookie"])
+  : undefined;
 const queryClient = useQueryClient();
 
 const profileForm = reactive({
@@ -68,6 +116,10 @@ const sessionActionSuccess = ref("");
 const sessionToRevokeToken = ref<string | null>(null);
 const isRevokeSessionDialogOpen = ref(false);
 const isRevokeOtherDialogOpen = ref(false);
+const billingError = ref("");
+const billingSuccess = ref("");
+const billingInterval = ref<SubscriptionBillingInterval>("monthly");
+const selectedPlan = ref<SubscriptionPlanKey>("pro");
 
 const errorBannerClass =
   "rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive";
@@ -101,6 +153,26 @@ const subscriptionQuery = useQuery(
   $orpc.subscription.getCurrent.queryOptions({
     queryKey: dashboardQueryKeys.subscription.current(),
   })
+);
+const subscriptionRecord = computed(() => subscriptionQuery.data.value ?? null);
+const hasPaidSubscription = computed(() =>
+  ["basic", "pro", "max"].includes(subscriptionRecord.value?.tier ?? "")
+);
+const hasPendingCancellation = computed(
+  () =>
+    Boolean(subscriptionRecord.value?.cancelAtPeriodEnd) ||
+    Boolean(subscriptionRecord.value?.cancelAt)
+);
+
+const selectedPlanDetails = computed(
+  () =>
+    subscriptionPlanOptions.find((plan) => plan.key === selectedPlan.value) ??
+    subscriptionPlanOptions[1]
+);
+const selectedPlanPriceLabel = computed(() =>
+  billingInterval.value === "yearly"
+    ? selectedPlanDetails.value.yearlyLabel
+    : selectedPlanDetails.value.monthlyLabel
 );
 
 watch(
@@ -165,6 +237,184 @@ const invalidateAuthQueries = async () => {
       queryKey: dashboardQueryKeys.auth.sessions(),
     }),
   ]);
+};
+
+const invalidateSubscriptionQueries = async () => {
+  await queryClient.invalidateQueries({
+    queryKey: dashboardQueryKeys.subscription.current(),
+  });
+};
+
+const getBillingReturnUrl = () =>
+  import.meta.client
+    ? `${window.location.origin}/settings/personal`
+    : `${config.public.serverUrl}/settings/personal`;
+
+const toErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    typeof error === "object" &&
+    error &&
+    "data" in error &&
+    typeof (error as { data?: { message?: string } }).data?.message === "string"
+  ) {
+    return (error as { data: { message: string } }).data.message;
+  }
+
+  return fallback;
+};
+
+const callBillingApi = async <T>(
+  path: string,
+  body: Record<string, unknown>
+) => {
+  return $fetch<T>(`${config.public.serverUrl}/api/auth${path}`, {
+    method: "POST",
+    body,
+    credentials: "include",
+    headers: authRequestHeaders,
+  });
+};
+
+const openBillingUrl = async (url?: string) => {
+  if (!url) {
+    return;
+  }
+
+  await navigateTo(url, { external: true });
+};
+
+const upgradeSubscriptionMutation = useMutation({
+  mutationFn: async () => {
+    const returnUrl = getBillingReturnUrl();
+    return callBillingApi<StripeSessionRedirectResponse>("/subscription/upgrade", {
+      plan: selectedPlan.value,
+      annual: billingInterval.value === "yearly",
+      successUrl: returnUrl,
+      cancelUrl: returnUrl,
+      returnUrl,
+      disableRedirect: true,
+    });
+  },
+  onSuccess: async (data) => {
+    billingError.value = "";
+    billingSuccess.value = "Checkout session created. Redirecting to Stripe...";
+    await invalidateSubscriptionQueries();
+    await openBillingUrl(data.url);
+  },
+  onError: (error) => {
+    billingSuccess.value = "";
+    billingError.value = toErrorMessage(error, "Unable to create checkout session.");
+  },
+});
+
+const billingPortalMutation = useMutation({
+  mutationFn: async () => {
+    return callBillingApi<StripeSessionRedirectResponse>(
+      "/subscription/billing-portal",
+      {
+        returnUrl: getBillingReturnUrl(),
+        disableRedirect: true,
+      }
+    );
+  },
+  onSuccess: async (data) => {
+    billingError.value = "";
+    billingSuccess.value = "Opening Stripe billing portal...";
+    await openBillingUrl(data.url);
+  },
+  onError: (error) => {
+    billingSuccess.value = "";
+    billingError.value = toErrorMessage(error, "Unable to open billing portal.");
+  },
+});
+
+const cancelSubscriptionMutation = useMutation({
+  mutationFn: async () => {
+    return callBillingApi<StripeSessionRedirectResponse>("/subscription/cancel", {
+      returnUrl: getBillingReturnUrl(),
+      disableRedirect: true,
+    });
+  },
+  onSuccess: async (data) => {
+    billingError.value = "";
+    billingSuccess.value = "Opening cancellation flow in Stripe...";
+    await openBillingUrl(data.url);
+    await invalidateSubscriptionQueries();
+  },
+  onError: (error) => {
+    billingSuccess.value = "";
+    billingError.value = toErrorMessage(
+      error,
+      "Unable to open cancellation flow."
+    );
+  },
+});
+
+const restoreSubscriptionMutation = useMutation({
+  mutationFn: async () => {
+    return callBillingApi("/subscription/restore", {});
+  },
+  onSuccess: async () => {
+    billingError.value = "";
+    billingSuccess.value = "Subscription cancellation has been removed.";
+    await invalidateSubscriptionQueries();
+  },
+  onError: (error) => {
+    billingSuccess.value = "";
+    billingError.value = toErrorMessage(error, "Unable to restore subscription.");
+  },
+});
+
+const isBillingActionPending = computed(
+  () =>
+    upgradeSubscriptionMutation.isPending.value ||
+    billingPortalMutation.isPending.value ||
+    cancelSubscriptionMutation.isPending.value ||
+    restoreSubscriptionMutation.isPending.value
+);
+
+const handleStartCheckout = async () => {
+  billingError.value = "";
+  billingSuccess.value = "";
+  try {
+    await upgradeSubscriptionMutation.mutateAsync();
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
+};
+
+const handleOpenBillingPortal = async () => {
+  billingError.value = "";
+  billingSuccess.value = "";
+  try {
+    await billingPortalMutation.mutateAsync();
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
+};
+
+const handleCancelSubscription = async () => {
+  billingError.value = "";
+  billingSuccess.value = "";
+  try {
+    await cancelSubscriptionMutation.mutateAsync();
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
+};
+
+const handleRestoreSubscription = async () => {
+  billingError.value = "";
+  billingSuccess.value = "";
+  try {
+    await restoreSubscriptionMutation.mutateAsync();
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
 };
 
 const profileMutation = useMutation({
@@ -439,6 +689,32 @@ const formatSessionToken = (token: string) => {
 
   return `${token.slice(0, 8)}...${token.slice(-6)}`;
 };
+
+onMounted(() => {
+  const queryPlan = String(route.query.plan ?? "").toLowerCase();
+  const queryInterval = String(route.query.interval ?? "").toLowerCase();
+
+  if (
+    queryPlan === "basic" ||
+    queryPlan === "pro" ||
+    queryPlan === "max"
+  ) {
+    selectedPlan.value = queryPlan;
+  }
+
+  if (queryInterval === "monthly" || queryInterval === "yearly") {
+    billingInterval.value = queryInterval;
+  }
+});
+
+watch(
+  () => subscriptionRecord.value?.tier,
+  (tier) => {
+    if (tier === "basic" || tier === "pro" || tier === "max") {
+      selectedPlan.value = tier;
+    }
+  }
+);
 </script>
 
 <template>
@@ -705,12 +981,19 @@ const formatSessionToken = (token: string) => {
           <CardHeader>
             <CardTitle>Subscription</CardTitle>
             <CardDescription>
-              Billing integration is not enabled yet. This section is read-only.
+              Manage checkout, billing portal, and subscription lifecycle for your account.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent class="space-y-4">
             <p v-if="subscriptionQuery.isLoading.value" class="text-sm text-muted-foreground">
               Loading subscription...
+            </p>
+            <p v-else-if="subscriptionQuery.error.value" :class="errorBannerClass">
+              {{
+                subscriptionQuery.error.value instanceof Error
+                  ? subscriptionQuery.error.value.message
+                  : "Unable to load subscription."
+              }}
             </p>
 
             <div v-else-if="subscriptionQuery.data.value" class="space-y-3">
@@ -720,6 +1003,15 @@ const formatSessionToken = (token: string) => {
                 </Badge>
                 <Badge variant="outline">
                   Status: {{ subscriptionQuery.data.value.status }}
+                </Badge>
+                <Badge v-if="subscriptionQuery.data.value.billingInterval" variant="outline">
+                  Interval: {{ subscriptionQuery.data.value.billingInterval }}
+                </Badge>
+                <Badge
+                  v-if="subscriptionQuery.data.value.status === 'trialing'"
+                  variant="secondary"
+                >
+                  Trial active
                 </Badge>
               </div>
 
@@ -738,6 +1030,129 @@ const formatSessionToken = (token: string) => {
                   </p>
                 </div>
               </div>
+
+              <div class="space-y-2 rounded-md border p-3">
+                <p class="text-xs font-medium text-muted-foreground">Choose plan</p>
+                <div class="grid gap-2 sm:grid-cols-3">
+                  <button
+                    v-for="plan in subscriptionPlanOptions"
+                    :key="plan.key"
+                    type="button"
+                    class="rounded-md border p-3 text-left transition hover:border-primary/60"
+                    :class="
+                      selectedPlan === plan.key
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border'
+                    "
+                    @click="selectedPlan = plan.key"
+                  >
+                    <p class="text-sm font-semibold">{{ plan.label }}</p>
+                    <p class="mt-1 text-xs text-muted-foreground">
+                      {{ billingInterval === 'yearly' ? plan.yearlyLabel : plan.monthlyLabel }}
+                    </p>
+                  </button>
+                </div>
+
+                <div class="inline-flex rounded-md border p-1">
+                  <button
+                    type="button"
+                    class="rounded px-3 py-1 text-xs font-medium transition"
+                    :class="
+                      billingInterval === 'monthly'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground'
+                    "
+                    @click="billingInterval = 'monthly'"
+                  >
+                    Monthly
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded px-3 py-1 text-xs font-medium transition"
+                    :class="
+                      billingInterval === 'yearly'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground'
+                    "
+                    @click="billingInterval = 'yearly'"
+                  >
+                    Yearly
+                  </button>
+                </div>
+
+                <div class="rounded-md border bg-muted/20 p-3">
+                  <p class="text-sm font-medium">
+                    {{ selectedPlanDetails.label }} - {{ selectedPlanPriceLabel }}
+                  </p>
+                  <p class="mt-1 text-xs text-muted-foreground">
+                    {{ selectedPlanDetails.note }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid gap-2">
+                <Button
+                  :disabled="isBillingActionPending"
+                  @click="handleStartCheckout"
+                >
+                  {{
+                    upgradeSubscriptionMutation.isPending.value
+                      ? "Creating checkout..."
+                      : `Checkout ${selectedPlanDetails.label} (${billingInterval})`
+                  }}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  :disabled="isBillingActionPending"
+                  @click="handleOpenBillingPortal"
+                >
+                  {{
+                    billingPortalMutation.isPending.value
+                      ? "Opening portal..."
+                      : "Open billing portal"
+                  }}
+                </Button>
+
+                <Button
+                  v-if="hasPaidSubscription && !hasPendingCancellation"
+                  variant="outline"
+                  :disabled="isBillingActionPending"
+                  @click="handleCancelSubscription"
+                >
+                  {{
+                    cancelSubscriptionMutation.isPending.value
+                      ? "Opening cancellation..."
+                      : "Cancel at period end"
+                  }}
+                </Button>
+
+                <Button
+                  v-if="hasPaidSubscription && hasPendingCancellation"
+                  variant="outline"
+                  :disabled="isBillingActionPending"
+                  @click="handleRestoreSubscription"
+                >
+                  {{
+                    restoreSubscriptionMutation.isPending.value
+                      ? "Restoring..."
+                      : "Restore subscription"
+                  }}
+                </Button>
+
+                <Button variant="ghost" as-child>
+                  <NuxtLink to="/pricing">
+                    View full pricing page
+                  </NuxtLink>
+                </Button>
+              </div>
+
+              <p v-if="billingError" aria-live="polite" :class="errorBannerClass">
+                {{ billingError }}
+              </p>
+              <p v-else-if="billingSuccess" aria-live="polite" :class="successBannerClass">
+                {{ billingSuccess }}
+              </p>
             </div>
           </CardContent>
         </Card>
