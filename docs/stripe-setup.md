@@ -22,12 +22,26 @@ Tao 3 product:
 
 Moi product tao recurring price theo nhu cau:
 - Monthly (bat buoc)
-- Yearly (tuy chon)
+- Yearly (nen tao de upsell)
+
+Gia goi de xuat:
+- Basic:
+  - Monthly: $4.99 - $6.99 (goi y: $5.99)
+  - Yearly: $49 - $59
+- Pro:
+  - Monthly: $9.99 - $14.99 (goi y: $9.99 hoac $12.99)
+  - Yearly: $89 - $119
+- Max:
+  - Monthly: $19.99 - $29.99 (goi y: $24.99)
+  - Yearly: $199 - $249
 
 Sau khi tao, copy cac `price_...` ID:
-- `STRIPE_PRICE_BASIC`
-- `STRIPE_PRICE_PRO`
-- `STRIPE_PRICE_MAX`
+- `STRIPE_PRICE_BASIC_MONTHLY`
+- `STRIPE_PRICE_BASIC_YEARLY`
+- `STRIPE_PRICE_PRO_MONTHLY`
+- `STRIPE_PRICE_PRO_YEARLY`
+- `STRIPE_PRICE_MAX_MONTHLY`
+- `STRIPE_PRICE_MAX_YEARLY`
 
 ## 3) Dien env server
 
@@ -36,9 +50,12 @@ Cap nhat vao `apps/server/.env` theo mau trong `apps/server/.env.example`.
 Bat buoc:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- `STRIPE_PRICE_BASIC`
-- `STRIPE_PRICE_PRO`
-- `STRIPE_PRICE_MAX`
+- `STRIPE_PRICE_BASIC_MONTHLY`
+- `STRIPE_PRICE_BASIC_YEARLY`
+- `STRIPE_PRICE_PRO_MONTHLY`
+- `STRIPE_PRICE_PRO_YEARLY`
+- `STRIPE_PRICE_MAX_MONTHLY`
+- `STRIPE_PRICE_MAX_YEARLY`
 
 ## 4) Kiem tra nhanh
 
