@@ -83,6 +83,14 @@ const subscriptionPlanOptions: SubscriptionPlanOption[] = [
   },
 ];
 
+const defaultSubscriptionPlanOption =
+  subscriptionPlanOptions.find((plan) => plan.key === "pro") ??
+  subscriptionPlanOptions[0];
+
+if (!defaultSubscriptionPlanOption) {
+  throw new Error("Subscription plan options must not be empty.");
+}
+
 const { $authClient, $orpc } = useNuxtApp();
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -167,7 +175,7 @@ const hasPendingCancellation = computed(
 const selectedPlanDetails = computed(
   () =>
     subscriptionPlanOptions.find((plan) => plan.key === selectedPlan.value) ??
-    subscriptionPlanOptions[1]
+    defaultSubscriptionPlanOption
 );
 const selectedPlanPriceLabel = computed(() =>
   billingInterval.value === "yearly"
