@@ -25,7 +25,12 @@ app.use(
 app.post(
   "/api/auth/stripe/webhook",
   express.raw({ type: "application/json" }),
-  (_req, _res, next) => next(),
+  (req, _res, next) => {
+    if (Buffer.isBuffer(req.body)) {
+      req.body = req.body.toString("utf8");
+    }
+    next();
+  },
 );
 
 app.all("/api/auth{/*path}", toNodeHandler(auth));
