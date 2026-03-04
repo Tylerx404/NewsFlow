@@ -23,6 +23,9 @@ onMounted(async () => {
         <NuxtLink to="/signup" class="inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium">
           Sign up
         </NuxtLink>
+        <NuxtLink to="/pricing" class="inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium">
+          Pricing
+        </NuxtLink>
       </div>
     </div>
   </div>
