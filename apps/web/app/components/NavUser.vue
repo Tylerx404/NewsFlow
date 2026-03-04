@@ -32,6 +32,7 @@ const props = defineProps<{
     name: string
     email: string
     avatar?: string | null
+    plan?: string
   }
 }>()
 
@@ -64,6 +65,15 @@ const avatarFallback = computed(() => {
     .join("")
 })
 
+const currentPlanLabel = computed(() => {
+  const rawPlan = props.user.plan?.trim()
+  if (!rawPlan) {
+    return "FREE"
+  }
+
+  return rawPlan.toUpperCase()
+})
+
 const handleSignOut = () => {
   emit("signOut")
 }
@@ -87,6 +97,11 @@ const handleSignOut = () => {
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
+              <div class="mt-1">
+                <span class="inline-flex rounded-md border px-1.5 py-0.5 text-[10px] font-semibold leading-none tracking-wide">
+                  {{ currentPlanLabel }}
+                </span>
+              </div>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -108,6 +123,11 @@ const handleSignOut = () => {
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">{{ user.name }}</span>
                 <span class="truncate text-xs">{{ user.email }}</span>
+                <div class="mt-1">
+                  <span class="inline-flex rounded-md border px-1.5 py-0.5 text-[10px] font-semibold leading-none tracking-wide">
+                    {{ currentPlanLabel }}
+                  </span>
+                </div>
               </div>
             </div>
           </DropdownMenuLabel>

@@ -62,6 +62,7 @@ const sidebarUser = computed(() => ({
   name: user.value?.name ?? "NewsFlow User",
   email: user.value?.email ?? "Loading...",
   avatar: user.value?.avatar ?? null,
+  plan: sidebarPlan.value,
 }));
 
 const sidebarFeedsQuery = useQuery(
@@ -72,6 +73,24 @@ const sidebarFeedsQuery = useQuery(
     })
   )
 );
+const subscriptionQuery = useQuery(
+  $orpc.subscription.getCurrent.queryOptions({
+    queryKey: dashboardQueryKeys.subscription.current(),
+  })
+);
+
+const sidebarPlan = computed(() => {
+  if (subscriptionQuery.isLoading.value) {
+    return "LOADING";
+  }
+
+  const tier = subscriptionQuery.data.value?.tier;
+  if (tier === "basic" || tier === "pro" || tier === "max" || tier === "free") {
+    return tier.toUpperCase();
+  }
+
+  return "FREE";
+});
 
 const discoverFeedsQuery = useQuery(
   $orpc.feedSubscription.discover.queryOptions({
