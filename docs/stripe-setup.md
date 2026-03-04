@@ -23,6 +23,7 @@ Tao 3 product:
 Moi product tao recurring price theo nhu cau:
 - Monthly (bat buoc)
 - Yearly (nen tao de upsell)
+- Free trial: 7 ngay (khi user checkout lan dau)
 
 Gia goi de xuat:
 - Basic:
