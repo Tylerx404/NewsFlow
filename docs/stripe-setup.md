@@ -25,12 +25,9 @@ Moi product tao recurring price theo nhu cau:
 - Yearly (tuy chon)
 
 Sau khi tao, copy cac `price_...` ID:
-- `STRIPE_PRICE_BASIC_MONTHLY`
-- `STRIPE_PRICE_PRO_MONTHLY`
-- `STRIPE_PRICE_MAX_MONTHLY`
-- `STRIPE_PRICE_BASIC_YEARLY` (optional)
-- `STRIPE_PRICE_PRO_YEARLY` (optional)
-- `STRIPE_PRICE_MAX_YEARLY` (optional)
+- `STRIPE_PRICE_BASIC`
+- `STRIPE_PRICE_PRO`
+- `STRIPE_PRICE_MAX`
 
 ## 3) Dien env server
 
@@ -39,10 +36,9 @@ Cap nhat vao `apps/server/.env` theo mau trong `apps/server/.env.example`.
 Bat buoc:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- 3 monthly price IDs
-
-Tuy chon:
-- 3 yearly price IDs
+- `STRIPE_PRICE_BASIC`
+- `STRIPE_PRICE_PRO`
+- `STRIPE_PRICE_MAX`
 
 ## 4) Kiem tra nhanh
 
