@@ -22,6 +22,12 @@ app.use(
   }),
 );
 
+app.post(
+  "/api/auth/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  (_req, _res, next) => next(),
+);
+
 app.all("/api/auth{/*path}", toNodeHandler(auth));
 
 const rpcHandler = new RPCHandler(appRouter, {
