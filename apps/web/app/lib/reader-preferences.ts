@@ -263,6 +263,26 @@ const cloneDefaultReaderPreferences = (): ReaderPreferences => ({
 export const isThemeMode = (value: string): value is ThemeMode =>
   themeModeValues.has(value as ThemeMode);
 
+export const isReaderColorPreset = (
+  value: string
+): value is ReaderColorPreset => colorPresetValues.has(value as ReaderColorPreset);
+
+export const isReaderFontFamily = (
+  value: string
+): value is ReaderFontFamily => fontFamilyValues.has(value as ReaderFontFamily);
+
+export const isReaderFontSize = (value: string): value is ReaderFontSize =>
+  fontSizeValues.has(value as ReaderFontSize);
+
+export const isReaderLineHeight = (
+  value: string
+): value is ReaderLineHeight => lineHeightValues.has(value as ReaderLineHeight);
+
+export const isReaderContentWidth = (
+  value: string
+): value is ReaderContentWidth =>
+  contentWidthValues.has(value as ReaderContentWidth);
+
 export const normalizeReaderPreferences = (value: unknown): ReaderPreferences => {
   if (!isRecord(value)) {
     return cloneDefaultReaderPreferences();
