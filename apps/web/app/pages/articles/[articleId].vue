@@ -2,8 +2,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, ref, watch } from "vue";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatArticleContent } from "@/lib/article-content";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 
 definePageMeta({
@@ -103,49 +105,71 @@ const handleSummarize = async () => {
     ...(selectedAiConfigId.value ? { aiConfigId: selectedAiConfigId.value } : {}),
   });
 };
+
+const formattedArticleContent = computed(() =>
+  formatArticleContent(articleQuery.data.value?.content ?? null)
+);
+
+const publishedAtLabel = computed(() => {
+  const dateValue = articleQuery.data.value?.pubDate;
+  if (!dateValue) {
+    return "";
+  }
+
+  return new Date(dateValue).toLocaleString();
+});
 </script>
 
 <template>
-  <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-    <Card>
-      <CardHeader v-if="articleQuery.data.value">
-        <CardTitle class="text-2xl leading-tight">
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+    <Card class="overflow-hidden">
+      <CardHeader v-if="articleQuery.data.value" class="space-y-4 border-b bg-muted/20 px-4 py-5 md:px-6">
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          <Badge variant="secondary">
+            {{ articleQuery.data.value.feed.title }}
+          </Badge>
+          <span>{{ publishedAtLabel }}</span>
+          <span v-if="articleQuery.data.value.author">
+            • {{ articleQuery.data.value.author }}
+          </span>
+        </div>
+        <CardTitle class="text-balance text-2xl leading-tight md:text-3xl">
           {{ articleQuery.data.value.title }}
         </CardTitle>
-        <CardDescription>
-          {{ articleQuery.data.value.feed.title }} •
-          {{ new Date(articleQuery.data.value.pubDate).toLocaleString() }}
-        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <p v-if="articleQuery.isLoading.value" class="text-sm text-muted-foreground">
+      <CardContent class="p-0">
+        <p v-if="articleQuery.isLoading.value" class="p-6 text-sm text-muted-foreground">
           Loading article...
         </p>
-        <p v-else-if="articleQuery.error.value" class="text-sm text-destructive">
+        <p v-else-if="articleQuery.error.value" class="p-6 text-sm text-destructive">
           {{ articleQuery.error.value.message }}
         </p>
-        <div v-else-if="articleQuery.data.value" class="space-y-4">
-          <div
-            v-if="articleQuery.data.value.content"
-            class="prose prose-sm max-w-none dark:prose-invert"
-            v-html="articleQuery.data.value.content"
-          />
-          <div v-else class="space-y-2 rounded-lg border border-dashed p-4 text-sm">
-            <p class="font-medium">Full content unavailable</p>
-            <p class="text-muted-foreground">
-              {{ articleQuery.data.value.excerpt || "No excerpt available for this article." }}
-            </p>
+        <div v-else-if="articleQuery.data.value" class="space-y-6 p-4 md:p-6">
+          <article class="reader-article-shell rounded-xl border p-4 md:p-8">
+            <div
+              v-if="formattedArticleContent"
+              class="reader-content"
+              v-html="formattedArticleContent"
+            />
+            <div v-else class="space-y-2 text-sm">
+              <p class="font-medium">Full content unavailable</p>
+              <p class="text-muted-foreground">
+                {{ articleQuery.data.value.excerpt || "No excerpt available for this article." }}
+              </p>
+            </div>
+          </article>
+          <div class="flex flex-wrap items-center gap-3">
+            <Button as-child variant="outline">
+              <a :href="articleQuery.data.value.link" target="_blank" rel="noreferrer">
+                Open original article
+              </a>
+            </Button>
           </div>
-          <Button as-child variant="outline">
-            <a :href="articleQuery.data.value.link" target="_blank" rel="noreferrer">
-              Open original article
-            </a>
-          </Button>
         </div>
       </CardContent>
     </Card>
 
-    <Card>
+    <Card class="h-fit">
       <CardHeader>
         <CardTitle>AI Summary</CardTitle>
         <CardDescription>
