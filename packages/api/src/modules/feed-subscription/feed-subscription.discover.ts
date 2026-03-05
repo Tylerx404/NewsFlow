@@ -33,14 +33,6 @@ export const DISCOVER_FEEDS: DiscoverFeed[] = [
     siteUrl: "https://arstechnica.com",
   },
   {
-    title: "Reuters World News",
-    url: "https://feeds.reuters.com/Reuters/worldNews",
-    description: "Global breaking news and analysis.",
-    category: "world",
-    language: "en",
-    siteUrl: "https://www.reuters.com",
-  },
-  {
     title: "BBC World",
     url: "http://feeds.bbci.co.uk/news/world/rss.xml",
     description: "World news from BBC.",
