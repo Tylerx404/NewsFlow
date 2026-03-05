@@ -2,10 +2,18 @@
 import {
   ChevronsUpDown,
   LogOut,
+  MonitorCog,
+  Moon,
+  Sun,
   UserCircle,
 } from "lucide-vue-next"
 import { computed } from "vue"
 
+import { useReadingPreferences } from "@/composables/use-reading-preferences"
+import {
+  isThemeMode,
+  themeModeOptions,
+} from "@/lib/reader-preferences"
 import {
   Avatar,
   AvatarFallback,
@@ -17,6 +25,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -40,6 +50,7 @@ const emit = defineEmits<{
 }>()
 
 const { isMobile } = useSidebar()
+const readingPreferences = useReadingPreferences()
 
 const avatarSrc = computed(() => {
   const raw = props.user.avatar
@@ -66,6 +77,18 @@ const avatarFallback = computed(() => {
 
 const handleSignOut = () => {
   emit("signOut")
+}
+
+const handleThemeModeChange = (value: unknown) => {
+  if (typeof value !== "string") {
+    return
+  }
+
+  if (!isThemeMode(value)) {
+    return
+  }
+
+  readingPreferences.value.themeMode = value
 }
 </script>
 
@@ -119,6 +142,28 @@ const handleSignOut = () => {
                 Personal Settings
               </NuxtLink>
             </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
+              Appearance
+            </DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              :model-value="readingPreferences.themeMode"
+              @update:model-value="handleThemeModeChange"
+            >
+              <DropdownMenuRadioItem
+                v-for="modeOption in themeModeOptions"
+                :key="modeOption.value"
+                :value="modeOption.value"
+                :title="modeOption.description"
+              >
+                <MonitorCog v-if="modeOption.value === 'system'" />
+                <Sun v-else-if="modeOption.value === 'light'" />
+                <Moon v-else />
+                {{ modeOption.label }}
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem @select="handleSignOut">
