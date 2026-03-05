@@ -178,20 +178,12 @@ const formattedArticleContent = computed(() =>
 const formattedSummaryContent = computed(() =>
   formatSummaryMarkdown(streamedSummaryText.value)
 );
+const hasAiProfiles = computed(() =>
+  (aiConfigQuery.data.value?.length ?? 0) > 0
+);
 const isSummaryBusy = computed(() =>
   summarizeMutation.isPending.value || isStreamingSummary.value
 );
-const summarizeButtonLabel = computed(() => {
-  if (summarizeMutation.isPending.value) {
-    return "Generating...";
-  }
-
-  if (isStreamingSummary.value) {
-    return "Streaming...";
-  }
-
-  return "Summarize";
-});
 
 const updateFontFamily = (value: unknown) => {
   if (typeof value !== "string" || !isReaderFontFamily(value)) {
@@ -264,6 +256,60 @@ onBeforeUnmount(() => {
           {{ articleQuery.error.value.message }}
         </p>
         <div v-else-if="articleQuery.data.value" class="space-y-6 p-4 md:p-6">
+          <div class="flex flex-wrap items-center gap-3">
+            <Button as-child variant="outline">
+              <a :href="articleQuery.data.value.link" target="_blank" rel="noreferrer">
+                Open original article
+              </a>
+            </Button>
+            <Button
+              :disabled="isSummaryBusy || articleQuery.isLoading.value || !hasAiProfiles"
+              @click="handleSummarize"
+            >
+              AI Summarize
+            </Button>
+          </div>
+          <p v-if="!hasAiProfiles" class="text-sm text-muted-foreground">
+            No AI profile configured.
+            <NuxtLink class="underline underline-offset-4" to="/settings/ai">
+              Add one in AI settings
+            </NuxtLink>
+          </p>
+          <div
+            v-if="summaryError"
+            class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+          >
+            {{ summaryError }}
+          </div>
+          <div
+            v-else-if="summarizeMutation.isPending.value"
+            class="space-y-3 rounded-md border bg-background p-4"
+          >
+            <div class="flex items-center gap-2 text-sm font-medium">
+              <span class="size-2 animate-pulse rounded-full bg-primary" />
+              Generating summary...
+            </div>
+            <div class="space-y-2">
+              <div class="h-2 rounded bg-muted/80 animate-pulse" />
+              <div class="h-2 rounded bg-muted/70 animate-pulse" />
+              <div class="h-2 w-3/4 rounded bg-muted/60 animate-pulse" />
+            </div>
+          </div>
+          <div
+            v-else-if="isStreamingSummary || streamedSummaryText"
+            class="space-y-2 rounded-md border bg-background p-4"
+          >
+            <p class="text-xs text-muted-foreground">
+              Tokens used: {{ summaryTokens ?? 0 }}
+            </p>
+            <p v-if="isStreamingSummary" class="text-xs text-muted-foreground animate-pulse">
+              Streaming response...
+            </p>
+            <div
+              class="reader-content max-w-none"
+              v-html="formattedSummaryContent"
+            />
+          </div>
           <article class="reader-article-shell rounded-xl border p-4 md:p-8">
             <div
               v-if="formattedArticleContent"
@@ -277,95 +323,6 @@ onBeforeUnmount(() => {
               </p>
             </div>
           </article>
-          <div class="flex flex-wrap items-center gap-3">
-            <Button as-child variant="outline">
-              <a :href="articleQuery.data.value.link" target="_blank" rel="noreferrer">
-                Open original article
-              </a>
-            </Button>
-          </div>
-
-          <section class="space-y-4 rounded-xl border bg-muted/20 p-4 md:p-5">
-            <div class="space-y-1">
-              <h3 class="text-base font-semibold">AI Summary</h3>
-              <p class="text-sm text-muted-foreground">
-                Use your configured AI profile to summarize this article.
-              </p>
-            </div>
-            <template v-if="(aiConfigQuery.data.value?.length ?? 0) > 0">
-              <label class="text-sm font-medium" for="ai-config">
-                AI Profile
-              </label>
-              <select
-                id="ai-config"
-                v-model="selectedAiConfigId"
-                class="w-full rounded-md border bg-background px-3 py-2 text-sm"
-              >
-                <option
-                  v-for="config in aiConfigQuery.data.value"
-                  :key="config.id"
-                  :value="config.id"
-                >
-                  {{ config.name }} ({{ config.provider }} / {{ config.model }})
-                </option>
-              </select>
-              <Button
-                class="w-full sm:w-auto"
-                :disabled="isSummaryBusy || articleQuery.isLoading.value"
-                @click="handleSummarize"
-              >
-                {{ summarizeButtonLabel }}
-              </Button>
-              <div
-                v-if="summaryError"
-                class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
-              >
-                {{ summaryError }}
-              </div>
-              <div
-                v-else-if="summarizeMutation.isPending.value"
-                class="space-y-3 rounded-md border bg-background p-4"
-              >
-                <div class="flex items-center gap-2 text-sm font-medium">
-                  <span class="size-2 animate-pulse rounded-full bg-primary" />
-                  Generating summary...
-                </div>
-                <div class="space-y-2">
-                  <div class="h-2 rounded bg-muted/80 animate-pulse" />
-                  <div class="h-2 rounded bg-muted/70 animate-pulse" />
-                  <div class="h-2 w-3/4 rounded bg-muted/60 animate-pulse" />
-                </div>
-              </div>
-              <div
-                v-else-if="isStreamingSummary || streamedSummaryText"
-                class="space-y-2 rounded-md border bg-background p-4"
-              >
-                <p class="text-xs text-muted-foreground">
-                  Tokens used: {{ summaryTokens ?? 0 }}
-                </p>
-                <p v-if="isStreamingSummary" class="text-xs text-muted-foreground animate-pulse">
-                  Streaming response...
-                </p>
-                <div
-                  class="reader-content max-w-none"
-                  v-html="formattedSummaryContent"
-                />
-              </div>
-            </template>
-            <template v-else>
-              <div class="space-y-3 rounded-md border border-dashed bg-background/60 p-4 text-sm">
-                <p class="font-medium">No AI profile configured</p>
-                <p class="text-muted-foreground">
-                  Add an AI profile to enable summarization.
-                </p>
-                <Button as-child size="sm">
-                  <NuxtLink to="/settings/ai">
-                    Go to AI settings
-                  </NuxtLink>
-                </Button>
-              </div>
-            </template>
-          </section>
         </div>
       </CardContent>
     </Card>
