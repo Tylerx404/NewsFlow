@@ -4,9 +4,10 @@ import { computed, ref, watch } from "vue";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatArticleContent } from "@/lib/article-content";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import { formatSummaryMarkdown } from "@/lib/summary-markdown";
 
 definePageMeta({
   layout: "dashboard",
@@ -109,6 +110,9 @@ const handleSummarize = async () => {
 const formattedArticleContent = computed(() =>
   formatArticleContent(articleQuery.data.value?.content ?? null)
 );
+const formattedSummaryContent = computed(() =>
+  formatSummaryMarkdown(summaryText.value)
+);
 
 const publishedAtLabel = computed(() => {
   const dateValue = articleQuery.data.value?.pubDate;
@@ -121,7 +125,7 @@ const publishedAtLabel = computed(() => {
 </script>
 
 <template>
-  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+  <div class="grid gap-6">
     <Card class="overflow-hidden">
       <CardHeader v-if="articleQuery.data.value" class="space-y-4 border-b bg-muted/20 px-4 py-5 md:px-6">
         <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
@@ -165,65 +169,69 @@ const publishedAtLabel = computed(() => {
               </a>
             </Button>
           </div>
-        </div>
-      </CardContent>
-    </Card>
 
-    <Card class="h-fit">
-      <CardHeader>
-        <CardTitle>AI Summary</CardTitle>
-        <CardDescription>
-          Use your configured AI profile to summarize this article.
-        </CardDescription>
-      </CardHeader>
-      <CardContent class="space-y-4">
-        <template v-if="(aiConfigQuery.data.value?.length ?? 0) > 0">
-          <label class="text-sm font-medium" for="ai-config">
-            AI Profile
-          </label>
-          <select
-            id="ai-config"
-            v-model="selectedAiConfigId"
-            class="w-full rounded-md border bg-background px-3 py-2 text-sm"
-          >
-            <option
-              v-for="config in aiConfigQuery.data.value"
-              :key="config.id"
-              :value="config.id"
-            >
-              {{ config.name }} ({{ config.provider }} / {{ config.model }})
-            </option>
-          </select>
-          <Button
-            class="w-full"
-            :disabled="summarizeMutation.isPending.value || articleQuery.isLoading.value"
-            @click="handleSummarize"
-          >
-            {{ summarizeMutation.isPending.value ? "Summarizing..." : "Summarize" }}
-          </Button>
-          <div v-if="summaryError" class="rounded-md border border-destructive/40 p-3 text-sm text-destructive">
-            {{ summaryError }}
-          </div>
-          <div v-else-if="summaryText" class="space-y-2 rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">
-              Tokens used: {{ summaryTokens ?? 0 }}
-            </p>
-            <pre class="whitespace-pre-wrap text-sm leading-relaxed">{{ summaryText }}</pre>
-          </div>
-        </template>
-        <template v-else>
-          <div class="space-y-3 rounded-md border border-dashed p-4 text-sm">
-            <p class="font-medium">No AI profile configured</p>
-            <p class="text-muted-foreground">
-              Add an AI profile to enable summarization.
-            </p>
-            <Button as-child size="sm">
-              <NuxtLink to="/settings/ai">
-                Go to AI settings
-              </NuxtLink>
-            </Button>
-          </div>
-        </template>
+          <section class="space-y-4 rounded-xl border bg-muted/20 p-4 md:p-5">
+            <div class="space-y-1">
+              <h3 class="text-base font-semibold">AI Summary</h3>
+              <p class="text-sm text-muted-foreground">
+                Use your configured AI profile to summarize this article.
+              </p>
+            </div>
+            <template v-if="(aiConfigQuery.data.value?.length ?? 0) > 0">
+              <label class="text-sm font-medium" for="ai-config">
+                AI Profile
+              </label>
+              <select
+                id="ai-config"
+                v-model="selectedAiConfigId"
+                class="w-full rounded-md border bg-background px-3 py-2 text-sm"
+              >
+                <option
+                  v-for="config in aiConfigQuery.data.value"
+                  :key="config.id"
+                  :value="config.id"
+                >
+                  {{ config.name }} ({{ config.provider }} / {{ config.model }})
+                </option>
+              </select>
+              <Button
+                class="w-full sm:w-auto"
+                :disabled="summarizeMutation.isPending.value || articleQuery.isLoading.value"
+                @click="handleSummarize"
+              >
+                {{ summarizeMutation.isPending.value ? "Summarizing..." : "Summarize" }}
+              </Button>
+              <div
+                v-if="summaryError"
+                class="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+              >
+                {{ summaryError }}
+              </div>
+              <div v-else-if="summaryText" class="space-y-2 rounded-md border bg-background p-4">
+                <p class="text-xs text-muted-foreground">
+                  Tokens used: {{ summaryTokens ?? 0 }}
+                </p>
+                <div
+                  class="reader-content max-w-none"
+                  v-html="formattedSummaryContent"
+                />
+              </div>
+            </template>
+            <template v-else>
+              <div class="space-y-3 rounded-md border border-dashed bg-background/60 p-4 text-sm">
+                <p class="font-medium">No AI profile configured</p>
+                <p class="text-muted-foreground">
+                  Add an AI profile to enable summarization.
+                </p>
+                <Button as-child size="sm">
+                  <NuxtLink to="/settings/ai">
+                    Go to AI settings
+                  </NuxtLink>
+                </Button>
+              </div>
+            </template>
+          </section>
+        </div>
       </CardContent>
     </Card>
   </div>
