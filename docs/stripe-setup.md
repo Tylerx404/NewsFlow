@@ -1,42 +1,29 @@
-# Stripe Setup (Test Mode)
+# Stripe Setup (Sandbox)
 
-Tai lieu nay dung de setup nhanh goi tra phi Stripe cho NewsFlow.
+Tai lieu nay dung de setup nhanh Stripe sandbox cho NewsFlow.
 
-## 1) Tao tai khoan va bat Test Mode
+## 1) Tao Stripe sandbox
 
 1. Dang nhap Stripe Dashboard.
-2. Chuyen sang **Test mode** (goc phai tren).
-3. Vao `Developers > API keys` va copy:
+2. Tao hoac chon mot sandbox environment.
+3. Vao `Developers > API keys` trong sandbox va copy:
    - `Secret key` (`sk_test_...`)
-4. Vao `Developers > Webhooks`:
-   - Tao endpoint webhook (vi du: `http://localhost:3000/api/auth/stripe/webhook`)
-   - Subscribe it nhat cac event subscription can dung
-   - Copy `Signing secret` (`whsec_...`)
+   - `Publishable key` (`pk_test_...`)
 
-## 2) Tao Product va Price
+Luu y: Stripe sandbox va Stripe test mode deu dung key prefix `*_test_*`.
+
+## 2) Tao Product va Price trong sandbox
 
 Tao 3 product:
 - Basic
 - Pro
 - Max
 
-Moi product tao recurring price theo nhu cau:
+Moi product tao recurring price:
 - Monthly (bat buoc)
-- Yearly (nen tao de upsell)
-- Free trial: 7 ngay (khi user checkout lan dau)
+- Yearly (khuyen nghi)
 
-Gia goi de xuat:
-- Basic:
-  - Monthly: $4.99 - $6.99 (goi y: $5.99)
-  - Yearly: $49 - $59
-- Pro:
-  - Monthly: $9.99 - $14.99 (goi y: $9.99 hoac $12.99)
-  - Yearly: $89 - $119
-- Max:
-  - Monthly: $19.99 - $29.99 (goi y: $24.99)
-  - Yearly: $199 - $249
-
-Sau khi tao, copy cac `price_...` ID:
+Copy cac `price_...` ID:
 - `STRIPE_PRICE_BASIC_MONTHLY`
 - `STRIPE_PRICE_BASIC_YEARLY`
 - `STRIPE_PRICE_PRO_MONTHLY`
@@ -44,9 +31,9 @@ Sau khi tao, copy cac `price_...` ID:
 - `STRIPE_PRICE_MAX_MONTHLY`
 - `STRIPE_PRICE_MAX_YEARLY`
 
-## 3) Dien env server
+## 3) Cau hinh env server
 
-Cap nhat vao `apps/server/.env` theo mau trong `apps/server/.env.example`.
+Cap nhat vao `apps/server/.env` theo mau `apps/server/.env.example`.
 
 Bat buoc:
 - `STRIPE_SECRET_KEY`
@@ -58,9 +45,22 @@ Bat buoc:
 - `STRIPE_PRICE_MAX_MONTHLY`
 - `STRIPE_PRICE_MAX_YEARLY`
 
-## 4) Kiem tra nhanh
+## 4) Cau hinh webhook cho sandbox
 
-Chay:
+Webhook endpoint cua server:
+- `http://localhost:3000/api/auth/stripe/webhook`
+
+Co 2 cach:
+
+1. Dashboard webhook:
+   - Tao endpoint trong sandbox dashboard.
+   - Subscribe cac event subscription lien quan.
+   - Copy signing secret `whsec_...` vao `STRIPE_WEBHOOK_SECRET`.
+2. Stripe CLI (dev local):
+   - Chay `stripe listen --forward-to http://localhost:3000/api/auth/stripe/webhook`
+   - Copy `whsec_...` in ra terminal vao `STRIPE_WEBHOOK_SECRET`.
+
+## 5) Kiem tra nhanh
 
 ```bash
 bun run check-types
