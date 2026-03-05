@@ -5,8 +5,26 @@ import { computed, ref, watch } from "vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useReadingPreferences } from "@/composables/use-reading-preferences";
 import { formatArticleContent } from "@/lib/article-content";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import {
+  isReaderContentWidth,
+  isReaderFontFamily,
+  isReaderFontSize,
+  isReaderLineHeight,
+  readerContentWidthOptions,
+  readerFontFamilyOptions,
+  readerFontSizeOptions,
+  readerLineHeightOptions,
+} from "@/lib/reader-preferences";
 import { formatSummaryMarkdown } from "@/lib/summary-markdown";
 
 definePageMeta({
@@ -18,6 +36,7 @@ definePageMeta({
 const route = useRoute();
 const { $orpc } = useNuxtApp();
 const queryClient = useQueryClient();
+const readingPreferences = useReadingPreferences();
 
 const articleId = computed(() => {
   const raw = route.params.articleId;
@@ -114,6 +133,38 @@ const formattedSummaryContent = computed(() =>
   formatSummaryMarkdown(summaryText.value)
 );
 
+const updateFontFamily = (value: unknown) => {
+  if (typeof value !== "string" || !isReaderFontFamily(value)) {
+    return;
+  }
+
+  readingPreferences.value.fontFamily = value;
+};
+
+const updateFontSize = (value: unknown) => {
+  if (typeof value !== "string" || !isReaderFontSize(value)) {
+    return;
+  }
+
+  readingPreferences.value.fontSize = value;
+};
+
+const updateLineHeight = (value: unknown) => {
+  if (typeof value !== "string" || !isReaderLineHeight(value)) {
+    return;
+  }
+
+  readingPreferences.value.lineHeight = value;
+};
+
+const updateContentWidth = (value: unknown) => {
+  if (typeof value !== "string" || !isReaderContentWidth(value)) {
+    return;
+  }
+
+  readingPreferences.value.contentWidth = value;
+};
+
 const publishedAtLabel = computed(() => {
   const dateValue = articleQuery.data.value?.pubDate;
   if (!dateValue) {
@@ -125,7 +176,7 @@ const publishedAtLabel = computed(() => {
 </script>
 
 <template>
-  <div class="grid gap-6">
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
     <Card class="overflow-hidden">
       <CardHeader v-if="articleQuery.data.value" class="space-y-4 border-b bg-muted/20 px-4 py-5 md:px-6">
         <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
@@ -231,6 +282,111 @@ const publishedAtLabel = computed(() => {
               </div>
             </template>
           </section>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card class="h-fit xl:sticky xl:top-6">
+      <CardHeader class="space-y-2">
+        <CardTitle class="text-base">Reading Appearance</CardTitle>
+        <p class="text-sm text-muted-foreground">
+          Adjust typography and spacing while reading.
+        </p>
+      </CardHeader>
+      <CardContent class="space-y-4">
+        <div class="space-y-2">
+          <p class="text-sm font-medium">Font family</p>
+          <Select
+            :model-value="readingPreferences.fontFamily"
+            @update:model-value="updateFontFamily"
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="fontOption in readerFontFamilyOptions"
+                :key="fontOption.value"
+                :value="fontOption.value"
+              >
+                {{ fontOption.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium">Font size</p>
+          <Select
+            :model-value="readingPreferences.fontSize"
+            @update:model-value="updateFontSize"
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="fontSizeOption in readerFontSizeOptions"
+                :key="fontSizeOption.value"
+                :value="fontSizeOption.value"
+              >
+                {{ fontSizeOption.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium">Line height</p>
+          <Select
+            :model-value="readingPreferences.lineHeight"
+            @update:model-value="updateLineHeight"
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="lineHeightOption in readerLineHeightOptions"
+                :key="lineHeightOption.value"
+                :value="lineHeightOption.value"
+              >
+                {{ lineHeightOption.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium">Reading width</p>
+          <Select
+            :model-value="readingPreferences.contentWidth"
+            @update:model-value="updateContentWidth"
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="contentWidthOption in readerContentWidthOptions"
+                :key="contentWidthOption.value"
+                :value="contentWidthOption.value"
+              >
+                {{ contentWidthOption.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="rounded-lg border bg-muted/20 p-3">
+          <p class="text-xs text-muted-foreground">
+            Need full controls for theme and color presets?
+          </p>
+          <Button as-child class="mt-3 w-full" size="sm" variant="outline">
+            <NuxtLink to="/settings/appearance">
+              Open appearance settings
+            </NuxtLink>
+          </Button>
         </div>
       </CardContent>
     </Card>
