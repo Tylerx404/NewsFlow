@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,9 +45,12 @@ const articleId = computed(() => {
 
 const selectedAiConfigId = ref<string>("");
 const summaryText = ref("");
+const streamedSummaryText = ref("");
 const summaryTokens = ref<number | null>(null);
 const summaryError = ref("");
 const hasMarkedRead = ref(false);
+const isStreamingSummary = ref(false);
+const summaryStreamInterval = ref<ReturnType<typeof setInterval> | null>(null);
 
 const articleQuery = useQuery(
   computed(() =>
@@ -73,18 +76,59 @@ const markReadMutation = useMutation(
   })
 );
 
+const stopSummaryStream = () => {
+  if (summaryStreamInterval.value) {
+    clearInterval(summaryStreamInterval.value);
+    summaryStreamInterval.value = null;
+  }
+
+  isStreamingSummary.value = false;
+};
+
+const startSummaryStream = (value: string) => {
+  stopSummaryStream();
+  streamedSummaryText.value = "";
+
+  const normalized = value.trim();
+  if (!normalized) {
+    return;
+  }
+
+  const segments = normalized.match(/\S+\s*/g) ?? [normalized];
+  let index = 0;
+  isStreamingSummary.value = true;
+
+  summaryStreamInterval.value = setInterval(() => {
+    const remaining = segments.length - index;
+    if (remaining <= 0) {
+      stopSummaryStream();
+      return;
+    }
+
+    const chunkSize = Math.min(remaining, Math.floor(Math.random() * 2) + 1);
+    streamedSummaryText.value += segments.slice(index, index + chunkSize).join("");
+    index += chunkSize;
+
+    if (index >= segments.length) {
+      stopSummaryStream();
+    }
+  }, 45);
+};
+
 const summarizeMutation = useMutation(
   $orpc.ai.summarize.mutationOptions({
     onSuccess: (result) => {
       summaryText.value = result.summary;
       summaryTokens.value = result.tokens;
       summaryError.value = "";
+      startSummaryStream(result.summary);
     },
     onError: (error) => {
       summaryError.value =
         error instanceof Error
           ? error.message
           : "Unable to summarize this article right now.";
+      stopSummaryStream();
     },
   })
 );
@@ -116,8 +160,10 @@ watch(
 );
 
 const handleSummarize = async () => {
+  stopSummaryStream();
   summaryError.value = "";
   summaryText.value = "";
+  streamedSummaryText.value = "";
   summaryTokens.value = null;
 
   await summarizeMutation.mutateAsync({
@@ -130,8 +176,22 @@ const formattedArticleContent = computed(() =>
   formatArticleContent(articleQuery.data.value?.content ?? null)
 );
 const formattedSummaryContent = computed(() =>
-  formatSummaryMarkdown(summaryText.value)
+  formatSummaryMarkdown(streamedSummaryText.value)
 );
+const isSummaryBusy = computed(() =>
+  summarizeMutation.isPending.value || isStreamingSummary.value
+);
+const summarizeButtonLabel = computed(() => {
+  if (summarizeMutation.isPending.value) {
+    return "Generating...";
+  }
+
+  if (isStreamingSummary.value) {
+    return "Streaming...";
+  }
+
+  return "Summarize";
+});
 
 const updateFontFamily = (value: unknown) => {
   if (typeof value !== "string" || !isReaderFontFamily(value)) {
@@ -172,6 +232,10 @@ const publishedAtLabel = computed(() => {
   }
 
   return new Date(dateValue).toLocaleString();
+});
+
+onBeforeUnmount(() => {
+  stopSummaryStream();
 });
 </script>
 
@@ -247,10 +311,10 @@ const publishedAtLabel = computed(() => {
               </select>
               <Button
                 class="w-full sm:w-auto"
-                :disabled="summarizeMutation.isPending.value || articleQuery.isLoading.value"
+                :disabled="isSummaryBusy || articleQuery.isLoading.value"
                 @click="handleSummarize"
               >
-                {{ summarizeMutation.isPending.value ? "Summarizing..." : "Summarize" }}
+                {{ summarizeButtonLabel }}
               </Button>
               <div
                 v-if="summaryError"
@@ -258,9 +322,29 @@ const publishedAtLabel = computed(() => {
               >
                 {{ summaryError }}
               </div>
-              <div v-else-if="summaryText" class="space-y-2 rounded-md border bg-background p-4">
+              <div
+                v-else-if="summarizeMutation.isPending.value"
+                class="space-y-3 rounded-md border bg-background p-4"
+              >
+                <div class="flex items-center gap-2 text-sm font-medium">
+                  <span class="size-2 animate-pulse rounded-full bg-primary" />
+                  Generating summary...
+                </div>
+                <div class="space-y-2">
+                  <div class="h-2 rounded bg-muted/80 animate-pulse" />
+                  <div class="h-2 rounded bg-muted/70 animate-pulse" />
+                  <div class="h-2 w-3/4 rounded bg-muted/60 animate-pulse" />
+                </div>
+              </div>
+              <div
+                v-else-if="isStreamingSummary || streamedSummaryText"
+                class="space-y-2 rounded-md border bg-background p-4"
+              >
                 <p class="text-xs text-muted-foreground">
                   Tokens used: {{ summaryTokens ?? 0 }}
+                </p>
+                <p v-if="isStreamingSummary" class="text-xs text-muted-foreground animate-pulse">
+                  Streaming response...
                 </p>
                 <div
                   class="reader-content max-w-none"
