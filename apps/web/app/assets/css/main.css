@@ -43,6 +43,19 @@
 
 :root {
   --radius: 0.625rem;
+  --reader-font-family:
+    "Source Serif 4",
+    "Palatino Linotype",
+    "Book Antiqua",
+    serif;
+  --reader-font-size: 1.05rem;
+  --reader-line-height: 1.78;
+  --reader-max-width: 72ch;
+  --reader-surface: oklch(0.99 0.003 250);
+  --reader-text: oklch(0.25 0.01 250);
+  --reader-muted-text: oklch(0.47 0.01 250);
+  --reader-border: oklch(0.9 0.004 250);
+  --reader-link: oklch(0.54 0.14 255);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -77,6 +90,11 @@
 }
 
 .dark {
+  --reader-surface: oklch(0.24 0.01 250);
+  --reader-text: oklch(0.94 0.01 250);
+  --reader-muted-text: oklch(0.75 0.01 250);
+  --reader-border: oklch(0.36 0.01 250);
+  --reader-link: oklch(0.79 0.1 245);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
