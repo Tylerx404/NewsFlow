@@ -36,7 +36,7 @@ const plans: PricingPlan[] = [
     features: [
       "Core RSS reading workflow",
       "AI summarize for occasional usage",
-      "7-day free trial",
+      "Instant access after checkout",
     ],
   },
   {
@@ -49,7 +49,7 @@ const plans: PricingPlan[] = [
     features: [
       "Everything in Basic",
       "Higher AI usage limits",
-      "7-day free trial",
+      "Instant access after checkout",
     ],
   },
   {
@@ -120,8 +120,8 @@ onMounted(async () => {
           Choose The Right NewsFlow Plan
         </h1>
         <p class="mx-auto max-w-2xl text-sm text-muted-foreground md:text-base">
-          Start with a 7-day free trial. Upgrade when you need higher AI usage and more
-          power for your reading workflow.
+          Pick a plan and get instant access after checkout. Upgrade when you need higher
+          AI usage and more power for your reading workflow.
         </p>
 
         <div class="inline-flex rounded-lg border p-1">

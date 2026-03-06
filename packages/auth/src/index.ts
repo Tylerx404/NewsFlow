@@ -6,7 +6,6 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import Stripe from "stripe";
 
 const isProduction = env.NODE_ENV === "production";
-const STRIPE_TRIAL_DAYS = 7;
 
 const stripeClient = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -38,19 +37,16 @@ export const auth = betterAuth({
             name: "basic",
             priceId: env.STRIPE_PRICE_BASIC_MONTHLY,
             annualDiscountPriceId: env.STRIPE_PRICE_BASIC_YEARLY,
-            freeTrial: { days: STRIPE_TRIAL_DAYS },
           },
           {
             name: "pro",
             priceId: env.STRIPE_PRICE_PRO_MONTHLY,
             annualDiscountPriceId: env.STRIPE_PRICE_PRO_YEARLY,
-            freeTrial: { days: STRIPE_TRIAL_DAYS },
           },
           {
             name: "max",
             priceId: env.STRIPE_PRICE_MAX_MONTHLY,
             annualDiscountPriceId: env.STRIPE_PRICE_MAX_YEARLY,
-            freeTrial: { days: STRIPE_TRIAL_DAYS },
           },
         ],
       },
