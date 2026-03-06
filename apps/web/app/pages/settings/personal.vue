@@ -1229,35 +1229,43 @@ watch(
                 </div>
               </div>
 
-              <div class="space-y-2 rounded-md border p-3">
-                <p class="text-xs font-medium text-muted-foreground">Choose plan</p>
+              <div class="space-y-4 rounded-xl border bg-card/60 p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                    Choose plan
+                  </p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ billingInterval === "yearly" ? "Yearly billing" : "Monthly billing" }}
+                  </p>
+                </div>
+
                 <div class="grid gap-2 sm:grid-cols-3">
                   <button
                     v-for="plan in subscriptionPlanOptions"
                     :key="plan.key"
                     type="button"
-                    class="rounded-md border p-3 text-left transition hover:border-primary/60"
+                    class="rounded-lg border p-3 text-left transition duration-150"
                     :class="
                       selectedPlan === plan.key
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border'
+                        ? 'border-primary bg-primary/5 shadow-sm'
+                        : 'border-border/80 bg-background hover:border-primary/50'
                     "
                     @click="selectedPlan = plan.key"
                   >
                     <p class="text-sm font-semibold">{{ plan.label }}</p>
                     <p class="mt-1 text-xs text-muted-foreground">
-                      {{ billingInterval === 'yearly' ? plan.yearlyLabel : plan.monthlyLabel }}
+                      {{ billingInterval === "yearly" ? plan.yearlyLabel : plan.monthlyLabel }}
                     </p>
                   </button>
                 </div>
 
-                <div class="inline-flex rounded-md border p-1">
+                <div class="inline-flex w-fit rounded-lg border bg-muted/40 p-1">
                   <button
                     type="button"
-                    class="rounded px-3 py-1 text-xs font-medium transition"
+                    class="rounded-md px-3 py-1.5 text-xs font-medium transition"
                     :class="
                       billingInterval === 'monthly'
-                        ? 'bg-primary text-primary-foreground'
+                        ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground'
                     "
                     @click="billingInterval = 'monthly'"
@@ -1266,10 +1274,10 @@ watch(
                   </button>
                   <button
                     type="button"
-                    class="rounded px-3 py-1 text-xs font-medium transition"
+                    class="rounded-md px-3 py-1.5 text-xs font-medium transition"
                     :class="
                       billingInterval === 'yearly'
-                        ? 'bg-primary text-primary-foreground'
+                        ? 'bg-background text-foreground shadow-sm'
                         : 'text-muted-foreground'
                     "
                     @click="billingInterval = 'yearly'"
@@ -1278,78 +1286,87 @@ watch(
                   </button>
                 </div>
 
-                <div class="rounded-md border bg-muted/20 p-3">
-                  <p class="text-sm font-medium">
-                    {{ selectedPlanDetails.label }}
-                  </p>
-                  <p class="mt-1 flex flex-wrap items-center gap-2 text-sm font-medium">
-                    <span
-                      v-if="hasDiscountedPlanPrice"
-                      class="text-muted-foreground line-through"
-                    >
-                      {{ formatCurrencyAmount(selectedPlanBaseAmount, selectedPlanCurrency) }}
-                    </span>
-                    <span>
-                      {{ formatCurrencyAmount(selectedPlanFinalAmount, selectedPlanCurrency) }}
-                      / {{ billingInterval === "yearly" ? "year" : "month" }}
-                    </span>
-                  </p>
-                  <p class="mt-1 text-xs text-muted-foreground">
-                    {{ selectedPlanDetails.note }}
-                  </p>
+                <div class="rounded-lg border bg-background p-4 shadow-sm">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p class="text-base font-semibold">{{ selectedPlanDetails.label }}</p>
+                      <p class="mt-1 text-xs text-muted-foreground">
+                        {{ selectedPlanDetails.note }}
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <p class="flex flex-wrap items-center justify-end gap-2 text-lg font-semibold">
+                        <span
+                          v-if="hasDiscountedPlanPrice"
+                          class="text-sm font-medium text-muted-foreground line-through"
+                        >
+                          {{ formatCurrencyAmount(selectedPlanBaseAmount, selectedPlanCurrency) }}
+                        </span>
+                        <span>
+                          {{ formatCurrencyAmount(selectedPlanFinalAmount, selectedPlanCurrency) }}
+                        </span>
+                      </p>
+                      <p class="text-xs text-muted-foreground">
+                        / {{ billingInterval === "yearly" ? "year" : "month" }}
+                      </p>
+                    </div>
+                  </div>
                   <p
                     v-if="hasDiscountedPlanPrice && appliedPromotionCode"
-                    class="mt-1 text-xs text-emerald-600 dark:text-emerald-400"
+                    class="mt-3 text-xs font-medium text-emerald-600 dark:text-emerald-400"
                   >
                     Voucher {{ appliedPromotionCode }} applied.
                   </p>
                 </div>
+              </div>
 
-                <div class="space-y-2 rounded-md border p-3">
-                  <p class="text-xs font-medium text-muted-foreground">Voucher code</p>
-                  <div class="flex flex-wrap items-center gap-2">
-                    <Input
-                      v-model="promotionCodeInput"
-                      placeholder="Enter voucher code"
-                      autocomplete="off"
-                      class="h-9 flex-1 min-w-[200px]"
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="secondary"
-                      :disabled="applyPromotionCodeMutation.isPending.value"
-                      @click="handleApplyPromotionCode"
-                    >
-                      {{
-                        applyPromotionCodeMutation.isPending.value
-                          ? "Applying..."
-                          : "Apply"
-                      }}
-                    </Button>
-                    <Button
-                      v-if="promotionCodeInput"
-                      type="button"
-                      size="sm"
-                      variant="ghost"
-                      :disabled="applyPromotionCodeMutation.isPending.value"
-                      @click="handleClearPromotionCode"
-                    >
-                      Clear
-                    </Button>
-                  </div>
+              <div class="space-y-3 rounded-xl border bg-card/60 p-4">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  Voucher code
+                </p>
 
-                  <p v-if="promotionError" aria-live="polite" :class="errorBannerClass">
-                    {{ promotionError }}
-                  </p>
-                  <p
-                    v-else-if="promotionSuccess"
-                    aria-live="polite"
-                    :class="successBannerClass"
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Input
+                    v-model="promotionCodeInput"
+                    placeholder="Enter voucher code"
+                    autocomplete="off"
+                    class="h-10 sm:flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    class="h-10 px-5 sm:w-auto"
+                    :disabled="applyPromotionCodeMutation.isPending.value"
+                    @click="handleApplyPromotionCode"
                   >
-                    {{ promotionSuccess }}
-                  </p>
+                    {{
+                      applyPromotionCodeMutation.isPending.value
+                        ? "Applying..."
+                        : "Apply"
+                    }}
+                  </Button>
                 </div>
+
+                <button
+                  v-if="promotionCodeInput"
+                  type="button"
+                  class="w-fit text-xs font-medium text-muted-foreground transition hover:text-foreground"
+                  :disabled="applyPromotionCodeMutation.isPending.value"
+                  @click="handleClearPromotionCode"
+                >
+                  Clear
+                </button>
+
+                <p v-if="promotionError" aria-live="polite" :class="errorBannerClass">
+                  {{ promotionError }}
+                </p>
+                <p
+                  v-else-if="promotionSuccess"
+                  aria-live="polite"
+                  :class="successBannerClass"
+                >
+                  {{ promotionSuccess }}
+                </p>
               </div>
 
               <div class="grid gap-2">
