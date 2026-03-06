@@ -10,11 +10,21 @@ type PrismaClient = typeof prisma;
 function normalizeSubscription<T extends {
   tier: string;
   billingInterval: string | null;
+  expiresAt: Date | null;
+  currentPeriodEnd: Date | null;
+  trialEnd: Date | null;
+  endedAt: Date | null;
 }>(subscription: T) {
   const tierResult = subscriptionTierSchema.safeParse(subscription.tier);
   const billingIntervalResult = subscriptionBillingIntervalSchema.safeParse(
     subscription.billingInterval
   );
+  const resolvedExpiresAt =
+    subscription.expiresAt ??
+    subscription.currentPeriodEnd ??
+    subscription.trialEnd ??
+    subscription.endedAt ??
+    null;
 
   return {
     ...subscription,
@@ -22,6 +32,7 @@ function normalizeSubscription<T extends {
     billingInterval: billingIntervalResult.success
       ? billingIntervalResult.data
       : null,
+    expiresAt: resolvedExpiresAt,
   };
 }
 
