@@ -121,8 +121,7 @@ app.post("/api/billing/promotion/preview", express.json(), async (req, res) => {
       return;
     }
 
-    const couponField = (promotionCode as { coupon?: Stripe.Coupon | string | null })
-      .coupon;
+    const couponField = promotionCode.promotion?.coupon;
     if (!couponField) {
       res.json({
         ...emptyCodeResponse,
