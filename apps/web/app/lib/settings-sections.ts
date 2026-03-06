@@ -1,4 +1,4 @@
-export type SettingsSectionId = "personal" | "ai" | "feeds";
+export type SettingsSectionId = "appearance" | "personal" | "ai" | "feeds";
 
 export type SettingsSection = {
   id: SettingsSectionId;
@@ -8,6 +8,12 @@ export type SettingsSection = {
 };
 
 export const settingsSections: SettingsSection[] = [
+  {
+    id: "appearance",
+    label: "Appearance",
+    description: "Theme mode, reading colors, typography, and article layout preferences.",
+    href: "/settings/appearance",
+  },
   {
     id: "personal",
     label: "Personal",
