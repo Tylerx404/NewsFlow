@@ -67,3 +67,10 @@ bun run check-types
 ```
 
 Neu thieu bien env bat buoc, `@NewsFlow/env/server` se bao loi som luc khoi dong.
+
+## 6) Promotion code (voucher)
+
+- NewsFlow cho phep nguoi dung nhap ma giam gia ngay tren man hinh Subscription (settings/personal).
+- Sau khi bam `Apply`, app preview gia sau giam va tu dong ap ma khi tao Stripe Checkout.
+- Nguoi dung nhap code text (vi du: `SUMMER26`, `GIAM20`), khong nhap `promo_...` ID.
+- Trang thai active/expired, so lan su dung, va ty le giam duoc quan ly trong Stripe Dashboard.

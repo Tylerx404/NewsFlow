@@ -49,6 +49,53 @@ export const auth = betterAuth({
             annualDiscountPriceId: env.STRIPE_PRICE_MAX_YEARLY,
           },
         ],
+        getCheckoutSessionParams: async (_data, req) => {
+          const rawPromotionCode = req?.headers
+            ?.get("x-newsflow-promo-code")
+            ?.trim();
+
+          if (!rawPromotionCode) {
+            return {
+              params: {
+                allow_promotion_codes: true,
+              },
+            };
+          }
+
+          const normalizedPromotionCode = rawPromotionCode.toUpperCase();
+
+          try {
+            const promotionCodeList = await stripeClient.promotionCodes.list({
+              code: normalizedPromotionCode,
+              active: true,
+              limit: 10,
+            });
+            const matchedPromotionCode = promotionCodeList.data.find(
+              (promotionCode) =>
+                promotionCode.code?.toUpperCase() === normalizedPromotionCode
+            );
+
+            if (!matchedPromotionCode) {
+              return {
+                params: {
+                  allow_promotion_codes: true,
+                },
+              };
+            }
+
+            return {
+              params: {
+                discounts: [{ promotion_code: matchedPromotionCode.id }],
+              },
+            };
+          } catch {
+            return {
+              params: {
+                allow_promotion_codes: true,
+              },
+            };
+          }
+        },
       },
       schema: {
         user: {

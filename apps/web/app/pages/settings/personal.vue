@@ -51,11 +51,24 @@ type StripeSessionRedirectResponse = {
   client_secret?: string | null;
 };
 
+type BillingPromotionPreviewResponse = {
+  valid: boolean;
+  code: string | null;
+  baseAmount: number;
+  finalAmount: number;
+  currency: string;
+  discountPercent: number | null;
+  amountOff: number | null;
+  reason: string | null;
+};
+
 type SubscriptionPlanOption = {
   key: SubscriptionPlanKey;
   label: string;
   monthlyLabel: string;
   yearlyLabel: string;
+  monthlyAmount: number;
+  yearlyAmount: number;
   note: string;
 };
 
@@ -65,6 +78,8 @@ const subscriptionPlanOptions: SubscriptionPlanOption[] = [
     label: "Basic",
     monthlyLabel: "$5.99 / month",
     yearlyLabel: "$59.99 / year",
+    monthlyAmount: 5.99,
+    yearlyAmount: 59.99,
     note: "Entry-level for personal testing.",
   },
   {
@@ -72,6 +87,8 @@ const subscriptionPlanOptions: SubscriptionPlanOption[] = [
     label: "Pro",
     monthlyLabel: "$9.99 / month",
     yearlyLabel: "$99.00 / year",
+    monthlyAmount: 9.99,
+    yearlyAmount: 99.0,
     note: "Best fit for regular AI summarization.",
   },
   {
@@ -79,6 +96,8 @@ const subscriptionPlanOptions: SubscriptionPlanOption[] = [
     label: "Max",
     monthlyLabel: "$19.99 / month",
     yearlyLabel: "$199.00 / year",
+    monthlyAmount: 19.99,
+    yearlyAmount: 199.0,
     note: "Advanced usage with highest quota.",
   },
 ];
@@ -128,6 +147,11 @@ const billingError = ref("");
 const billingSuccess = ref("");
 const billingInterval = ref<SubscriptionBillingInterval>("monthly");
 const selectedPlan = ref<SubscriptionPlanKey>("pro");
+const promotionCodeInput = ref("");
+const appliedPromotionCode = ref<string | null>(null);
+const promotionError = ref("");
+const promotionSuccess = ref("");
+const promotionPreview = ref<BillingPromotionPreviewResponse | null>(null);
 
 const errorBannerClass =
   "rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive";
@@ -177,10 +201,19 @@ const selectedPlanDetails = computed(
     subscriptionPlanOptions.find((plan) => plan.key === selectedPlan.value) ??
     defaultSubscriptionPlanOption
 );
-const selectedPlanPriceLabel = computed(() =>
+const selectedPlanBaseAmount = computed(() =>
   billingInterval.value === "yearly"
-    ? selectedPlanDetails.value.yearlyLabel
-    : selectedPlanDetails.value.monthlyLabel
+    ? Math.round(selectedPlanDetails.value.yearlyAmount * 100)
+    : Math.round(selectedPlanDetails.value.monthlyAmount * 100)
+);
+const selectedPlanCurrency = computed(
+  () => promotionPreview.value?.currency.toUpperCase() ?? "USD"
+);
+const selectedPlanFinalAmount = computed(
+  () => promotionPreview.value?.finalAmount ?? selectedPlanBaseAmount.value
+);
+const hasDiscountedPlanPrice = computed(
+  () => selectedPlanFinalAmount.value < selectedPlanBaseAmount.value
 );
 
 watch(
@@ -275,17 +308,160 @@ const toErrorMessage = (error: unknown, fallback: string) => {
   return fallback;
 };
 
+const normalizePromotionCode = (value: string) => value.trim().toUpperCase();
+
+const formatCurrencyAmount = (amountInMinor: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+  }).format(amountInMinor / 100);
+
+const clearPromotionState = () => {
+  appliedPromotionCode.value = null;
+  promotionPreview.value = null;
+  promotionError.value = "";
+  promotionSuccess.value = "";
+};
+
 const callBillingApi = async <T>(
   path: string,
-  body: Record<string, unknown>
+  body: Record<string, unknown>,
+  options?: {
+    promotionCode?: string | null;
+  }
 ) => {
+  const requestHeaders: Record<string, string> = {
+    ...(authRequestHeaders ?? {}),
+  };
+
+  if (options?.promotionCode) {
+    requestHeaders["X-NewsFlow-Promo-Code"] = options.promotionCode;
+  }
+
   return $fetch<T>(`${config.public.serverUrl}/api/auth${path}`, {
     method: "POST",
     body,
     credentials: "include",
-    headers: authRequestHeaders,
+    headers: requestHeaders,
   });
 };
+
+const callBillingPreviewApi = async (
+  body: Record<string, unknown>
+) => {
+  return $fetch<BillingPromotionPreviewResponse>(
+    `${config.public.serverUrl}/api/billing/promotion/preview`,
+    {
+      method: "POST",
+      body,
+      credentials: "include",
+      headers: authRequestHeaders,
+    }
+  );
+};
+
+const applyPromotionCodeMutation = useMutation({
+  mutationFn: async (code: string) => {
+    return callBillingPreviewApi({
+      plan: selectedPlan.value,
+      annual: billingInterval.value === "yearly",
+      code,
+    });
+  },
+  onSuccess: (result, code) => {
+    if (!result.valid || !result.code) {
+      clearPromotionState();
+      promotionCodeInput.value = normalizePromotionCode(code);
+      promotionError.value = result.reason ?? "Voucher code is not valid.";
+      return;
+    }
+
+    appliedPromotionCode.value = result.code;
+    promotionPreview.value = result;
+    promotionError.value = "";
+    promotionSuccess.value = `Voucher ${result.code} applied successfully.`;
+  },
+  onError: (error) => {
+    clearPromotionState();
+    promotionError.value = toErrorMessage(
+      error,
+      "Unable to validate voucher code."
+    );
+  },
+});
+
+const handleApplyPromotionCode = async () => {
+  const code = normalizePromotionCode(promotionCodeInput.value);
+
+  promotionError.value = "";
+  promotionSuccess.value = "";
+
+  if (!code) {
+    clearPromotionState();
+    return;
+  }
+
+  promotionCodeInput.value = code;
+
+  try {
+    await applyPromotionCodeMutation.mutateAsync(code);
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
+};
+
+const handleClearPromotionCode = () => {
+  promotionCodeInput.value = "";
+  clearPromotionState();
+};
+
+const refreshAppliedPromotionCode = async () => {
+  const code = appliedPromotionCode.value;
+  if (!code) {
+    return;
+  }
+
+  try {
+    await applyPromotionCodeMutation.mutateAsync(code);
+  } catch {
+    // Error is already mapped in mutation onError.
+  }
+};
+
+watch([selectedPlan, billingInterval], () => {
+  void refreshAppliedPromotionCode();
+});
+
+watch(promotionCodeInput, (value) => {
+  const normalizedCode = normalizePromotionCode(value);
+  if (!appliedPromotionCode.value) {
+    return;
+  }
+
+  if (normalizedCode === appliedPromotionCode.value) {
+    return;
+  }
+
+  clearPromotionState();
+  if (!normalizedCode) {
+    promotionError.value = "";
+  }
+});
+
+watch(appliedPromotionCode, (value) => {
+  if (value) {
+    return;
+  }
+
+  promotionPreview.value = null;
+});
+
+watch(selectedPlanBaseAmount, (amount) => {
+  if (promotionPreview.value && promotionPreview.value.baseAmount !== amount) {
+    promotionPreview.value = null;
+  }
+});
 
 const openBillingUrl = async (url?: string) => {
   if (!url) {
@@ -298,14 +474,20 @@ const openBillingUrl = async (url?: string) => {
 const upgradeSubscriptionMutation = useMutation({
   mutationFn: async () => {
     const returnUrl = getBillingReturnUrl();
-    return callBillingApi<StripeSessionRedirectResponse>("/subscription/upgrade", {
-      plan: selectedPlan.value,
-      annual: billingInterval.value === "yearly",
-      successUrl: returnUrl,
-      cancelUrl: returnUrl,
-      returnUrl,
-      disableRedirect: true,
-    });
+    return callBillingApi<StripeSessionRedirectResponse>(
+      "/subscription/upgrade",
+      {
+        plan: selectedPlan.value,
+        annual: billingInterval.value === "yearly",
+        successUrl: returnUrl,
+        cancelUrl: returnUrl,
+        returnUrl,
+        disableRedirect: true,
+      },
+      {
+        promotionCode: appliedPromotionCode.value,
+      }
+    );
   },
   onSuccess: async (data) => {
     billingError.value = "";
@@ -380,6 +562,7 @@ const restoreSubscriptionMutation = useMutation({
 const isBillingActionPending = computed(
   () =>
     upgradeSubscriptionMutation.isPending.value ||
+    applyPromotionCodeMutation.isPending.value ||
     billingPortalMutation.isPending.value ||
     cancelSubscriptionMutation.isPending.value ||
     restoreSubscriptionMutation.isPending.value
@@ -388,6 +571,13 @@ const isBillingActionPending = computed(
 const handleStartCheckout = async () => {
   billingError.value = "";
   billingSuccess.value = "";
+
+  const normalizedCode = normalizePromotionCode(promotionCodeInput.value);
+  if (normalizedCode && normalizedCode !== appliedPromotionCode.value) {
+    billingError.value = "Apply a valid voucher code before checkout.";
+    return;
+  }
+
   try {
     await upgradeSubscriptionMutation.mutateAsync();
   } catch {
@@ -1090,10 +1280,74 @@ watch(
 
                 <div class="rounded-md border bg-muted/20 p-3">
                   <p class="text-sm font-medium">
-                    {{ selectedPlanDetails.label }} - {{ selectedPlanPriceLabel }}
+                    {{ selectedPlanDetails.label }}
+                  </p>
+                  <p class="mt-1 flex flex-wrap items-center gap-2 text-sm font-medium">
+                    <span
+                      v-if="hasDiscountedPlanPrice"
+                      class="text-muted-foreground line-through"
+                    >
+                      {{ formatCurrencyAmount(selectedPlanBaseAmount, selectedPlanCurrency) }}
+                    </span>
+                    <span>
+                      {{ formatCurrencyAmount(selectedPlanFinalAmount, selectedPlanCurrency) }}
+                      / {{ billingInterval === "yearly" ? "year" : "month" }}
+                    </span>
                   </p>
                   <p class="mt-1 text-xs text-muted-foreground">
                     {{ selectedPlanDetails.note }}
+                  </p>
+                  <p
+                    v-if="hasDiscountedPlanPrice && appliedPromotionCode"
+                    class="mt-1 text-xs text-emerald-600 dark:text-emerald-400"
+                  >
+                    Voucher {{ appliedPromotionCode }} applied.
+                  </p>
+                </div>
+
+                <div class="space-y-2 rounded-md border p-3">
+                  <p class="text-xs font-medium text-muted-foreground">Voucher code</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <Input
+                      v-model="promotionCodeInput"
+                      placeholder="Enter voucher code"
+                      autocomplete="off"
+                      class="h-9 flex-1 min-w-[200px]"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      :disabled="applyPromotionCodeMutation.isPending.value"
+                      @click="handleApplyPromotionCode"
+                    >
+                      {{
+                        applyPromotionCodeMutation.isPending.value
+                          ? "Applying..."
+                          : "Apply"
+                      }}
+                    </Button>
+                    <Button
+                      v-if="promotionCodeInput"
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      :disabled="applyPromotionCodeMutation.isPending.value"
+                      @click="handleClearPromotionCode"
+                    >
+                      Clear
+                    </Button>
+                  </div>
+
+                  <p v-if="promotionError" aria-live="polite" :class="errorBannerClass">
+                    {{ promotionError }}
+                  </p>
+                  <p
+                    v-else-if="promotionSuccess"
+                    aria-live="polite"
+                    :class="successBannerClass"
+                  >
+                    {{ promotionSuccess }}
                   </p>
                 </div>
               </div>
@@ -1154,6 +1408,10 @@ watch(
                   </NuxtLink>
                 </Button>
               </div>
+
+              <p class="text-xs text-muted-foreground">
+                Voucher codes entered above are applied automatically when creating Stripe Checkout.
+              </p>
 
               <p v-if="billingError" aria-live="polite" :class="errorBannerClass">
                 {{ billingError }}
