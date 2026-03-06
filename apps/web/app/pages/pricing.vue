@@ -69,6 +69,9 @@ const plans: PricingPlan[] = [
 const { $authClient } = useNuxtApp();
 const billingInterval = ref<BillingInterval>("monthly");
 const hasSession = ref(false);
+const billingIntervalIndex = computed(() =>
+  billingInterval.value === "monthly" ? 0 : 1
+);
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat("en-US", {
@@ -103,6 +106,13 @@ const resolvePlanHref = (planKey: PlanKey) =>
 const resolvePlanActionLabel = () =>
   hasSession.value ? "Choose plan" : "Create account";
 
+const setBillingInterval = (interval: BillingInterval) => {
+  if (billingInterval.value === interval) {
+    return;
+  }
+  billingInterval.value = interval;
+};
+
 onMounted(async () => {
   const { data } = await $authClient.getSession();
   hasSession.value = Boolean(data?.session);
@@ -110,109 +120,134 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background">
-    <div class="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-12">
-      <div class="space-y-4 text-center">
+  <div class="relative min-h-screen overflow-hidden bg-background">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,hsl(var(--primary)/0.12),transparent_28%),radial-gradient(circle_at_85%_10%,hsl(var(--muted-foreground)/0.08),transparent_24%)]" />
+
+    <div class="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14">
+      <section class="space-y-6 text-center">
         <Badge variant="outline" class="rounded-full px-4 py-1">
           Pricing
         </Badge>
-        <h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
-          Choose The Right NewsFlow Plan
-        </h1>
-        <p class="mx-auto max-w-2xl text-sm text-muted-foreground md:text-base">
-          Pick a plan and get instant access after checkout. Upgrade when you need higher
-          AI usage and more power for your reading workflow.
-        </p>
-
-        <div class="inline-flex rounded-lg border p-1">
-          <button
-            type="button"
-            class="rounded-md px-4 py-2 text-sm font-medium transition"
-            :class="
-              billingInterval === 'monthly'
-                ? 'bg-primary text-primary-foreground'
-                : 'text-muted-foreground'
-            "
-            @click="billingInterval = 'monthly'"
-          >
-            Monthly billing
-          </button>
-          <button
-            type="button"
-            class="rounded-md px-4 py-2 text-sm font-medium transition"
-            :class="
-              billingInterval === 'yearly'
-                ? 'bg-primary text-primary-foreground'
-                : 'text-muted-foreground'
-            "
-            @click="billingInterval = 'yearly'"
-          >
-            Yearly billing
-          </button>
+        <div class="space-y-3">
+          <h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
+            Choose Your Growth Plan
+          </h1>
+          <p class="mx-auto max-w-2xl text-sm text-muted-foreground md:text-base">
+            Pick a plan and get instant access after checkout. Upgrade when your
+            AI workflow needs more speed and capacity.
+          </p>
         </div>
-      </div>
 
-      <div class="grid gap-6 md:grid-cols-3">
+        <div class="mx-auto w-full max-w-sm">
+          <div class="relative grid grid-cols-2 rounded-xl border bg-muted/40 p-1">
+            <span
+              class="pointer-events-none absolute bottom-1 top-1 w-[calc(50%-0.25rem)] rounded-lg bg-background shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              :style="{ transform: `translateX(${billingIntervalIndex * 100}%)` }"
+            />
+            <button
+              type="button"
+              class="relative z-10 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+              :class="billingInterval === 'monthly' ? 'text-foreground' : 'text-muted-foreground'"
+              @click="setBillingInterval('monthly')"
+            >
+              Monthly billing
+            </button>
+            <button
+              type="button"
+              class="relative z-10 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+              :class="billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'"
+              @click="setBillingInterval('yearly')"
+            >
+              Yearly billing
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-6 lg:grid-cols-3">
         <Card
           v-for="plan in displayedPlans"
           :key="plan.key"
-          class="relative overflow-hidden border-border/70"
-          :class="plan.highlight ? 'border-primary/40 shadow-md' : ''"
+          class="group relative flex h-full flex-col overflow-hidden border transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+          :class="
+            plan.highlight
+              ? 'border-primary/45 bg-card shadow-xl shadow-primary/10 lg:-translate-y-2'
+              : 'border-border/70 bg-card/95'
+          "
         >
           <div
             v-if="plan.highlight"
-            class="absolute right-3 top-3 rounded-full bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground"
+            class="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary-foreground"
           >
-            Most Popular
+            Best value
           </div>
 
-          <CardHeader class="space-y-3">
-            <CardTitle class="text-2xl">
-              {{ plan.label }}
-            </CardTitle>
-            <CardDescription class="min-h-12">
-              {{ plan.subtitle }}
-            </CardDescription>
-            <div>
-              <p class="text-3xl font-semibold">
-                {{ formatPrice(plan.activePrice) }}
-              </p>
-              <p class="text-xs text-muted-foreground">
-                <span v-if="billingInterval === 'monthly'">per month</span>
-                <span v-else>
-                  per year ({{ formatPrice(plan.monthlyFromYearly) }}/month equivalent)
-                </span>
-              </p>
-              <p v-if="billingInterval === 'yearly'" class="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
-                Save around {{ plan.yearlyDiscount }}% with yearly plan
-              </p>
+          <CardHeader class="space-y-4">
+            <div class="space-y-2">
+              <CardTitle class="text-2xl">
+                {{ plan.label }}
+              </CardTitle>
+              <CardDescription class="min-h-12">
+                {{ plan.subtitle }}
+              </CardDescription>
+            </div>
+
+            <div class="rounded-lg border bg-muted/15 p-3">
+              <Transition name="price-swap" mode="out-in">
+                <p :key="`${plan.key}-${billingInterval}-price`" class="text-3xl font-semibold tracking-tight">
+                  {{ formatPrice(plan.activePrice) }}
+                  <span class="ml-1 text-base font-medium text-muted-foreground">
+                    /{{ billingInterval === "yearly" ? "yr" : "mo" }}
+                  </span>
+                </p>
+              </Transition>
+
+              <Transition name="meta-swap" mode="out-in">
+                <p
+                  :key="`${plan.key}-${billingInterval}-meta`"
+                  class="mt-1 text-xs text-muted-foreground"
+                >
+                  <span v-if="billingInterval === 'monthly'">Per month, cancel anytime.</span>
+                  <span v-else>Per year, about {{ formatPrice(plan.monthlyFromYearly) }}/month.</span>
+                </p>
+              </Transition>
+
+              <Transition name="meta-swap" mode="out-in">
+                <p
+                  v-if="billingInterval === 'yearly'"
+                  :key="`${plan.key}-yearly-discount`"
+                  class="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400"
+                >
+                  Save around {{ plan.yearlyDiscount }}% with yearly billing.
+                </p>
+              </Transition>
             </div>
           </CardHeader>
 
-          <CardContent>
-            <ul class="space-y-2 text-sm">
+          <CardContent class="flex-1">
+            <ul class="space-y-2.5 text-sm">
               <li
                 v-for="feature in plan.features"
                 :key="feature"
-                class="flex items-start gap-2"
+                class="flex items-start gap-2.5"
               >
-                <Check class="mt-0.5 size-4 text-emerald-600 dark:text-emerald-400" />
+                <Check class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 <span>{{ feature }}</span>
               </li>
             </ul>
           </CardContent>
 
           <CardFooter class="pt-0">
-            <Button class="w-full" as-child>
+            <Button class="h-11 w-full" as-child>
               <NuxtLink :to="resolvePlanHref(plan.key)">
                 {{ resolvePlanActionLabel() }}
               </NuxtLink>
             </Button>
           </CardFooter>
         </Card>
-      </div>
+      </section>
 
-      <div class="flex justify-center gap-3">
+      <section class="flex flex-wrap justify-center gap-3">
         <Button variant="outline" as-child>
           <NuxtLink to="/">
             Back to home
@@ -223,7 +258,35 @@ onMounted(async () => {
             Go to subscription settings
           </NuxtLink>
         </Button>
-      </div>
+      </section>
     </div>
   </div>
 </template>
+
+<style scoped>
+.price-swap-enter-active,
+.price-swap-leave-active {
+  transition: all 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.price-swap-enter-from {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+}
+
+.price-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+}
+
+.meta-swap-enter-active,
+.meta-swap-leave-active {
+  transition: all 180ms ease;
+}
+
+.meta-swap-enter-from,
+.meta-swap-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
+}
+</style>
