@@ -12,6 +12,26 @@ export const dashboardQueryKeys = {
       detail: (userId: string) =>
         ["dashboard", "admin", "users", "detail", userId] as const,
     },
+    subscriptions: {
+      list: (
+        query: string,
+        tier: "all" | "free" | "basic" | "pro" | "max",
+        status: string,
+        billingInterval: "all" | "monthly" | "yearly",
+        cancelAtPeriodEnd: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "subscriptions",
+          "list",
+          query || "",
+          tier,
+          status || "all",
+          billingInterval,
+          cancelAtPeriodEnd,
+        ] as const,
+    },
   },
   feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
