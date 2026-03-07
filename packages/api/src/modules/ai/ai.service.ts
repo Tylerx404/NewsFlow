@@ -89,3 +89,23 @@ ${content.slice(0, 8000)}`; // Limit content length
     tokens: usage?.totalTokens ?? 0,
   };
 }
+
+const MAX_ERROR_SUMMARY_LENGTH = 240;
+
+export function sanitizeAiErrorSummary(error: unknown): string {
+  const fallbackMessage = "AI summarize request failed.";
+
+  if (error instanceof Error) {
+    const sanitizedMessage = error.message
+      .replace(/sk-[a-zA-Z0-9_-]{8,}/g, "sk-****")
+      .replace(/[\u0000-\u001F\u007F]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (sanitizedMessage.length > 0) {
+      return sanitizedMessage.slice(0, MAX_ERROR_SUMMARY_LENGTH);
+    }
+  }
+
+  return fallbackMessage;
+}

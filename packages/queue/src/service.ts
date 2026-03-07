@@ -100,7 +100,11 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
     });
 
     if (!feedSource) {
-      throw new Error(`Feed source ${feedSourceId} not found`);
+      throw new Error(`Feed source  not found`);
+    }
+
+    if (!feedSource.isEnabled && !force) {
+      return { skipped: true, reason: "Feed source is disabled" };
     }
 
     const feedData = await rssParser.parseURL(feedSource.url);

@@ -1,11 +1,11 @@
 import { ORPCError } from "@orpc/server";
 
-import prisma from "@NewsFlow/db";
+import prisma, { AiUsageStatus } from "@NewsFlow/db";
 import { protectedProcedure } from "../../index";
 import { EncryptionService } from "../ai-config/ai-config.service";
 import { extractFullContent } from "../article/article.service";
 import { summarizeOutputSchema, summarizeSchema } from "./ai.schema";
-import { generateSummary } from "./ai.service";
+import { generateSummary, sanitizeAiErrorSummary } from "./ai.service";
 
 export const aiRouter = {
   summarize: protectedProcedure
@@ -13,6 +13,7 @@ export const aiRouter = {
     .output(summarizeOutputSchema)
     .handler(async ({ input, context }) => {
       const userId = context.session.user.id;
+      const action = "summarize";
 
       const article = await extractFullContent(prisma, input.articleId, userId);
 
@@ -43,25 +44,90 @@ export const aiRouter = {
         });
       }
 
+      const logUsageEvent = async (params: {
+        status: AiUsageStatus;
+        tokens?: number;
+        durationMs: number;
+        errorSummary?: string;
+      }) => {
+        await prisma.aiUsage.create({
+          data: {
+            userId,
+            provider: config.provider,
+            model: config.model,
+            tokens: params.tokens ?? 0,
+            action,
+            status: params.status,
+            durationMs: params.durationMs,
+            errorSummary: params.errorSummary,
+          },
+        });
+      };
+
+      if (!config.isEnabled) {
+        const disabledSummary = "Selected AI config is currently disabled.";
+
+        try {
+          await logUsageEvent({
+            status: "FAILED",
+            durationMs: 0,
+            errorSummary: disabledSummary,
+          });
+        } catch {
+          console.error("Failed to record disabled AI config usage event", {
+            userId,
+            provider: config.provider,
+            model: config.model,
+          });
+        }
+
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Selected AI config is disabled. Enable it or choose another config.",
+        });
+      }
+
       const decryptedKey = await EncryptionService.decrypt(config.apiKey);
       const configWithDecryptedKey = { ...config, apiKey: decryptedKey };
+      const startedAt = Date.now();
 
-      const { summary, tokens } = await generateSummary(
-        article.content,
-        configWithDecryptedKey,
-        article.feedSource?.language
-      );
+      try {
+        const { summary, tokens } = await generateSummary(
+          article.content,
+          configWithDecryptedKey,
+          article.feedSource?.language
+        );
 
-      await prisma.aiUsage.create({
-        data: {
-          userId,
-          provider: config.provider,
-          model: config.model,
+        await logUsageEvent({
+          status: "SUCCESS",
           tokens,
-          action: "summarize",
-        },
-      });
+          durationMs: Date.now() - startedAt,
+        });
 
-      return { summary, tokens };
+        return { summary, tokens };
+      } catch (error) {
+        const failureSummary = sanitizeAiErrorSummary(error);
+
+        try {
+          await logUsageEvent({
+            status: "FAILED",
+            durationMs: Date.now() - startedAt,
+            errorSummary: failureSummary,
+          });
+        } catch {
+          console.error("Failed to record AI summarize failure event", {
+            userId,
+            provider: config.provider,
+            model: config.model,
+          });
+        }
+
+        if (error instanceof ORPCError) {
+          throw error;
+        }
+
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Unable to summarize this article with the selected AI config.",
+        });
+      }
     }),
 };

@@ -7,6 +7,11 @@ interface CreateContextOptions {
   req: Request;
 }
 
+type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>;
+
+export type AuthSession = NonNullable<SessionResult>;
+export type AuthSessionUser = AuthSession["user"];
+
 export async function createContext(opts: CreateContextOptions) {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(opts.req.headers),

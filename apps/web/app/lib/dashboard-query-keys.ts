@@ -1,5 +1,124 @@
 export const dashboardQueryKeys = {
   root: () => ["dashboard"] as const,
+  admin: {
+    users: {
+      list: (
+        query: string,
+        role: "all" | "USER" | "ADMIN",
+        status: "all" | "ACTIVE" | "SUSPENDED",
+        tier: "all" | "free" | "basic" | "pro" | "max"
+      ) =>
+        ["dashboard", "admin", "users", "list", query || "", role, status, tier] as const,
+      detail: (userId: string) =>
+        ["dashboard", "admin", "users", "detail", userId] as const,
+    },
+    subscriptions: {
+      list: (
+        query: string,
+        tier: "all" | "free" | "basic" | "pro" | "max",
+        status: string,
+        billingInterval: "all" | "monthly" | "yearly",
+        cancelAtPeriodEnd: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "subscriptions",
+          "list",
+          query || "",
+          tier,
+          status || "all",
+          billingInterval,
+          cancelAtPeriodEnd,
+        ] as const,
+    },
+    feeds: {
+      list: (
+        query: string,
+        isEnabled: "all" | "true" | "false",
+        hasErrors: "all" | "true" | "false",
+        isStale: "all" | "true" | "false",
+        hasExtractionFailures: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "feeds",
+          "list",
+          query || "",
+          isEnabled,
+          hasErrors,
+          isStale,
+          hasExtractionFailures,
+        ] as const,
+      detail: (feedId: string) =>
+        ["dashboard", "admin", "feeds", "detail", feedId] as const,
+    },
+    operations: {
+      overview: () => ["dashboard", "admin", "operations", "overview"] as const,
+    },
+    aiUsage: {
+      overview: (days: number) =>
+        ["dashboard", "admin", "ai-usage", "overview", days] as const,
+      listEvents: (
+        provider: string,
+        model: string,
+        status: "all" | "SUCCESS" | "FAILED",
+        userQuery: string,
+        startedAt: string,
+        endedAt: string,
+        limit: number
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "ai-usage",
+          "events",
+          provider || "all",
+          model || "all",
+          status,
+          userQuery || "",
+          startedAt || "none",
+          endedAt || "none",
+          limit,
+        ] as const,
+      userUsage: (userId: string, days: number) =>
+        ["dashboard", "admin", "ai-usage", "user-usage", userId, days] as const,
+      configs: (
+        provider: string,
+        model: string,
+        userQuery: string,
+        isEnabled: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "ai-usage",
+          "configs",
+          provider || "all",
+          model || "all",
+          userQuery || "",
+          isEnabled,
+        ] as const,
+    },
+    systemOps: {
+      overview: () => ["dashboard", "admin", "system-ops", "overview"] as const,
+      queueJobs: (
+        queueName: "all" | "rss-fetch" | "content-extract",
+        states: string[],
+        limit: number
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "system-ops",
+          "queue-jobs",
+          queueName,
+          states.join(","),
+          limit,
+        ] as const,
+    },
+  },
   feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
       ["dashboard", "feed-subscriptions", "sidebar", includeInactive] as const,

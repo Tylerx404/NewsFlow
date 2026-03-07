@@ -12,6 +12,7 @@ model FeedSource {
   lastError     String? // Last RSS fetch error message
   errorCount    Int                @default(0) // Consecutive error count
   nextFetchAt   DateTime? // Scheduled next fetch time
+  isEnabled     Boolean            @default(true)
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   subscriptions FeedSubscription[]
@@ -98,6 +99,7 @@ model AiConfig {
   apiKey    String
   baseUrl   String?
   isDefault Boolean  @default(false)
+  isEnabled Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -113,11 +115,20 @@ model AiUsage {
   model     String
   tokens    Int      @default(0)
   action    String
+  status    AiUsageStatus @default(SUCCESS)
+  durationMs Int?
+  errorSummary String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([status, createdAt])
   @@map("ai_usage")
+}
+
+enum AiUsageStatus {
+  SUCCESS
+  FAILED
 }
 
 model Subscription {
@@ -148,4 +159,20 @@ model Subscription {
   @@index([stripePriceId])
 
   @@map("subscription")
+}
+
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminUserId String
+  action      String
+  targetType  String
+  targetId    String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  adminUser   User     @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("admin_audit_log")
 }
