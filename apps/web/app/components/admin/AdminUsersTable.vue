@@ -138,7 +138,7 @@ const avatarFallback = (name: string) =>
             <TableCell>
               <div class="flex min-w-0 items-center gap-3">
                 <Avatar class="size-9 border">
-                  <AvatarImage :src="item.image ?? undefined" :alt="item.name" />
+                  <AvatarImage v-if="item.image" :src="item.image" :alt="item.name" />
                   <AvatarFallback>{{ avatarFallback(item.name) }}</AvatarFallback>
                 </Avatar>
                 <div class="min-w-0">

@@ -215,7 +215,7 @@ const handleConfirmAction = () => {
         <template v-else>
           <div class="flex items-start gap-3 rounded-lg border p-4">
             <Avatar class="size-12 border">
-              <AvatarImage :src="user.image ?? undefined" :alt="user.name" />
+              <AvatarImage v-if="user.image" :src="user.image" :alt="user.name" />
               <AvatarFallback>{{ avatarFallback(user.name) }}</AvatarFallback>
             </Avatar>
             <div class="min-w-0 flex-1 space-y-2">
