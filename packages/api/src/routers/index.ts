@@ -1,6 +1,7 @@
 import type { RouterClient } from "@orpc/server";
 
 import { protectedProcedure, publicProcedure } from "../index";
+import { adminFeedRouter } from "../modules/admin/admin-feed.router";
 import { adminSubscriptionRouter } from "../modules/admin/admin-subscription.router";
 import { adminUserRouter } from "../modules/admin/admin-user.router";
 import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
@@ -27,6 +28,7 @@ export const appRouter = {
   admin: {
     user: adminUserRouter,
     subscription: adminSubscriptionRouter,
+    feed: adminFeedRouter,
   },
 };
 

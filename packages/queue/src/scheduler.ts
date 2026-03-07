@@ -3,7 +3,8 @@ import cron from "node-cron";
 
 import db from "@NewsFlow/db";
 import type { ContentExtractJobData, RssFetchJobData } from "./schema";
-import { createQueue, QUEUES } from "./service";
+import { CONTENT_EXTRACT_JOB, RSS_FETCH_JOB } from "./schema";
+import { QUEUES, createQueue } from "./service";
 
 let rssQueue: Queue<RssFetchJobData> | null = null;
 let contentQueue: Queue<ContentExtractJobData> | null = null;
@@ -21,13 +22,13 @@ export const startScheduler = () => {
   rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
   contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
 
-  // Run every 30 minutes
   rssTask = cron.schedule("*/30 * * * *", async () => {
     try {
       console.log("Running RSS fetch cron job...");
 
       const sourcesToRefresh = await db.feedSource.findMany({
         where: {
+          isEnabled: true,
           subscriptions: {
             some: {
               isActive: true,
@@ -44,7 +45,7 @@ export const startScheduler = () => {
       console.log(`Found ${sourcesToRefresh.length} feed sources to refresh`);
 
       const jobs = sourcesToRefresh.map((source) => ({
-        name: "rss-fetch",
+        name: RSS_FETCH_JOB,
         data: {
           feedSourceId: source.id,
         },
@@ -61,7 +62,6 @@ export const startScheduler = () => {
     }
   });
 
-  // Run content extraction every 15 minutes
   contentTask = cron.schedule("*/15 * * * *", async () => {
     try {
       console.log("Running content extraction cron job...");
@@ -72,6 +72,7 @@ export const startScheduler = () => {
           content: null,
           extractionAttempts: { lt: 3 },
           feedSource: {
+            isEnabled: true,
             subscriptions: {
               some: {
                 isActive: true,
@@ -89,7 +90,7 @@ export const startScheduler = () => {
       console.log(`Found ${articlesToExtract.length} source articles to extract`);
 
       const jobs = articlesToExtract.map((article) => ({
-        name: "content-extract",
+        name: CONTENT_EXTRACT_JOB,
         data: {
           sourceArticleId: article.id,
           url: article.link,
