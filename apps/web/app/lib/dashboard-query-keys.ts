@@ -1,5 +1,18 @@
 export const dashboardQueryKeys = {
   root: () => ["dashboard"] as const,
+  admin: {
+    users: {
+      list: (
+        query: string,
+        role: "all" | "USER" | "ADMIN",
+        status: "all" | "ACTIVE" | "SUSPENDED",
+        tier: "all" | "free" | "basic" | "pro" | "max"
+      ) =>
+        ["dashboard", "admin", "users", "list", query || "", role, status, tier] as const,
+      detail: (userId: string) =>
+        ["dashboard", "admin", "users", "detail", userId] as const,
+    },
+  },
   feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
       ["dashboard", "feed-subscriptions", "sidebar", includeInactive] as const,
