@@ -32,6 +32,28 @@ export const dashboardQueryKeys = {
           cancelAtPeriodEnd,
         ] as const,
     },
+    feeds: {
+      list: (
+        query: string,
+        isEnabled: "all" | "true" | "false",
+        hasErrors: "all" | "true" | "false",
+        isStale: "all" | "true" | "false",
+        hasExtractionFailures: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "feeds",
+          "list",
+          query || "",
+          isEnabled,
+          hasErrors,
+          isStale,
+          hasExtractionFailures,
+        ] as const,
+      detail: (feedId: string) =>
+        ["dashboard", "admin", "feeds", "detail", feedId] as const,
+    },
   },
   feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
