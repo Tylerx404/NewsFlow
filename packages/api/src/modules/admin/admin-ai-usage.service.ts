@@ -530,9 +530,13 @@ export async function updateAdminAiConfigEnabled(
         reason: input.reason ?? null,
         previous: {
           isEnabled: existingConfig.isEnabled,
+          provider: existingConfig.provider,
+          model: existingConfig.model,
         },
         next: {
           isEnabled: input.isEnabled,
+          provider: existingConfig.provider,
+          model: existingConfig.model,
         },
       },
     });

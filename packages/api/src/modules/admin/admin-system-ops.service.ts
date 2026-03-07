@@ -300,6 +300,10 @@ export async function retryAdminQueueJob(
     targetId: `${input.queueName}:${resolvedJobId}`,
     metadata: {
       reason: input.reason ?? null,
+      previous: {
+        queueName: input.queueName,
+        state: jobState,
+      },
       next: {
         queueName: input.queueName,
         state: "waiting",
@@ -358,6 +362,7 @@ export async function triggerAdminFeedFetch(
       next: {
         queueName: QUEUES.RSS_FETCH,
         jobId,
+        feedSourceId: input.feedSourceId,
       },
     },
   });
@@ -414,6 +419,7 @@ export async function triggerAdminContentExtract(
       next: {
         queueName: QUEUES.CONTENT_EXTRACT,
         jobId,
+        sourceArticleId: article.id,
       },
     },
   });
