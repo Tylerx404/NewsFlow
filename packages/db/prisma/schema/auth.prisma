@@ -1,3 +1,13 @@
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
 model User {
   id                 String              @id
   name               String
@@ -5,6 +15,10 @@ model User {
   emailVerified      Boolean             @default(false)
   image              String?
   stripeCustomerId   String?             @unique
+  role               UserRole            @default(USER)
+  status             UserStatus          @default(ACTIVE)
+  suspendedAt        DateTime?
+  suspendedReason    String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   sessions           Session[]
@@ -14,6 +28,7 @@ model User {
   aiConfigs          AiConfig[]
   aiUsages           AiUsage[]
   subscription       Subscription?
+  adminAuditLogs     AdminAuditLog[]
 
   @@unique([email])
   @@map("user")
