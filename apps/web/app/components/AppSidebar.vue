@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   Compass,
+  CreditCard,
   LayoutDashboard,
   Newspaper,
   Plus,
@@ -8,6 +9,7 @@ import {
   Rss,
   Settings,
   SlidersHorizontal,
+  Users,
   Trash2,
 } from "lucide-vue-next";
 import { computed, ref } from "vue";
@@ -33,6 +35,10 @@ import {
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import { settingsSections } from "@/lib/settings-sections";
 
+type AdminCapableUser = {
+  role?: string | null;
+};
+
 const { $authClient, $orpc } = useNuxtApp();
 const route = useRoute();
 const queryClient = useQueryClient();
@@ -49,15 +55,19 @@ const sessionQuery = useQuery({
       return null;
     }
 
+    const authUser = data.user as typeof data.user & AdminCapableUser;
+
     return {
-      name: data.user.name,
-      email: data.user.email,
-      avatar: data.user.image,
+      name: authUser.name,
+      email: authUser.email,
+      avatar: authUser.image,
+      role: authUser.role ?? "USER",
     };
   },
 });
 
 const user = computed(() => sessionQuery.data.value ?? null);
+const isAdmin = computed(() => user.value?.role === "ADMIN");
 const sidebarUser = computed(() => ({
   name: user.value?.name ?? "NewsFlow User",
   email: user.value?.email ?? "Loading...",
@@ -141,6 +151,27 @@ const navigationItems = computed(() => [
       to: section.href,
       isActive: isRouteActive(section.href),
     })),
+  },
+]);
+
+const adminNavigationItems = computed(() => [
+  {
+    title: "Users",
+    to: "/admin/users",
+    icon: Users,
+    isActive: isRouteActive("/admin/users"),
+  },
+  {
+    title: "Subscriptions",
+    to: "/admin/subscriptions",
+    icon: CreditCard,
+    isActive: isRouteActive("/admin/subscriptions"),
+  },
+  {
+    title: "Feeds",
+    to: "/admin/feeds",
+    icon: Rss,
+    isActive: isRouteActive("/admin/feeds"),
   },
 ]);
 
@@ -330,6 +361,7 @@ const handleSignOut = async () => {
 
     <SidebarContent>
       <NavMain label="Navigation" :items="navigationItems" />
+      <NavMain v-if="isAdmin" label="Admin" :items="adminNavigationItems" />
 
       <template v-if="feedNavItems.length">
         <NavProjects
