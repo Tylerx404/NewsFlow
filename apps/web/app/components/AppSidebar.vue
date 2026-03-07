@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import {
+  Activity,
+  Bot,
+  Cog,
   Compass,
   CreditCard,
   LayoutDashboard,
@@ -155,6 +158,24 @@ const navigationItems = computed(() => [
 ]);
 
 const adminNavigationItems = computed(() => [
+  {
+    title: "Operations",
+    to: "/admin/operations",
+    icon: Activity,
+    isActive: isRouteActive("/admin/operations"),
+  },
+  {
+    title: "AI Usage",
+    to: "/admin/ai-usage",
+    icon: Bot,
+    isActive: isRouteActive("/admin/ai-usage"),
+  },
+  {
+    title: "System Ops",
+    to: "/admin/system-ops",
+    icon: Cog,
+    isActive: isRouteActive("/admin/system-ops"),
+  },
   {
     title: "Users",
     to: "/admin/users",
