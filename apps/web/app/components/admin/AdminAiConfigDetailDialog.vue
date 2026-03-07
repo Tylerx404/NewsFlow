@@ -45,6 +45,7 @@ type AdminAiConfigListItem = {
 const props = defineProps<{
   open: boolean;
   isLoading: boolean;
+  loadError: string;
   actionPending: boolean;
   actionError: string;
   configs: AdminAiConfigListItem[];
@@ -119,6 +120,10 @@ const handleConfirmToggle = () => {
       </SheetHeader>
 
       <div class="flex h-full flex-col gap-4 overflow-y-auto pr-1">
+        <p v-if="loadError" class="text-sm text-destructive">
+          {{ loadError }}
+        </p>
+
         <template v-if="isLoading">
           <Card>
             <CardHeader>

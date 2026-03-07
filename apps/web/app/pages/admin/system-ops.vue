@@ -137,6 +137,16 @@ const isActionPending = computed(
     || triggerContentExtractMutation.isPending.value
 );
 
+const overviewErrorMessage = computed(() => {
+  if (!overviewQuery.error.value) {
+    return "";
+  }
+
+  return overviewQuery.error.value instanceof Error
+    ? overviewQuery.error.value.message
+    : "Could not load system runtime summary.";
+});
+
 const queueJobsErrorMessage = computed(() => {
   if (!queueJobsQuery.error.value) {
     return "";
@@ -277,6 +287,7 @@ const handleConfirmAction = async () => {
 
     <AdminSystemOpsOverviewCards
       :is-loading="overviewQuery.isLoading.value"
+      :error-message="overviewErrorMessage"
       :overview="overviewQuery.data.value ?? null"
     />
 

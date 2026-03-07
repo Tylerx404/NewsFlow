@@ -43,6 +43,22 @@ const isOverviewLoading = computed(
   () => aiOverviewQuery.isLoading.value || systemOverviewQuery.isLoading.value
 );
 
+const overviewErrorMessage = computed(() => {
+  const aiError = aiOverviewQuery.error.value;
+  if (aiError) {
+    return aiError instanceof Error ? aiError.message : "Could not load AI usage summary.";
+  }
+
+  const systemError = systemOverviewQuery.error.value;
+  if (systemError) {
+    return systemError instanceof Error
+      ? systemError.message
+      : "Could not load system overview.";
+  }
+
+  return "";
+});
+
 const overviewMetrics = computed(() => {
   if (!aiOverviewQuery.data.value || !systemOverviewQuery.data.value) {
     return null;
@@ -90,6 +106,7 @@ const recentJobsErrorMessage = computed(() => {
 
     <AdminOperationsOverviewCards
       :is-loading="isOverviewLoading"
+      :error-message="overviewErrorMessage"
       :metrics="overviewMetrics"
     />
 

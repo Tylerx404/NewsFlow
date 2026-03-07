@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const props = defineProps<{
   isLoading: boolean;
+  errorMessage: string;
   metrics: {
     totalTokens: number;
     totalRequests: number;
@@ -59,16 +60,22 @@ const formatNumber = (value: number) => value.toLocaleString();
 </script>
 
 <template>
-  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-    <Card v-for="card in cards" :key="card.title">
-      <CardHeader class="space-y-1">
-        <CardTitle class="text-sm font-medium">{{ card.title }}</CardTitle>
-        <CardDescription>{{ card.description }}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Skeleton v-if="isLoading" class="h-8 w-20" />
-        <p v-else class="text-2xl font-semibold">{{ formatNumber(card.value) }}</p>
-      </CardContent>
-    </Card>
+  <div class="space-y-3">
+    <p v-if="errorMessage" class="text-sm text-destructive">
+      {{ errorMessage }}
+    </p>
+
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <Card v-for="card in cards" :key="card.title">
+        <CardHeader class="space-y-1">
+          <CardTitle class="text-sm font-medium">{{ card.title }}</CardTitle>
+          <CardDescription>{{ card.description }}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton v-if="isLoading" class="h-8 w-20" />
+          <p v-else class="text-2xl font-semibold">{{ formatNumber(card.value) }}</p>
+        </CardContent>
+      </Card>
+    </div>
   </div>
 </template>

@@ -28,6 +28,7 @@ type QueueCountItem = {
 
 const props = defineProps<{
   isLoading: boolean;
+  errorMessage: string;
   overview: {
     runtime: {
       worker: RuntimeNode;
@@ -134,6 +135,10 @@ const formatState = (state: RuntimeNode["state"]) =>
 
 <template>
   <div class="space-y-4">
+    <p v-if="errorMessage" class="text-sm text-destructive">
+      {{ errorMessage }}
+    </p>
+
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
       <Card v-for="card in cards" :key="card.title">
         <CardHeader class="space-y-1">

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 
 definePageMeta({
@@ -138,6 +139,16 @@ const summaryErrorMessage = computed(() => {
     : "Could not load AI usage summary.";
 });
 
+const configsLoadError = computed(() => {
+  if (!configsQuery.error.value) {
+    return "";
+  }
+
+  return configsQuery.error.value instanceof Error
+    ? configsQuery.error.value.message
+    : "Could not load AI configs.";
+});
+
 const handleToggleConfigEnabled = async (payload: {
   aiConfigId: string;
   isEnabled: boolean;
@@ -181,29 +192,43 @@ const handleToggleConfigEnabled = async (payload: {
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <div class="rounded-md border p-3">
             <p class="text-xs text-muted-foreground">Total tokens</p>
-            <p class="mt-1 text-lg font-semibold">
+            <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-20" />
+            <p v-else class="mt-1 text-lg font-semibold">
               {{ overviewQuery.data.value?.totalTokens?.toLocaleString() ?? "0" }}
             </p>
           </div>
           <div class="rounded-md border p-3">
             <p class="text-xs text-muted-foreground">Total requests</p>
-            <p class="mt-1 text-lg font-semibold">
+            <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-20" />
+            <p v-else class="mt-1 text-lg font-semibold">
               {{ overviewQuery.data.value?.totalRequests?.toLocaleString() ?? "0" }}
             </p>
           </div>
           <div class="rounded-md border p-3">
             <p class="text-xs text-muted-foreground">Failures</p>
-            <p class="mt-1 text-lg font-semibold">
+            <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-16" />
+            <p v-else class="mt-1 text-lg font-semibold">
               {{ overviewQuery.data.value?.failureCount?.toLocaleString() ?? "0" }}
             </p>
           </div>
           <div class="rounded-md border p-3">
             <p class="text-xs text-muted-foreground">Top user</p>
-            <p class="mt-1 text-sm font-semibold">
+            <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-5 w-32" />
+            <p v-else class="mt-1 text-sm font-semibold">
               {{ overviewQuery.data.value?.topUsers?.[0]?.userEmail ?? "N/A" }}
             </p>
           </div>
         </div>
+        <p
+          v-if="
+            !overviewQuery.isLoading.value
+            && !summaryErrorMessage
+            && (overviewQuery.data.value?.totalRequests ?? 0) === 0
+          "
+          class="text-xs text-muted-foreground"
+        >
+          No AI usage requests recorded in the last 7 days.
+        </p>
       </CardContent>
     </Card>
 
@@ -251,6 +276,7 @@ const handleToggleConfigEnabled = async (payload: {
     <AdminAiConfigDetailDialog
       :open="isConfigDialogOpen"
       :is-loading="configsQuery.isLoading.value"
+      :load-error="configsLoadError"
       :action-pending="isConfigActionPending"
       :action-error="configActionError"
       :configs="configsQuery.data.value?.items ?? []"
