@@ -72,7 +72,7 @@ const feedErrorMessage = computed(() => {
 
   return feedDetailQuery.error.value instanceof Error
     ? feedDetailQuery.error.value.message
-    : "Unable to load feed details.";
+    : "Could not load feed details. Refresh and try again.";
 });
 
 const isActionPending = computed(
@@ -89,7 +89,7 @@ const handleToggleEnabled = async (payload: { feedSourceId: string; isEnabled: b
   try {
     await updateEnabledMutation.mutateAsync(payload);
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Unable to update feed state.";
+    actionError.value = error instanceof Error ? error.message : "Could not update this feed state. Try again.";
   }
 };
 
@@ -99,7 +99,7 @@ const handleRetryFetch = async (feedSourceId: string) => {
   try {
     await retryFetchMutation.mutateAsync({ feedSourceId });
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Unable to queue RSS retry.";
+    actionError.value = error instanceof Error ? error.message : "Could not queue an RSS fetch retry. Try again.";
   }
 };
 
@@ -110,7 +110,7 @@ const handleRetryFeedExtraction = async (feedSourceId: string) => {
     await retryFeedExtractionMutation.mutateAsync({ feedSourceId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Unable to queue extraction retry.";
+      error instanceof Error ? error.message : "Could not queue a feed extraction retry. Try again.";
   }
 };
 
@@ -121,7 +121,7 @@ const handleRetryArticleExtraction = async (sourceArticleId: string) => {
     await retryArticleExtractionMutation.mutateAsync({ sourceArticleId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Unable to queue article extraction retry.";
+      error instanceof Error ? error.message : "Could not queue an article extraction retry. Try again.";
   }
 };
 </script>

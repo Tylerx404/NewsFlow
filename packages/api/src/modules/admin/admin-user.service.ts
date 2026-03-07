@@ -1,3 +1,5 @@
+import { ORPCError } from "@orpc/server";
+
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
@@ -259,7 +261,9 @@ export async function suspendAdminUser(
   }
 
   if (existingUser.status === "SUSPENDED") {
-    return mapAdminUserDetail(existingUser);
+    throw new ORPCError("BAD_REQUEST", {
+      message: "User account is already suspended.",
+    });
   }
 
   const updatedUser = await db.$transaction(async (tx) => {
@@ -309,7 +313,9 @@ export async function reactivateAdminUser(
   }
 
   if (existingUser.status === "ACTIVE") {
-    return mapAdminUserDetail(existingUser);
+    throw new ORPCError("BAD_REQUEST", {
+      message: "User account is already active.",
+    });
   }
 
   const updatedUser = await db.$transaction(async (tx) => {

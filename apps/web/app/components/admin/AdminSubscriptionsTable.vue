@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -41,6 +42,8 @@ const emit = defineEmits<{
   select: [userId: string];
 }>();
 
+const loadingRowKeys = [1, 2, 3];
+
 const formatDateTime = (value: Date | string | null) => {
   if (!value) {
     return "—";
@@ -76,11 +79,31 @@ const formatPlan = (item: AdminSubscriptionRow) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-if="isLoading">
-            <TableCell :colspan="6" class="py-8 text-center text-sm text-muted-foreground">
-              Loading subscriptions...
-            </TableCell>
-          </TableRow>
+          <template v-if="isLoading">
+            <TableRow v-for="row in loadingRowKeys" :key="row">
+              <TableCell>
+                <div class="space-y-2">
+                  <Skeleton class="h-4 w-28" />
+                  <Skeleton class="h-3 w-40" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <div class="space-y-2">
+                  <Skeleton class="h-4 w-24" />
+                  <Skeleton class="h-3 w-28" />
+                </div>
+              </TableCell>
+              <TableCell><Skeleton class="h-5 w-20 rounded-full" /></TableCell>
+              <TableCell><Skeleton class="h-4 w-28" /></TableCell>
+              <TableCell>
+                <div class="space-y-2">
+                  <Skeleton class="h-3 w-32" />
+                  <Skeleton class="h-3 w-36" />
+                </div>
+              </TableCell>
+              <TableCell class="text-right"><Skeleton class="ml-auto h-8 w-16" /></TableCell>
+            </TableRow>
+          </template>
           <TableRow v-else-if="errorMessage">
             <TableCell :colspan="6" class="py-8 text-center text-sm text-destructive">
               {{ errorMessage }}
@@ -88,7 +111,7 @@ const formatPlan = (item: AdminSubscriptionRow) => {
           </TableRow>
           <TableRow v-else-if="items.length === 0">
             <TableCell :colspan="6" class="py-8 text-center text-sm text-muted-foreground">
-              No subscriptions match the current filters.
+              No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.
             </TableCell>
           </TableRow>
           <TableRow

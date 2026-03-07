@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 
+import AdminActionConfirmDialog from "@/components/admin/AdminActionConfirmDialog.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +64,7 @@ const emit = defineEmits<{
 const draftTier = ref<SubscriptionTier>("free");
 const draftExpiresAt = ref("");
 const draftCancelAtPeriodEnd = ref(false);
+const isConfirmOpen = ref(false);
 
 const formatDateTime = (value: Date | string | null) => {
   if (!value) {
@@ -94,20 +96,13 @@ watch(
     draftTier.value = subscription?.tier ?? "free";
     draftExpiresAt.value = toDateTimeLocal(subscription?.expiresAt ?? null);
     draftCancelAtPeriodEnd.value = subscription?.cancelAtPeriodEnd ?? false;
+    isConfirmOpen.value = false;
   },
   { immediate: true }
 );
 
 const handleTierChange = (value: string) => {
   draftTier.value = value as SubscriptionTier;
-};
-
-const handleSave = () => {
-  emit("save", {
-    tier: draftTier.value,
-    expiresAt: draftExpiresAt.value,
-    cancelAtPeriodEnd: draftCancelAtPeriodEnd.value,
-  });
 };
 
 const planLabel = computed(() => {
@@ -123,6 +118,57 @@ const planLabel = computed(() => {
 
   return tier;
 });
+
+const hasPendingChanges = computed(() => {
+  if (!props.subscription) {
+    return false;
+  }
+
+  return (
+    draftTier.value !== props.subscription.tier
+    || draftExpiresAt.value !== toDateTimeLocal(props.subscription.expiresAt)
+    || draftCancelAtPeriodEnd.value !== props.subscription.cancelAtPeriodEnd
+  );
+});
+
+const changedFieldsLabel = computed(() => {
+  if (!props.subscription) {
+    return "these changes";
+  }
+
+  const changedFields: string[] = [];
+
+  if (draftTier.value !== props.subscription.tier) {
+    changedFields.push("tier");
+  }
+
+  if (draftExpiresAt.value !== toDateTimeLocal(props.subscription.expiresAt)) {
+    changedFields.push("expiry");
+  }
+
+  if (draftCancelAtPeriodEnd.value !== props.subscription.cancelAtPeriodEnd) {
+    changedFields.push("cancellation");
+  }
+
+  return changedFields.join(", ") || "these changes";
+});
+
+const handleSave = () => {
+  if (!hasPendingChanges.value || props.isPending) {
+    return;
+  }
+
+  isConfirmOpen.value = true;
+};
+
+const handleConfirmSave = () => {
+  isConfirmOpen.value = false;
+  emit("save", {
+    tier: draftTier.value,
+    expiresAt: draftExpiresAt.value,
+    cancelAtPeriodEnd: draftCancelAtPeriodEnd.value,
+  });
+};
 </script>
 
 <template>
@@ -136,9 +182,9 @@ const planLabel = computed(() => {
       </SheetHeader>
 
       <div class="flex h-full flex-col gap-4 overflow-y-auto pr-1">
-        <p v-if="!subscription" class="text-sm text-muted-foreground">
+        <div v-if="!subscription" class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
           Select a subscription row to edit support settings.
-        </p>
+        </div>
         <template v-else>
           <Card>
             <CardHeader>
@@ -200,9 +246,14 @@ const planLabel = computed(() => {
                 <p>Stripe price: {{ subscription.stripePriceId || "—" }}</p>
               </div>
 
-              <Button class="w-full sm:w-auto" :disabled="isPending" @click="handleSave">
-                {{ isPending ? "Saving..." : "Save changes" }}
-              </Button>
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Button class="w-full sm:w-auto" :disabled="isPending || !hasPendingChanges" @click="handleSave">
+                  {{ isPending ? "Saving..." : "Save changes" }}
+                </Button>
+                <p class="text-xs text-muted-foreground">
+                  {{ hasPendingChanges ? `Pending fields: ${changedFieldsLabel}.` : "No pending changes to save." }}
+                </p>
+              </div>
 
               <p v-if="errorMessage" class="text-sm text-destructive">
                 {{ errorMessage }}
@@ -213,4 +264,17 @@ const planLabel = computed(() => {
       </div>
     </SheetContent>
   </Sheet>
+
+  <AdminActionConfirmDialog
+    :open="isConfirmOpen"
+    title="Save subscription changes?"
+    :description="subscription
+      ? `Apply ${changedFieldsLabel} for ${subscription.name}. These updates are recorded in the admin audit log.`
+      : 'Apply the pending subscription changes.'"
+    confirm-label="Save subscription changes"
+    confirm-pending-label="Saving..."
+    :is-pending="isPending"
+    @update:open="(open) => { isConfirmOpen = open; }"
+    @confirm="handleConfirmSave"
+  />
 </template>

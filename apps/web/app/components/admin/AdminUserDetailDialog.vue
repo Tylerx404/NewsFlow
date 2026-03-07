@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 
+import AdminActionConfirmDialog from "@/components/admin/AdminActionConfirmDialog.vue";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type AdminUserDetail = {
   id: string;
@@ -55,6 +57,7 @@ const emit = defineEmits<{
 }>();
 
 const suspendReason = ref("");
+const confirmAction = ref<"suspend" | "reactivate" | null>(null);
 
 watch(
   () => [props.open, props.user?.id, props.user?.suspendedReason],
@@ -62,6 +65,7 @@ watch(
     suspendReason.value = props.user?.status === "SUSPENDED"
       ? props.user.suspendedReason ?? ""
       : "";
+    confirmAction.value = null;
   },
   { immediate: true }
 );
@@ -100,7 +104,59 @@ const avatarFallback = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const handleSuspend = () => {
+const confirmTitle = computed(() => {
+  if (confirmAction.value === "reactivate") {
+    return "Reactivate this user?";
+  }
+
+  return "Suspend this user?";
+});
+
+const confirmDescription = computed(() => {
+  const userName = props.user?.name || "this user";
+
+  if (confirmAction.value === "reactivate") {
+    return `Restore access for ${userName}. Protected routes become available again immediately.`;
+  }
+
+  const reason = suspendReason.value.trim();
+
+  if (reason.length > 0) {
+    return `Suspend ${userName}. The reason \"${reason}\" will be saved to the admin audit log.`;
+  }
+
+  return `Suspend ${userName}. They lose access to protected routes until an admin reactivates the account.`;
+});
+
+const confirmLabel = computed(() =>
+  confirmAction.value === "reactivate" ? "Reactivate user" : "Suspend user"
+);
+
+const confirmPendingLabel = computed(() =>
+  confirmAction.value === "reactivate" ? "Reactivating..." : "Suspending..."
+);
+
+const confirmVariant = computed(() =>
+  confirmAction.value === "reactivate" ? "secondary" : "destructive"
+);
+
+const requestSuspendConfirmation = () => {
+  confirmAction.value = "suspend";
+};
+
+const requestReactivateConfirmation = () => {
+  confirmAction.value = "reactivate";
+};
+
+const handleConfirmAction = () => {
+  const nextAction = confirmAction.value;
+  confirmAction.value = null;
+
+  if (nextAction === "reactivate") {
+    emit("reactivate");
+    return;
+  }
+
   emit("suspend", suspendReason.value.trim() || undefined);
 };
 </script>
@@ -116,12 +172,46 @@ const handleSuspend = () => {
       </SheetHeader>
 
       <div class="flex h-full flex-col gap-4 overflow-y-auto pr-1">
-        <p v-if="isLoading" class="text-sm text-muted-foreground">
-          Loading user details...
-        </p>
-        <p v-else-if="!user" class="text-sm text-muted-foreground">
+        <template v-if="isLoading">
+          <div class="flex items-start gap-3 rounded-lg border p-4">
+            <Skeleton class="size-12 rounded-full" />
+            <div class="min-w-0 flex-1 space-y-2">
+              <Skeleton class="h-5 w-32" />
+              <Skeleton class="h-4 w-48" />
+              <div class="flex gap-2">
+                <Skeleton class="h-5 w-16 rounded-full" />
+                <Skeleton class="h-5 w-20 rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <Skeleton class="h-5 w-32" />
+              <Skeleton class="h-4 w-48" />
+            </CardHeader>
+            <CardContent class="grid gap-3 sm:grid-cols-2">
+              <Skeleton class="h-20 rounded-md" />
+              <Skeleton class="h-20 rounded-md" />
+              <Skeleton class="h-20 rounded-md" />
+              <Skeleton class="h-20 rounded-md" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <Skeleton class="h-5 w-28" />
+              <Skeleton class="h-4 w-44" />
+            </CardHeader>
+            <CardContent class="space-y-3">
+              <Skeleton class="h-9 rounded-md" />
+              <Skeleton class="h-9 w-32 rounded-md" />
+            </CardContent>
+          </Card>
+        </template>
+        <div v-else-if="!user" class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
           Select a user to review account details.
-        </p>
+        </div>
         <template v-else>
           <div class="flex items-start gap-3 rounded-lg border p-4">
             <Avatar class="size-12 border">
@@ -199,16 +289,21 @@ const handleSuspend = () => {
             </CardHeader>
             <CardContent class="space-y-3">
               <template v-if="!isSuspended">
-                <Input
-                  v-model="suspendReason"
-                  placeholder="Optional suspension reason"
-                  :disabled="actionPending"
-                />
+                <div class="space-y-2">
+                  <Input
+                    v-model="suspendReason"
+                    placeholder="Optional suspension reason"
+                    :disabled="actionPending"
+                  />
+                  <p class="text-xs text-muted-foreground">
+                    The reason is visible to admins in the detail view and audit log.
+                  </p>
+                </div>
                 <Button
                   variant="destructive"
                   class="w-full sm:w-auto"
                   :disabled="actionPending"
-                  @click="handleSuspend"
+                  @click="requestSuspendConfirmation"
                 >
                   {{ actionPending ? "Suspending..." : "Suspend user" }}
                 </Button>
@@ -224,7 +319,7 @@ const handleSuspend = () => {
                   variant="secondary"
                   class="w-full sm:w-auto"
                   :disabled="actionPending"
-                  @click="emit('reactivate')"
+                  @click="requestReactivateConfirmation"
                 >
                   {{ actionPending ? "Reactivating..." : "Reactivate user" }}
                 </Button>
@@ -239,4 +334,16 @@ const handleSuspend = () => {
       </div>
     </SheetContent>
   </Sheet>
+
+  <AdminActionConfirmDialog
+    :open="Boolean(confirmAction)"
+    :title="confirmTitle"
+    :description="confirmDescription"
+    :confirm-label="confirmLabel"
+    :confirm-pending-label="confirmPendingLabel"
+    :confirm-variant="confirmVariant"
+    :is-pending="actionPending"
+    @update:open="(open) => { if (!open) confirmAction = null; }"
+    @confirm="handleConfirmAction"
+  />
 </template>

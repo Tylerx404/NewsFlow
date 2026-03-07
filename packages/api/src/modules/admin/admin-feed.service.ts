@@ -1,3 +1,5 @@
+import { ORPCError } from "@orpc/server";
+
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 import {
@@ -328,6 +330,14 @@ export async function updateAdminFeedEnabled(
     return null;
   }
 
+  if (existingFeed.isEnabled === input.isEnabled) {
+    throw new ORPCError("BAD_REQUEST", {
+      message: input.isEnabled
+        ? "Feed source is already enabled."
+        : "Feed source is already disabled.",
+    });
+  }
+
   await db.$transaction(async (tx) => {
     await tx.feedSource.update({
       where: { id: input.feedSourceId },
@@ -442,6 +452,12 @@ export async function retryAdminFeedExtraction(
     },
     take: 100,
   });
+
+  if (articles.length === 0) {
+    throw new ORPCError("BAD_REQUEST", {
+      message: "Feed source has no articles waiting for extraction.",
+    });
+  }
 
   await contentQueue.addBulk(
     articles.map((article) => ({

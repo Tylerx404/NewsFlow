@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -39,6 +40,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [userId: string];
 }>();
+
+const loadingRowKeys = [1, 2, 3];
 
 const formatDateTime = (value: Date | string | null) => {
   if (!value) {
@@ -92,11 +95,30 @@ const avatarFallback = (name: string) =>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-if="isLoading">
-            <TableCell :colspan="7" class="py-8 text-center text-sm text-muted-foreground">
-              Loading admin users...
-            </TableCell>
-          </TableRow>
+          <template v-if="isLoading">
+            <TableRow v-for="row in loadingRowKeys" :key="row">
+              <TableCell>
+                <div class="flex min-w-0 items-center gap-3">
+                  <Skeleton class="size-9 rounded-full" />
+                  <div class="min-w-0 space-y-2">
+                    <Skeleton class="h-4 w-28" />
+                    <Skeleton class="h-3 w-40" />
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell><Skeleton class="h-5 w-16 rounded-full" /></TableCell>
+              <TableCell><Skeleton class="h-5 w-20 rounded-full" /></TableCell>
+              <TableCell>
+                <div class="space-y-2">
+                  <Skeleton class="h-4 w-24" />
+                  <Skeleton class="h-3 w-32" />
+                </div>
+              </TableCell>
+              <TableCell><Skeleton class="h-4 w-10" /></TableCell>
+              <TableCell><Skeleton class="h-4 w-32" /></TableCell>
+              <TableCell class="text-right"><Skeleton class="ml-auto h-8 w-16" /></TableCell>
+            </TableRow>
+          </template>
           <TableRow v-else-if="errorMessage">
             <TableCell :colspan="7" class="py-8 text-center text-sm text-destructive">
               {{ errorMessage }}
@@ -104,7 +126,7 @@ const avatarFallback = (name: string) =>
           </TableRow>
           <TableRow v-else-if="items.length === 0">
             <TableCell :colspan="7" class="py-8 text-center text-sm text-muted-foreground">
-              No users match the current filters.
+              No users match the current filters. Adjust role, status, or plan filters to widen the result.
             </TableCell>
           </TableRow>
           <TableRow
@@ -139,7 +161,7 @@ const avatarFallback = (name: string) =>
                 </p>
               </div>
             </TableCell>
-            <TableCell>{{ item.feedCount }}</TableCell>
+            <TableCell class="text-sm text-muted-foreground">{{ item.feedCount }}</TableCell>
             <TableCell class="text-sm text-muted-foreground">
               {{ formatDateTime(item.createdAt) }}
             </TableCell>

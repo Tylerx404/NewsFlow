@@ -97,7 +97,7 @@ const feedsErrorMessage = computed(() => {
 
   return feedsQuery.error.value instanceof Error
     ? feedsQuery.error.value.message
-    : "Unable to load feed sources.";
+    : "Could not load feed sources. Refresh and try again.";
 });
 
 const hasMoreFeeds = computed(() => Boolean(feedsQuery.data.value?.nextCursor));
@@ -122,7 +122,7 @@ const handleToggleEnabled = async (payload: { feedSourceId: string; isEnabled: b
   try {
     await updateEnabledMutation.mutateAsync(payload);
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Unable to update feed state.";
+    actionError.value = error instanceof Error ? error.message : "Could not update this feed state. Try again.";
   }
 };
 
@@ -132,7 +132,7 @@ const handleRetryFetch = async (feedSourceId: string) => {
   try {
     await retryFetchMutation.mutateAsync({ feedSourceId });
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Unable to queue RSS retry.";
+    actionError.value = error instanceof Error ? error.message : "Could not queue an RSS fetch retry. Try again.";
   }
 };
 
@@ -143,7 +143,7 @@ const handleRetryExtraction = async (feedSourceId: string) => {
     await retryFeedExtractionMutation.mutateAsync({ feedSourceId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Unable to queue extraction retry.";
+      error instanceof Error ? error.message : "Could not queue a feed extraction retry. Try again.";
   }
 };
 </script>

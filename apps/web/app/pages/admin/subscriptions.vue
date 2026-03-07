@@ -128,7 +128,7 @@ const subscriptionsErrorMessage = computed(() => {
 
   return subscriptionsQuery.error.value instanceof Error
     ? subscriptionsQuery.error.value.message
-    : "Unable to load subscriptions.";
+    : "Could not load subscriptions. Refresh and try again.";
 });
 
 const hasMoreSubscriptions = computed(() => Boolean(subscriptionsQuery.data.value?.nextCursor));
@@ -212,7 +212,7 @@ const handleSaveSubscription = async (draft: {
     }
   } catch (error) {
     editError.value =
-      error instanceof Error ? error.message : "Unable to update subscription.";
+      error instanceof Error ? error.message : "Could not update this subscription. Review the changes and try again.";
   }
 };
 </script>

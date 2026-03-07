@@ -99,7 +99,7 @@ const usersErrorMessage = computed(() => {
 
   return usersQuery.error.value instanceof Error
     ? usersQuery.error.value.message
-    : "Unable to load admin users.";
+    : "Could not load admin users. Refresh and try again.";
 });
 
 const hasMoreUsers = computed(() => Boolean(usersQuery.data.value?.nextCursor));
@@ -148,7 +148,7 @@ const handleSuspendUser = async (reason?: string) => {
     });
   } catch (error) {
     detailActionError.value =
-      error instanceof Error ? error.message : "Unable to suspend user.";
+      error instanceof Error ? error.message : "Could not suspend this user. Try again.";
   }
 };
 
@@ -165,7 +165,7 @@ const handleReactivateUser = async () => {
     });
   } catch (error) {
     detailActionError.value =
-      error instanceof Error ? error.message : "Unable to reactivate user.";
+      error instanceof Error ? error.message : "Could not reactivate this user. Try again.";
   }
 };
 </script>
