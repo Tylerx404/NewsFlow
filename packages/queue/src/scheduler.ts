@@ -2,6 +2,11 @@ import type { Queue } from "bullmq";
 import cron from "node-cron";
 
 import db from "@NewsFlow/db";
+import {
+  HEARTBEAT_KEYS,
+  startHeartbeatTicker,
+  type HeartbeatTicker,
+} from "./heartbeat";
 import type { ContentExtractJobData, RssFetchJobData } from "./schema";
 import { CONTENT_EXTRACT_JOB, RSS_FETCH_JOB } from "./schema";
 import { QUEUES, createQueue } from "./service";
@@ -10,6 +15,8 @@ let rssQueue: Queue<RssFetchJobData> | null = null;
 let contentQueue: Queue<ContentExtractJobData> | null = null;
 let rssTask: ReturnType<typeof cron.schedule> | null = null;
 let contentTask: ReturnType<typeof cron.schedule> | null = null;
+let rssHeartbeatTicker: HeartbeatTicker | null = null;
+let contentHeartbeatTicker: HeartbeatTicker | null = null;
 
 export const startScheduler = () => {
   if (rssTask || contentTask) {
@@ -21,6 +28,16 @@ export const startScheduler = () => {
 
   rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
   contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
+
+  rssHeartbeatTicker = startHeartbeatTicker({
+    key: HEARTBEAT_KEYS.scheduler.rss,
+    component: "scheduler:rss",
+  });
+
+  contentHeartbeatTicker = startHeartbeatTicker({
+    key: HEARTBEAT_KEYS.scheduler.content,
+    component: "scheduler:content",
+  });
 
   rssTask = cron.schedule("*/30 * * * *", async () => {
     try {
@@ -118,6 +135,16 @@ export const stopScheduler = async () => {
   contentTask?.destroy();
   rssTask = null;
   contentTask = null;
+
+  if (rssHeartbeatTicker) {
+    await rssHeartbeatTicker.stop();
+    rssHeartbeatTicker = null;
+  }
+
+  if (contentHeartbeatTicker) {
+    await contentHeartbeatTicker.stop();
+    contentHeartbeatTicker = null;
+  }
 
   await Promise.all([rssQueue?.close(), contentQueue?.close()]);
   rssQueue = null;

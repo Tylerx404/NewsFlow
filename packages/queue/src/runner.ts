@@ -1,5 +1,10 @@
 import type { Job } from "bullmq";
 
+import {
+  HEARTBEAT_KEYS,
+  startHeartbeatTicker,
+  type HeartbeatTicker,
+} from "./heartbeat";
 import { startScheduler, stopScheduler } from "./scheduler";
 import {
   contentExtractProcessor,
@@ -12,6 +17,7 @@ import type { ContentExtractJobData, RssFetchJobData } from "./schema";
 
 let rssWorker: WorkerInstance;
 let contentWorker: WorkerInstance;
+let workerHeartbeatTicker: HeartbeatTicker | null = null;
 let isRunning = false;
 
 // Worker creation functions
@@ -55,6 +61,26 @@ const stopWorkers = async () => {
   ]);
 };
 
+const startWorkerHeartbeat = () => {
+  if (workerHeartbeatTicker) {
+    return;
+  }
+
+  workerHeartbeatTicker = startHeartbeatTicker({
+    key: HEARTBEAT_KEYS.worker,
+    component: "worker",
+  });
+};
+
+const stopWorkerHeartbeat = async () => {
+  if (!workerHeartbeatTicker) {
+    return;
+  }
+
+  await workerHeartbeatTicker.stop();
+  workerHeartbeatTicker = null;
+};
+
 export const startJobRunner = () => {
   if (isRunning) {
     console.log("Job runner already running");
@@ -71,6 +97,9 @@ export const startJobRunner = () => {
     // Setup event handlers
     setupWorkerEventHandlers();
 
+    // Start worker heartbeat
+    startWorkerHeartbeat();
+
     // Start cron scheduler
     startScheduler();
 
@@ -78,6 +107,7 @@ export const startJobRunner = () => {
     console.log("Job runner started successfully");
 
   } catch (error) {
+    void stopWorkerHeartbeat();
     console.error("Failed to start job runner:", error);
     throw error;
   }
@@ -94,6 +124,7 @@ export const stopJobRunner = async () => {
   try {
     // Stop in reverse order
     await stopScheduler();
+    await stopWorkerHeartbeat();
     await stopWorkers();
 
     isRunning = false;

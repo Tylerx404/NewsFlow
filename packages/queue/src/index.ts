@@ -24,3 +24,15 @@ export { startScheduler, stopScheduler } from './scheduler';
 
 // Runner exports
 export { startJobRunner, stopJobRunner } from './runner';
+
+// Heartbeat exports
+export {
+  HEARTBEAT_KEYS,
+  writeHeartbeat,
+  clearHeartbeat,
+  readHeartbeat,
+  startHeartbeatTicker,
+  type HeartbeatHealth,
+  type HeartbeatSnapshot,
+  type HeartbeatTicker,
+} from "./heartbeat";
