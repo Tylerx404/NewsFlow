@@ -7,6 +7,7 @@ import { createAdminAuditLog } from "./admin-audit.service";
 import type {
   AdminAiUsageOverviewInput,
   AdminAiUsageUserUsageInput,
+  ListAdminAiConfigsInput,
   ListAdminAiUsageEventsInput,
   UpdateAdminAiConfigEnabledInput,
 } from "./admin-ai-usage.schema";
@@ -77,6 +78,65 @@ function buildAdminAiUsageWhere(
   const dateRange = buildDateRangeFilter(input.startedAt, input.endedAt);
   if (dateRange) {
     andFilters.push({ createdAt: dateRange });
+  }
+
+  if (input.userQuery) {
+    andFilters.push({
+      user: {
+        OR: [
+          {
+            name: {
+              contains: input.userQuery,
+              mode: "insensitive",
+            },
+          },
+          {
+            email: {
+              contains: input.userQuery,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  if (andFilters.length === 0) {
+    return {};
+  }
+
+  return {
+    AND: andFilters,
+  };
+}
+
+function buildAdminAiConfigWhere(
+  input: ListAdminAiConfigsInput
+): Prisma.AiConfigWhereInput {
+  const andFilters: Prisma.AiConfigWhereInput[] = [];
+
+  if (input.provider) {
+    andFilters.push({
+      provider: {
+        contains: input.provider,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  if (input.model) {
+    andFilters.push({
+      model: {
+        contains: input.model,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  if (input.isEnabled !== undefined) {
+    andFilters.push({
+      isEnabled: input.isEnabled,
+    });
   }
 
   if (input.userQuery) {
@@ -360,6 +420,43 @@ export async function listAdminAiUsageEvents(
 
   return {
     items: events.map(mapAdminAiUsageEvent),
+  };
+}
+
+export async function listAdminAiConfigs(
+  db: PrismaClient,
+  input: ListAdminAiConfigsInput
+) {
+  const configs = await db.aiConfig.findMany({
+    where: buildAdminAiConfigWhere(input),
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+    take: input.limit,
+    select: {
+      ...adminAiConfigSelect,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return {
+    items: configs.map((config) => ({
+      id: config.id,
+      userId: config.userId,
+      userName: config.user.name,
+      userEmail: config.user.email,
+      name: config.name,
+      provider: config.provider,
+      model: config.model,
+      baseUrl: config.baseUrl,
+      isDefault: config.isDefault,
+      isEnabled: config.isEnabled,
+      createdAt: config.createdAt,
+      updatedAt: config.updatedAt,
+    })),
   };
 }
 

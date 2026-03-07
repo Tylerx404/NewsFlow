@@ -5,17 +5,20 @@ import prisma from "@NewsFlow/db";
 import { adminProcedure } from "../../index";
 import {
   adminAiConfigSchema,
+  adminAiConfigListOutputSchema,
   adminAiUsageEventsOutputSchema,
   adminAiUsageOverviewOutputSchema,
   adminAiUsageOverviewSchema,
   adminAiUsageUserUsageOutputSchema,
   adminAiUsageUserUsageSchema,
+  listAdminAiConfigsSchema,
   listAdminAiUsageEventsSchema,
   updateAdminAiConfigEnabledSchema,
 } from "./admin-ai-usage.schema";
 import {
   getAdminAiUsageOverview,
   getAdminAiUserUsage,
+  listAdminAiConfigs,
   listAdminAiUsageEvents,
   updateAdminAiConfigEnabled,
 } from "./admin-ai-usage.service";
@@ -33,6 +36,13 @@ export const adminAiUsageRouter = {
     .output(adminAiUsageEventsOutputSchema)
     .handler(async ({ input }) => {
       return listAdminAiUsageEvents(prisma, input);
+    }),
+
+  listConfigs: adminProcedure
+    .input(listAdminAiConfigsSchema)
+    .output(adminAiConfigListOutputSchema)
+    .handler(async ({ input }) => {
+      return listAdminAiConfigs(prisma, input);
     }),
 
   getUserUsage: adminProcedure

@@ -84,6 +84,22 @@ export const dashboardQueryKeys = {
         ] as const,
       userUsage: (userId: string, days: number) =>
         ["dashboard", "admin", "ai-usage", "user-usage", userId, days] as const,
+      configs: (
+        provider: string,
+        model: string,
+        userQuery: string,
+        isEnabled: "all" | "true" | "false"
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "ai-usage",
+          "configs",
+          provider || "all",
+          model || "all",
+          userQuery || "",
+          isEnabled,
+        ] as const,
     },
     systemOps: {
       overview: () => ["dashboard", "admin", "system-ops", "overview"] as const,

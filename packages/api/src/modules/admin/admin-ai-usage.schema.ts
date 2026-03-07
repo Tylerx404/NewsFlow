@@ -35,6 +35,33 @@ export const adminAiUsageEventsOutputSchema = z.object({
   items: z.array(adminAiUsageEventSchema),
 });
 
+export const listAdminAiConfigsSchema = z.object({
+  provider: z.string().trim().min(1).optional(),
+  model: z.string().trim().min(1).optional(),
+  userQuery: z.string().trim().min(1).optional(),
+  isEnabled: z.boolean().optional(),
+  limit: z.number().int().min(1).max(100).default(50),
+});
+
+export const adminAiConfigListItemSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  userName: z.string(),
+  userEmail: z.string(),
+  name: z.string(),
+  provider: z.string(),
+  model: z.string(),
+  baseUrl: z.string().nullable(),
+  isDefault: z.boolean(),
+  isEnabled: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const adminAiConfigListOutputSchema = z.object({
+  items: z.array(adminAiConfigListItemSchema),
+});
+
 export const adminAiUsageTopUserSchema = z.object({
   userId: z.string(),
   userName: z.string(),
@@ -113,6 +140,7 @@ export const adminAiConfigSchema = z.object({
 
 export type AdminAiUsageStatus = z.infer<typeof adminAiUsageStatusSchema>;
 export type ListAdminAiUsageEventsInput = z.infer<typeof listAdminAiUsageEventsSchema>;
+export type ListAdminAiConfigsInput = z.infer<typeof listAdminAiConfigsSchema>;
 export type AdminAiUsageOverviewInput = z.infer<typeof adminAiUsageOverviewSchema>;
 export type AdminAiUsageUserUsageInput = z.infer<typeof adminAiUsageUserUsageSchema>;
 export type UpdateAdminAiConfigEnabledInput = z.infer<
