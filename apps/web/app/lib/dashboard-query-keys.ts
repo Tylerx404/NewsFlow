@@ -54,6 +54,54 @@ export const dashboardQueryKeys = {
       detail: (feedId: string) =>
         ["dashboard", "admin", "feeds", "detail", feedId] as const,
     },
+    operations: {
+      overview: () => ["dashboard", "admin", "operations", "overview"] as const,
+    },
+    aiUsage: {
+      overview: (days: number) =>
+        ["dashboard", "admin", "ai-usage", "overview", days] as const,
+      listEvents: (
+        provider: string,
+        model: string,
+        status: "all" | "SUCCESS" | "FAILED",
+        userQuery: string,
+        startedAt: string,
+        endedAt: string,
+        limit: number
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "ai-usage",
+          "events",
+          provider || "all",
+          model || "all",
+          status,
+          userQuery || "",
+          startedAt || "none",
+          endedAt || "none",
+          limit,
+        ] as const,
+      userUsage: (userId: string, days: number) =>
+        ["dashboard", "admin", "ai-usage", "user-usage", userId, days] as const,
+    },
+    systemOps: {
+      overview: () => ["dashboard", "admin", "system-ops", "overview"] as const,
+      queueJobs: (
+        queueName: "all" | "rss-fetch" | "content-extract",
+        states: string[],
+        limit: number
+      ) =>
+        [
+          "dashboard",
+          "admin",
+          "system-ops",
+          "queue-jobs",
+          queueName,
+          states.join(","),
+          limit,
+        ] as const,
+    },
   },
   feedSubscriptions: {
     sidebar: (includeInactive: boolean) =>
