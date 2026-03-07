@@ -1,6 +1,7 @@
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
+import { createAdminAuditLog } from "./admin-audit.service";
 import {
   subscriptionBillingIntervalSchema,
   subscriptionTierSchema,
@@ -272,16 +273,18 @@ export async function suspendAdminUser(
       select: adminUserDetailSelect,
     });
 
-    await tx.adminAuditLog.create({
-      data: {
-        adminUserId: input.adminUserId,
-        action: "USER_SUSPENDED",
-        targetType: "USER",
-        targetId: input.userId,
-        metadata: {
-          previousStatus: existingUser.status,
-          nextStatus: "SUSPENDED",
-          reason: input.reason ?? null,
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "USER_SUSPENDED",
+      targetType: "USER",
+      targetId: input.userId,
+      metadata: {
+        reason: input.reason ?? null,
+        previous: {
+          status: existingUser.status,
+        },
+        next: {
+          status: "SUSPENDED",
         },
       },
     });
@@ -320,15 +323,17 @@ export async function reactivateAdminUser(
       select: adminUserDetailSelect,
     });
 
-    await tx.adminAuditLog.create({
-      data: {
-        adminUserId: input.adminUserId,
-        action: "USER_REACTIVATED",
-        targetType: "USER",
-        targetId: input.userId,
-        metadata: {
-          previousStatus: existingUser.status,
-          nextStatus: "ACTIVE",
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "USER_REACTIVATED",
+      targetType: "USER",
+      targetId: input.userId,
+      metadata: {
+        previous: {
+          status: existingUser.status,
+        },
+        next: {
+          status: "ACTIVE",
         },
       },
     });
