@@ -161,6 +161,24 @@ model Subscription {
   @@map("subscription")
 }
 
+model StripeConfig {
+  id                      String   @id @default("default")
+  publishableKey          String?
+  secretKeyEncrypted      String?
+  webhookSecretEncrypted  String?
+  priceBasicMonthly       String?
+  priceBasicYearly        String?
+  priceProMonthly         String?
+  priceProYearly          String?
+  priceMaxMonthly         String?
+  priceMaxYearly          String?
+  updatedByUserId         String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("stripe_config")
+}
+
 model AdminAuditLog {
   id          String   @id @default(cuid())
   adminUserId String

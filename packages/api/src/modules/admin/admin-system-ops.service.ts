@@ -1,5 +1,10 @@
 import { ORPCError } from "@orpc/server";
 
+import {
+  buildStripeConfigUpdateData,
+  getStripeConfigRecord,
+  maskStripeConfigRecord,
+} from "@NewsFlow/auth/stripe-config";
 import prisma from "@NewsFlow/db";
 import {
   CONTENT_EXTRACT_JOB,
@@ -20,6 +25,7 @@ import type {
   RetryAdminQueueJobInput,
   TriggerAdminContentExtractInput,
   TriggerAdminFeedFetchInput,
+  UpdateAdminStripeConfigInput,
 } from "./admin-system-ops.schema";
 
 type PrismaClient = typeof prisma;
@@ -273,6 +279,82 @@ export async function getAdminSystemOpsOverview(db: PrismaClient) {
     extractionBacklogCount,
     recentFailedJobs,
   };
+}
+
+export async function getAdminStripeConfig(
+  db: Pick<PrismaClient, "stripeConfig">
+) {
+  const record = await getStripeConfigRecord(db);
+  return maskStripeConfigRecord(record);
+}
+
+interface UpdateAdminStripeConfigParams extends UpdateAdminStripeConfigInput {
+  adminUserId: string;
+}
+
+export async function updateAdminStripeConfig(
+  db: PrismaClient,
+  input: UpdateAdminStripeConfigParams
+) {
+  const existing = await getStripeConfigRecord(db);
+  const nextData = await buildStripeConfigUpdateData({
+    ...input,
+    updatedByUserId: input.adminUserId,
+  });
+
+  const changedFields = Object.keys(nextData).filter(
+    (field) => field !== "updatedByUserId" && field !== "updatedAt"
+  );
+  const nextPublishableKey =
+    typeof nextData.publishableKey === "string" || nextData.publishableKey === null
+      ? nextData.publishableKey
+      : existing?.publishableKey ?? null;
+  const nextSecretKeyState =
+    typeof nextData.secretKeyEncrypted === "string"
+      ? "present"
+      : existing?.secretKeyEncrypted
+        ? "present"
+        : "missing";
+  const nextWebhookSecretState =
+    typeof nextData.webhookSecretEncrypted === "string"
+      ? "present"
+      : existing?.webhookSecretEncrypted
+        ? "present"
+        : "missing";
+
+  await db.$transaction(async (tx) => {
+    await tx.stripeConfig.upsert({
+      where: { id: "default" },
+      update: nextData,
+      create: {
+        id: "default",
+        ...nextData,
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "SYSTEM_OPS_STRIPE_CONFIG_UPDATED",
+      targetType: "SYSTEM_CONFIG",
+      targetId: "stripe",
+      metadata: {
+        previous: {
+          changedFields: changedFields.join(",") || undefined,
+          publishableKey: existing?.publishableKey ? "present" : "missing",
+          secretKey: existing?.secretKeyEncrypted ? "present" : "missing",
+          webhookSecret: existing?.webhookSecretEncrypted ? "present" : "missing",
+        },
+        next: {
+          changedFields: changedFields.join(",") || undefined,
+          publishableKey: nextPublishableKey ? "present" : "missing",
+          secretKey: nextSecretKeyState,
+          webhookSecret: nextWebhookSecretState,
+        },
+      },
+    });
+  });
+
+  return getAdminStripeConfig(db);
 }
 
 export async function listAdminQueueJobs(

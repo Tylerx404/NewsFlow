@@ -11,6 +11,17 @@ export const adminQueueJobStateSchema = z.enum([
 
 export const adminSystemOpsOverviewSchema = z.object({});
 
+const nullableTrimmedStringSchema = z
+  .string()
+  .trim()
+  .transform((value) => (value.length > 0 ? value : null));
+
+const optionalSecretStringSchema = z
+  .string()
+  .trim()
+  .transform((value) => (value.length > 0 ? value : undefined))
+  .optional();
+
 export const adminHeartbeatStateSchema = z.enum([
   "healthy",
   "stale",
@@ -67,6 +78,36 @@ export const adminSystemOpsOverviewOutputSchema = z.object({
   recentFailedJobs: z.array(adminQueueJobSchema),
 });
 
+export const adminStripeConfigSchema = z.object({
+  publishableKey: z.string().nullable(),
+  secretKeyMasked: z.string().nullable(),
+  webhookSecretMasked: z.string().nullable(),
+  hasSecretKey: z.boolean(),
+  hasWebhookSecret: z.boolean(),
+  priceBasicMonthly: z.string().nullable(),
+  priceBasicYearly: z.string().nullable(),
+  priceProMonthly: z.string().nullable(),
+  priceProYearly: z.string().nullable(),
+  priceMaxMonthly: z.string().nullable(),
+  priceMaxYearly: z.string().nullable(),
+  isConfigured: z.boolean(),
+  updatedByUserId: z.string().nullable(),
+  updatedAt: z.date().nullable(),
+  createdAt: z.date().nullable(),
+});
+
+export const adminStripeConfigUpdateSchema = z.object({
+  publishableKey: nullableTrimmedStringSchema.optional(),
+  secretKey: optionalSecretStringSchema,
+  webhookSecret: optionalSecretStringSchema,
+  priceBasicMonthly: nullableTrimmedStringSchema.optional(),
+  priceBasicYearly: nullableTrimmedStringSchema.optional(),
+  priceProMonthly: nullableTrimmedStringSchema.optional(),
+  priceProYearly: nullableTrimmedStringSchema.optional(),
+  priceMaxMonthly: nullableTrimmedStringSchema.optional(),
+  priceMaxYearly: nullableTrimmedStringSchema.optional(),
+});
+
 export const listAdminQueueJobsSchema = z.object({
   queueName: adminQueueNameSchema.optional(),
   states: z.array(adminQueueJobStateSchema).min(1).max(5).default(["failed"]),
@@ -112,4 +153,7 @@ export type RetryAdminQueueJobInput = z.infer<typeof retryAdminQueueJobSchema>;
 export type TriggerAdminFeedFetchInput = z.infer<typeof triggerAdminFeedFetchSchema>;
 export type TriggerAdminContentExtractInput = z.infer<
   typeof triggerAdminContentExtractSchema
+>;
+export type UpdateAdminStripeConfigInput = z.infer<
+  typeof adminStripeConfigUpdateSchema
 >;

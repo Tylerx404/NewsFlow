@@ -6,6 +6,8 @@ import { adminProcedure } from "../../index";
 import {
   adminOpsActionOutputSchema,
   adminQueueJobsOutputSchema,
+  adminStripeConfigSchema,
+  adminStripeConfigUpdateSchema,
   adminSystemOpsOverviewOutputSchema,
   adminSystemOpsOverviewSchema,
   listAdminQueueJobsSchema,
@@ -15,11 +17,13 @@ import {
   triggerAdminFeedFetchSchema,
 } from "./admin-system-ops.schema";
 import {
+  getAdminStripeConfig,
   getAdminSystemOpsOverview,
   listAdminQueueJobs,
   retryAdminQueueJob,
   triggerAdminContentExtract,
   triggerAdminFeedFetch,
+  updateAdminStripeConfig,
 } from "./admin-system-ops.service";
 
 export const adminSystemOpsRouter = {
@@ -28,6 +32,22 @@ export const adminSystemOpsRouter = {
     .output(adminSystemOpsOverviewOutputSchema)
     .handler(async () => {
       return getAdminSystemOpsOverview(prisma);
+    }),
+
+  getStripeConfig: adminProcedure
+    .output(adminStripeConfigSchema)
+    .handler(async () => {
+      return getAdminStripeConfig(prisma);
+    }),
+
+  updateStripeConfig: adminProcedure
+    .input(adminStripeConfigUpdateSchema)
+    .output(adminStripeConfigSchema)
+    .handler(async ({ input, context }) => {
+      return updateAdminStripeConfig(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
     }),
 
   listQueueJobs: adminProcedure
