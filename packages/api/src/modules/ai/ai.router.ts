@@ -94,7 +94,7 @@ export const aiRouter = {
         const { summary, tokens } = await generateSummary(
           article.content,
           configWithDecryptedKey,
-          article.feedSource?.language
+          input.language ?? article.feedSource?.language
         );
 
         await logUsageEvent({

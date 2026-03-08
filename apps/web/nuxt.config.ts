@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     baseUrl: process.env.NUXT_PUBLIC_SITE_URL,
     strategy: "no_prefix",
     defaultLocale: "en",
-    lazy: true,
     langDir: "locales",
     locales: [
       { code: "en", name: "English", language: "en-US", file: "en.json" },
@@ -31,7 +30,7 @@ export default defineNuxtConfig({
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: "newsflow_locale",
-      redirectOn: "root",
+      redirectOn: "all",
       fallbackLocale: "en",
     },
   },

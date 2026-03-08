@@ -35,7 +35,7 @@ definePageMeta({
 
 const route = useRoute();
 const { $orpc } = useNuxtApp();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 const readingPreferences = useReadingPreferences();
@@ -170,6 +170,7 @@ const handleSummarize = async () => {
 
   await summarizeMutation.mutateAsync({
     articleId: articleId.value,
+    language: locale.value,
     ...(selectedAiConfigId.value ? { aiConfigId: selectedAiConfigId.value } : {}),
   });
 };

@@ -64,17 +64,42 @@ export function getModel(config: AiConfig): LanguageModel {
   }
 }
 
+const LANGUAGE_NAME_BY_CODE: Record<string, string> = {
+  en: "English",
+  "en-us": "English",
+  vi: "Vietnamese",
+  "vi-vn": "Vietnamese",
+  zh: "Chinese (Simplified)",
+  "zh-cn": "Chinese (Simplified)",
+  kr: "Korean",
+  ko: "Korean",
+  "ko-kr": "Korean",
+  jp: "Japanese",
+  ja: "Japanese",
+  "ja-jp": "Japanese",
+};
+
+function resolveSummaryLanguage(language?: string | null) {
+  const normalized = language?.trim().toLowerCase();
+
+  if (!normalized) {
+    return "English";
+  }
+
+  const baseCode = normalized.split("-")[0] ?? normalized;
+
+  return LANGUAGE_NAME_BY_CODE[normalized] ?? LANGUAGE_NAME_BY_CODE[baseCode] ?? "English";
+}
+
 export async function generateSummary(
   content: string,
   config: AiConfig,
   language?: string | null
 ) {
   const model = getModel(config);
+  const langName = resolveSummaryLanguage(language);
 
-  const lang = language || "en";
-  const langName = lang === "vi" ? "Vietnamese" : lang === "en" ? "English" : lang;
-
-  const prompt = `Summarize the following article in ${langName}. Keep it concise (3-5 bullet points):
+  const prompt = `Summarize the following article in ${langName}. Keep it concise in 3-5 bullet points. Reply only in ${langName}.
 
 ${content.slice(0, 8000)}`; // Limit content length
 
