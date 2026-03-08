@@ -1,47 +1,42 @@
 import { createContext } from "@NewsFlow/api/context";
 import { appRouter } from "@NewsFlow/api/routers/index";
 import { auth } from "@NewsFlow/auth";
+import {
+  cancelSubscriptionForUser,
+  constructStripeWebhookEvent,
+  createBillingPortalSessionForUser,
+  createCheckoutSessionForUser,
+  getStripePromotionPreview,
+  handleStripeWebhookEvent,
+  isStripeBillingPlan,
+  mapStripeBillingError,
+  normalizeStripeBodyUrl,
+  restoreSubscriptionForUser,
+} from "@NewsFlow/auth/stripe-billing";
+import prisma from "@NewsFlow/db";
 import { env } from "@NewsFlow/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/node";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/node";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { toNodeHandler } from "better-auth/node";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express from "express";
-import Stripe from "stripe";
 
 const app = express();
-const stripeClient = new Stripe(env.STRIPE_SECRET_KEY);
 
-const planPriceIdByInterval = {
-  basic: {
-    monthly: env.STRIPE_PRICE_BASIC_MONTHLY,
-    yearly: env.STRIPE_PRICE_BASIC_YEARLY,
-  },
-  pro: {
-    monthly: env.STRIPE_PRICE_PRO_MONTHLY,
-    yearly: env.STRIPE_PRICE_PRO_YEARLY,
-  },
-  max: {
-    monthly: env.STRIPE_PRICE_MAX_MONTHLY,
-    yearly: env.STRIPE_PRICE_MAX_YEARLY,
-  },
-} as const;
+async function requireSessionUser(req: express.Request) {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
 
-type SubscriptionPlanKey = keyof typeof planPriceIdByInterval;
+  if (!session?.user?.id) {
+    return null;
+  }
 
-type PromotionPreviewResponse = {
-  valid: boolean;
-  code: string | null;
-  baseAmount: number;
-  finalAmount: number;
-  currency: string;
-  discountPercent: number | null;
-  amountOff: number | null;
-  reason: string | null;
-};
+  return session.user;
+}
 
 app.use(
   cors({
@@ -55,12 +50,28 @@ app.use(
 app.post(
   "/api/auth/stripe/webhook",
   express.raw({ type: "application/json" }),
-  (req, _res, next) => {
-    if (Buffer.isBuffer(req.body)) {
-      req.body = req.body.toString("utf8");
+  async (req, res) => {
+    const signature = req.headers["stripe-signature"];
+
+    if (!Buffer.isBuffer(req.body)) {
+      res.status(400).json({ message: "Stripe webhook payload must be raw bytes." });
+      return;
     }
-    next();
-  },
+
+    if (typeof signature !== "string") {
+      res.status(400).json({ message: "Missing Stripe signature header." });
+      return;
+    }
+
+    try {
+      const { config, event } = await constructStripeWebhookEvent(req.body, signature);
+      await handleStripeWebhookEvent(prisma, event, config);
+      res.status(200).json({ received: true });
+    } catch (error) {
+      const mapped = mapStripeBillingError(error);
+      res.status(mapped.statusCode).json({ message: mapped.message });
+    }
+  }
 );
 
 app.post("/api/billing/promotion/preview", express.json(), async (req, res) => {
@@ -68,125 +79,123 @@ app.post("/api/billing/promotion/preview", express.json(), async (req, res) => {
   const annual = req.body?.annual === true;
   const rawCode = typeof req.body?.code === "string" ? req.body.code.trim() : "";
 
-  if (plan !== "basic" && plan !== "pro" && plan !== "max") {
+  if (!isStripeBillingPlan(plan)) {
     res.status(400).json({ message: "Invalid plan." });
     return;
   }
 
-  const billingInterval = annual ? "yearly" : "monthly";
-  const priceId = planPriceIdByInterval[plan as SubscriptionPlanKey][billingInterval];
+  try {
+    const preview = await getStripePromotionPreview(plan, annual, rawCode);
+    res.json(preview);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
+
+app.post("/api/auth/subscription/upgrade", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
+
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const plan = typeof req.body?.plan === "string" ? req.body.plan.toLowerCase() : "";
+  const annual = req.body?.annual === true;
+  const successUrl = normalizeStripeBodyUrl(req.body?.successUrl);
+  const cancelUrl = normalizeStripeBodyUrl(req.body?.cancelUrl);
+  const returnUrl = normalizeStripeBodyUrl(req.body?.returnUrl);
+  const promotionCodeHeader = req.headers["x-newsflow-promo-code"];
+  const promotionCode =
+    typeof promotionCodeHeader === "string"
+      ? promotionCodeHeader
+      : Array.isArray(promotionCodeHeader)
+        ? promotionCodeHeader[0]
+        : null;
+
+  if (!isStripeBillingPlan(plan) || !successUrl || !cancelUrl) {
+    res.status(400).json({ message: "Invalid subscription upgrade payload." });
+    return;
+  }
 
   try {
-    const price = await stripeClient.prices.retrieve(priceId, { expand: ["product"] });
-
-    if (!price || typeof price.unit_amount !== "number") {
-      res.status(400).json({ message: "Price is not configured correctly." });
-      return;
-    }
-
-    const baseAmount = price.unit_amount;
-    const currency = price.currency.toLowerCase();
-    const emptyCodeResponse: PromotionPreviewResponse = {
-      valid: false,
-      code: null,
-      baseAmount,
-      finalAmount: baseAmount,
-      currency,
-      discountPercent: null,
-      amountOff: null,
-      reason: "No promotion code provided.",
-    };
-
-    if (!rawCode) {
-      res.json(emptyCodeResponse);
-      return;
-    }
-
-    const normalizedCode = rawCode.toUpperCase();
-    const promotionCodeList = await stripeClient.promotionCodes.list({
-      code: normalizedCode,
-      active: true,
-      limit: 10,
+    const result = await createCheckoutSessionForUser(prisma, {
+      userId: user.id,
+      plan,
+      annual,
+      successUrl,
+      cancelUrl,
+      returnUrl: returnUrl ?? successUrl,
+      promotionCode,
     });
-    const promotionCode = promotionCodeList.data.find(
-      (item) => item.code?.toUpperCase() === normalizedCode
-    );
 
-    if (!promotionCode) {
-      res.json({
-        ...emptyCodeResponse,
-        code: normalizedCode,
-        reason: "Promotion code is invalid or inactive.",
-      } satisfies PromotionPreviewResponse);
-      return;
-    }
+    res.json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
 
-    const couponField = promotionCode.promotion?.coupon;
-    if (!couponField) {
-      res.json({
-        ...emptyCodeResponse,
-        code: normalizedCode,
-        reason: "Promotion code does not contain a valid coupon.",
-      } satisfies PromotionPreviewResponse);
-      return;
-    }
+app.post("/api/auth/subscription/billing-portal", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
 
-    const coupon =
-      typeof couponField === "string"
-        ? await stripeClient.coupons.retrieve(couponField)
-        : couponField;
-    const allowedProducts = coupon.applies_to?.products ?? [];
-    const priceProductId =
-      typeof price.product === "string" ? price.product : price.product?.id;
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-    if (
-      allowedProducts.length > 0 &&
-      (!priceProductId || !allowedProducts.includes(priceProductId))
-    ) {
-      res.json({
-        ...emptyCodeResponse,
-        code: normalizedCode,
-        reason: "Promotion code does not apply to this plan.",
-      } satisfies PromotionPreviewResponse);
-      return;
-    }
+  const returnUrl = normalizeStripeBodyUrl(req.body?.returnUrl);
 
-    let finalAmount = baseAmount;
-    let discountPercent: number | null = null;
-    let amountOff: number | null = null;
+  if (!returnUrl) {
+    res.status(400).json({ message: "Invalid billing portal payload." });
+    return;
+  }
 
-    if (typeof coupon.percent_off === "number") {
-      discountPercent = coupon.percent_off;
-      finalAmount = Math.max(
-        0,
-        Math.round((baseAmount * (100 - coupon.percent_off)) / 100)
-      );
-    } else if (typeof coupon.amount_off === "number") {
-      const couponCurrency = coupon.currency?.toLowerCase();
-      if (couponCurrency && couponCurrency !== currency) {
-        res.json({
-          ...emptyCodeResponse,
-          code: normalizedCode,
-          reason: "Promotion code currency does not match plan currency.",
-        } satisfies PromotionPreviewResponse);
-        return;
-      }
-      amountOff = coupon.amount_off;
-      finalAmount = Math.max(0, baseAmount - coupon.amount_off);
-    }
+  try {
+    const result = await createBillingPortalSessionForUser(prisma, {
+      userId: user.id,
+      returnUrl,
+    });
 
-    res.json({
-      valid: true,
-      code: promotionCode.code?.toUpperCase() ?? normalizedCode,
-      baseAmount,
-      finalAmount,
-      currency,
-      discountPercent,
-      amountOff,
-      reason: null,
-    } satisfies PromotionPreviewResponse);
-  } catch {
-    res.status(500).json({ message: "Unable to validate promotion code." });
+    res.json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
+
+app.post("/api/auth/subscription/cancel", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
+
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const result = await cancelSubscriptionForUser(prisma, user.id);
+    res.json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
+
+app.post("/api/auth/subscription/restore", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
+
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const result = await restoreSubscriptionForUser(prisma, user.id);
+    res.json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
   }
 });
 

@@ -1,5 +1,10 @@
 import { ORPCError } from "@orpc/server";
 
+import {
+  buildStripeConfigUpdateData,
+  getStripeConfigRecord,
+  maskStripeConfigRecord,
+} from "@NewsFlow/auth/stripe-config";
 import prisma from "@NewsFlow/db";
 import {
   CONTENT_EXTRACT_JOB,
@@ -20,6 +25,7 @@ import type {
   RetryAdminQueueJobInput,
   TriggerAdminContentExtractInput,
   TriggerAdminFeedFetchInput,
+  UpdateAdminStripeConfigInput,
 } from "./admin-system-ops.schema";
 
 type PrismaClient = typeof prisma;
@@ -40,22 +46,40 @@ type QueueJobRecord = {
   retry: () => Promise<void>;
 };
 
-const rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
-const contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
+let rssQueue: ReturnType<typeof createQueue<RssFetchJobData>> | null = null;
+let contentQueue: ReturnType<typeof createQueue<ContentExtractJobData>> | null = null;
 
-const queueEntries = [
-  {
-    queueName: QUEUES.RSS_FETCH as AdminQueueName,
-    queue: rssQueue,
-  },
-  {
-    queueName: QUEUES.CONTENT_EXTRACT as AdminQueueName,
-    queue: contentQueue,
-  },
-] as const;
+function getRssQueue() {
+  if (!rssQueue) {
+    rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
+  }
+
+  return rssQueue;
+}
+
+function getContentQueue() {
+  if (!contentQueue) {
+    contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
+  }
+
+  return contentQueue;
+}
+
+function getQueueEntries() {
+  return [
+    {
+      queueName: QUEUES.RSS_FETCH as AdminQueueName,
+      queue: getRssQueue(),
+    },
+    {
+      queueName: QUEUES.CONTENT_EXTRACT as AdminQueueName,
+      queue: getContentQueue(),
+    },
+  ] as const;
+}
 
 function getQueueEntry(queueName: AdminQueueName) {
-  const entry = queueEntries.find((item) => item.queueName === queueName);
+  const entry = getQueueEntries().find((item) => item.queueName === queueName);
 
   if (!entry) {
     throw new ORPCError("BAD_REQUEST", {
@@ -129,7 +153,7 @@ function mapQueueJob(
 async function listQueueJobsInternal(input: ListAdminQueueJobsInput) {
   const selectedQueues = input.queueName
     ? [getQueueEntry(input.queueName)]
-    : [...queueEntries];
+    : [...getQueueEntries()];
 
   const jobsByQueue = await Promise.all(
     selectedQueues.map(async ({ queueName, queue }) => {
@@ -165,7 +189,7 @@ export async function getAdminSystemOpsOverview(db: PrismaClient) {
       readHeartbeat(HEARTBEAT_KEYS.scheduler.rss),
       readHeartbeat(HEARTBEAT_KEYS.scheduler.content),
       Promise.all(
-        queueEntries.map(async ({ queueName, queue }) => {
+        getQueueEntries().map(async ({ queueName, queue }) => {
           const counts = await queue.getJobCounts(
             "waiting",
             "active",
@@ -257,6 +281,82 @@ export async function getAdminSystemOpsOverview(db: PrismaClient) {
   };
 }
 
+export async function getAdminStripeConfig(
+  db: Pick<PrismaClient, "stripeConfig">
+) {
+  const record = await getStripeConfigRecord(db);
+  return maskStripeConfigRecord(record);
+}
+
+interface UpdateAdminStripeConfigParams extends UpdateAdminStripeConfigInput {
+  adminUserId: string;
+}
+
+export async function updateAdminStripeConfig(
+  db: PrismaClient,
+  input: UpdateAdminStripeConfigParams
+) {
+  const existing = await getStripeConfigRecord(db);
+  const nextData = await buildStripeConfigUpdateData({
+    ...input,
+    updatedByUserId: input.adminUserId,
+  });
+
+  const changedFields = Object.keys(nextData).filter(
+    (field) => field !== "updatedByUserId" && field !== "updatedAt"
+  );
+  const nextPublishableKey =
+    typeof nextData.publishableKey === "string" || nextData.publishableKey === null
+      ? nextData.publishableKey
+      : existing?.publishableKey ?? null;
+  const nextSecretKeyState =
+    typeof nextData.secretKeyEncrypted === "string"
+      ? "present"
+      : existing?.secretKeyEncrypted
+        ? "present"
+        : "missing";
+  const nextWebhookSecretState =
+    typeof nextData.webhookSecretEncrypted === "string"
+      ? "present"
+      : existing?.webhookSecretEncrypted
+        ? "present"
+        : "missing";
+
+  await db.$transaction(async (tx) => {
+    await tx.stripeConfig.upsert({
+      where: { id: "default" },
+      update: nextData,
+      create: {
+        id: "default",
+        ...nextData,
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "SYSTEM_OPS_STRIPE_CONFIG_UPDATED",
+      targetType: "SYSTEM_CONFIG",
+      targetId: "stripe",
+      metadata: {
+        previous: {
+          changedFields: changedFields.join(",") || undefined,
+          publishableKey: existing?.publishableKey ? "present" : "missing",
+          secretKey: existing?.secretKeyEncrypted ? "present" : "missing",
+          webhookSecret: existing?.webhookSecretEncrypted ? "present" : "missing",
+        },
+        next: {
+          changedFields: changedFields.join(",") || undefined,
+          publishableKey: nextPublishableKey ? "present" : "missing",
+          secretKey: nextSecretKeyState,
+          webhookSecret: nextWebhookSecretState,
+        },
+      },
+    });
+  });
+
+  return getAdminStripeConfig(db);
+}
+
 export async function listAdminQueueJobs(
   _db: PrismaClient,
   input: ListAdminQueueJobsInput
@@ -341,7 +441,7 @@ export async function triggerAdminFeedFetch(
 
   const jobId = `rss-fetch-${input.feedSourceId}`;
 
-  await rssQueue.add(
+  await getRssQueue().add(
     RSS_FETCH_JOB,
     {
       feedSourceId: input.feedSourceId,
@@ -398,7 +498,7 @@ export async function triggerAdminContentExtract(
 
   const jobId = `content-extract-${article.id}`;
 
-  await contentQueue.add(
+  await getContentQueue().add(
     CONTENT_EXTRACT_JOB,
     {
       sourceArticleId: article.id,

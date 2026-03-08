@@ -529,10 +529,9 @@ const cancelSubscriptionMutation = useMutation({
       disableRedirect: true,
     });
   },
-  onSuccess: async (data) => {
+  onSuccess: async () => {
     billingError.value = "";
-    billingSuccess.value = "Opening cancellation flow in Stripe...";
-    await openBillingUrl(data.url);
+    billingSuccess.value = "Subscription will cancel at the end of the current billing period.";
     await invalidateSubscriptionQueries();
   },
   onError: (error) => {

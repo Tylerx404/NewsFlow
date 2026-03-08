@@ -4,8 +4,16 @@ const HEARTBEAT_PREFIX = "newsflow:heartbeat";
 const DEFAULT_HEARTBEAT_TTL_SECONDS = 90;
 const DEFAULT_HEARTBEAT_INTERVAL_MS = 30_000;
 
-const redis = createRedisConnection();
+let redis: ReturnType<typeof createRedisConnection> | null = null;
 let connectPromise: Promise<void> | null = null;
+
+function getRedis() {
+  if (!redis) {
+    redis = createRedisConnection("heartbeat");
+  }
+
+  return redis;
+}
 
 export const HEARTBEAT_KEYS = {
   worker: `${HEARTBEAT_PREFIX}:worker`,
@@ -30,12 +38,14 @@ export interface HeartbeatTicker {
 }
 
 async function ensureRedisConnected() {
-  if (redis.status === "ready" || redis.status === "connecting") {
+  const client = getRedis();
+
+  if (client.status === "ready") {
     return;
   }
 
   if (!connectPromise) {
-    connectPromise = redis.connect().finally(() => {
+    connectPromise = client.connect().finally(() => {
       connectPromise = null;
     });
   }
@@ -69,12 +79,12 @@ export async function writeHeartbeat(
   const ttlSeconds = options?.ttlSeconds ?? DEFAULT_HEARTBEAT_TTL_SECONDS;
   const now = options?.now ?? new Date();
 
-  await redis.set(key, now.toISOString(), "EX", ttlSeconds);
+  await getRedis().set(key, now.toISOString(), "EX", ttlSeconds);
 }
 
 export async function clearHeartbeat(key: string) {
   await ensureRedisConnected();
-  await redis.del(key);
+  await getRedis().del(key);
 }
 
 export async function readHeartbeat(
@@ -89,7 +99,7 @@ export async function readHeartbeat(
 
   try {
     await ensureRedisConnected();
-    const rawValue = await redis.get(key);
+    const rawValue = await getRedis().get(key);
 
     if (!rawValue) {
       return {

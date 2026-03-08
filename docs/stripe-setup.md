@@ -1,76 +1,63 @@
-# Stripe Setup (Sandbox)
+# Stripe Setup (Admin System Ops)
 
-Tai lieu nay dung de setup nhanh Stripe sandbox cho NewsFlow.
+Tai lieu nay mo ta cach cau hinh Stripe cho NewsFlow tu admin UI.
 
-## 1) Tao Stripe sandbox
+## 1) Tao key va price trong Stripe
 
 1. Dang nhap Stripe Dashboard.
-2. Tao hoac chon mot sandbox environment.
-3. Vao `Developers > API keys` trong sandbox va copy:
-   - `Secret key` (`sk_test_...`)
+2. Chon dung environment sandbox/test.
+3. Vao `Developers > API keys` va copy:
    - `Publishable key` (`pk_test_...`)
+   - `Secret key` (`sk_test_...`)
+4. Tao webhook secret `whsec_...` cho endpoint:
+   - `http://localhost:3000/api/auth/stripe/webhook`
+5. Tao 3 product va recurring price:
+   - Basic: monthly + yearly
+   - Pro: monthly + yearly
+   - Max: monthly + yearly
 
-Luu y: Stripe sandbox va Stripe test mode deu dung key prefix `*_test_*`.
+## 2) Vao admin system ops de save config
 
-## 2) Tao Product va Price trong sandbox
+Dang nhap bang tai khoan `ADMIN`, mo:
 
-Tao 3 product:
-- Basic
-- Pro
-- Max
+- `http://localhost:3001/admin/system-ops`
 
-Moi product tao recurring price:
-- Monthly (bat buoc)
-- Yearly (khuyen nghi)
+Tai card `Stripe config`, nhap:
 
-Copy cac `price_...` ID:
-- `STRIPE_PRICE_BASIC_MONTHLY`
-- `STRIPE_PRICE_BASIC_YEARLY`
-- `STRIPE_PRICE_PRO_MONTHLY`
-- `STRIPE_PRICE_PRO_YEARLY`
-- `STRIPE_PRICE_MAX_MONTHLY`
-- `STRIPE_PRICE_MAX_YEARLY`
+- `Publishable key`
+- `Secret key`
+- `Webhook secret`
+- `Basic monthly price`
+- `Basic yearly price`
+- `Pro monthly price`
+- `Pro yearly price`
+- `Max monthly price`
+- `Max yearly price`
 
-## 3) Cau hinh env server
+Sau do bam `Save Stripe config`.
 
-Cap nhat vao `apps/server/.env` theo mau `apps/server/.env.example`.
+## 3) Env khong con chua STRIPE_*
 
-Bat buoc:
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-- `STRIPE_PRICE_BASIC_MONTHLY`
-- `STRIPE_PRICE_BASIC_YEARLY`
-- `STRIPE_PRICE_PRO_MONTHLY`
-- `STRIPE_PRICE_PRO_YEARLY`
-- `STRIPE_PRICE_MAX_MONTHLY`
-- `STRIPE_PRICE_MAX_YEARLY`
+NewsFlow khong doc `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, hay `STRIPE_PRICE_*` tu `apps/server/.env` nua.
 
-## 4) Cau hinh webhook cho sandbox
+Chi con cac env he thong nhu:
 
-Webhook endpoint cua server:
-- `http://localhost:3000/api/auth/stripe/webhook`
+- `DATABASE_URL`
+- `BETTER_AUTH_SECRET`
+- `BETTER_AUTH_URL`
+- `CORS_ORIGIN`
+- `AI_KEY_ENCRYPTION_SECRET`
+- `REDIS_URL`
 
-Co 2 cach:
+## 4) Kiem tra nhanh
 
-1. Dashboard webhook:
-   - Tao endpoint trong sandbox dashboard.
-   - Subscribe cac event subscription lien quan.
-   - Copy signing secret `whsec_...` vao `STRIPE_WEBHOOK_SECRET`.
-2. Stripe CLI (dev local):
-   - Chay `stripe listen --forward-to http://localhost:3000/api/auth/stripe/webhook`
-   - Copy `whsec_...` in ra terminal vao `STRIPE_WEBHOOK_SECRET`.
+1. Mo `http://localhost:3001/admin/system-ops`
+2. Xac nhan `Stripe config` hien `Configured`
+3. Dang nhap user thuong va mo `http://localhost:3001/settings/personal`
+4. Thu tao checkout session hoac mo billing portal
 
-## 5) Kiem tra nhanh
+## 5) Promotion code (voucher)
 
-```bash
-bun run check-types
-```
-
-Neu thieu bien env bat buoc, `@NewsFlow/env/server` se bao loi som luc khoi dong.
-
-## 6) Promotion code (voucher)
-
-- NewsFlow cho phep nguoi dung nhap ma giam gia ngay tren man hinh Subscription (settings/personal).
-- Sau khi bam `Apply`, app preview gia sau giam va tu dong ap ma khi tao Stripe Checkout.
-- Nguoi dung nhap code text (vi du: `SUMMER26`, `GIAM20`), khong nhap `promo_...` ID.
-- Trang thai active/expired, so lan su dung, va ty le giam duoc quan ly trong Stripe Dashboard.
+- Voucher code van duoc nhap o man hinh subscription trong `settings/personal`
+- App se preview gia qua Stripe va ap vao checkout neu code hop le
+- Nguoi dung nhap text code (vi du `SUMMER26`), khong nhap `promo_...`
