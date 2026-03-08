@@ -14,22 +14,22 @@
     "@NewsFlow/auth": "workspace:*",
     "@NewsFlow/db": "workspace:*",
     "@NewsFlow/env": "workspace:*",
-    "@orpc/openapi": "^1.13.5",
-    "@orpc/server": "^1.13.5",
-    "@orpc/zod": "^1.13.5",
-    "better-auth": "^1.4.19",
+    "@orpc/openapi": "^1.13.6",
+    "@orpc/server": "^1.13.6",
+    "@orpc/zod": "^1.13.6",
+    "better-auth": "^1.5.4",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "stripe": "20.4.0",
+    "stripe": "20.4.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@NewsFlow/config": "workspace:*",
-    "@types/bun": "^1.3.9",
+    "@types/bun": "^1.3.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "tsdown": "^0.20.3",
+    "tsdown": "^0.21.0",
     "typescript": "^5.9.3"
   }
 }
