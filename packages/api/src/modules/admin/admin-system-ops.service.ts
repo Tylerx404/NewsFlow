@@ -40,22 +40,40 @@ type QueueJobRecord = {
   retry: () => Promise<void>;
 };
 
-const rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
-const contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
+let rssQueue: ReturnType<typeof createQueue<RssFetchJobData>> | null = null;
+let contentQueue: ReturnType<typeof createQueue<ContentExtractJobData>> | null = null;
 
-const queueEntries = [
-  {
-    queueName: QUEUES.RSS_FETCH as AdminQueueName,
-    queue: rssQueue,
-  },
-  {
-    queueName: QUEUES.CONTENT_EXTRACT as AdminQueueName,
-    queue: contentQueue,
-  },
-] as const;
+function getRssQueue() {
+  if (!rssQueue) {
+    rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
+  }
+
+  return rssQueue;
+}
+
+function getContentQueue() {
+  if (!contentQueue) {
+    contentQueue = createQueue<ContentExtractJobData>(QUEUES.CONTENT_EXTRACT);
+  }
+
+  return contentQueue;
+}
+
+function getQueueEntries() {
+  return [
+    {
+      queueName: QUEUES.RSS_FETCH as AdminQueueName,
+      queue: getRssQueue(),
+    },
+    {
+      queueName: QUEUES.CONTENT_EXTRACT as AdminQueueName,
+      queue: getContentQueue(),
+    },
+  ] as const;
+}
 
 function getQueueEntry(queueName: AdminQueueName) {
-  const entry = queueEntries.find((item) => item.queueName === queueName);
+  const entry = getQueueEntries().find((item) => item.queueName === queueName);
 
   if (!entry) {
     throw new ORPCError("BAD_REQUEST", {
@@ -129,7 +147,7 @@ function mapQueueJob(
 async function listQueueJobsInternal(input: ListAdminQueueJobsInput) {
   const selectedQueues = input.queueName
     ? [getQueueEntry(input.queueName)]
-    : [...queueEntries];
+    : [...getQueueEntries()];
 
   const jobsByQueue = await Promise.all(
     selectedQueues.map(async ({ queueName, queue }) => {
@@ -165,7 +183,7 @@ export async function getAdminSystemOpsOverview(db: PrismaClient) {
       readHeartbeat(HEARTBEAT_KEYS.scheduler.rss),
       readHeartbeat(HEARTBEAT_KEYS.scheduler.content),
       Promise.all(
-        queueEntries.map(async ({ queueName, queue }) => {
+        getQueueEntries().map(async ({ queueName, queue }) => {
           const counts = await queue.getJobCounts(
             "waiting",
             "active",
@@ -341,7 +359,7 @@ export async function triggerAdminFeedFetch(
 
   const jobId = `rss-fetch-${input.feedSourceId}`;
 
-  await rssQueue.add(
+  await getRssQueue().add(
     RSS_FETCH_JOB,
     {
       feedSourceId: input.feedSourceId,
@@ -398,7 +416,7 @@ export async function triggerAdminContentExtract(
 
   const jobId = `content-extract-${article.id}`;
 
-  await contentQueue.add(
+  await getContentQueue().add(
     CONTENT_EXTRACT_JOB,
     {
       sourceArticleId: article.id,

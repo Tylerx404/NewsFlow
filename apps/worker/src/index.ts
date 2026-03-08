@@ -11,6 +11,7 @@ const { env } = await import("@NewsFlow/env/server");
 const { startJobRunner } = await import("@NewsFlow/queue");
 
 console.log(`Worker is starting in ${env.NODE_ENV} mode`);
+
 startJobRunner();
 
 

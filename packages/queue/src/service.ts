@@ -21,9 +21,21 @@ export type WorkerProcessor<TData = unknown, TResult = unknown> = (
 // Worker instance types
 export type WorkerInstance = Worker;
 
+function attachQueueErrorHandler(target: Queue, name: string) {
+  target.on("error", (error: Error) => {
+    console.warn(`queue ${name} Redis error: ${error.message}`);
+  });
+}
+
+function attachWorkerErrorHandler(target: Worker, name: string) {
+  target.on("error", (error: Error) => {
+    console.warn(`worker ${name} Redis error: ${error.message}`);
+  });
+}
+
 // Create queue factory
 export const createQueue = <TData = unknown>(name: string) => {
-  return new Queue<TData>(name, {
+  const queue = new Queue<TData>(name, {
     connection: redisConnection,
     defaultJobOptions: {
       removeOnComplete: 100,
@@ -35,6 +47,10 @@ export const createQueue = <TData = unknown>(name: string) => {
       },
     },
   });
+
+  attachQueueErrorHandler(queue, name);
+
+  return queue;
 };
 
 // Create worker factory
@@ -42,7 +58,7 @@ export const createWorker = <TData = unknown, TResult = unknown>(
   name: string,
   processor: WorkerProcessor<TData, TResult>
 ) => {
-  return new Worker<TData, TResult>(name, processor, {
+  const worker = new Worker<TData, TResult>(name, processor, {
     connection: redisConnection,
     concurrency: 5,
     limiter: {
@@ -50,6 +66,10 @@ export const createWorker = <TData = unknown, TResult = unknown>(
       duration: 1000,
     },
   });
+
+  attachWorkerErrorHandler(worker, name);
+
+  return worker;
 };
 
 // RSS parser instance
