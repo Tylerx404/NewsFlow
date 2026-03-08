@@ -6,11 +6,11 @@
   "locale": {
     "label": "Ngôn ngữ",
     "options": {
-      "en": "Tiếng Anh",
+      "en": "English",
       "vi": "Tiếng Việt",
-      "zh": "Tiếng Trung",
-      "kr": "Tiếng Hàn",
-      "jp": "Tiếng Nhật"
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
     }
   },
   "common": {
@@ -572,168 +572,168 @@
   },
   "admin": {
     "common": {
-      "action": "Action",
-      "actions": "Actions",
-      "confirm": "Confirm",
-      "open": "Open",
-      "edit": "Edit",
-      "detail": "Details",
+      "action": "Thao tác",
+      "actions": "Hành động",
+      "confirm": "Xác nhận",
+      "open": "Mở",
+      "edit": "Chỉnh sửa",
+      "detail": "Chi tiết",
       "id": "ID",
-      "yes": "Yes",
-      "no": "No",
-      "updating": "Updating...",
-      "queueing": "Queuing...",
-      "notAvailable": "N/A",
-      "noHeartbeat": "No heartbeat",
-      "lastHeartbeat": "Last heartbeat",
-      "expiresAt": "expires",
+      "yes": "Có",
+      "no": "Không",
+      "updating": "Đang cập nhật...",
+      "queueing": "Đang đưa vào hàng đợi...",
+      "notAvailable": "Không có",
+      "noHeartbeat": "Không có heartbeat",
+      "lastHeartbeat": "Heartbeat gần nhất",
+      "expiresAt": "hết hạn",
       "roles": {
-        "user": "User",
-        "admin": "Admin"
+        "user": "Người dùng",
+        "admin": "Quản trị viên"
       },
       "accountStatus": {
-        "active": "Active",
-        "suspended": "Suspended"
+        "active": "Hoạt động",
+        "suspended": "Đã tạm khóa"
       },
       "eventStatus": {
-        "success": "Success",
-        "failed": "Failed"
+        "success": "Thành công",
+        "failed": "Thất bại"
       },
       "runtimeNodes": {
         "worker": "Worker",
-        "rssScheduler": "RSS scheduler",
-        "contentScheduler": "Content scheduler"
+        "rssScheduler": "Bộ lập lịch RSS",
+        "contentScheduler": "Bộ lập lịch nội dung"
       },
       "runtimeStates": {
-        "healthy": "Healthy",
-        "stale": "Stale",
-        "offline": "Offline",
-        "unknown": "Unknown"
+        "healthy": "Ổn định",
+        "stale": "Cũ",
+        "offline": "Ngoại tuyến",
+        "unknown": "Không rõ"
       },
       "queueName": {
-        "rssFetch": "RSS fetch",
-        "contentExtract": "Content extract"
+        "rssFetch": "Lấy RSS",
+        "contentExtract": "Trích xuất nội dung"
       },
       "queueState": {
-        "waiting": "Waiting",
-        "active": "Active",
-        "failed": "Failed",
-        "delayed": "Delayed",
-        "completed": "Completed"
+        "waiting": "Đang chờ",
+        "active": "Đang chạy",
+        "failed": "Thất bại",
+        "delayed": "Trì hoãn",
+        "completed": "Hoàn tất"
       },
       "subscriptionTier": {
-        "free": "Free",
-        "basic": "Basic",
+        "free": "Miễn phí",
+        "basic": "Cơ bản",
         "pro": "Pro",
         "max": "Max"
       },
       "billingInterval": {
-        "monthly": "Monthly",
-        "yearly": "Yearly"
+        "monthly": "Hàng tháng",
+        "yearly": "Hàng năm"
       },
       "stripe": {
-        "customer": "Customer",
-        "subscription": "Subscription",
-        "price": "Price"
+        "customer": "Khách hàng",
+        "subscription": "Gói đăng ký",
+        "price": "Giá"
       },
       "age": {
-        "label": "Age",
-        "secondsAgo": "{value}s ago",
-        "minutesAgo": "{value}m ago",
-        "hoursAgo": "{value}h ago",
-        "secondsShort": "{value}s",
-        "minutesShort": "{value}m",
-        "hoursShort": "{value}h"
+        "label": "Thời gian",
+        "secondsAgo": "{value} giây trước",
+        "minutesAgo": "{value} phút trước",
+        "hoursAgo": "{value} giờ trước",
+        "secondsShort": "{value}gi",
+        "minutesShort": "{value}ph",
+        "hoursShort": "{value}g"
       }
     },
     "operations": {
-      "metaTitle": "Admin Operations",
+      "metaTitle": "Vận hành quản trị",
       "overview": {
-        "title": "Operations overview",
-        "description": "Monitor AI usage, queue health, and runtime heartbeat status.",
+        "title": "Tổng quan vận hành",
+        "description": "Theo dõi mức sử dụng AI, sức khỏe hàng đợi và trạng thái heartbeat runtime.",
         "metrics": {
           "aiTokens7d": {
-            "title": "AI tokens (7d)",
-            "description": "Total token usage in the last 7 days."
+            "title": "Token AI (7 ngày)",
+            "description": "Tổng số token đã dùng trong 7 ngày gần nhất."
           },
           "aiRequests7d": {
-            "title": "AI requests (7d)",
-            "description": "Total summarize requests in the last 7 days."
+            "title": "Yêu cầu AI (7 ngày)",
+            "description": "Tổng số yêu cầu tóm tắt trong 7 ngày gần nhất."
           },
           "aiFailures7d": {
-            "title": "AI failures (7d)",
-            "description": "Failed summarize attempts in the last 7 days."
+            "title": "Lỗi AI (7 ngày)",
+            "description": "Số lần tóm tắt thất bại trong 7 ngày gần nhất."
           },
           "failedQueueJobs": {
-            "title": "Failed queue jobs",
-            "description": "Current failed jobs across worker queues."
+            "title": "Job hàng đợi lỗi",
+            "description": "Số job lỗi hiện tại trên các hàng đợi worker."
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for fetch scheduling."
+            "title": "Feed cũ",
+            "description": "Các feed đang bật nhưng đang chờ lên lịch fetch."
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for content extraction."
+            "title": "Hàng chờ trích xuất",
+            "description": "Các bài viết đang chờ trích xuất nội dung."
           }
         }
       },
       "runtimeHealth": {
-        "title": "Runtime health",
-        "description": "Heartbeat status for worker and schedulers."
+        "title": "Sức khỏe runtime",
+        "description": "Trạng thái heartbeat của worker và scheduler."
       },
       "drillDown": {
-        "title": "Drill-down",
-        "description": "Open detailed pages to inspect AI events or perform queue actions.",
-        "openAiUsage": "Open AI usage",
-        "openSystemOps": "Open system ops"
+        "title": "Xem chi tiết",
+        "description": "Mở các trang chi tiết để kiểm tra sự kiện AI hoặc thao tác với hàng đợi.",
+        "openAiUsage": "Mở trang sử dụng AI",
+        "openSystemOps": "Mở trang vận hành hệ thống"
       },
       "recentFailedJobs": {
-        "title": "Recent failed jobs",
-        "description": "Latest queue failures across RSS fetch and content extraction workers.",
-        "empty": "No recent failed jobs in queue history.",
-        "noFailureReason": "No failure reason available.",
+        "title": "Job lỗi gần đây",
+        "description": "Các lỗi hàng đợi mới nhất từ worker lấy RSS và trích xuất nội dung.",
+        "empty": "Không có job lỗi gần đây trong lịch sử hàng đợi.",
+        "noFailureReason": "Không có lý do lỗi.",
         "columns": {
-          "queue": "Queue",
+          "queue": "Hàng đợi",
           "job": "Job",
-          "failure": "Failure",
-          "time": "Time"
+          "failure": "Lỗi",
+          "time": "Thời gian"
         }
       },
       "errors": {
-        "aiUsageSummary": "Could not load AI usage summary.",
-        "systemOverview": "Could not load system overview.",
-        "runtimeHealth": "Could not load runtime health data.",
-        "recentQueueFailures": "Could not load recent queue failures."
+        "aiUsageSummary": "Không thể tải tổng hợp sử dụng AI.",
+        "systemOverview": "Không thể tải tổng quan hệ thống.",
+        "runtimeHealth": "Không thể tải dữ liệu sức khỏe runtime.",
+        "recentQueueFailures": "Không thể tải các lỗi hàng đợi gần đây."
       }
     },
     "aiUsage": {
-      "metaTitle": "Admin AI Usage",
+      "metaTitle": "Sử dụng AI quản trị",
       "page": {
-        "title": "AI usage",
-        "description": "Inspect usage events, recent failures, and AI config state.",
-        "manageConfigs": "Manage AI configs"
+        "title": "Sử dụng AI",
+        "description": "Kiểm tra các sự kiện sử dụng, lỗi gần đây và trạng thái cấu hình AI.",
+        "manageConfigs": "Quản lý cấu hình AI"
       },
       "summary": {
-        "title": "Summary (7 days)",
-        "description": "Token usage and failure trends for admin support visibility.",
-        "totalTokens": "Total tokens",
-        "totalRequests": "Total requests",
-        "failures": "Failures",
-        "topUser": "Top user",
-        "empty7Days": "No AI usage requests recorded in the last 7 days."
+        "title": "Tổng hợp (7 ngày)",
+        "description": "Xu hướng sử dụng token và lỗi để hỗ trợ theo dõi quản trị.",
+        "totalTokens": "Tổng token",
+        "totalRequests": "Tổng yêu cầu",
+        "failures": "Lỗi",
+        "topUser": "Người dùng nhiều nhất",
+        "empty7Days": "Không có yêu cầu AI nào được ghi nhận trong 7 ngày gần nhất."
       },
       "filters": {
-        "title": "Filters",
-        "description": "Filter by user, provider, model, status, and time range.",
-        "from": "From",
-        "to": "To",
+        "title": "Bộ lọc",
+        "description": "Lọc theo người dùng, nhà cung cấp, model, trạng thái và khoảng thời gian.",
+        "from": "Từ",
+        "to": "Đến",
         "user": {
-          "label": "User",
-          "placeholder": "Search name or email"
+          "label": "Người dùng",
+          "placeholder": "Tìm theo tên hoặc email"
         },
         "provider": {
-          "label": "Provider",
+          "label": "Nhà cung cấp",
           "placeholder": "openai, anthropic..."
         },
         "model": {
@@ -741,544 +741,544 @@
           "placeholder": "gpt-4.1..."
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "Trạng thái",
+          "all": "Tất cả trạng thái"
         }
       },
       "events": {
-        "title": "AI events",
-        "description": "Recent summarize activity with success/failure status and safe error summaries."
+        "title": "Sự kiện AI",
+        "description": "Hoạt động tóm tắt gần đây với trạng thái thành công/thất bại và tóm tắt lỗi an toàn."
       },
       "table": {
         "columns": {
-          "user": "User",
-          "providerModel": "Provider / model",
-          "status": "Status",
-          "tokens": "Tokens",
-          "duration": "Duration",
-          "errorSummary": "Error summary",
-          "created": "Created"
+          "user": "Người dùng",
+          "providerModel": "Nhà cung cấp / model",
+          "status": "Trạng thái",
+          "tokens": "Token",
+          "duration": "Thời lượng",
+          "errorSummary": "Tóm tắt lỗi",
+          "created": "Tạo lúc"
         },
-        "empty": "No AI usage events match the current filters."
+        "empty": "Không có sự kiện AI nào khớp với bộ lọc hiện tại."
       },
       "configDialog": {
-        "title": "AI config controls",
-        "description": "Review config ownership and toggle individual configs.",
-        "empty": "No AI configs match the current filters.",
+        "title": "Điều khiển cấu hình AI",
+        "description": "Xem quyền sở hữu cấu hình và bật/tắt từng cấu hình.",
+        "empty": "Không có cấu hình AI nào khớp với bộ lọc hiện tại.",
         "badges": {
-          "default": "Default"
+          "default": "Mặc định"
         },
         "select": {
-          "title": "Select config",
-          "description": "Choose a config to inspect and toggle.",
-          "placeholder": "Select an AI config"
+          "title": "Chọn cấu hình",
+          "description": "Chọn một cấu hình để xem và bật/tắt.",
+          "placeholder": "Chọn một cấu hình AI"
         },
         "fields": {
-          "owner": "Owner",
+          "owner": "Chủ sở hữu",
           "baseUrl": "Base URL",
-          "defaultProviderUrl": "Default provider URL",
-          "updated": "Updated"
+          "defaultProviderUrl": "URL nhà cung cấp mặc định",
+          "updated": "Cập nhật lúc"
         },
         "actions": {
-          "enable": "Enable config",
-          "disable": "Disable config",
-          "updating": "Updating..."
+          "enable": "Bật cấu hình",
+          "disable": "Tắt cấu hình",
+          "updating": "Đang cập nhật..."
         },
         "confirm": {
-          "enableTitle": "Enable this AI config?",
-          "disableTitle": "Disable this AI config?",
-          "enableDescription": "Enable {name}. Summarize requests can use this config again.",
-          "disableDescription": "Disable {name}. Summarize requests using this config will be blocked."
+          "enableTitle": "Bật cấu hình AI này?",
+          "disableTitle": "Tắt cấu hình AI này?",
+          "enableDescription": "Bật {name}. Các yêu cầu tóm tắt có thể dùng lại cấu hình này.",
+          "disableDescription": "Tắt {name}. Các yêu cầu tóm tắt dùng cấu hình này sẽ bị chặn."
         }
       },
       "errors": {
-        "summary": "Could not load AI usage summary.",
-        "events": "Could not load AI usage events.",
-        "configs": "Could not load AI configs.",
-        "updateConfig": "Could not update this AI config."
+        "summary": "Không thể tải tổng hợp sử dụng AI.",
+        "events": "Không thể tải các sự kiện sử dụng AI.",
+        "configs": "Không thể tải các cấu hình AI.",
+        "updateConfig": "Không thể cập nhật cấu hình AI này."
       }
     },
     "users": {
-      "metaTitle": "Admin Users",
+      "metaTitle": "Người dùng quản trị",
       "page": {
-        "title": "Admin users",
-        "description": "Review user accounts, subscription state, and account status actions."
+        "title": "Người dùng quản trị",
+        "description": "Xem tài khoản người dùng, trạng thái gói đăng ký và thao tác trạng thái tài khoản."
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search users and narrow results by role, account status, or subscription tier.",
+        "title": "Bộ lọc",
+        "description": "Tìm người dùng và thu hẹp kết quả theo vai trò, trạng thái tài khoản hoặc gói đăng ký.",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "Tìm kiếm",
+          "placeholder": "Tên hoặc email"
         },
         "role": {
-          "label": "Role",
-          "all": "All roles"
+          "label": "Vai trò",
+          "all": "Tất cả vai trò"
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "Trạng thái",
+          "all": "Tất cả trạng thái"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "Gói",
+          "all": "Tất cả gói"
         }
       },
       "directory": {
-        "title": "User directory",
-        "description": "Open a user row to review details and update account status."
+        "title": "Danh sách người dùng",
+        "description": "Mở một dòng người dùng để xem chi tiết và cập nhật trạng thái tài khoản."
       },
       "table": {
         "columns": {
-          "user": "User",
-          "role": "Role",
-          "status": "Status",
-          "subscription": "Subscription",
-          "feeds": "Feeds",
-          "created": "Created"
+          "user": "Người dùng",
+          "role": "Vai trò",
+          "status": "Trạng thái",
+          "subscription": "Gói đăng ký",
+          "feeds": "Feed",
+          "created": "Tạo lúc"
         },
-        "empty": "No users match the current filters. Adjust role, status, or plan filters to widen the result.",
-        "hasMore": "More users are available. Refine filters to narrow the result set."
+        "empty": "Không có người dùng nào khớp với bộ lọc hiện tại. Hãy nới bộ lọc vai trò, trạng thái hoặc gói.",
+        "hasMore": "Còn nhiều người dùng hơn. Hãy tinh chỉnh bộ lọc để thu hẹp kết quả."
       },
       "detail": {
-        "title": "User details",
-        "description": "Review account state, subscription details, and support actions.",
-        "empty": "Select a user to review account details.",
+        "title": "Chi tiết người dùng",
+        "description": "Xem trạng thái tài khoản, thông tin gói đăng ký và các thao tác hỗ trợ.",
+        "empty": "Chọn một người dùng để xem chi tiết tài khoản.",
         "accountSummary": {
-          "title": "Account summary",
-          "description": "Membership and feed usage at a glance.",
-          "created": "Created",
-          "updated": "Updated",
-          "feeds": "Feeds",
-          "suspendedAt": "Suspended at"
+          "title": "Tóm tắt tài khoản",
+          "description": "Tổng quan nhanh về thành viên và mức sử dụng feed.",
+          "created": "Tạo lúc",
+          "updated": "Cập nhật lúc",
+          "feeds": "Feed",
+          "suspendedAt": "Tạm khóa lúc"
         },
         "subscription": {
-          "title": "Subscription",
-          "description": "Tier, billing cadence, and current expiry.",
-          "plan": "Plan",
-          "status": "Subscription status",
-          "expires": "Expires"
+          "title": "Gói đăng ký",
+          "description": "Gói, chu kỳ thanh toán và thời điểm hết hạn hiện tại.",
+          "plan": "Gói",
+          "status": "Trạng thái đăng ký",
+          "expires": "Hết hạn"
         },
         "actions": {
-          "title": "Account actions",
-          "description": "Suspend or reactivate the user account.",
-          "suspendReasonPlaceholder": "Optional suspension reason",
-          "suspendReasonHint": "The reason is visible to admins in the detail view and audit log.",
-          "suspensionReason": "Suspension reason",
-          "noReason": "No reason provided.",
-          "suspend": "Suspend user",
-          "suspending": "Suspending...",
-          "reactivate": "Reactivate user",
-          "reactivating": "Reactivating..."
+          "title": "Hành động tài khoản",
+          "description": "Tạm khóa hoặc kích hoạt lại tài khoản người dùng.",
+          "suspendReasonPlaceholder": "Lý do tạm khóa (không bắt buộc)",
+          "suspendReasonHint": "Lý do này hiển thị với admin trong trang chi tiết và log kiểm tra.",
+          "suspensionReason": "Lý do tạm khóa",
+          "noReason": "Không có lý do.",
+          "suspend": "Tạm khóa người dùng",
+          "suspending": "Đang tạm khóa...",
+          "reactivate": "Kích hoạt lại người dùng",
+          "reactivating": "Đang kích hoạt lại..."
         },
         "confirm": {
-          "thisUser": "this user",
+          "thisUser": "người dùng này",
           "suspend": {
-            "title": "Suspend this user?",
-            "description": "Suspend {name}. They lose access to protected routes until an admin reactivates the account.",
-            "descriptionWithReason": "Suspend {name}. The reason \"{reason}\" will be saved to the admin audit log."
+            "title": "Tạm khóa người dùng này?",
+            "description": "Tạm khóa {name}. Họ sẽ mất quyền truy cập vào các route bảo vệ cho tới khi admin kích hoạt lại tài khoản.",
+            "descriptionWithReason": "Tạm khóa {name}. Lý do \"{reason}\" sẽ được lưu vào nhật ký kiểm tra của admin."
           },
           "reactivate": {
-            "title": "Reactivate this user?",
-            "description": "Restore access for {name}. Protected routes become available again immediately."
+            "title": "Kích hoạt lại người dùng này?",
+            "description": "Khôi phục quyền truy cập cho {name}. Các route bảo vệ sẽ dùng lại ngay lập tức."
           }
         }
       },
       "errors": {
-        "list": "Could not load admin users. Refresh and try again.",
-        "suspend": "Could not suspend this user. Try again.",
-        "reactivate": "Could not reactivate this user. Try again."
+        "list": "Không thể tải danh sách người dùng quản trị. Hãy làm mới và thử lại.",
+        "suspend": "Không thể tạm khóa người dùng này. Hãy thử lại.",
+        "reactivate": "Không thể kích hoạt lại người dùng này. Hãy thử lại."
       }
     },
     "subscriptions": {
-      "metaTitle": "Admin Subscriptions",
+      "metaTitle": "Gói đăng ký quản trị",
       "page": {
-        "title": "Admin subscriptions",
-        "description": "Review billing state and apply support-oriented subscription changes."
+        "title": "Gói đăng ký quản trị",
+        "description": "Xem trạng thái thanh toán và áp dụng các thay đổi hỗ trợ cho gói đăng ký."
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search by user and narrow the billing slice by plan, status, cadence, or cancellation flag.",
+        "title": "Bộ lọc",
+        "description": "Tìm theo người dùng và thu hẹp danh sách theo gói, trạng thái, chu kỳ hoặc cờ hủy.",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "Tìm kiếm",
+          "placeholder": "Tên hoặc email"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "Gói",
+          "all": "Tất cả gói"
         },
         "billing": {
-          "label": "Billing",
-          "all": "All billing"
+          "label": "Thanh toán",
+          "all": "Tất cả kiểu thanh toán"
         },
         "cancelFlag": {
-          "label": "Cancel flag",
-          "all": "All flags",
-          "canceling": "Canceling",
-          "continuing": "Continuing"
+          "label": "Cờ hủy",
+          "all": "Tất cả cờ",
+          "canceling": "Đang hủy",
+          "continuing": "Tiếp tục"
         }
       },
       "directory": {
-        "title": "Subscription directory",
-        "description": "Open a row to inspect support controls and persist changes."
+        "title": "Danh sách gói đăng ký",
+        "description": "Mở một dòng để xem điều khiển hỗ trợ và lưu thay đổi."
       },
       "table": {
         "columns": {
-          "user": "User",
-          "plan": "Plan",
-          "status": "Status",
-          "expires": "Expires",
-          "stripeIds": "Stripe IDs"
+          "user": "Người dùng",
+          "plan": "Gói",
+          "status": "Trạng thái",
+          "expires": "Hết hạn",
+          "stripeIds": "Stripe ID"
         },
-        "cancelAtPeriodEnd": "Cancel at period end",
-        "empty": "No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.",
-        "hasMore": "More subscriptions are available. Narrow the filters to inspect a smaller slice."
+        "cancelAtPeriodEnd": "Hủy vào cuối kỳ",
+        "empty": "Không có gói đăng ký nào khớp với bộ lọc hiện tại. Hãy điều chỉnh bộ lọc thanh toán để xem nhiều hơn.",
+        "hasMore": "Còn nhiều gói đăng ký hơn. Hãy thu hẹp bộ lọc để xem phạm vi nhỏ hơn."
       },
       "edit": {
-        "title": "Edit subscription",
-        "description": "Support plan changes, expiry adjustments, and cancellation flags.",
-        "empty": "Select a subscription row to edit support settings.",
-        "currentExpiry": "Current expiry",
+        "title": "Chỉnh sửa gói đăng ký",
+        "description": "Hỗ trợ đổi gói, điều chỉnh thời hạn và cờ hủy.",
+        "empty": "Chọn một dòng gói đăng ký để chỉnh sửa thiết lập hỗ trợ.",
+        "currentExpiry": "Hết hạn hiện tại",
         "fields": {
-          "tier": "Tier",
-          "expiry": "Expires at",
-          "cancellation": "Cancel at period end"
+          "tier": "Gói",
+          "expiry": "Hết hạn lúc",
+          "cancellation": "Hủy vào cuối kỳ"
         },
         "controls": {
-          "title": "Support controls",
-          "description": "Adjust billing and support flags for this user.",
-          "tierPlaceholder": "Select tier",
-          "cancelAtPeriodEndHint": "Preserve subscription until the current paid period ends.",
-          "save": "Save changes",
-          "saving": "Saving...",
-          "noPendingChanges": "No pending changes to save.",
-          "pendingFields": "Pending fields: {fields}."
+          "title": "Điều khiển hỗ trợ",
+          "description": "Điều chỉnh thông tin thanh toán và cờ hỗ trợ cho người dùng này.",
+          "tierPlaceholder": "Chọn gói",
+          "cancelAtPeriodEndHint": "Giữ gói đăng ký cho tới khi kỳ thanh toán hiện tại kết thúc.",
+          "save": "Lưu thay đổi",
+          "saving": "Đang lưu...",
+          "noPendingChanges": "Không có thay đổi nào để lưu.",
+          "pendingFields": "Các trường đang chờ: {fields}."
         },
         "confirm": {
-          "title": "Save subscription changes?",
-          "confirmLabel": "Save subscription changes",
-          "theseChanges": "these changes",
-          "description": "Apply {fields} for {name}. These updates are recorded in the admin audit log.",
-          "descriptionFallback": "Apply the pending subscription changes."
+          "title": "Lưu thay đổi gói đăng ký?",
+          "confirmLabel": "Lưu thay đổi gói đăng ký",
+          "theseChanges": "những thay đổi này",
+          "description": "Áp dụng {fields} cho {name}. Các cập nhật này sẽ được ghi vào nhật ký kiểm tra của admin.",
+          "descriptionFallback": "Áp dụng các thay đổi gói đăng ký đang chờ."
         }
       },
       "errors": {
-        "list": "Could not load subscriptions. Refresh and try again.",
-        "update": "Could not update this subscription. Review the changes and try again."
+        "list": "Không thể tải các gói đăng ký. Hãy làm mới và thử lại.",
+        "update": "Không thể cập nhật gói đăng ký này. Hãy kiểm tra lại thay đổi và thử lại."
       }
     },
     "feeds": {
-      "metaTitle": "Admin Feeds",
+      "metaTitle": "Feed quản trị",
       "page": {
-        "title": "Admin feeds",
-        "description": "Track system-wide feed health and trigger operational queue actions."
+        "title": "Feed quản trị",
+        "description": "Theo dõi sức khỏe feed toàn hệ thống và kích hoạt các hành động vận hành hàng đợi."
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.",
+        "title": "Bộ lọc",
+        "description": "Tìm feed và tập trung theo trạng thái bật/tắt, lỗi, lịch cũ hoặc lỗi trích xuất.",
         "search": {
-          "label": "Search",
-          "placeholder": "Feed title or URL"
+          "label": "Tìm kiếm",
+          "placeholder": "Tiêu đề feed hoặc URL"
         },
         "enabled": {
-          "label": "Enabled",
-          "all": "All feeds"
+          "label": "Đang bật",
+          "all": "Tất cả feed"
         },
         "errors": {
-          "label": "Errors",
-          "all": "All error states",
-          "hasErrors": "Has errors",
-          "healthy": "Healthy"
+          "label": "Lỗi",
+          "all": "Tất cả trạng thái lỗi",
+          "hasErrors": "Có lỗi",
+          "healthy": "Ổn định"
         },
         "stale": {
-          "label": "Stale",
-          "all": "All freshness states",
-          "stale": "Stale",
-          "scheduled": "Scheduled"
+          "label": "Cũ",
+          "all": "Tất cả trạng thái độ mới",
+          "stale": "Cũ",
+          "scheduled": "Đúng lịch"
         },
         "extraction": {
-          "label": "Extraction",
-          "all": "All extraction states",
-          "hasFailures": "Has failures",
-          "healthy": "Healthy"
+          "label": "Trích xuất",
+          "all": "Tất cả trạng thái trích xuất",
+          "hasFailures": "Có lỗi",
+          "healthy": "Ổn định"
         }
       },
       "operations": {
-        "title": "Feed operations",
-        "description": "Use quick actions or open a feed for detailed operational context."
+        "title": "Vận hành feed",
+        "description": "Dùng thao tác nhanh hoặc mở feed để xem ngữ cảnh vận hành chi tiết."
       },
       "table": {
         "columns": {
           "feed": "Feed",
-          "enabled": "Enabled",
-          "health": "Health",
-          "coverage": "Coverage",
-          "lastFetched": "Last fetched"
+          "enabled": "Bật",
+          "health": "Sức khỏe",
+          "coverage": "Phạm vi",
+          "lastFetched": "Fetch gần nhất"
         },
         "health": {
-          "errors": "Errors: {count}",
-          "extractionFailures": "Extraction failures: {count}"
+          "errors": "Lỗi: {count}",
+          "extractionFailures": "Lỗi trích xuất: {count}"
         },
         "coverage": {
-          "subscriptions": "{count} subscriptions",
-          "articles": "{count} articles"
+          "subscriptions": "{count} lượt đăng ký",
+          "articles": "{count} bài viết"
         },
-        "nextFetch": "Next",
-        "empty": "No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.",
-        "hasMore": "More feed sources are available. Refine filters to narrow the result set.",
+        "nextFetch": "Lần kế tiếp",
+        "empty": "Không có feed nào khớp với bộ lọc hiện tại. Hãy nới bộ lọc lỗi hoặc bật/tắt để xem thêm.",
+        "hasMore": "Còn nhiều feed hơn. Hãy tinh chỉnh bộ lọc để thu hẹp kết quả.",
         "actions": {
-          "retryFetch": "Retry fetch",
-          "retryExtraction": "Retry extraction"
+          "retryFetch": "Thử fetch lại",
+          "retryExtraction": "Thử trích xuất lại"
         },
         "confirm": {
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "defaultTitle": "Xác nhận hành động quản trị",
+          "defaultDescription": "Xác nhận hành động quản trị này.",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "Thử lấy RSS lại?",
+            "description": "Đưa ngay một lần thử lấy RSS lại cho {label} vào hàng đợi.",
+            "confirmLabel": "Đưa retry RSS vào hàng đợi"
           },
           "retryExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "Thử trích xuất feed lại?",
+            "description": "Đưa các bài đủ điều kiện của {label} vào hàng đợi trích xuất lại.",
+            "confirmLabel": "Đưa retry trích xuất vào hàng đợi"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "Bật feed này?",
+            "description": "Bật {label} để các lịch fetch có thể tiếp tục.",
+            "confirmLabel": "Bật feed"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "Tắt feed này?",
+            "description": "Tắt {label}. Các lần fetch theo lịch sẽ dừng cho tới khi admin bật lại hoặc ép retry.",
+            "confirmLabel": "Tắt feed"
           }
         }
       },
       "detail": {
-        "metaTitle": "Admin Feed Detail",
+        "metaTitle": "Chi tiết feed quản trị",
         "page": {
-          "title": "Feed operations detail",
-          "description": "Inspect article health and trigger targeted retries for this feed source.",
-          "backToFeeds": "Back to feeds"
+          "title": "Chi tiết vận hành feed",
+          "description": "Kiểm tra sức khỏe bài viết và kích hoạt retry có mục tiêu cho feed này.",
+          "backToFeeds": "Quay lại danh sách feed"
         },
-        "empty": "Feed details are unavailable.",
+        "empty": "Không có dữ liệu chi tiết feed.",
         "summary": {
-          "lastFetched": "Last fetched",
-          "nextFetch": "Next fetch",
-          "subscriptions": "Subscriptions",
-          "articles": "Articles",
-          "rssErrors": "RSS errors: {count}",
-          "extractionFailures": "Extraction failures: {count}",
-          "lastError": "Last error",
-          "noRecentErrors": "No recent RSS errors."
+          "lastFetched": "Fetch gần nhất",
+          "nextFetch": "Lần fetch tiếp theo",
+          "subscriptions": "Lượt đăng ký",
+          "articles": "Bài viết",
+          "rssErrors": "Lỗi RSS: {count}",
+          "extractionFailures": "Lỗi trích xuất: {count}",
+          "lastError": "Lỗi gần nhất",
+          "noRecentErrors": "Không có lỗi RSS gần đây."
         },
         "operations": {
-          "title": "Operations",
-          "description": "Toggle source state and trigger queue retries.",
-          "feedEnabled": "Feed enabled",
-          "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
-          "retryFetch": "Retry RSS fetch",
-          "retryFeedExtractionQueue": "Retry feed extraction queue"
+          "title": "Thao tác",
+          "description": "Bật/tắt nguồn feed và kích hoạt retry hàng đợi.",
+          "feedEnabled": "Feed đang bật",
+          "feedEnabledHint": "Feed bị tắt sẽ bị scheduler bỏ qua trừ khi bị ép chạy.",
+          "retryFetch": "Thử fetch RSS lại",
+          "retryFeedExtractionQueue": "Thử lại hàng đợi trích xuất feed"
         },
         "recentArticles": {
-          "title": "Recent articles",
-          "description": "Latest source articles and extraction status.",
+          "title": "Bài viết gần đây",
+          "description": "Các bài nguồn mới nhất và trạng thái trích xuất.",
           "columns": {
-            "article": "Article",
-            "published": "Published",
-            "status": "Status"
+            "article": "Bài viết",
+            "published": "Xuất bản",
+            "status": "Trạng thái"
           },
-          "empty": "No recent articles found for this feed source.",
-          "attempts": "Attempts: {count}",
-          "retryArticle": "Retry article",
+          "empty": "Không tìm thấy bài viết gần đây cho feed này.",
+          "attempts": "Số lần thử: {count}",
+          "retryArticle": "Thử lại bài viết",
           "status": {
-            "extracted": "Extracted",
-            "pending": "Pending",
-            "needsAttention": "Needs attention"
+            "extracted": "Đã trích xuất",
+            "pending": "Đang chờ",
+            "needsAttention": "Cần chú ý"
           }
         },
         "recentFailures": {
-          "title": "Recent extraction failures",
-          "description": "Articles that most recently failed extraction.",
+          "title": "Lỗi trích xuất gần đây",
+          "description": "Các bài viết vừa thất bại trích xuất gần nhất.",
           "columns": {
-            "article": "Article",
-            "error": "Error",
-            "updated": "Updated"
+            "article": "Bài viết",
+            "error": "Lỗi",
+            "updated": "Cập nhật lúc"
           },
-          "empty": "No recent extraction failures.",
-          "attempts": "Attempts: {count}",
-          "retry": "Retry"
+          "empty": "Không có lỗi trích xuất gần đây.",
+          "attempts": "Số lần thử: {count}",
+          "retry": "Thử lại"
         },
         "confirm": {
-          "thisFeed": "this feed",
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "thisFeed": "feed này",
+          "defaultTitle": "Xác nhận hành động quản trị",
+          "defaultDescription": "Xác nhận hành động quản trị này.",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "Thử lấy RSS lại?",
+            "description": "Đưa ngay một lần thử lấy RSS lại cho {label} vào hàng đợi.",
+            "confirmLabel": "Đưa retry RSS vào hàng đợi"
           },
           "retryFeedExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "Thử trích xuất feed lại?",
+            "description": "Đưa các bài đủ điều kiện của {label} vào hàng đợi trích xuất lại.",
+            "confirmLabel": "Đưa retry trích xuất vào hàng đợi"
           },
           "retryArticleExtraction": {
-            "title": "Retry article extraction?",
-            "description": "Queue a fresh extraction attempt for {title}.",
-            "confirmLabel": "Queue article retry"
+            "title": "Thử trích xuất bài viết lại?",
+            "description": "Đưa một lần trích xuất mới cho {title} vào hàng đợi.",
+            "confirmLabel": "Đưa retry bài viết vào hàng đợi"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "Bật feed này?",
+            "description": "Bật {label} để các lịch fetch có thể tiếp tục.",
+            "confirmLabel": "Bật feed"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "Tắt feed này?",
+            "description": "Tắt {label}. Các lần fetch theo lịch sẽ dừng cho tới khi admin bật lại hoặc ép retry.",
+            "confirmLabel": "Tắt feed"
           }
         },
         "errors": {
-          "load": "Could not load feed details. Refresh and try again.",
-          "retryArticleExtraction": "Could not queue an article extraction retry. Try again."
+          "load": "Không thể tải chi tiết feed. Hãy làm mới và thử lại.",
+          "retryArticleExtraction": "Không thể đưa thao tác trích xuất lại bài viết vào hàng đợi. Hãy thử lại."
         }
       },
       "errors": {
-        "list": "Could not load feed sources. Refresh and try again.",
-        "updateState": "Could not update this feed state. Try again.",
-        "retryFetch": "Could not queue an RSS fetch retry. Try again.",
-        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+        "list": "Không thể tải các nguồn feed. Hãy làm mới và thử lại.",
+        "updateState": "Không thể cập nhật trạng thái feed này. Hãy thử lại.",
+        "retryFetch": "Không thể đưa retry RSS vào hàng đợi. Hãy thử lại.",
+        "retryExtraction": "Không thể đưa retry trích xuất feed vào hàng đợi. Hãy thử lại."
       }
     },
     "systemOps": {
-      "metaTitle": "Admin System Ops",
+      "metaTitle": "Vận hành hệ thống quản trị",
       "page": {
-        "title": "System ops",
-        "description": "Inspect queue health and run single-item operational actions safely."
+        "title": "Vận hành hệ thống",
+        "description": "Kiểm tra sức khỏe hàng đợi và chạy các thao tác vận hành đơn lẻ an toàn."
       },
       "overview": {
         "metrics": {
           "failedJobs": {
-            "title": "Failed jobs",
-            "description": "Current failed jobs across queues."
+            "title": "Job lỗi",
+            "description": "Số job lỗi hiện tại trên các hàng đợi."
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for refresh."
+            "title": "Feed cũ",
+            "description": "Các feed đang bật đang chờ làm mới."
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for extraction."
+            "title": "Hàng chờ trích xuất",
+            "description": "Các bài viết đang chờ trích xuất."
           },
           "rssWaitingJobs": {
-            "title": "RSS waiting jobs",
-            "description": "Pending RSS fetch jobs."
+            "title": "Job RSS đang chờ",
+            "description": "Các job lấy RSS đang chờ xử lý."
           },
           "contentWaitingJobs": {
-            "title": "Content waiting jobs",
-            "description": "Pending content extraction jobs."
+            "title": "Job nội dung đang chờ",
+            "description": "Các job trích xuất nội dung đang chờ xử lý."
           }
         },
         "runtimeHeartbeat": {
-          "title": "Runtime heartbeat",
-          "description": "Worker and scheduler liveness from Redis heartbeat keys."
+          "title": "Heartbeat runtime",
+          "description": "Tình trạng sống của worker và scheduler từ các khóa heartbeat trên Redis."
         }
       },
       "stripe": {
-        "title": "Stripe config",
-        "description": "Manage Stripe keys and plan price IDs here instead of server environment variables.",
+        "title": "Cấu hình Stripe",
+        "description": "Quản lý khóa Stripe và price ID của gói tại đây thay vì biến môi trường server.",
         "status": {
-          "label": "Status",
-          "configured": "Configured",
-          "incomplete": "Incomplete",
-          "secretKey": "Secret key",
+          "label": "Trạng thái",
+          "configured": "Đã cấu hình",
+          "incomplete": "Chưa đầy đủ",
+          "secretKey": "Khóa bí mật",
           "webhookSecret": "Webhook secret",
-          "missing": "Missing"
+          "missing": "Thiếu"
         },
         "form": {
           "publishableKey": "Publishable key",
           "publishablePlaceholder": "pk_test_...",
           "secretKey": "Secret key",
-          "secretPlaceholder": "Leave blank to keep current sk_*",
+          "secretPlaceholder": "Để trống để giữ nguyên sk_* hiện tại",
           "webhookSecret": "Webhook secret",
-          "webhookPlaceholder": "Leave blank to keep current whsec_*",
-          "basicMonthly": "Basic monthly price",
-          "basicYearly": "Basic yearly price",
-          "proMonthly": "Pro monthly price",
-          "proYearly": "Pro yearly price",
-          "maxMonthly": "Max monthly price",
-          "maxYearly": "Max yearly price"
+          "webhookPlaceholder": "Để trống để giữ nguyên whsec_* hiện tại",
+          "basicMonthly": "Giá Basic tháng",
+          "basicYearly": "Giá Basic năm",
+          "proMonthly": "Giá Pro tháng",
+          "proYearly": "Giá Pro năm",
+          "maxMonthly": "Giá Max tháng",
+          "maxYearly": "Giá Max năm"
         },
-        "lastUpdated": "Last updated",
+        "lastUpdated": "Cập nhật lần cuối",
         "webhookEndpoint": "Webhook endpoint",
-        "save": "Save Stripe config",
-        "saving": "Saving...",
-        "successSaved": "Stripe config saved.",
-        "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
+        "save": "Lưu cấu hình Stripe",
+        "saving": "Đang lưu...",
+        "successSaved": "Đã lưu cấu hình Stripe.",
+        "secretHint": "Bạn có thể để trống các trường secret nếu chỉ muốn cập nhật price ID."
       },
       "manualActions": {
-        "title": "Manual actions",
-        "description": "Trigger one feed fetch or one content extraction by ID.",
-        "feedSourceId": "Feed source ID",
+        "title": "Thao tác thủ công",
+        "description": "Kích hoạt một lần fetch feed hoặc một lần trích xuất nội dung theo ID.",
+        "feedSourceId": "ID nguồn feed",
         "feedSourceIdPlaceholder": "feedSourceId",
-        "sourceArticleId": "Source article ID",
+        "sourceArticleId": "ID bài nguồn",
         "sourceArticleIdPlaceholder": "sourceArticleId",
-        "triggerFetch": "Trigger fetch",
-        "triggerExtract": "Trigger extract",
+        "triggerFetch": "Kích hoạt fetch",
+        "triggerExtract": "Kích hoạt trích xuất",
         "errors": {
-          "feedSourceIdRequired": "Feed source ID is required.",
-          "sourceArticleIdRequired": "Source article ID is required."
+          "feedSourceIdRequired": "Bắt buộc phải có ID nguồn feed.",
+          "sourceArticleIdRequired": "Bắt buộc phải có ID bài nguồn."
         }
       },
       "queueJobs": {
-        "title": "Queue jobs",
-        "description": "Review queue states and retry failed jobs one at a time.",
+        "title": "Job hàng đợi",
+        "description": "Xem trạng thái hàng đợi và thử lại từng job lỗi một.",
         "filters": {
-          "queue": "Queue",
-          "state": "State",
-          "allQueues": "All queues",
-          "allStates": "All states"
+          "queue": "Hàng đợi",
+          "state": "Trạng thái",
+          "allQueues": "Tất cả hàng đợi",
+          "allStates": "Tất cả trạng thái"
         },
         "columns": {
-          "queue": "Queue",
+          "queue": "Hàng đợi",
           "job": "Job",
-          "state": "State",
-          "attempts": "Attempts",
-          "failure": "Failure",
-          "created": "Created"
+          "state": "Trạng thái",
+          "attempts": "Số lần thử",
+          "failure": "Lỗi",
+          "created": "Tạo lúc"
         },
         "actions": {
-          "retry": "Retry"
+          "retry": "Thử lại"
         },
-        "empty": "No queue jobs match the selected filters."
+        "empty": "Không có job hàng đợi nào khớp với bộ lọc đã chọn."
       },
       "confirm": {
-        "defaultTitle": "Confirm action",
-        "defaultDescription": "Confirm this operation.",
+        "defaultTitle": "Xác nhận thao tác",
+        "defaultDescription": "Xác nhận thao tác này.",
         "retryJob": {
-          "title": "Retry this failed job?",
-          "description": "Queue retry for job {jobId} in {queueName}.",
-          "confirmLabel": "Retry job"
+          "title": "Thử lại job lỗi này?",
+          "description": "Đưa thao tác retry cho job {jobId} trong {queueName} vào hàng đợi.",
+          "confirmLabel": "Thử lại job"
         },
         "triggerFeedFetch": {
-          "title": "Trigger feed fetch now?",
-          "description": "Queue one immediate RSS fetch for feed source {feedSourceId}.",
-          "confirmLabel": "Trigger feed fetch"
+          "title": "Kích hoạt fetch feed ngay?",
+          "description": "Đưa một lần fetch RSS ngay cho nguồn feed {feedSourceId} vào hàng đợi.",
+          "confirmLabel": "Kích hoạt fetch feed"
         },
         "triggerContentExtract": {
-          "title": "Trigger content extraction now?",
-          "description": "Queue one content extraction job for source article {sourceArticleId}.",
-          "confirmLabel": "Trigger extraction"
+          "title": "Kích hoạt trích xuất nội dung ngay?",
+          "description": "Đưa một job trích xuất nội dung cho bài nguồn {sourceArticleId} vào hàng đợi.",
+          "confirmLabel": "Kích hoạt trích xuất"
         }
       },
       "errors": {
-        "runtimeSummary": "Could not load system runtime summary.",
-        "queueJobs": "Could not load queue jobs.",
-        "stripeLoad": "Could not load Stripe config.",
-        "stripeSave": "Could not save Stripe config.",
-        "executeOperation": "Could not execute this system operation."
+        "runtimeSummary": "Không thể tải tổng hợp runtime hệ thống.",
+        "queueJobs": "Không thể tải các job hàng đợi.",
+        "stripeLoad": "Không thể tải cấu hình Stripe.",
+        "stripeSave": "Không thể lưu cấu hình Stripe.",
+        "executeOperation": "Không thể thực thi thao tác hệ thống này."
       }
     }
   }

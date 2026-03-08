@@ -6,11 +6,11 @@
   "locale": {
     "label": "语言",
     "options": {
-      "en": "英语",
-      "vi": "越南语",
+      "en": "English",
+      "vi": "Tiếng Việt",
       "zh": "中文",
-      "kr": "韩语",
-      "jp": "日语"
+      "kr": "한국어",
+      "jp": "日本語"
     }
   },
   "common": {
@@ -572,713 +572,713 @@
   },
   "admin": {
     "common": {
-      "action": "Action",
-      "actions": "Actions",
-      "confirm": "Confirm",
-      "open": "Open",
-      "edit": "Edit",
-      "detail": "Details",
+      "action": "操作",
+      "actions": "操作",
+      "confirm": "确认",
+      "open": "打开",
+      "edit": "编辑",
+      "detail": "详情",
       "id": "ID",
-      "yes": "Yes",
-      "no": "No",
-      "updating": "Updating...",
-      "queueing": "Queuing...",
-      "notAvailable": "N/A",
-      "noHeartbeat": "No heartbeat",
-      "lastHeartbeat": "Last heartbeat",
-      "expiresAt": "expires",
+      "yes": "是",
+      "no": "否",
+      "updating": "更新中...",
+      "queueing": "加入队列中...",
+      "notAvailable": "不可用",
+      "noHeartbeat": "无心跳",
+      "lastHeartbeat": "最近心跳",
+      "expiresAt": "到期",
       "roles": {
-        "user": "User",
-        "admin": "Admin"
+        "user": "用户",
+        "admin": "管理员"
       },
       "accountStatus": {
-        "active": "Active",
-        "suspended": "Suspended"
+        "active": "启用",
+        "suspended": "已停用"
       },
       "eventStatus": {
-        "success": "Success",
-        "failed": "Failed"
+        "success": "成功",
+        "failed": "失败"
       },
       "runtimeNodes": {
         "worker": "Worker",
-        "rssScheduler": "RSS scheduler",
-        "contentScheduler": "Content scheduler"
+        "rssScheduler": "RSS 调度器",
+        "contentScheduler": "内容调度器"
       },
       "runtimeStates": {
-        "healthy": "Healthy",
-        "stale": "Stale",
-        "offline": "Offline",
-        "unknown": "Unknown"
+        "healthy": "正常",
+        "stale": "过期",
+        "offline": "离线",
+        "unknown": "未知"
       },
       "queueName": {
-        "rssFetch": "RSS fetch",
-        "contentExtract": "Content extract"
+        "rssFetch": "RSS 抓取",
+        "contentExtract": "内容提取"
       },
       "queueState": {
-        "waiting": "Waiting",
-        "active": "Active",
-        "failed": "Failed",
-        "delayed": "Delayed",
-        "completed": "Completed"
+        "waiting": "等待中",
+        "active": "运行中",
+        "failed": "失败",
+        "delayed": "延迟",
+        "completed": "已完成"
       },
       "subscriptionTier": {
-        "free": "Free",
-        "basic": "Basic",
-        "pro": "Pro",
-        "max": "Max"
+        "free": "免费",
+        "basic": "基础",
+        "pro": "专业",
+        "max": "高级"
       },
       "billingInterval": {
-        "monthly": "Monthly",
-        "yearly": "Yearly"
+        "monthly": "按月",
+        "yearly": "按年"
       },
       "stripe": {
-        "customer": "Customer",
-        "subscription": "Subscription",
-        "price": "Price"
+        "customer": "客户",
+        "subscription": "订阅",
+        "price": "价格"
       },
       "age": {
-        "label": "Age",
-        "secondsAgo": "{value}s ago",
-        "minutesAgo": "{value}m ago",
-        "hoursAgo": "{value}h ago",
-        "secondsShort": "{value}s",
-        "minutesShort": "{value}m",
-        "hoursShort": "{value}h"
+        "label": "时长",
+        "secondsAgo": "{value} 秒前",
+        "minutesAgo": "{value} 分钟前",
+        "hoursAgo": "{value} 小时前",
+        "secondsShort": "{value}秒",
+        "minutesShort": "{value}分",
+        "hoursShort": "{value}小时"
       }
     },
     "operations": {
-      "metaTitle": "Admin Operations",
+      "metaTitle": "管理运维",
       "overview": {
-        "title": "Operations overview",
-        "description": "Monitor AI usage, queue health, and runtime heartbeat status.",
+        "title": "运维总览",
+        "description": "监控 AI 使用情况、队列健康状态和运行时心跳状态。",
         "metrics": {
           "aiTokens7d": {
-            "title": "AI tokens (7d)",
-            "description": "Total token usage in the last 7 days."
+            "title": "AI Token（7天）",
+            "description": "最近 7 天的 token 使用总量。"
           },
           "aiRequests7d": {
-            "title": "AI requests (7d)",
-            "description": "Total summarize requests in the last 7 days."
+            "title": "AI 请求（7天）",
+            "description": "最近 7 天的摘要请求总数。"
           },
           "aiFailures7d": {
-            "title": "AI failures (7d)",
-            "description": "Failed summarize attempts in the last 7 days."
+            "title": "AI 失败（7天）",
+            "description": "最近 7 天摘要失败次数。"
           },
           "failedQueueJobs": {
-            "title": "Failed queue jobs",
-            "description": "Current failed jobs across worker queues."
+            "title": "失败队列任务",
+            "description": "当前各工作队列中的失败任务数。"
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for fetch scheduling."
+            "title": "过期订阅源",
+            "description": "已启用但等待抓取调度的订阅源。"
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for content extraction."
+            "title": "提取积压",
+            "description": "等待内容提取的文章。"
           }
         }
       },
       "runtimeHealth": {
-        "title": "Runtime health",
-        "description": "Heartbeat status for worker and schedulers."
+        "title": "运行时健康状态",
+        "description": "Worker 和调度器的心跳状态。"
       },
       "drillDown": {
-        "title": "Drill-down",
-        "description": "Open detailed pages to inspect AI events or perform queue actions.",
-        "openAiUsage": "Open AI usage",
-        "openSystemOps": "Open system ops"
+        "title": "深入查看",
+        "description": "打开详细页面以检查 AI 事件或执行队列操作。",
+        "openAiUsage": "打开 AI 使用情况",
+        "openSystemOps": "打开系统运维"
       },
       "recentFailedJobs": {
-        "title": "Recent failed jobs",
-        "description": "Latest queue failures across RSS fetch and content extraction workers.",
-        "empty": "No recent failed jobs in queue history.",
-        "noFailureReason": "No failure reason available.",
+        "title": "最近失败任务",
+        "description": "RSS 抓取和内容提取 worker 的最新队列失败记录。",
+        "empty": "队列历史中暂无最近失败任务。",
+        "noFailureReason": "没有可用的失败原因。",
         "columns": {
-          "queue": "Queue",
-          "job": "Job",
-          "failure": "Failure",
-          "time": "Time"
+          "queue": "队列",
+          "job": "任务",
+          "failure": "失败原因",
+          "time": "时间"
         }
       },
       "errors": {
-        "aiUsageSummary": "Could not load AI usage summary.",
-        "systemOverview": "Could not load system overview.",
-        "runtimeHealth": "Could not load runtime health data.",
-        "recentQueueFailures": "Could not load recent queue failures."
+        "aiUsageSummary": "无法加载 AI 使用摘要。",
+        "systemOverview": "无法加载系统总览。",
+        "runtimeHealth": "无法加载运行时健康数据。",
+        "recentQueueFailures": "无法加载最近的队列失败记录。"
       }
     },
     "aiUsage": {
-      "metaTitle": "Admin AI Usage",
+      "metaTitle": "管理 AI 使用情况",
       "page": {
-        "title": "AI usage",
-        "description": "Inspect usage events, recent failures, and AI config state.",
-        "manageConfigs": "Manage AI configs"
+        "title": "AI 使用情况",
+        "description": "检查使用事件、近期失败和 AI 配置状态。",
+        "manageConfigs": "管理 AI 配置"
       },
       "summary": {
-        "title": "Summary (7 days)",
-        "description": "Token usage and failure trends for admin support visibility.",
-        "totalTokens": "Total tokens",
-        "totalRequests": "Total requests",
-        "failures": "Failures",
-        "topUser": "Top user",
-        "empty7Days": "No AI usage requests recorded in the last 7 days."
+        "title": "摘要（7天）",
+        "description": "用于管理支持可见性的 token 使用和失败趋势。",
+        "totalTokens": "总 Token",
+        "totalRequests": "总请求数",
+        "failures": "失败数",
+        "topUser": "最高用户",
+        "empty7Days": "最近 7 天没有记录到 AI 使用请求。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Filter by user, provider, model, status, and time range.",
-        "from": "From",
-        "to": "To",
+        "title": "筛选",
+        "description": "按用户、提供商、模型、状态和时间范围筛选。",
+        "from": "从",
+        "to": "到",
         "user": {
-          "label": "User",
-          "placeholder": "Search name or email"
+          "label": "用户",
+          "placeholder": "按姓名或邮箱搜索"
         },
         "provider": {
-          "label": "Provider",
+          "label": "提供商",
           "placeholder": "openai, anthropic..."
         },
         "model": {
-          "label": "Model",
+          "label": "模型",
           "placeholder": "gpt-4.1..."
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "状态",
+          "all": "全部状态"
         }
       },
       "events": {
-        "title": "AI events",
-        "description": "Recent summarize activity with success/failure status and safe error summaries."
+        "title": "AI 事件",
+        "description": "近期摘要活动，包括成功/失败状态和安全的错误摘要。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "providerModel": "Provider / model",
-          "status": "Status",
-          "tokens": "Tokens",
-          "duration": "Duration",
-          "errorSummary": "Error summary",
-          "created": "Created"
+          "user": "用户",
+          "providerModel": "提供商 / 模型",
+          "status": "状态",
+          "tokens": "Token",
+          "duration": "耗时",
+          "errorSummary": "错误摘要",
+          "created": "创建时间"
         },
-        "empty": "No AI usage events match the current filters."
+        "empty": "没有 AI 使用事件符合当前筛选条件。"
       },
       "configDialog": {
-        "title": "AI config controls",
-        "description": "Review config ownership and toggle individual configs.",
-        "empty": "No AI configs match the current filters.",
+        "title": "AI 配置控制",
+        "description": "查看配置归属并启用/停用单个配置。",
+        "empty": "没有 AI 配置符合当前筛选条件。",
         "badges": {
-          "default": "Default"
+          "default": "默认"
         },
         "select": {
-          "title": "Select config",
-          "description": "Choose a config to inspect and toggle.",
-          "placeholder": "Select an AI config"
+          "title": "选择配置",
+          "description": "选择一个配置进行查看和启停。",
+          "placeholder": "选择一个 AI 配置"
         },
         "fields": {
-          "owner": "Owner",
-          "baseUrl": "Base URL",
-          "defaultProviderUrl": "Default provider URL",
-          "updated": "Updated"
+          "owner": "所有者",
+          "baseUrl": "基础 URL",
+          "defaultProviderUrl": "默认提供商 URL",
+          "updated": "更新时间"
         },
         "actions": {
-          "enable": "Enable config",
-          "disable": "Disable config",
-          "updating": "Updating..."
+          "enable": "启用配置",
+          "disable": "停用配置",
+          "updating": "更新中..."
         },
         "confirm": {
-          "enableTitle": "Enable this AI config?",
-          "disableTitle": "Disable this AI config?",
-          "enableDescription": "Enable {name}. Summarize requests can use this config again.",
-          "disableDescription": "Disable {name}. Summarize requests using this config will be blocked."
+          "enableTitle": "启用这个 AI 配置？",
+          "disableTitle": "停用这个 AI 配置？",
+          "enableDescription": "启用 {name}。摘要请求可以再次使用此配置。",
+          "disableDescription": "停用 {name}。使用此配置的摘要请求将被阻止。"
         }
       },
       "errors": {
-        "summary": "Could not load AI usage summary.",
-        "events": "Could not load AI usage events.",
-        "configs": "Could not load AI configs.",
-        "updateConfig": "Could not update this AI config."
+        "summary": "无法加载 AI 使用摘要。",
+        "events": "无法加载 AI 使用事件。",
+        "configs": "无法加载 AI 配置。",
+        "updateConfig": "无法更新此 AI 配置。"
       }
     },
     "users": {
-      "metaTitle": "Admin Users",
+      "metaTitle": "管理用户",
       "page": {
-        "title": "Admin users",
-        "description": "Review user accounts, subscription state, and account status actions."
+        "title": "管理用户",
+        "description": "查看用户账户、订阅状态和账户状态操作。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search users and narrow results by role, account status, or subscription tier.",
+        "title": "筛选",
+        "description": "搜索用户，并按角色、账户状态或订阅等级缩小结果。",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "搜索",
+          "placeholder": "姓名或邮箱"
         },
         "role": {
-          "label": "Role",
-          "all": "All roles"
+          "label": "角色",
+          "all": "全部角色"
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "状态",
+          "all": "全部状态"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "等级",
+          "all": "全部等级"
         }
       },
       "directory": {
-        "title": "User directory",
-        "description": "Open a user row to review details and update account status."
+        "title": "用户目录",
+        "description": "打开用户行以查看详情并更新账户状态。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "role": "Role",
-          "status": "Status",
-          "subscription": "Subscription",
-          "feeds": "Feeds",
-          "created": "Created"
+          "user": "用户",
+          "role": "角色",
+          "status": "状态",
+          "subscription": "订阅",
+          "feeds": "订阅源",
+          "created": "创建时间"
         },
-        "empty": "No users match the current filters. Adjust role, status, or plan filters to widen the result.",
-        "hasMore": "More users are available. Refine filters to narrow the result set."
+        "empty": "没有用户符合当前筛选条件。请调整角色、状态或套餐筛选。",
+        "hasMore": "还有更多用户可用。请优化筛选条件以缩小结果范围。"
       },
       "detail": {
-        "title": "User details",
-        "description": "Review account state, subscription details, and support actions.",
-        "empty": "Select a user to review account details.",
+        "title": "用户详情",
+        "description": "查看账户状态、订阅详情和支持操作。",
+        "empty": "请选择一个用户以查看账户详情。",
         "accountSummary": {
-          "title": "Account summary",
-          "description": "Membership and feed usage at a glance.",
-          "created": "Created",
-          "updated": "Updated",
-          "feeds": "Feeds",
-          "suspendedAt": "Suspended at"
+          "title": "账户摘要",
+          "description": "快速查看会员信息和订阅源使用情况。",
+          "created": "创建时间",
+          "updated": "更新时间",
+          "feeds": "订阅源",
+          "suspendedAt": "停用时间"
         },
         "subscription": {
-          "title": "Subscription",
-          "description": "Tier, billing cadence, and current expiry.",
-          "plan": "Plan",
-          "status": "Subscription status",
-          "expires": "Expires"
+          "title": "订阅",
+          "description": "套餐、计费周期和当前到期时间。",
+          "plan": "套餐",
+          "status": "订阅状态",
+          "expires": "到期时间"
         },
         "actions": {
-          "title": "Account actions",
-          "description": "Suspend or reactivate the user account.",
-          "suspendReasonPlaceholder": "Optional suspension reason",
-          "suspendReasonHint": "The reason is visible to admins in the detail view and audit log.",
-          "suspensionReason": "Suspension reason",
-          "noReason": "No reason provided.",
-          "suspend": "Suspend user",
-          "suspending": "Suspending...",
-          "reactivate": "Reactivate user",
-          "reactivating": "Reactivating..."
+          "title": "账户操作",
+          "description": "停用或重新激活用户账户。",
+          "suspendReasonPlaceholder": "可选的停用原因",
+          "suspendReasonHint": "此原因会显示给管理员，并写入审计日志。",
+          "suspensionReason": "停用原因",
+          "noReason": "未提供原因。",
+          "suspend": "停用用户",
+          "suspending": "停用中...",
+          "reactivate": "重新激活用户",
+          "reactivating": "重新激活中..."
         },
         "confirm": {
-          "thisUser": "this user",
+          "thisUser": "该用户",
           "suspend": {
-            "title": "Suspend this user?",
-            "description": "Suspend {name}. They lose access to protected routes until an admin reactivates the account.",
-            "descriptionWithReason": "Suspend {name}. The reason \"{reason}\" will be saved to the admin audit log."
+            "title": "停用该用户？",
+            "description": "停用 {name}。在管理员重新激活之前，他们将无法访问受保护路由。",
+            "descriptionWithReason": "停用 {name}。原因“{reason}”将保存到管理员审计日志中。"
           },
           "reactivate": {
-            "title": "Reactivate this user?",
-            "description": "Restore access for {name}. Protected routes become available again immediately."
+            "title": "重新激活该用户？",
+            "description": "恢复 {name} 的访问权限。受保护路由会立即再次可用。"
           }
         }
       },
       "errors": {
-        "list": "Could not load admin users. Refresh and try again.",
-        "suspend": "Could not suspend this user. Try again.",
-        "reactivate": "Could not reactivate this user. Try again."
+        "list": "无法加载管理用户。请刷新后重试。",
+        "suspend": "无法停用该用户。请重试。",
+        "reactivate": "无法重新激活该用户。请重试。"
       }
     },
     "subscriptions": {
-      "metaTitle": "Admin Subscriptions",
+      "metaTitle": "管理订阅",
       "page": {
-        "title": "Admin subscriptions",
-        "description": "Review billing state and apply support-oriented subscription changes."
+        "title": "管理订阅",
+        "description": "查看计费状态并应用面向支持的订阅调整。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search by user and narrow the billing slice by plan, status, cadence, or cancellation flag.",
+        "title": "筛选",
+        "description": "按用户搜索，并按套餐、状态、周期或取消标记缩小计费范围。",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "搜索",
+          "placeholder": "姓名或邮箱"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "等级",
+          "all": "全部等级"
         },
         "billing": {
-          "label": "Billing",
-          "all": "All billing"
+          "label": "计费",
+          "all": "全部计费方式"
         },
         "cancelFlag": {
-          "label": "Cancel flag",
-          "all": "All flags",
-          "canceling": "Canceling",
-          "continuing": "Continuing"
+          "label": "取消标记",
+          "all": "全部标记",
+          "canceling": "取消中",
+          "continuing": "继续中"
         }
       },
       "directory": {
-        "title": "Subscription directory",
-        "description": "Open a row to inspect support controls and persist changes."
+        "title": "订阅目录",
+        "description": "打开一行以查看支持控制并保存更改。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "plan": "Plan",
-          "status": "Status",
-          "expires": "Expires",
-          "stripeIds": "Stripe IDs"
+          "user": "用户",
+          "plan": "套餐",
+          "status": "状态",
+          "expires": "到期时间",
+          "stripeIds": "Stripe ID"
         },
-        "cancelAtPeriodEnd": "Cancel at period end",
-        "empty": "No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.",
-        "hasMore": "More subscriptions are available. Narrow the filters to inspect a smaller slice."
+        "cancelAtPeriodEnd": "周期结束时取消",
+        "empty": "没有订阅符合当前筛选条件。请调整计费筛选以查看更多。",
+        "hasMore": "还有更多订阅。请收窄筛选范围。"
       },
       "edit": {
-        "title": "Edit subscription",
-        "description": "Support plan changes, expiry adjustments, and cancellation flags.",
-        "empty": "Select a subscription row to edit support settings.",
-        "currentExpiry": "Current expiry",
+        "title": "编辑订阅",
+        "description": "支持套餐变更、到期时间调整和取消标记。",
+        "empty": "请选择一条订阅记录以编辑支持设置。",
+        "currentExpiry": "当前到期时间",
         "fields": {
-          "tier": "Tier",
-          "expiry": "Expires at",
-          "cancellation": "Cancel at period end"
+          "tier": "等级",
+          "expiry": "到期时间",
+          "cancellation": "周期结束时取消"
         },
         "controls": {
-          "title": "Support controls",
-          "description": "Adjust billing and support flags for this user.",
-          "tierPlaceholder": "Select tier",
-          "cancelAtPeriodEndHint": "Preserve subscription until the current paid period ends.",
-          "save": "Save changes",
-          "saving": "Saving...",
-          "noPendingChanges": "No pending changes to save.",
-          "pendingFields": "Pending fields: {fields}."
+          "title": "支持控制",
+          "description": "为该用户调整计费和支持标记。",
+          "tierPlaceholder": "选择等级",
+          "cancelAtPeriodEndHint": "在当前已付款周期结束前保留订阅。",
+          "save": "保存更改",
+          "saving": "保存中...",
+          "noPendingChanges": "没有待保存的更改。",
+          "pendingFields": "待变更字段：{fields}。"
         },
         "confirm": {
-          "title": "Save subscription changes?",
-          "confirmLabel": "Save subscription changes",
-          "theseChanges": "these changes",
-          "description": "Apply {fields} for {name}. These updates are recorded in the admin audit log.",
-          "descriptionFallback": "Apply the pending subscription changes."
+          "title": "保存订阅更改？",
+          "confirmLabel": "保存订阅更改",
+          "theseChanges": "这些更改",
+          "description": "为 {name} 应用 {fields}。这些更新将记录到管理员审计日志。",
+          "descriptionFallback": "应用待处理的订阅更改。"
         }
       },
       "errors": {
-        "list": "Could not load subscriptions. Refresh and try again.",
-        "update": "Could not update this subscription. Review the changes and try again."
+        "list": "无法加载订阅。请刷新后重试。",
+        "update": "无法更新此订阅。请检查更改后重试。"
       }
     },
     "feeds": {
-      "metaTitle": "Admin Feeds",
+      "metaTitle": "管理订阅源",
       "page": {
-        "title": "Admin feeds",
-        "description": "Track system-wide feed health and trigger operational queue actions."
+        "title": "管理订阅源",
+        "description": "跟踪全系统订阅源健康状态并触发运维队列操作。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.",
+        "title": "筛选",
+        "description": "搜索订阅源，并按启用状态、错误、过期计划或提取失败进行聚焦。",
         "search": {
-          "label": "Search",
-          "placeholder": "Feed title or URL"
+          "label": "搜索",
+          "placeholder": "订阅源标题或 URL"
         },
         "enabled": {
-          "label": "Enabled",
-          "all": "All feeds"
+          "label": "启用",
+          "all": "全部订阅源"
         },
         "errors": {
-          "label": "Errors",
-          "all": "All error states",
-          "hasErrors": "Has errors",
-          "healthy": "Healthy"
+          "label": "错误",
+          "all": "全部错误状态",
+          "hasErrors": "有错误",
+          "healthy": "健康"
         },
         "stale": {
-          "label": "Stale",
-          "all": "All freshness states",
-          "stale": "Stale",
-          "scheduled": "Scheduled"
+          "label": "过期",
+          "all": "全部新鲜度状态",
+          "stale": "过期",
+          "scheduled": "按计划"
         },
         "extraction": {
-          "label": "Extraction",
-          "all": "All extraction states",
-          "hasFailures": "Has failures",
-          "healthy": "Healthy"
+          "label": "提取",
+          "all": "全部提取状态",
+          "hasFailures": "有失败",
+          "healthy": "健康"
         }
       },
       "operations": {
-        "title": "Feed operations",
-        "description": "Use quick actions or open a feed for detailed operational context."
+        "title": "订阅源运维",
+        "description": "使用快捷操作或打开订阅源以查看详细运维上下文。"
       },
       "table": {
         "columns": {
-          "feed": "Feed",
-          "enabled": "Enabled",
-          "health": "Health",
-          "coverage": "Coverage",
-          "lastFetched": "Last fetched"
+          "feed": "订阅源",
+          "enabled": "启用",
+          "health": "健康状态",
+          "coverage": "覆盖范围",
+          "lastFetched": "最近抓取"
         },
         "health": {
-          "errors": "Errors: {count}",
-          "extractionFailures": "Extraction failures: {count}"
+          "errors": "错误：{count}",
+          "extractionFailures": "提取失败：{count}"
         },
         "coverage": {
-          "subscriptions": "{count} subscriptions",
-          "articles": "{count} articles"
+          "subscriptions": "{count} 个订阅",
+          "articles": "{count} 篇文章"
         },
-        "nextFetch": "Next",
-        "empty": "No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.",
-        "hasMore": "More feed sources are available. Refine filters to narrow the result set.",
+        "nextFetch": "下次抓取",
+        "empty": "没有订阅源符合当前筛选条件。请放宽健康或启用筛选。",
+        "hasMore": "还有更多订阅源。请优化筛选条件以缩小结果。",
         "actions": {
-          "retryFetch": "Retry fetch",
-          "retryExtraction": "Retry extraction"
+          "retryFetch": "重试抓取",
+          "retryExtraction": "重试提取"
         },
         "confirm": {
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "defaultTitle": "确认管理操作",
+          "defaultDescription": "确认此管理操作。",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "重试 RSS 抓取？",
+            "description": "立即为 {label} 加入一次 RSS 抓取重试任务。",
+            "confirmLabel": "加入 RSS 重试任务"
           },
           "retryExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "重试订阅源提取？",
+            "description": "为 {label} 中符合条件的文章加入提取重试任务。",
+            "confirmLabel": "加入提取重试任务"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "启用此订阅源？",
+            "description": "启用 {label}，以便计划抓取可以恢复。",
+            "confirmLabel": "启用订阅源"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "停用此订阅源？",
+            "description": "停用 {label}。计划抓取会停止，直到管理员重新启用或强制重试。",
+            "confirmLabel": "停用订阅源"
           }
         }
       },
       "detail": {
-        "metaTitle": "Admin Feed Detail",
+        "metaTitle": "管理订阅源详情",
         "page": {
-          "title": "Feed operations detail",
-          "description": "Inspect article health and trigger targeted retries for this feed source.",
-          "backToFeeds": "Back to feeds"
+          "title": "订阅源运维详情",
+          "description": "检查文章健康状态，并为此订阅源触发定向重试。",
+          "backToFeeds": "返回订阅源列表"
         },
-        "empty": "Feed details are unavailable.",
+        "empty": "订阅源详情不可用。",
         "summary": {
-          "lastFetched": "Last fetched",
-          "nextFetch": "Next fetch",
-          "subscriptions": "Subscriptions",
-          "articles": "Articles",
-          "rssErrors": "RSS errors: {count}",
-          "extractionFailures": "Extraction failures: {count}",
-          "lastError": "Last error",
-          "noRecentErrors": "No recent RSS errors."
+          "lastFetched": "最近抓取",
+          "nextFetch": "下次抓取",
+          "subscriptions": "订阅数",
+          "articles": "文章数",
+          "rssErrors": "RSS 错误：{count}",
+          "extractionFailures": "提取失败：{count}",
+          "lastError": "最近错误",
+          "noRecentErrors": "最近没有 RSS 错误。"
         },
         "operations": {
-          "title": "Operations",
-          "description": "Toggle source state and trigger queue retries.",
-          "feedEnabled": "Feed enabled",
-          "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
-          "retryFetch": "Retry RSS fetch",
-          "retryFeedExtractionQueue": "Retry feed extraction queue"
+          "title": "操作",
+          "description": "切换订阅源状态并触发队列重试。",
+          "feedEnabled": "订阅源已启用",
+          "feedEnabledHint": "被停用的订阅源会被调度器跳过，除非被强制执行。",
+          "retryFetch": "重试 RSS 抓取",
+          "retryFeedExtractionQueue": "重试订阅源提取队列"
         },
         "recentArticles": {
-          "title": "Recent articles",
-          "description": "Latest source articles and extraction status.",
+          "title": "最近文章",
+          "description": "最新来源文章及提取状态。",
           "columns": {
-            "article": "Article",
-            "published": "Published",
-            "status": "Status"
+            "article": "文章",
+            "published": "发布时间",
+            "status": "状态"
           },
-          "empty": "No recent articles found for this feed source.",
-          "attempts": "Attempts: {count}",
-          "retryArticle": "Retry article",
+          "empty": "该订阅源没有最近文章。",
+          "attempts": "尝试次数：{count}",
+          "retryArticle": "重试文章",
           "status": {
-            "extracted": "Extracted",
-            "pending": "Pending",
-            "needsAttention": "Needs attention"
+            "extracted": "已提取",
+            "pending": "待处理",
+            "needsAttention": "需要关注"
           }
         },
         "recentFailures": {
-          "title": "Recent extraction failures",
-          "description": "Articles that most recently failed extraction.",
+          "title": "最近提取失败",
+          "description": "最近提取失败的文章。",
           "columns": {
-            "article": "Article",
-            "error": "Error",
-            "updated": "Updated"
+            "article": "文章",
+            "error": "错误",
+            "updated": "更新时间"
           },
-          "empty": "No recent extraction failures.",
-          "attempts": "Attempts: {count}",
-          "retry": "Retry"
+          "empty": "最近没有提取失败。",
+          "attempts": "尝试次数：{count}",
+          "retry": "重试"
         },
         "confirm": {
-          "thisFeed": "this feed",
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "thisFeed": "该订阅源",
+          "defaultTitle": "确认管理操作",
+          "defaultDescription": "确认此管理操作。",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "重试 RSS 抓取？",
+            "description": "立即为 {label} 加入一次 RSS 抓取重试任务。",
+            "confirmLabel": "加入 RSS 重试任务"
           },
           "retryFeedExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "重试订阅源提取？",
+            "description": "为 {label} 中符合条件的文章加入提取重试任务。",
+            "confirmLabel": "加入提取重试任务"
           },
           "retryArticleExtraction": {
-            "title": "Retry article extraction?",
-            "description": "Queue a fresh extraction attempt for {title}.",
-            "confirmLabel": "Queue article retry"
+            "title": "重试文章提取？",
+            "description": "为 {title} 加入一次新的提取尝试任务。",
+            "confirmLabel": "加入文章重试任务"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "启用此订阅源？",
+            "description": "启用 {label}，以便计划抓取可以恢复。",
+            "confirmLabel": "启用订阅源"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "停用此订阅源？",
+            "description": "停用 {label}。计划抓取会停止，直到管理员重新启用或强制重试。",
+            "confirmLabel": "停用订阅源"
           }
         },
         "errors": {
-          "load": "Could not load feed details. Refresh and try again.",
-          "retryArticleExtraction": "Could not queue an article extraction retry. Try again."
+          "load": "无法加载订阅源详情。请刷新后重试。",
+          "retryArticleExtraction": "无法加入文章提取重试任务。请重试。"
         }
       },
       "errors": {
-        "list": "Could not load feed sources. Refresh and try again.",
-        "updateState": "Could not update this feed state. Try again.",
-        "retryFetch": "Could not queue an RSS fetch retry. Try again.",
-        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+        "list": "无法加载订阅源。请刷新后重试。",
+        "updateState": "无法更新此订阅源状态。请重试。",
+        "retryFetch": "无法加入 RSS 抓取重试任务。请重试。",
+        "retryExtraction": "无法加入订阅源提取重试任务。请重试。"
       }
     },
     "systemOps": {
-      "metaTitle": "Admin System Ops",
+      "metaTitle": "管理系统运维",
       "page": {
-        "title": "System ops",
-        "description": "Inspect queue health and run single-item operational actions safely."
+        "title": "系统运维",
+        "description": "检查队列健康状态，并安全执行单项运维操作。"
       },
       "overview": {
         "metrics": {
           "failedJobs": {
-            "title": "Failed jobs",
-            "description": "Current failed jobs across queues."
+            "title": "失败任务",
+            "description": "当前各队列中的失败任务数。"
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for refresh."
+            "title": "过期订阅源",
+            "description": "等待刷新的已启用订阅源。"
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for extraction."
+            "title": "提取积压",
+            "description": "等待提取的文章。"
           },
           "rssWaitingJobs": {
-            "title": "RSS waiting jobs",
-            "description": "Pending RSS fetch jobs."
+            "title": "RSS 等待任务",
+            "description": "等待处理的 RSS 抓取任务。"
           },
           "contentWaitingJobs": {
-            "title": "Content waiting jobs",
-            "description": "Pending content extraction jobs."
+            "title": "内容等待任务",
+            "description": "等待处理的内容提取任务。"
           }
         },
         "runtimeHeartbeat": {
-          "title": "Runtime heartbeat",
-          "description": "Worker and scheduler liveness from Redis heartbeat keys."
+          "title": "运行时心跳",
+          "description": "来自 Redis 心跳键的 Worker 和调度器存活状态。"
         }
       },
       "stripe": {
-        "title": "Stripe config",
-        "description": "Manage Stripe keys and plan price IDs here instead of server environment variables.",
+        "title": "Stripe 配置",
+        "description": "在此管理 Stripe 密钥和套餐价格 ID，而不是依赖服务器环境变量。",
         "status": {
-          "label": "Status",
-          "configured": "Configured",
-          "incomplete": "Incomplete",
-          "secretKey": "Secret key",
-          "webhookSecret": "Webhook secret",
-          "missing": "Missing"
+          "label": "状态",
+          "configured": "已配置",
+          "incomplete": "未完成",
+          "secretKey": "密钥",
+          "webhookSecret": "Webhook 密钥",
+          "missing": "缺失"
         },
         "form": {
-          "publishableKey": "Publishable key",
+          "publishableKey": "可发布密钥",
           "publishablePlaceholder": "pk_test_...",
-          "secretKey": "Secret key",
-          "secretPlaceholder": "Leave blank to keep current sk_*",
-          "webhookSecret": "Webhook secret",
-          "webhookPlaceholder": "Leave blank to keep current whsec_*",
-          "basicMonthly": "Basic monthly price",
-          "basicYearly": "Basic yearly price",
-          "proMonthly": "Pro monthly price",
-          "proYearly": "Pro yearly price",
-          "maxMonthly": "Max monthly price",
-          "maxYearly": "Max yearly price"
+          "secretKey": "密钥",
+          "secretPlaceholder": "留空可保留当前 sk_*",
+          "webhookSecret": "Webhook 密钥",
+          "webhookPlaceholder": "留空可保留当前 whsec_*",
+          "basicMonthly": "Basic 月付价格",
+          "basicYearly": "Basic 年付价格",
+          "proMonthly": "Pro 月付价格",
+          "proYearly": "Pro 年付价格",
+          "maxMonthly": "Max 月付价格",
+          "maxYearly": "Max 年付价格"
         },
-        "lastUpdated": "Last updated",
-        "webhookEndpoint": "Webhook endpoint",
-        "save": "Save Stripe config",
-        "saving": "Saving...",
-        "successSaved": "Stripe config saved.",
-        "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
+        "lastUpdated": "最后更新",
+        "webhookEndpoint": "Webhook 地址",
+        "save": "保存 Stripe 配置",
+        "saving": "保存中...",
+        "successSaved": "Stripe 配置已保存。",
+        "secretHint": "如果你只想更新价格 ID，可将密钥字段留空。"
       },
       "manualActions": {
-        "title": "Manual actions",
-        "description": "Trigger one feed fetch or one content extraction by ID.",
-        "feedSourceId": "Feed source ID",
+        "title": "手动操作",
+        "description": "按 ID 触发一次订阅源抓取或一次内容提取。",
+        "feedSourceId": "订阅源 ID",
         "feedSourceIdPlaceholder": "feedSourceId",
-        "sourceArticleId": "Source article ID",
+        "sourceArticleId": "来源文章 ID",
         "sourceArticleIdPlaceholder": "sourceArticleId",
-        "triggerFetch": "Trigger fetch",
-        "triggerExtract": "Trigger extract",
+        "triggerFetch": "触发抓取",
+        "triggerExtract": "触发提取",
         "errors": {
-          "feedSourceIdRequired": "Feed source ID is required.",
-          "sourceArticleIdRequired": "Source article ID is required."
+          "feedSourceIdRequired": "必须提供订阅源 ID。",
+          "sourceArticleIdRequired": "必须提供来源文章 ID。"
         }
       },
       "queueJobs": {
-        "title": "Queue jobs",
-        "description": "Review queue states and retry failed jobs one at a time.",
+        "title": "队列任务",
+        "description": "查看队列状态，并逐个重试失败任务。",
         "filters": {
-          "queue": "Queue",
-          "state": "State",
-          "allQueues": "All queues",
-          "allStates": "All states"
+          "queue": "队列",
+          "state": "状态",
+          "allQueues": "全部队列",
+          "allStates": "全部状态"
         },
         "columns": {
-          "queue": "Queue",
-          "job": "Job",
-          "state": "State",
-          "attempts": "Attempts",
-          "failure": "Failure",
-          "created": "Created"
+          "queue": "队列",
+          "job": "任务",
+          "state": "状态",
+          "attempts": "尝试次数",
+          "failure": "失败原因",
+          "created": "创建时间"
         },
         "actions": {
-          "retry": "Retry"
+          "retry": "重试"
         },
-        "empty": "No queue jobs match the selected filters."
+        "empty": "没有队列任务符合所选筛选条件。"
       },
       "confirm": {
-        "defaultTitle": "Confirm action",
-        "defaultDescription": "Confirm this operation.",
+        "defaultTitle": "确认操作",
+        "defaultDescription": "确认此操作。",
         "retryJob": {
-          "title": "Retry this failed job?",
-          "description": "Queue retry for job {jobId} in {queueName}.",
-          "confirmLabel": "Retry job"
+          "title": "重试此失败任务？",
+          "description": "为 {queueName} 中的任务 {jobId} 加入重试。",
+          "confirmLabel": "重试任务"
         },
         "triggerFeedFetch": {
-          "title": "Trigger feed fetch now?",
-          "description": "Queue one immediate RSS fetch for feed source {feedSourceId}.",
-          "confirmLabel": "Trigger feed fetch"
+          "title": "立即触发订阅源抓取？",
+          "description": "为订阅源 {feedSourceId} 加入一次立即 RSS 抓取任务。",
+          "confirmLabel": "触发订阅源抓取"
         },
         "triggerContentExtract": {
-          "title": "Trigger content extraction now?",
-          "description": "Queue one content extraction job for source article {sourceArticleId}.",
-          "confirmLabel": "Trigger extraction"
+          "title": "立即触发内容提取？",
+          "description": "为来源文章 {sourceArticleId} 加入一次内容提取任务。",
+          "confirmLabel": "触发提取"
         }
       },
       "errors": {
-        "runtimeSummary": "Could not load system runtime summary.",
-        "queueJobs": "Could not load queue jobs.",
-        "stripeLoad": "Could not load Stripe config.",
-        "stripeSave": "Could not save Stripe config.",
-        "executeOperation": "Could not execute this system operation."
+        "runtimeSummary": "无法加载系统运行摘要。",
+        "queueJobs": "无法加载队列任务。",
+        "stripeLoad": "无法加载 Stripe 配置。",
+        "stripeSave": "无法保存 Stripe 配置。",
+        "executeOperation": "无法执行此系统操作。"
       }
     }
   }

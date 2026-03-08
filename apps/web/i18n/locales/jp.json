@@ -6,10 +6,10 @@
   "locale": {
     "label": "言語",
     "options": {
-      "en": "英語",
-      "vi": "ベトナム語",
-      "zh": "中国語",
-      "kr": "韓国語",
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
       "jp": "日本語"
     }
   },
@@ -572,713 +572,713 @@
   },
   "admin": {
     "common": {
-      "action": "Action",
-      "actions": "Actions",
-      "confirm": "Confirm",
-      "open": "Open",
-      "edit": "Edit",
-      "detail": "Details",
+      "action": "操作",
+      "actions": "操作",
+      "confirm": "確認",
+      "open": "開く",
+      "edit": "編集",
+      "detail": "詳細",
       "id": "ID",
-      "yes": "Yes",
-      "no": "No",
-      "updating": "Updating...",
-      "queueing": "Queuing...",
-      "notAvailable": "N/A",
-      "noHeartbeat": "No heartbeat",
-      "lastHeartbeat": "Last heartbeat",
-      "expiresAt": "expires",
+      "yes": "はい",
+      "no": "いいえ",
+      "updating": "更新中...",
+      "queueing": "キューに追加中...",
+      "notAvailable": "なし",
+      "noHeartbeat": "ハートビートなし",
+      "lastHeartbeat": "最終ハートビート",
+      "expiresAt": "有効期限",
       "roles": {
-        "user": "User",
-        "admin": "Admin"
+        "user": "ユーザー",
+        "admin": "管理者"
       },
       "accountStatus": {
-        "active": "Active",
-        "suspended": "Suspended"
+        "active": "有効",
+        "suspended": "停止中"
       },
       "eventStatus": {
-        "success": "Success",
-        "failed": "Failed"
+        "success": "成功",
+        "failed": "失敗"
       },
       "runtimeNodes": {
-        "worker": "Worker",
-        "rssScheduler": "RSS scheduler",
-        "contentScheduler": "Content scheduler"
+        "worker": "ワーカー",
+        "rssScheduler": "RSS スケジューラ",
+        "contentScheduler": "コンテンツスケジューラ"
       },
       "runtimeStates": {
-        "healthy": "Healthy",
-        "stale": "Stale",
-        "offline": "Offline",
-        "unknown": "Unknown"
+        "healthy": "正常",
+        "stale": "古い",
+        "offline": "オフライン",
+        "unknown": "不明"
       },
       "queueName": {
-        "rssFetch": "RSS fetch",
-        "contentExtract": "Content extract"
+        "rssFetch": "RSS 取得",
+        "contentExtract": "コンテンツ抽出"
       },
       "queueState": {
-        "waiting": "Waiting",
-        "active": "Active",
-        "failed": "Failed",
-        "delayed": "Delayed",
-        "completed": "Completed"
+        "waiting": "待機中",
+        "active": "実行中",
+        "failed": "失敗",
+        "delayed": "遅延",
+        "completed": "完了"
       },
       "subscriptionTier": {
-        "free": "Free",
+        "free": "無料",
         "basic": "Basic",
         "pro": "Pro",
         "max": "Max"
       },
       "billingInterval": {
-        "monthly": "Monthly",
-        "yearly": "Yearly"
+        "monthly": "月額",
+        "yearly": "年額"
       },
       "stripe": {
-        "customer": "Customer",
-        "subscription": "Subscription",
-        "price": "Price"
+        "customer": "顧客",
+        "subscription": "サブスクリプション",
+        "price": "価格"
       },
       "age": {
-        "label": "Age",
-        "secondsAgo": "{value}s ago",
-        "minutesAgo": "{value}m ago",
-        "hoursAgo": "{value}h ago",
-        "secondsShort": "{value}s",
-        "minutesShort": "{value}m",
-        "hoursShort": "{value}h"
+        "label": "経過時間",
+        "secondsAgo": "{value}秒前",
+        "minutesAgo": "{value}分前",
+        "hoursAgo": "{value}時間前",
+        "secondsShort": "{value}秒",
+        "minutesShort": "{value}分",
+        "hoursShort": "{value}時間"
       }
     },
     "operations": {
-      "metaTitle": "Admin Operations",
+      "metaTitle": "管理運用",
       "overview": {
-        "title": "Operations overview",
-        "description": "Monitor AI usage, queue health, and runtime heartbeat status.",
+        "title": "運用概要",
+        "description": "AI 利用状況、キューの健全性、ランタイムのハートビート状態を監視します。",
         "metrics": {
           "aiTokens7d": {
-            "title": "AI tokens (7d)",
-            "description": "Total token usage in the last 7 days."
+            "title": "AI トークン（7日）",
+            "description": "直近 7 日間の総トークン使用量です。"
           },
           "aiRequests7d": {
-            "title": "AI requests (7d)",
-            "description": "Total summarize requests in the last 7 days."
+            "title": "AI リクエスト（7日）",
+            "description": "直近 7 日間の要約リクエスト総数です。"
           },
           "aiFailures7d": {
-            "title": "AI failures (7d)",
-            "description": "Failed summarize attempts in the last 7 days."
+            "title": "AI 失敗（7日）",
+            "description": "直近 7 日間の要約失敗回数です。"
           },
           "failedQueueJobs": {
-            "title": "Failed queue jobs",
-            "description": "Current failed jobs across worker queues."
+            "title": "失敗したキュージョブ",
+            "description": "現在のワーカーキュー全体の失敗ジョブ数です。"
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for fetch scheduling."
+            "title": "古いフィード",
+            "description": "再取得スケジュール待ちの有効なフィードです。"
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for content extraction."
+            "title": "抽出バックログ",
+            "description": "コンテンツ抽出待ちの記事です。"
           }
         }
       },
       "runtimeHealth": {
-        "title": "Runtime health",
-        "description": "Heartbeat status for worker and schedulers."
+        "title": "ランタイム状態",
+        "description": "ワーカーとスケジューラのハートビート状態です。"
       },
       "drillDown": {
-        "title": "Drill-down",
-        "description": "Open detailed pages to inspect AI events or perform queue actions.",
-        "openAiUsage": "Open AI usage",
-        "openSystemOps": "Open system ops"
+        "title": "詳細へ",
+        "description": "AI イベントを確認したりキュー操作を行うために詳細ページを開きます。",
+        "openAiUsage": "AI 利用状況を開く",
+        "openSystemOps": "システム運用を開く"
       },
       "recentFailedJobs": {
-        "title": "Recent failed jobs",
-        "description": "Latest queue failures across RSS fetch and content extraction workers.",
-        "empty": "No recent failed jobs in queue history.",
-        "noFailureReason": "No failure reason available.",
+        "title": "最近の失敗ジョブ",
+        "description": "RSS 取得とコンテンツ抽出ワーカーの最新のキュー失敗です。",
+        "empty": "最近の失敗ジョブはありません。",
+        "noFailureReason": "失敗理由はありません。",
         "columns": {
-          "queue": "Queue",
-          "job": "Job",
-          "failure": "Failure",
-          "time": "Time"
+          "queue": "キュー",
+          "job": "ジョブ",
+          "failure": "失敗",
+          "time": "時間"
         }
       },
       "errors": {
-        "aiUsageSummary": "Could not load AI usage summary.",
-        "systemOverview": "Could not load system overview.",
-        "runtimeHealth": "Could not load runtime health data.",
-        "recentQueueFailures": "Could not load recent queue failures."
+        "aiUsageSummary": "AI 利用状況の概要を読み込めません。",
+        "systemOverview": "システム概要を読み込めません。",
+        "runtimeHealth": "ランタイム状態データを読み込めません。",
+        "recentQueueFailures": "最近のキュー失敗を読み込めません。"
       }
     },
     "aiUsage": {
-      "metaTitle": "Admin AI Usage",
+      "metaTitle": "管理 AI 利用状況",
       "page": {
-        "title": "AI usage",
-        "description": "Inspect usage events, recent failures, and AI config state.",
-        "manageConfigs": "Manage AI configs"
+        "title": "AI 利用状況",
+        "description": "利用イベント、最近の失敗、AI 設定の状態を確認します。",
+        "manageConfigs": "AI 設定を管理"
       },
       "summary": {
-        "title": "Summary (7 days)",
-        "description": "Token usage and failure trends for admin support visibility.",
-        "totalTokens": "Total tokens",
-        "totalRequests": "Total requests",
-        "failures": "Failures",
-        "topUser": "Top user",
-        "empty7Days": "No AI usage requests recorded in the last 7 days."
+        "title": "概要（7日）",
+        "description": "管理サポート向けのトークン使用量と失敗傾向です。",
+        "totalTokens": "総トークン",
+        "totalRequests": "総リクエスト",
+        "failures": "失敗数",
+        "topUser": "上位ユーザー",
+        "empty7Days": "直近 7 日間に記録された AI リクエストはありません。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Filter by user, provider, model, status, and time range.",
-        "from": "From",
-        "to": "To",
+        "title": "フィルター",
+        "description": "ユーザー、プロバイダー、モデル、状態、期間で絞り込みます。",
+        "from": "開始",
+        "to": "終了",
         "user": {
-          "label": "User",
-          "placeholder": "Search name or email"
+          "label": "ユーザー",
+          "placeholder": "名前またはメールで検索"
         },
         "provider": {
-          "label": "Provider",
+          "label": "プロバイダー",
           "placeholder": "openai, anthropic..."
         },
         "model": {
-          "label": "Model",
+          "label": "モデル",
           "placeholder": "gpt-4.1..."
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "状態",
+          "all": "すべての状態"
         }
       },
       "events": {
-        "title": "AI events",
-        "description": "Recent summarize activity with success/failure status and safe error summaries."
+        "title": "AI イベント",
+        "description": "成功/失敗状態と安全なエラー要約を含む最近の要約アクティビティです。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "providerModel": "Provider / model",
-          "status": "Status",
-          "tokens": "Tokens",
-          "duration": "Duration",
-          "errorSummary": "Error summary",
-          "created": "Created"
+          "user": "ユーザー",
+          "providerModel": "プロバイダー / モデル",
+          "status": "状態",
+          "tokens": "トークン",
+          "duration": "所要時間",
+          "errorSummary": "エラー要約",
+          "created": "作成日時"
         },
-        "empty": "No AI usage events match the current filters."
+        "empty": "現在のフィルターに一致する AI イベントはありません。"
       },
       "configDialog": {
-        "title": "AI config controls",
-        "description": "Review config ownership and toggle individual configs.",
-        "empty": "No AI configs match the current filters.",
+        "title": "AI 設定コントロール",
+        "description": "設定の所有者を確認し、個別設定を有効/無効にします。",
+        "empty": "現在のフィルターに一致する AI 設定はありません。",
         "badges": {
-          "default": "Default"
+          "default": "デフォルト"
         },
         "select": {
-          "title": "Select config",
-          "description": "Choose a config to inspect and toggle.",
-          "placeholder": "Select an AI config"
+          "title": "設定を選択",
+          "description": "確認して切り替える設定を選択します。",
+          "placeholder": "AI 設定を選択"
         },
         "fields": {
-          "owner": "Owner",
-          "baseUrl": "Base URL",
-          "defaultProviderUrl": "Default provider URL",
-          "updated": "Updated"
+          "owner": "所有者",
+          "baseUrl": "ベース URL",
+          "defaultProviderUrl": "デフォルトのプロバイダー URL",
+          "updated": "更新日時"
         },
         "actions": {
-          "enable": "Enable config",
-          "disable": "Disable config",
-          "updating": "Updating..."
+          "enable": "設定を有効化",
+          "disable": "設定を無効化",
+          "updating": "更新中..."
         },
         "confirm": {
-          "enableTitle": "Enable this AI config?",
-          "disableTitle": "Disable this AI config?",
-          "enableDescription": "Enable {name}. Summarize requests can use this config again.",
-          "disableDescription": "Disable {name}. Summarize requests using this config will be blocked."
+          "enableTitle": "この AI 設定を有効にしますか？",
+          "disableTitle": "この AI 設定を無効にしますか？",
+          "enableDescription": "{name} を有効にします。要約リクエストで再びこの設定を利用できます。",
+          "disableDescription": "{name} を無効にします。この設定を使う要約リクエストはブロックされます。"
         }
       },
       "errors": {
-        "summary": "Could not load AI usage summary.",
-        "events": "Could not load AI usage events.",
-        "configs": "Could not load AI configs.",
-        "updateConfig": "Could not update this AI config."
+        "summary": "AI 利用状況の概要を読み込めません。",
+        "events": "AI 利用イベントを読み込めません。",
+        "configs": "AI 設定を読み込めません。",
+        "updateConfig": "この AI 設定を更新できません。"
       }
     },
     "users": {
-      "metaTitle": "Admin Users",
+      "metaTitle": "管理ユーザー",
       "page": {
-        "title": "Admin users",
-        "description": "Review user accounts, subscription state, and account status actions."
+        "title": "管理ユーザー",
+        "description": "ユーザーアカウント、契約状態、アカウント状態操作を確認します。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search users and narrow results by role, account status, or subscription tier.",
+        "title": "フィルター",
+        "description": "ユーザーを検索し、ロール、アカウント状態、契約プランで結果を絞り込みます。",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "検索",
+          "placeholder": "名前またはメール"
         },
         "role": {
-          "label": "Role",
-          "all": "All roles"
+          "label": "ロール",
+          "all": "すべてのロール"
         },
         "status": {
-          "label": "Status",
-          "all": "All statuses"
+          "label": "状態",
+          "all": "すべての状態"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "プラン",
+          "all": "すべてのプラン"
         }
       },
       "directory": {
-        "title": "User directory",
-        "description": "Open a user row to review details and update account status."
+        "title": "ユーザー一覧",
+        "description": "ユーザー行を開いて詳細を確認し、アカウント状態を更新します。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "role": "Role",
-          "status": "Status",
-          "subscription": "Subscription",
-          "feeds": "Feeds",
-          "created": "Created"
+          "user": "ユーザー",
+          "role": "ロール",
+          "status": "状態",
+          "subscription": "契約",
+          "feeds": "フィード",
+          "created": "作成日時"
         },
-        "empty": "No users match the current filters. Adjust role, status, or plan filters to widen the result.",
-        "hasMore": "More users are available. Refine filters to narrow the result set."
+        "empty": "現在のフィルターに一致するユーザーはいません。ロール、状態、プランのフィルターを調整してください。",
+        "hasMore": "さらにユーザーがあります。結果を絞り込むにはフィルターを調整してください。"
       },
       "detail": {
-        "title": "User details",
-        "description": "Review account state, subscription details, and support actions.",
-        "empty": "Select a user to review account details.",
+        "title": "ユーザー詳細",
+        "description": "アカウント状態、契約内容、サポート操作を確認します。",
+        "empty": "アカウント詳細を確認するにはユーザーを選択してください。",
         "accountSummary": {
-          "title": "Account summary",
-          "description": "Membership and feed usage at a glance.",
-          "created": "Created",
-          "updated": "Updated",
-          "feeds": "Feeds",
-          "suspendedAt": "Suspended at"
+          "title": "アカウント概要",
+          "description": "メンバーシップとフィード利用状況を一目で確認します。",
+          "created": "作成日時",
+          "updated": "更新日時",
+          "feeds": "フィード",
+          "suspendedAt": "停止日時"
         },
         "subscription": {
-          "title": "Subscription",
-          "description": "Tier, billing cadence, and current expiry.",
-          "plan": "Plan",
-          "status": "Subscription status",
-          "expires": "Expires"
+          "title": "契約",
+          "description": "プラン、課金周期、現在の有効期限です。",
+          "plan": "プラン",
+          "status": "契約状態",
+          "expires": "有効期限"
         },
         "actions": {
-          "title": "Account actions",
-          "description": "Suspend or reactivate the user account.",
-          "suspendReasonPlaceholder": "Optional suspension reason",
-          "suspendReasonHint": "The reason is visible to admins in the detail view and audit log.",
-          "suspensionReason": "Suspension reason",
-          "noReason": "No reason provided.",
-          "suspend": "Suspend user",
-          "suspending": "Suspending...",
-          "reactivate": "Reactivate user",
-          "reactivating": "Reactivating..."
+          "title": "アカウント操作",
+          "description": "ユーザーアカウントを停止または再有効化します。",
+          "suspendReasonPlaceholder": "停止理由（任意）",
+          "suspendReasonHint": "この理由は管理者の詳細画面と監査ログに表示されます。",
+          "suspensionReason": "停止理由",
+          "noReason": "理由はありません。",
+          "suspend": "ユーザーを停止",
+          "suspending": "停止中...",
+          "reactivate": "ユーザーを再有効化",
+          "reactivating": "再有効化中..."
         },
         "confirm": {
-          "thisUser": "this user",
+          "thisUser": "このユーザー",
           "suspend": {
-            "title": "Suspend this user?",
-            "description": "Suspend {name}. They lose access to protected routes until an admin reactivates the account.",
-            "descriptionWithReason": "Suspend {name}. The reason \"{reason}\" will be saved to the admin audit log."
+            "title": "このユーザーを停止しますか？",
+            "description": "{name} を停止します。管理者が再有効化するまで保護されたルートにアクセスできません。",
+            "descriptionWithReason": "{name} を停止します。理由「{reason}」は管理者の監査ログに保存されます。"
           },
           "reactivate": {
-            "title": "Reactivate this user?",
-            "description": "Restore access for {name}. Protected routes become available again immediately."
+            "title": "このユーザーを再有効化しますか？",
+            "description": "{name} のアクセスを復元します。保護されたルートはすぐに再び利用可能になります。"
           }
         }
       },
       "errors": {
-        "list": "Could not load admin users. Refresh and try again.",
-        "suspend": "Could not suspend this user. Try again.",
-        "reactivate": "Could not reactivate this user. Try again."
+        "list": "管理ユーザーを読み込めません。更新して再試行してください。",
+        "suspend": "このユーザーを停止できません。再試行してください。",
+        "reactivate": "このユーザーを再有効化できません。再試行してください。"
       }
     },
     "subscriptions": {
-      "metaTitle": "Admin Subscriptions",
+      "metaTitle": "管理サブスクリプション",
       "page": {
-        "title": "Admin subscriptions",
-        "description": "Review billing state and apply support-oriented subscription changes."
+        "title": "管理サブスクリプション",
+        "description": "課金状態を確認し、サポート用の契約変更を適用します。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search by user and narrow the billing slice by plan, status, cadence, or cancellation flag.",
+        "title": "フィルター",
+        "description": "ユーザーで検索し、プラン、状態、課金周期、キャンセルフラグで絞り込みます。",
         "search": {
-          "label": "Search",
-          "placeholder": "Name or email"
+          "label": "検索",
+          "placeholder": "名前またはメール"
         },
         "tier": {
-          "label": "Tier",
-          "all": "All tiers"
+          "label": "プラン",
+          "all": "すべてのプラン"
         },
         "billing": {
-          "label": "Billing",
-          "all": "All billing"
+          "label": "課金",
+          "all": "すべての課金タイプ"
         },
         "cancelFlag": {
-          "label": "Cancel flag",
-          "all": "All flags",
-          "canceling": "Canceling",
-          "continuing": "Continuing"
+          "label": "キャンセルフラグ",
+          "all": "すべてのフラグ",
+          "canceling": "キャンセル予定",
+          "continuing": "継続中"
         }
       },
       "directory": {
-        "title": "Subscription directory",
-        "description": "Open a row to inspect support controls and persist changes."
+        "title": "契約一覧",
+        "description": "行を開いてサポート用コントロールを確認し、変更を保存します。"
       },
       "table": {
         "columns": {
-          "user": "User",
-          "plan": "Plan",
-          "status": "Status",
-          "expires": "Expires",
-          "stripeIds": "Stripe IDs"
+          "user": "ユーザー",
+          "plan": "プラン",
+          "status": "状態",
+          "expires": "有効期限",
+          "stripeIds": "Stripe ID"
         },
-        "cancelAtPeriodEnd": "Cancel at period end",
-        "empty": "No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.",
-        "hasMore": "More subscriptions are available. Narrow the filters to inspect a smaller slice."
+        "cancelAtPeriodEnd": "期間終了時にキャンセル",
+        "empty": "現在のフィルターに一致する契約はありません。課金フィルターを調整してください。",
+        "hasMore": "さらに契約があります。フィルターを絞り込んでください。"
       },
       "edit": {
-        "title": "Edit subscription",
-        "description": "Support plan changes, expiry adjustments, and cancellation flags.",
-        "empty": "Select a subscription row to edit support settings.",
-        "currentExpiry": "Current expiry",
+        "title": "契約を編集",
+        "description": "プラン変更、有効期限調整、キャンセルフラグをサポートします。",
+        "empty": "サポート設定を編集するには契約行を選択してください。",
+        "currentExpiry": "現在の有効期限",
         "fields": {
-          "tier": "Tier",
-          "expiry": "Expires at",
-          "cancellation": "Cancel at period end"
+          "tier": "プラン",
+          "expiry": "有効期限",
+          "cancellation": "期間終了時にキャンセル"
         },
         "controls": {
-          "title": "Support controls",
-          "description": "Adjust billing and support flags for this user.",
-          "tierPlaceholder": "Select tier",
-          "cancelAtPeriodEndHint": "Preserve subscription until the current paid period ends.",
-          "save": "Save changes",
-          "saving": "Saving...",
-          "noPendingChanges": "No pending changes to save.",
-          "pendingFields": "Pending fields: {fields}."
+          "title": "サポートコントロール",
+          "description": "このユーザーの課金およびサポートフラグを調整します。",
+          "tierPlaceholder": "プランを選択",
+          "cancelAtPeriodEndHint": "現在の支払い期間が終わるまで契約を維持します。",
+          "save": "変更を保存",
+          "saving": "保存中...",
+          "noPendingChanges": "保存する変更はありません。",
+          "pendingFields": "保留中の項目: {fields}。"
         },
         "confirm": {
-          "title": "Save subscription changes?",
-          "confirmLabel": "Save subscription changes",
-          "theseChanges": "these changes",
-          "description": "Apply {fields} for {name}. These updates are recorded in the admin audit log.",
-          "descriptionFallback": "Apply the pending subscription changes."
+          "title": "契約変更を保存しますか？",
+          "confirmLabel": "契約変更を保存",
+          "theseChanges": "これらの変更",
+          "description": "{name} に {fields} を適用します。これらの更新は管理者の監査ログに記録されます。",
+          "descriptionFallback": "保留中の契約変更を適用します。"
         }
       },
       "errors": {
-        "list": "Could not load subscriptions. Refresh and try again.",
-        "update": "Could not update this subscription. Review the changes and try again."
+        "list": "契約情報を読み込めません。更新して再試行してください。",
+        "update": "この契約を更新できません。変更内容を確認して再試行してください。"
       }
     },
     "feeds": {
-      "metaTitle": "Admin Feeds",
+      "metaTitle": "管理フィード",
       "page": {
-        "title": "Admin feeds",
-        "description": "Track system-wide feed health and trigger operational queue actions."
+        "title": "管理フィード",
+        "description": "システム全体のフィード健全性を追跡し、運用キュー操作を実行します。"
       },
       "filters": {
-        "title": "Filters",
-        "description": "Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.",
+        "title": "フィルター",
+        "description": "フィードを検索し、有効状態、エラー、古いスケジュール、抽出失敗に注目します。",
         "search": {
-          "label": "Search",
-          "placeholder": "Feed title or URL"
+          "label": "検索",
+          "placeholder": "フィードタイトルまたは URL"
         },
         "enabled": {
-          "label": "Enabled",
-          "all": "All feeds"
+          "label": "有効",
+          "all": "すべてのフィード"
         },
         "errors": {
-          "label": "Errors",
-          "all": "All error states",
-          "hasErrors": "Has errors",
-          "healthy": "Healthy"
+          "label": "エラー",
+          "all": "すべてのエラー状態",
+          "hasErrors": "エラーあり",
+          "healthy": "正常"
         },
         "stale": {
-          "label": "Stale",
-          "all": "All freshness states",
-          "stale": "Stale",
-          "scheduled": "Scheduled"
+          "label": "古さ",
+          "all": "すべての鮮度状態",
+          "stale": "古い",
+          "scheduled": "予定通り"
         },
         "extraction": {
-          "label": "Extraction",
-          "all": "All extraction states",
-          "hasFailures": "Has failures",
-          "healthy": "Healthy"
+          "label": "抽出",
+          "all": "すべての抽出状態",
+          "hasFailures": "失敗あり",
+          "healthy": "正常"
         }
       },
       "operations": {
-        "title": "Feed operations",
-        "description": "Use quick actions or open a feed for detailed operational context."
+        "title": "フィード運用",
+        "description": "クイック操作を使うかフィードを開いて詳細な運用情報を確認します。"
       },
       "table": {
         "columns": {
-          "feed": "Feed",
-          "enabled": "Enabled",
-          "health": "Health",
-          "coverage": "Coverage",
-          "lastFetched": "Last fetched"
+          "feed": "フィード",
+          "enabled": "有効",
+          "health": "状態",
+          "coverage": "範囲",
+          "lastFetched": "最終取得"
         },
         "health": {
-          "errors": "Errors: {count}",
-          "extractionFailures": "Extraction failures: {count}"
+          "errors": "エラー: {count}",
+          "extractionFailures": "抽出失敗: {count}"
         },
         "coverage": {
-          "subscriptions": "{count} subscriptions",
-          "articles": "{count} articles"
+          "subscriptions": "{count} 件の購読",
+          "articles": "{count} 件の記事"
         },
-        "nextFetch": "Next",
-        "empty": "No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.",
-        "hasMore": "More feed sources are available. Refine filters to narrow the result set.",
+        "nextFetch": "次回取得",
+        "empty": "現在のフィルターに一致するフィードはありません。状態または有効フィルターを広げてください。",
+        "hasMore": "さらにフィードがあります。結果を絞るにはフィルターを調整してください。",
         "actions": {
-          "retryFetch": "Retry fetch",
-          "retryExtraction": "Retry extraction"
+          "retryFetch": "取得を再試行",
+          "retryExtraction": "抽出を再試行"
         },
         "confirm": {
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "defaultTitle": "管理操作を確認",
+          "defaultDescription": "この管理操作を確認してください。",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "RSS 取得を再試行しますか？",
+            "description": "{label} に対する RSS 取得再試行をすぐにキューへ追加します。",
+            "confirmLabel": "RSS 再試行をキューへ追加"
           },
           "retryExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "フィード抽出を再試行しますか？",
+            "description": "{label} の対象記事に対して抽出再試行をキューへ追加します。",
+            "confirmLabel": "抽出再試行をキューへ追加"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "このフィードを有効にしますか？",
+            "description": "{label} を有効化し、定期取得を再開します。",
+            "confirmLabel": "フィードを有効化"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "このフィードを無効にしますか？",
+            "description": "{label} を無効化します。管理者が再度有効化するか強制再試行するまで定期取得は停止します。",
+            "confirmLabel": "フィードを無効化"
           }
         }
       },
       "detail": {
-        "metaTitle": "Admin Feed Detail",
+        "metaTitle": "管理フィード詳細",
         "page": {
-          "title": "Feed operations detail",
-          "description": "Inspect article health and trigger targeted retries for this feed source.",
-          "backToFeeds": "Back to feeds"
+          "title": "フィード運用詳細",
+          "description": "記事の状態を確認し、このフィードに対する対象再試行を実行します。",
+          "backToFeeds": "フィード一覧へ戻る"
         },
-        "empty": "Feed details are unavailable.",
+        "empty": "フィード詳細は利用できません。",
         "summary": {
-          "lastFetched": "Last fetched",
-          "nextFetch": "Next fetch",
-          "subscriptions": "Subscriptions",
-          "articles": "Articles",
-          "rssErrors": "RSS errors: {count}",
-          "extractionFailures": "Extraction failures: {count}",
-          "lastError": "Last error",
-          "noRecentErrors": "No recent RSS errors."
+          "lastFetched": "最終取得",
+          "nextFetch": "次回取得",
+          "subscriptions": "購読数",
+          "articles": "記事数",
+          "rssErrors": "RSS エラー: {count}",
+          "extractionFailures": "抽出失敗: {count}",
+          "lastError": "最新エラー",
+          "noRecentErrors": "最近の RSS エラーはありません。"
         },
         "operations": {
-          "title": "Operations",
-          "description": "Toggle source state and trigger queue retries.",
-          "feedEnabled": "Feed enabled",
-          "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
-          "retryFetch": "Retry RSS fetch",
-          "retryFeedExtractionQueue": "Retry feed extraction queue"
+          "title": "操作",
+          "description": "フィード状態を切り替え、キュー再試行を実行します。",
+          "feedEnabled": "フィード有効化",
+          "feedEnabledHint": "無効なフィードは強制実行しない限りスケジューラでスキップされます。",
+          "retryFetch": "RSS 取得を再試行",
+          "retryFeedExtractionQueue": "フィード抽出キューを再試行"
         },
         "recentArticles": {
-          "title": "Recent articles",
-          "description": "Latest source articles and extraction status.",
+          "title": "最近の記事",
+          "description": "最新の元記事と抽出状態です。",
           "columns": {
-            "article": "Article",
-            "published": "Published",
-            "status": "Status"
+            "article": "記事",
+            "published": "公開日",
+            "status": "状態"
           },
-          "empty": "No recent articles found for this feed source.",
-          "attempts": "Attempts: {count}",
-          "retryArticle": "Retry article",
+          "empty": "このフィードに最近の記事はありません。",
+          "attempts": "試行回数: {count}",
+          "retryArticle": "記事を再試行",
           "status": {
-            "extracted": "Extracted",
-            "pending": "Pending",
-            "needsAttention": "Needs attention"
+            "extracted": "抽出済み",
+            "pending": "待機中",
+            "needsAttention": "要確認"
           }
         },
         "recentFailures": {
-          "title": "Recent extraction failures",
-          "description": "Articles that most recently failed extraction.",
+          "title": "最近の抽出失敗",
+          "description": "最近抽出に失敗した記事です。",
           "columns": {
-            "article": "Article",
-            "error": "Error",
-            "updated": "Updated"
+            "article": "記事",
+            "error": "エラー",
+            "updated": "更新日時"
           },
-          "empty": "No recent extraction failures.",
-          "attempts": "Attempts: {count}",
-          "retry": "Retry"
+          "empty": "最近の抽出失敗はありません。",
+          "attempts": "試行回数: {count}",
+          "retry": "再試行"
         },
         "confirm": {
-          "thisFeed": "this feed",
-          "defaultTitle": "Confirm admin action",
-          "defaultDescription": "Confirm this admin action.",
+          "thisFeed": "このフィード",
+          "defaultTitle": "管理操作を確認",
+          "defaultDescription": "この管理操作を確認してください。",
           "retryFetch": {
-            "title": "Retry RSS fetch?",
-            "description": "Queue an RSS fetch retry for {label} immediately.",
-            "confirmLabel": "Queue RSS retry"
+            "title": "RSS 取得を再試行しますか？",
+            "description": "{label} に対する RSS 取得再試行をすぐにキューへ追加します。",
+            "confirmLabel": "RSS 再試行をキューへ追加"
           },
           "retryFeedExtraction": {
-            "title": "Retry feed extraction?",
-            "description": "Queue extraction retries for eligible articles from {label}.",
-            "confirmLabel": "Queue extraction retry"
+            "title": "フィード抽出を再試行しますか？",
+            "description": "{label} の対象記事に対して抽出再試行をキューへ追加します。",
+            "confirmLabel": "抽出再試行をキューへ追加"
           },
           "retryArticleExtraction": {
-            "title": "Retry article extraction?",
-            "description": "Queue a fresh extraction attempt for {title}.",
-            "confirmLabel": "Queue article retry"
+            "title": "記事抽出を再試行しますか？",
+            "description": "{title} に対する新しい抽出試行をキューへ追加します。",
+            "confirmLabel": "記事再試行をキューへ追加"
           },
           "enable": {
-            "title": "Enable this feed?",
-            "description": "Enable {label} so scheduled fetches can resume.",
-            "confirmLabel": "Enable feed"
+            "title": "このフィードを有効にしますか？",
+            "description": "{label} を有効化し、定期取得を再開します。",
+            "confirmLabel": "フィードを有効化"
           },
           "disable": {
-            "title": "Disable this feed?",
-            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
-            "confirmLabel": "Disable feed"
+            "title": "このフィードを無効にしますか？",
+            "description": "{label} を無効化します。管理者が再度有効化するか強制再試行するまで定期取得は停止します。",
+            "confirmLabel": "フィードを無効化"
           }
         },
         "errors": {
-          "load": "Could not load feed details. Refresh and try again.",
-          "retryArticleExtraction": "Could not queue an article extraction retry. Try again."
+          "load": "フィード詳細を読み込めません。更新して再試行してください。",
+          "retryArticleExtraction": "記事抽出再試行をキューへ追加できません。再試行してください。"
         }
       },
       "errors": {
-        "list": "Could not load feed sources. Refresh and try again.",
-        "updateState": "Could not update this feed state. Try again.",
-        "retryFetch": "Could not queue an RSS fetch retry. Try again.",
-        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+        "list": "フィードソースを読み込めません。更新して再試行してください。",
+        "updateState": "このフィード状態を更新できません。再試行してください。",
+        "retryFetch": "RSS 取得再試行をキューへ追加できません。再試行してください。",
+        "retryExtraction": "フィード抽出再試行をキューへ追加できません。再試行してください。"
       }
     },
     "systemOps": {
-      "metaTitle": "Admin System Ops",
+      "metaTitle": "管理システム運用",
       "page": {
-        "title": "System ops",
-        "description": "Inspect queue health and run single-item operational actions safely."
+        "title": "システム運用",
+        "description": "キュー状態を確認し、安全に単発の運用操作を実行します。"
       },
       "overview": {
         "metrics": {
           "failedJobs": {
-            "title": "Failed jobs",
-            "description": "Current failed jobs across queues."
+            "title": "失敗ジョブ",
+            "description": "現在のキュー全体の失敗ジョブ数です。"
           },
           "staleFeeds": {
-            "title": "Stale feeds",
-            "description": "Enabled feeds waiting for refresh."
+            "title": "古いフィード",
+            "description": "更新待ちの有効フィードです。"
           },
           "extractionBacklog": {
-            "title": "Extraction backlog",
-            "description": "Articles waiting for extraction."
+            "title": "抽出バックログ",
+            "description": "抽出待ちの記事です。"
           },
           "rssWaitingJobs": {
-            "title": "RSS waiting jobs",
-            "description": "Pending RSS fetch jobs."
+            "title": "RSS 待機ジョブ",
+            "description": "処理待ちの RSS 取得ジョブです。"
           },
           "contentWaitingJobs": {
-            "title": "Content waiting jobs",
-            "description": "Pending content extraction jobs."
+            "title": "コンテンツ待機ジョブ",
+            "description": "処理待ちのコンテンツ抽出ジョブです。"
           }
         },
         "runtimeHeartbeat": {
-          "title": "Runtime heartbeat",
-          "description": "Worker and scheduler liveness from Redis heartbeat keys."
+          "title": "ランタイムハートビート",
+          "description": "Redis のハートビートキーに基づくワーカーとスケジューラの稼働状況です。"
         }
       },
       "stripe": {
-        "title": "Stripe config",
-        "description": "Manage Stripe keys and plan price IDs here instead of server environment variables.",
+        "title": "Stripe 設定",
+        "description": "サーバー環境変数ではなく、ここで Stripe キーとプラン価格 ID を管理します。",
         "status": {
-          "label": "Status",
-          "configured": "Configured",
-          "incomplete": "Incomplete",
-          "secretKey": "Secret key",
-          "webhookSecret": "Webhook secret",
-          "missing": "Missing"
+          "label": "状態",
+          "configured": "設定済み",
+          "incomplete": "未完了",
+          "secretKey": "シークレットキー",
+          "webhookSecret": "Webhook シークレット",
+          "missing": "未設定"
         },
         "form": {
-          "publishableKey": "Publishable key",
+          "publishableKey": "公開キー",
           "publishablePlaceholder": "pk_test_...",
-          "secretKey": "Secret key",
-          "secretPlaceholder": "Leave blank to keep current sk_*",
-          "webhookSecret": "Webhook secret",
-          "webhookPlaceholder": "Leave blank to keep current whsec_*",
-          "basicMonthly": "Basic monthly price",
-          "basicYearly": "Basic yearly price",
-          "proMonthly": "Pro monthly price",
-          "proYearly": "Pro yearly price",
-          "maxMonthly": "Max monthly price",
-          "maxYearly": "Max yearly price"
+          "secretKey": "シークレットキー",
+          "secretPlaceholder": "現在の sk_* を保持するには空欄のままにします",
+          "webhookSecret": "Webhook シークレット",
+          "webhookPlaceholder": "現在の whsec_* を保持するには空欄のままにします",
+          "basicMonthly": "Basic 月額価格",
+          "basicYearly": "Basic 年額価格",
+          "proMonthly": "Pro 月額価格",
+          "proYearly": "Pro 年額価格",
+          "maxMonthly": "Max 月額価格",
+          "maxYearly": "Max 年額価格"
         },
-        "lastUpdated": "Last updated",
-        "webhookEndpoint": "Webhook endpoint",
-        "save": "Save Stripe config",
-        "saving": "Saving...",
-        "successSaved": "Stripe config saved.",
-        "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
+        "lastUpdated": "最終更新",
+        "webhookEndpoint": "Webhook エンドポイント",
+        "save": "Stripe 設定を保存",
+        "saving": "保存中...",
+        "successSaved": "Stripe 設定を保存しました。",
+        "secretHint": "価格 ID だけ更新する場合はシークレット入力を空のままにできます。"
       },
       "manualActions": {
-        "title": "Manual actions",
-        "description": "Trigger one feed fetch or one content extraction by ID.",
-        "feedSourceId": "Feed source ID",
+        "title": "手動操作",
+        "description": "ID を指定して 1 回のフィード取得またはコンテンツ抽出を実行します。",
+        "feedSourceId": "フィードソース ID",
         "feedSourceIdPlaceholder": "feedSourceId",
-        "sourceArticleId": "Source article ID",
+        "sourceArticleId": "ソース記事 ID",
         "sourceArticleIdPlaceholder": "sourceArticleId",
-        "triggerFetch": "Trigger fetch",
-        "triggerExtract": "Trigger extract",
+        "triggerFetch": "取得を実行",
+        "triggerExtract": "抽出を実行",
         "errors": {
-          "feedSourceIdRequired": "Feed source ID is required.",
-          "sourceArticleIdRequired": "Source article ID is required."
+          "feedSourceIdRequired": "フィードソース ID が必要です。",
+          "sourceArticleIdRequired": "ソース記事 ID が必要です。"
         }
       },
       "queueJobs": {
-        "title": "Queue jobs",
-        "description": "Review queue states and retry failed jobs one at a time.",
+        "title": "キュージョブ",
+        "description": "キュー状態を確認し、失敗したジョブを 1 件ずつ再試行します。",
         "filters": {
-          "queue": "Queue",
-          "state": "State",
-          "allQueues": "All queues",
-          "allStates": "All states"
+          "queue": "キュー",
+          "state": "状態",
+          "allQueues": "すべてのキュー",
+          "allStates": "すべての状態"
         },
         "columns": {
-          "queue": "Queue",
-          "job": "Job",
-          "state": "State",
-          "attempts": "Attempts",
-          "failure": "Failure",
-          "created": "Created"
+          "queue": "キュー",
+          "job": "ジョブ",
+          "state": "状態",
+          "attempts": "試行回数",
+          "failure": "失敗理由",
+          "created": "作成日時"
         },
         "actions": {
-          "retry": "Retry"
+          "retry": "再試行"
         },
-        "empty": "No queue jobs match the selected filters."
+        "empty": "選択したフィルターに一致するキュージョブはありません。"
       },
       "confirm": {
-        "defaultTitle": "Confirm action",
-        "defaultDescription": "Confirm this operation.",
+        "defaultTitle": "操作を確認",
+        "defaultDescription": "この操作を確認してください。",
         "retryJob": {
-          "title": "Retry this failed job?",
-          "description": "Queue retry for job {jobId} in {queueName}.",
-          "confirmLabel": "Retry job"
+          "title": "この失敗ジョブを再試行しますか？",
+          "description": "{queueName} のジョブ {jobId} の再試行をキューへ追加します。",
+          "confirmLabel": "ジョブを再試行"
         },
         "triggerFeedFetch": {
-          "title": "Trigger feed fetch now?",
-          "description": "Queue one immediate RSS fetch for feed source {feedSourceId}.",
-          "confirmLabel": "Trigger feed fetch"
+          "title": "今すぐフィード取得を実行しますか？",
+          "description": "フィードソース {feedSourceId} に対して即時 RSS 取得をキューへ追加します。",
+          "confirmLabel": "フィード取得を実行"
         },
         "triggerContentExtract": {
-          "title": "Trigger content extraction now?",
-          "description": "Queue one content extraction job for source article {sourceArticleId}.",
-          "confirmLabel": "Trigger extraction"
+          "title": "今すぐコンテンツ抽出を実行しますか？",
+          "description": "ソース記事 {sourceArticleId} に対してコンテンツ抽出ジョブをキューへ追加します。",
+          "confirmLabel": "抽出を実行"
         }
       },
       "errors": {
-        "runtimeSummary": "Could not load system runtime summary.",
-        "queueJobs": "Could not load queue jobs.",
-        "stripeLoad": "Could not load Stripe config.",
-        "stripeSave": "Could not save Stripe config.",
-        "executeOperation": "Could not execute this system operation."
+        "runtimeSummary": "システムランタイム概要を読み込めません。",
+        "queueJobs": "キュージョブを読み込めません。",
+        "stripeLoad": "Stripe 設定を読み込めません。",
+        "stripeSave": "Stripe 設定を保存できません。",
+        "executeOperation": "このシステム操作を実行できません。"
       }
     }
   }

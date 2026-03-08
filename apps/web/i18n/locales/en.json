@@ -7,10 +7,10 @@
     "label": "Language",
     "options": {
       "en": "English",
-      "vi": "Vietnamese",
-      "zh": "Chinese",
-      "kr": "Korean",
-      "jp": "Japanese"
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
     }
   },
   "common": {
