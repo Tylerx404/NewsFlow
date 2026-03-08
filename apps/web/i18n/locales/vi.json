@@ -88,6 +88,122 @@
       "logOut": "Đăng xuất"
     }
   },
+  "auth": {
+    "common": {
+      "name": "Tên",
+      "namePlaceholder": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPlaceholder": "m@example.com",
+      "password": "Mật khẩu",
+      "orContinueWith": "Hoặc tiếp tục với",
+      "heroImageAlt": "Hình minh họa xác thực",
+      "termsPrefix": "Khi nhấn tiếp tục, bạn đồng ý với",
+      "termsOfService": "Điều khoản dịch vụ",
+      "termsAnd": "và",
+      "privacyPolicy": "Chính sách quyền riêng tư"
+    },
+    "login": {
+      "title": "Chào mừng quay lại",
+      "subtitle": "Đăng nhập vào tài khoản NewsFlow của bạn",
+      "forgotPassword": "Quên mật khẩu?",
+      "submit": "Đăng nhập",
+      "submitting": "Đang đăng nhập...",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký",
+      "sso": {
+        "apple": "Đăng nhập với Apple",
+        "google": "Đăng nhập với Google",
+        "meta": "Đăng nhập với Meta"
+      },
+      "errors": {
+        "generic": "Không thể đăng nhập lúc này. Vui lòng thử lại.",
+        "invalidCredentials": "Email hoặc mật khẩu không đúng."
+      }
+    },
+    "signup": {
+      "title": "Tạo tài khoản",
+      "subtitle": "Nhập email của bạn để tạo tài khoản",
+      "emailDescription": "Chúng tôi sẽ dùng email này để liên hệ. Chúng tôi không chia sẻ email của bạn.",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "passwordHint": "Mật khẩu tối thiểu 8 ký tự.",
+      "submit": "Tạo tài khoản",
+      "submitting": "Đang tạo tài khoản...",
+      "haveAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "sso": {
+        "apple": "Đăng ký với Apple",
+        "google": "Đăng ký với Google",
+        "meta": "Đăng ký với Meta"
+      },
+      "errors": {
+        "generic": "Không thể tạo tài khoản lúc này. Vui lòng thử lại.",
+        "passwordConfirmationMismatch": "Xác nhận mật khẩu không khớp.",
+        "createFailed": "Không thể tạo tài khoản của bạn."
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "Trình đọc RSS cá nhân hóa bằng AI.",
+      "login": "Đăng nhập",
+      "signUp": "Đăng ký",
+      "pricing": "Bảng giá"
+    },
+    "pricing": {
+      "badge": "Bảng giá",
+      "title": "Chọn Gói Phát Triển",
+      "subtitle": "Chọn gói và truy cập ngay sau khi thanh toán. Nâng cấp khi workflow AI của bạn cần tốc độ và dung lượng cao hơn.",
+      "bestValue": "Đáng giá nhất",
+      "billing": {
+        "monthly": "Thanh toán theo tháng",
+        "yearly": "Thanh toán theo năm"
+      },
+      "suffix": {
+        "month": "tháng",
+        "year": "năm"
+      },
+      "meta": {
+        "monthly": "Theo tháng, có thể hủy bất cứ lúc nào.",
+        "yearly": "Theo năm, tương đương khoảng {price}/tháng.",
+        "discount": "Tiết kiệm khoảng {percent}% khi thanh toán năm."
+      },
+      "actions": {
+        "choosePlan": "Chọn gói",
+        "createAccount": "Tạo tài khoản",
+        "backHome": "Về trang chủ",
+        "goSubscriptionSettings": "Đến cài đặt gói đăng ký"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "Gói cơ bản cho nhu cầu thử nghiệm và khám phá cá nhân.",
+          "features": {
+            "coreRss": "Quy trình đọc RSS cốt lõi",
+            "aiOccasional": "Tóm tắt AI cho nhu cầu thỉnh thoảng",
+            "instantAccess": "Truy cập ngay sau khi thanh toán"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "Khuyến nghị cho nhu cầu tóm tắt AI thường xuyên và đọc hằng ngày.",
+          "features": {
+            "everythingBasic": "Bao gồm toàn bộ Basic",
+            "higherAiLimits": "Hạn mức AI cao hơn",
+            "instantAccess": "Truy cập ngay sau khi thanh toán"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "Cho người dùng chuyên sâu cần hạn mức cao nhất và hỗ trợ ưu tiên.",
+          "features": {
+            "everythingPro": "Bao gồm toàn bộ Pro",
+            "highestAiCapacity": "Dung lượng AI cao nhất",
+            "prioritySupport": "Kênh hỗ trợ ưu tiên"
+          }
+        }
+      }
+    }
+  },
   "settings": {
     "sections": {
       "appearance": {

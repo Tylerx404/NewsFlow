@@ -88,6 +88,122 @@
       "logOut": "ログアウト"
     }
   },
+  "auth": {
+    "common": {
+      "name": "名前",
+      "namePlaceholder": "山田 太郎",
+      "email": "メール",
+      "emailPlaceholder": "m@example.com",
+      "password": "パスワード",
+      "orContinueWith": "または次で続行",
+      "heroImageAlt": "認証ページ画像",
+      "termsPrefix": "続行をクリックすると、次に同意したことになります。",
+      "termsOfService": "利用規約",
+      "termsAnd": "および",
+      "privacyPolicy": "プライバシーポリシー"
+    },
+    "login": {
+      "title": "おかえりなさい",
+      "subtitle": "NewsFlow アカウントにログイン",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "submit": "ログイン",
+      "submitting": "ログイン中...",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUp": "新規登録",
+      "sso": {
+        "apple": "Appleでログイン",
+        "google": "Googleでログイン",
+        "meta": "Metaでログイン"
+      },
+      "errors": {
+        "generic": "現在サインインできません。もう一度お試しください。",
+        "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。"
+      }
+    },
+    "signup": {
+      "title": "アカウント作成",
+      "subtitle": "メールアドレスを入力してアカウントを作成します",
+      "emailDescription": "このメールアドレスを連絡に利用します。第三者には共有しません。",
+      "confirmPassword": "パスワード確認",
+      "passwordHint": "8文字以上である必要があります。",
+      "submit": "アカウントを作成",
+      "submitting": "アカウント作成中...",
+      "haveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "sso": {
+        "apple": "Appleで登録",
+        "google": "Googleで登録",
+        "meta": "Metaで登録"
+      },
+      "errors": {
+        "generic": "現在アカウントを作成できません。もう一度お試しください。",
+        "passwordConfirmationMismatch": "パスワード確認が一致しません。",
+        "createFailed": "アカウントを作成できませんでした。"
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "パーソナライズされた AI 駆動 RSS リーダー。",
+      "login": "ログイン",
+      "signUp": "新規登録",
+      "pricing": "料金"
+    },
+    "pricing": {
+      "badge": "料金",
+      "title": "成長プランを選択",
+      "subtitle": "プランを選ぶと決済後すぐ利用できます。AI ワークフローの規模に合わせてアップグレードしてください。",
+      "bestValue": "おすすめ",
+      "billing": {
+        "monthly": "月額課金",
+        "yearly": "年額課金"
+      },
+      "suffix": {
+        "month": "月",
+        "year": "年"
+      },
+      "meta": {
+        "monthly": "月払い、いつでも解約可能。",
+        "yearly": "年払い、月あたり約 {price}。",
+        "discount": "年額課金で約 {percent}% お得です。"
+      },
+      "actions": {
+        "choosePlan": "プランを選択",
+        "createAccount": "アカウント作成",
+        "backHome": "ホームへ戻る",
+        "goSubscriptionSettings": "サブスクリプション設定へ"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "個人での試用と探索向けの入門プラン。",
+          "features": {
+            "coreRss": "基本的な RSS 読書フロー",
+            "aiOccasional": "軽度利用向け AI 要約",
+            "instantAccess": "決済後すぐ利用可能"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "日常的に AI 要約を使うユーザー向け。",
+          "features": {
+            "everythingBasic": "Basic の全機能を含む",
+            "higherAiLimits": "より高い AI 利用上限",
+            "instantAccess": "決済後すぐ利用可能"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "最大枠と優先サポートが必要なヘビーユーザー向け。",
+          "features": {
+            "everythingPro": "Pro の全機能を含む",
+            "highestAiCapacity": "最大の AI 利用容量",
+            "prioritySupport": "優先サポートレーン"
+          }
+        }
+      }
+    }
+  },
   "settings": {
     "sections": {
       "appearance": {

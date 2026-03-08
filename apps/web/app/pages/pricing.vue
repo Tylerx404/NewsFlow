@@ -18,55 +18,49 @@ type PlanKey = "basic" | "pro" | "max";
 
 type PricingPlan = {
   key: PlanKey;
-  label: string;
   monthlyPrice: number;
   yearlyPrice: number;
-  subtitle: string;
   highlight?: boolean;
-  features: string[];
+  featureKeys: string[];
 };
 
 const plans: PricingPlan[] = [
   {
     key: "basic",
-    label: "Basic",
     monthlyPrice: 5.99,
     yearlyPrice: 59.99,
-    subtitle: "Entry-level plan for personal testing and discovery.",
-    features: [
-      "Core RSS reading workflow",
-      "AI summarize for occasional usage",
-      "Instant access after checkout",
+    featureKeys: [
+      "coreRss",
+      "aiOccasional",
+      "instantAccess",
     ],
   },
   {
     key: "pro",
-    label: "Pro",
     monthlyPrice: 9.99,
     yearlyPrice: 99.0,
-    subtitle: "Recommended for frequent AI summarization and daily reading.",
     highlight: true,
-    features: [
-      "Everything in Basic",
-      "Higher AI usage limits",
-      "Instant access after checkout",
+    featureKeys: [
+      "everythingBasic",
+      "higherAiLimits",
+      "instantAccess",
     ],
   },
   {
     key: "max",
-    label: "Max",
     monthlyPrice: 19.99,
     yearlyPrice: 199.0,
-    subtitle: "Power users who want highest quota and priority support.",
-    features: [
-      "Everything in Pro",
-      "Highest AI usage capacity",
-      "Priority support lane",
+    featureKeys: [
+      "everythingPro",
+      "highestAiCapacity",
+      "prioritySupport",
     ],
   },
 ];
 
 const { $authClient } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 const billingInterval = ref<BillingInterval>("monthly");
 const hasSession = ref(false);
 const billingIntervalIndex = computed(() =>
@@ -74,7 +68,7 @@ const billingIntervalIndex = computed(() =>
 );
 
 const formatPrice = (value: number) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat(intlLocale.value, {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
@@ -91,6 +85,11 @@ const displayedPlans = computed(() =>
 
     return {
       ...plan,
+      label: t(`public.pricing.plans.${plan.key}.label`),
+      subtitle: t(`public.pricing.plans.${plan.key}.subtitle`),
+      features: plan.featureKeys.map((featureKey) =>
+        t(`public.pricing.plans.${plan.key}.features.${featureKey}`)
+      ),
       activePrice,
       monthlyFromYearly,
       yearlyDiscount,
@@ -104,7 +103,9 @@ const resolvePlanHref = (planKey: PlanKey) =>
     : "/signup";
 
 const resolvePlanActionLabel = () =>
-  hasSession.value ? "Choose plan" : "Create account";
+  hasSession.value
+    ? t("public.pricing.actions.choosePlan")
+    : t("public.pricing.actions.createAccount");
 
 const setBillingInterval = (interval: BillingInterval) => {
   if (billingInterval.value === interval) {
@@ -126,15 +127,14 @@ onMounted(async () => {
     <div class="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14">
       <section class="space-y-6 text-center">
         <Badge variant="outline" class="rounded-full px-4 py-1">
-          Pricing
+          {{ t("public.pricing.badge") }}
         </Badge>
         <div class="space-y-3">
           <h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
-            Choose Your Growth Plan
+            {{ t("public.pricing.title") }}
           </h1>
           <p class="mx-auto max-w-2xl text-sm text-muted-foreground md:text-base">
-            Pick a plan and get instant access after checkout. Upgrade when your
-            AI workflow needs more speed and capacity.
+            {{ t("public.pricing.subtitle") }}
           </p>
         </div>
 
@@ -150,7 +150,7 @@ onMounted(async () => {
               :class="billingInterval === 'monthly' ? 'text-foreground' : 'text-muted-foreground'"
               @click="setBillingInterval('monthly')"
             >
-              Monthly billing
+              {{ t("public.pricing.billing.monthly") }}
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ onMounted(async () => {
               :class="billingInterval === 'yearly' ? 'text-foreground' : 'text-muted-foreground'"
               @click="setBillingInterval('yearly')"
             >
-              Yearly billing
+              {{ t("public.pricing.billing.yearly") }}
             </button>
           </div>
         </div>
@@ -179,7 +179,7 @@ onMounted(async () => {
             v-if="plan.highlight"
             class="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary-foreground"
           >
-            Best value
+            {{ t("public.pricing.bestValue") }}
           </div>
 
           <CardHeader class="space-y-4">
@@ -197,7 +197,7 @@ onMounted(async () => {
                 <p :key="`${plan.key}-${billingInterval}-price`" class="text-3xl font-semibold tracking-tight">
                   {{ formatPrice(plan.activePrice) }}
                   <span class="ml-1 text-base font-medium text-muted-foreground">
-                    /{{ billingInterval === "yearly" ? "yr" : "mo" }}
+                    /{{ billingInterval === "yearly" ? t("public.pricing.suffix.year") : t("public.pricing.suffix.month") }}
                   </span>
                 </p>
               </Transition>
@@ -207,8 +207,8 @@ onMounted(async () => {
                   :key="`${plan.key}-${billingInterval}-meta`"
                   class="mt-1 text-xs text-muted-foreground"
                 >
-                  <span v-if="billingInterval === 'monthly'">Per month, cancel anytime.</span>
-                  <span v-else>Per year, about {{ formatPrice(plan.monthlyFromYearly) }}/month.</span>
+                  <span v-if="billingInterval === 'monthly'">{{ t("public.pricing.meta.monthly") }}</span>
+                  <span v-else>{{ t("public.pricing.meta.yearly", { price: formatPrice(plan.monthlyFromYearly) }) }}</span>
                 </p>
               </Transition>
 
@@ -218,7 +218,7 @@ onMounted(async () => {
                   :key="`${plan.key}-yearly-discount`"
                   class="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400"
                 >
-                  Save around {{ plan.yearlyDiscount }}% with yearly billing.
+                  {{ t("public.pricing.meta.discount", { percent: plan.yearlyDiscount }) }}
                 </p>
               </Transition>
             </div>
@@ -250,12 +250,12 @@ onMounted(async () => {
       <section class="flex flex-wrap justify-center gap-3">
         <Button variant="outline" as-child>
           <NuxtLink to="/">
-            Back to home
+            {{ t("public.pricing.actions.backHome") }}
           </NuxtLink>
         </Button>
         <Button variant="outline" as-child>
           <NuxtLink to="/settings/personal">
-            Go to subscription settings
+            {{ t("public.pricing.actions.goSubscriptionSettings") }}
           </NuxtLink>
         </Button>
       </section>

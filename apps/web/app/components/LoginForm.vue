@@ -20,6 +20,7 @@ const props = defineProps<{
 
 const { $authClient } = useNuxtApp()
 const route = useRoute()
+const { t } = useI18n()
 
 const DEFAULT_REDIRECT_PATH = "/dashboard"
 
@@ -35,7 +36,7 @@ const getErrorMessage = (error: unknown) => {
     return error.message
   }
 
-  return "Unable to sign in right now. Please try again."
+  return t("auth.login.errors.generic")
 }
 
 const getSafeRedirectPath = () => {
@@ -73,7 +74,7 @@ const handleSubmit = async () => {
     })
 
     if (error) {
-      submitError.value = error.message ?? "Invalid email or password."
+      submitError.value = error.message ?? t("auth.login.errors.invalidCredentials")
       return
     }
 
@@ -94,20 +95,20 @@ const handleSubmit = async () => {
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
-                Welcome back
+                {{ t("auth.login.title") }}
               </h1>
               <p class="text-muted-foreground text-balance">
-                Login to your Acme Inc account
+                {{ t("auth.login.subtitle") }}
               </p>
             </div>
             <Field>
               <FieldLabel for="email">
-                Email
+                {{ t("auth.common.email") }}
               </FieldLabel>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                :placeholder="t('auth.common.emailPlaceholder')"
                 autocomplete="email"
                 v-model="form.email"
                 required
@@ -116,13 +117,13 @@ const handleSubmit = async () => {
             <Field>
               <div class="flex items-center">
                 <FieldLabel for="password">
-                  Password
+                  {{ t("auth.common.password") }}
                 </FieldLabel>
                 <a
                   href="#"
                   class="ml-auto text-sm underline-offset-2 hover:underline"
                 >
-                  Forgot your password?
+                  {{ t("auth.login.forgotPassword") }}
                 </a>
               </div>
               <Input
@@ -138,11 +139,11 @@ const handleSubmit = async () => {
             </Field>
             <Field>
               <Button type="submit" :disabled="isSubmitting">
-                {{ isSubmitting ? "Logging in..." : "Login" }}
+                {{ isSubmitting ? t("auth.login.submitting") : t("auth.login.submit") }}
               </Button>
             </Field>
             <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
-              Or continue with
+              {{ t("auth.common.orContinueWith") }}
             </FieldSeparator>
             <Field class="grid grid-cols-3 gap-4">
               <Button variant="outline" type="button">
@@ -152,7 +153,7 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Login with Apple</span>
+                <span class="sr-only">{{ t("auth.login.sso.apple") }}</span>
               </Button>
               <Button variant="outline" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -161,7 +162,7 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Login with Google</span>
+                <span class="sr-only">{{ t("auth.login.sso.google") }}</span>
               </Button>
               <Button variant="outline" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -170,13 +171,13 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Login with Meta</span>
+                <span class="sr-only">{{ t("auth.login.sso.meta") }}</span>
               </Button>
             </Field>
             <FieldDescription class="text-center">
-              Don't have an account?
+              {{ t("auth.login.noAccount") }}
               <NuxtLink :to="{ path: '/signup', query: authSwitchQuery }">
-                Sign up
+                {{ t("auth.login.signUp") }}
               </NuxtLink>
             </FieldDescription>
           </FieldGroup>
@@ -184,15 +185,15 @@ const handleSubmit = async () => {
         <div class="bg-muted relative hidden md:block">
           <img
             src="/placeholder.svg"
-            alt="Image"
+            :alt="t('auth.common.heroImageAlt')"
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           >
         </div>
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a>
-      and <a href="#">Privacy Policy</a>.
+      {{ t("auth.common.termsPrefix") }} <a href="#">{{ t("auth.common.termsOfService") }}</a>
+      {{ t("auth.common.termsAnd") }} <a href="#">{{ t("auth.common.privacyPolicy") }}</a>.
     </FieldDescription>
   </div>
 </template>

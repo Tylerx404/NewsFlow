@@ -88,6 +88,122 @@
       "logOut": "退出登录"
     }
   },
+  "auth": {
+    "common": {
+      "name": "姓名",
+      "namePlaceholder": "张三",
+      "email": "邮箱",
+      "emailPlaceholder": "m@example.com",
+      "password": "密码",
+      "orContinueWith": "或使用以下方式继续",
+      "heroImageAlt": "认证页面插图",
+      "termsPrefix": "点击继续即表示你同意我们的",
+      "termsOfService": "服务条款",
+      "termsAnd": "和",
+      "privacyPolicy": "隐私政策"
+    },
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录你的 NewsFlow 账户",
+      "forgotPassword": "忘记密码？",
+      "submit": "登录",
+      "submitting": "登录中...",
+      "noAccount": "还没有账户？",
+      "signUp": "注册",
+      "sso": {
+        "apple": "使用 Apple 登录",
+        "google": "使用 Google 登录",
+        "meta": "使用 Meta 登录"
+      },
+      "errors": {
+        "generic": "当前无法登录，请稍后重试。",
+        "invalidCredentials": "邮箱或密码错误。"
+      }
+    },
+    "signup": {
+      "title": "创建账户",
+      "subtitle": "输入你的邮箱以创建账户",
+      "emailDescription": "我们会用此邮箱与你联系，不会与他人共享。",
+      "confirmPassword": "确认密码",
+      "passwordHint": "密码长度至少 8 位。",
+      "submit": "创建账户",
+      "submitting": "账户创建中...",
+      "haveAccount": "已有账户？",
+      "signIn": "登录",
+      "sso": {
+        "apple": "使用 Apple 注册",
+        "google": "使用 Google 注册",
+        "meta": "使用 Meta 注册"
+      },
+      "errors": {
+        "generic": "当前无法创建账户，请稍后重试。",
+        "passwordConfirmationMismatch": "两次输入的密码不一致。",
+        "createFailed": "无法创建你的账户。"
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "个性化 AI 驱动的 RSS 阅读器。",
+      "login": "登录",
+      "signUp": "注册",
+      "pricing": "定价"
+    },
+    "pricing": {
+      "badge": "定价",
+      "title": "选择你的成长方案",
+      "subtitle": "选择方案后即可立即使用。随着 AI 工作流增长，随时升级以获得更高速度与容量。",
+      "bestValue": "最佳性价比",
+      "billing": {
+        "monthly": "按月计费",
+        "yearly": "按年计费"
+      },
+      "suffix": {
+        "month": "月",
+        "year": "年"
+      },
+      "meta": {
+        "monthly": "按月支付，可随时取消。",
+        "yearly": "按年支付，约合每月 {price}。",
+        "discount": "按年计费可节省约 {percent}%。"
+      },
+      "actions": {
+        "choosePlan": "选择方案",
+        "createAccount": "创建账户",
+        "backHome": "返回首页",
+        "goSubscriptionSettings": "前往订阅设置"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "适合个人测试与探索的入门方案。",
+          "features": {
+            "coreRss": "核心 RSS 阅读流程",
+            "aiOccasional": "适合偶尔使用的 AI 摘要",
+            "instantAccess": "结账后立即可用"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "适合高频 AI 摘要和日常阅读。",
+          "features": {
+            "everythingBasic": "包含 Basic 全部功能",
+            "higherAiLimits": "更高 AI 使用额度",
+            "instantAccess": "结账后立即可用"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "适合需要最高配额和优先支持的重度用户。",
+          "features": {
+            "everythingPro": "包含 Pro 全部功能",
+            "highestAiCapacity": "最高 AI 使用容量",
+            "prioritySupport": "优先支持通道"
+          }
+        }
+      }
+    }
+  },
   "settings": {
     "sections": {
       "appearance": {

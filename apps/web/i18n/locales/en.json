@@ -88,6 +88,122 @@
       "logOut": "Log out"
     }
   },
+  "auth": {
+    "common": {
+      "name": "Name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "m@example.com",
+      "password": "Password",
+      "orContinueWith": "Or continue with",
+      "heroImageAlt": "Authentication visual",
+      "termsPrefix": "By clicking continue, you agree to our",
+      "termsOfService": "Terms of Service",
+      "termsAnd": "and",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Login to your NewsFlow account",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Login",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "sso": {
+        "apple": "Login with Apple",
+        "google": "Login with Google",
+        "meta": "Login with Meta"
+      },
+      "errors": {
+        "generic": "Unable to sign in right now. Please try again.",
+        "invalidCredentials": "Invalid email or password."
+      }
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Enter your email below to create your account",
+      "emailDescription": "We'll use this to contact you. We will not share your email with anyone else.",
+      "confirmPassword": "Confirm Password",
+      "passwordHint": "Must be at least 8 characters long.",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "sso": {
+        "apple": "Sign up with Apple",
+        "google": "Sign up with Google",
+        "meta": "Sign up with Meta"
+      },
+      "errors": {
+        "generic": "Unable to create account right now. Please try again.",
+        "passwordConfirmationMismatch": "Password confirmation does not match.",
+        "createFailed": "Could not create your account."
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "Personalized AI-powered RSS reader.",
+      "login": "Login",
+      "signUp": "Sign up",
+      "pricing": "Pricing"
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Choose Your Growth Plan",
+      "subtitle": "Pick a plan and get instant access after checkout. Upgrade when your AI workflow needs more speed and capacity.",
+      "bestValue": "Best value",
+      "billing": {
+        "monthly": "Monthly billing",
+        "yearly": "Yearly billing"
+      },
+      "suffix": {
+        "month": "mo",
+        "year": "yr"
+      },
+      "meta": {
+        "monthly": "Per month, cancel anytime.",
+        "yearly": "Per year, about {price}/month.",
+        "discount": "Save around {percent}% with yearly billing."
+      },
+      "actions": {
+        "choosePlan": "Choose plan",
+        "createAccount": "Create account",
+        "backHome": "Back to home",
+        "goSubscriptionSettings": "Go to subscription settings"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "Entry-level plan for personal testing and discovery.",
+          "features": {
+            "coreRss": "Core RSS reading workflow",
+            "aiOccasional": "AI summarize for occasional usage",
+            "instantAccess": "Instant access after checkout"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "Recommended for frequent AI summarization and daily reading.",
+          "features": {
+            "everythingBasic": "Everything in Basic",
+            "higherAiLimits": "Higher AI usage limits",
+            "instantAccess": "Instant access after checkout"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "Power users who want highest quota and priority support.",
+          "features": {
+            "everythingPro": "Everything in Pro",
+            "highestAiCapacity": "Highest AI usage capacity",
+            "prioritySupport": "Priority support lane"
+          }
+        }
+      }
+    }
+  },
   "settings": {
     "sections": {
       "appearance": {
