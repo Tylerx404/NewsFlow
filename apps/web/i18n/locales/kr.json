@@ -223,5 +223,115 @@
         "description": "피드 메타데이터, 상태, 새로고침 작업, 정리 기능입니다."
       }
     }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "최신 아티클",
+      "allFeedsTitle": "전체 피드",
+      "subtitle": "AI로 피드를 읽고 저장하고 요약하세요.",
+      "searchPlaceholder": "제목, 요약, 링크로 검색",
+      "stats": {
+        "total": "전체",
+        "unread": "읽지 않음",
+        "saved": "저장됨"
+      },
+      "filters": {
+        "all": "전체",
+        "unread": "읽지 않음",
+        "saved": "저장됨"
+      },
+      "loadingArticle": "아티클을 불러오는 중...",
+      "empty": "이 필터에 맞는 아티클이 없습니다.",
+      "badges": {
+        "saved": "저장됨",
+        "unread": "읽지 않음"
+      },
+      "noExcerpt": "요약이 없습니다.",
+      "actions": {
+        "markRead": "읽음 표시",
+        "unsave": "저장 취소",
+        "save": "저장",
+        "openReader": "리더 열기"
+      },
+      "loadingMore": "더 불러오는 중..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "피드 아티클",
+      "panelTitle": "피드 아티클"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "지금은 이 아티클을 요약할 수 없습니다."
+      },
+      "loadingArticle": "아티클을 불러오는 중...",
+      "actions": {
+        "openOriginal": "원문 열기",
+        "aiSummarize": "AI 요약"
+      },
+      "noAiProfile": "구성된 AI 프로필이 없습니다.",
+      "addAiProfile": "AI 설정에서 추가",
+      "generatingSummary": "요약 생성 중...",
+      "tokensUsed": "사용 토큰: {count}",
+      "streaming": "응답 스트리밍 중...",
+      "fullContentUnavailable": "전체 내용을 사용할 수 없음",
+      "noExcerpt": "이 아티클의 요약이 없습니다.",
+      "readingAppearance": {
+        "title": "읽기 외형",
+        "subtitle": "읽는 동안 타이포그래피와 간격을 조정합니다.",
+        "fontFamily": "글꼴",
+        "fontSize": "글자 크기",
+        "lineHeight": "줄 높이",
+        "readingWidth": "읽기 폭",
+        "needFullControls": "테마와 색상 프리셋의 전체 제어가 필요하신가요?",
+        "openAppearanceSettings": "외형 설정 열기"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "뉴스 개요",
+      "subtitle": "읽기량, 피드 상태를 모니터링하고 핵심 작업으로 바로 이동하세요.",
+      "neverFetched": "가져온 적 없음"
+    },
+    "stats": {
+      "totalArticles": "전체 아티클",
+      "unread": "읽지 않음",
+      "saved": "저장됨",
+      "activeFeeds": "활성 피드"
+    },
+    "feedHealth": {
+      "title": "피드 상태",
+      "description": "마지막 가져오기 기준으로 활성 상태, 전달 문제, 오래된 소스를 확인합니다.",
+      "loading": "피드 상태를 불러오는 중...",
+      "cards": {
+        "errors": "오류가 있는 피드",
+        "inactive": "비활성 피드",
+        "stale": "오래된 피드 (> {hours}시간)"
+      },
+      "topUnread": {
+        "title": "읽지 않은 항목이 많은 피드",
+        "empty": "읽지 않은 아티클이 있는 활성 피드가 없습니다.",
+        "lastFetched": "마지막 가져오기: {value}",
+        "unreadCount": "읽지 않음 {count}개"
+      }
+    },
+    "quickActions": {
+      "title": "빠른 작업",
+      "description": "자주 쓰는 작업으로 바로 이동합니다.",
+      "openArticles": "아티클 목록 열기",
+      "manageFeeds": "피드 관리",
+      "manageAiProfiles": "AI 프로필 관리"
+    },
+    "queueWatch": {
+      "title": "큐 모니터링",
+      "description": "지금 주의가 필요한 피드입니다.",
+      "feedsWithErrors": "오류가 있는 피드",
+      "staleActiveFeeds": "오래된 활성 피드",
+      "totalConfiguredFeeds": "구성된 전체 피드"
+    }
   }
 }

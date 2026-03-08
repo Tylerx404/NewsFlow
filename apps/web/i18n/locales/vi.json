@@ -223,5 +223,115 @@
         "description": "Thông tin feed, trạng thái hoạt động, làm mới và dọn dẹp."
       }
     }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "Bài viết mới nhất",
+      "allFeedsTitle": "Tất cả feed",
+      "subtitle": "Đọc, lưu và tóm tắt feed của bạn bằng AI.",
+      "searchPlaceholder": "Tìm theo tiêu đề, trích đoạn, liên kết",
+      "stats": {
+        "total": "Tổng",
+        "unread": "Chưa đọc",
+        "saved": "Đã lưu"
+      },
+      "filters": {
+        "all": "Tất cả",
+        "unread": "Chưa đọc",
+        "saved": "Đã lưu"
+      },
+      "loadingArticle": "Đang tải bài viết...",
+      "empty": "Không có bài viết cho bộ lọc này.",
+      "badges": {
+        "saved": "Đã lưu",
+        "unread": "Chưa đọc"
+      },
+      "noExcerpt": "Không có trích đoạn.",
+      "actions": {
+        "markRead": "Đánh dấu đã đọc",
+        "unsave": "Bỏ lưu",
+        "save": "Lưu",
+        "openReader": "Mở trình đọc"
+      },
+      "loadingMore": "Đang tải thêm..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "Bài viết từ Feed",
+      "panelTitle": "Bài viết feed"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "Không thể tóm tắt bài viết lúc này."
+      },
+      "loadingArticle": "Đang tải bài viết...",
+      "actions": {
+        "openOriginal": "Mở bài gốc",
+        "aiSummarize": "Tóm tắt AI"
+      },
+      "noAiProfile": "Chưa cấu hình hồ sơ AI.",
+      "addAiProfile": "Thêm trong cài đặt AI",
+      "generatingSummary": "Đang tạo tóm tắt...",
+      "tokensUsed": "Token đã dùng: {count}",
+      "streaming": "Đang stream phản hồi...",
+      "fullContentUnavailable": "Không có nội dung đầy đủ",
+      "noExcerpt": "Bài viết này chưa có trích đoạn.",
+      "readingAppearance": {
+        "title": "Giao diện đọc",
+        "subtitle": "Điều chỉnh kiểu chữ và khoảng cách khi đọc.",
+        "fontFamily": "Phông chữ",
+        "fontSize": "Cỡ chữ",
+        "lineHeight": "Giãn dòng",
+        "readingWidth": "Độ rộng đọc",
+        "needFullControls": "Cần đầy đủ tùy chọn chủ đề và màu sắc?",
+        "openAppearanceSettings": "Mở cài đặt giao diện"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Tổng quan tin tức",
+      "subtitle": "Theo dõi khối lượng đọc, tình trạng feed và truy cập nhanh workflow chính.",
+      "neverFetched": "Chưa từng fetch"
+    },
+    "stats": {
+      "totalArticles": "Tổng bài viết",
+      "unread": "Chưa đọc",
+      "saved": "Đã lưu",
+      "activeFeeds": "Feed đang hoạt động"
+    },
+    "feedHealth": {
+      "title": "Sức khỏe feed",
+      "description": "Trạng thái hoạt động, lỗi phân phối và feed cũ theo lần fetch gần nhất.",
+      "loading": "Đang tải sức khỏe feed...",
+      "cards": {
+        "errors": "Feed có lỗi",
+        "inactive": "Feed tạm dừng",
+        "stale": "Feed cũ (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "Feed có nhiều bài chưa đọc",
+        "empty": "Không có feed hoạt động nào có bài chưa đọc.",
+        "lastFetched": "Lần fetch gần nhất: {value}",
+        "unreadCount": "{count} bài chưa đọc"
+      }
+    },
+    "quickActions": {
+      "title": "Thao tác nhanh",
+      "description": "Đi đến các tác vụ bạn dùng thường xuyên.",
+      "openArticles": "Mở danh sách bài viết",
+      "manageFeeds": "Quản lý feed",
+      "manageAiProfiles": "Quản lý hồ sơ AI"
+    },
+    "queueWatch": {
+      "title": "Theo dõi hàng đợi",
+      "description": "Các feed cần chú ý ngay lúc này.",
+      "feedsWithErrors": "Feed có lỗi",
+      "staleActiveFeeds": "Feed hoạt động bị cũ",
+      "totalConfiguredFeeds": "Tổng feed đã cấu hình"
+    }
   }
 }

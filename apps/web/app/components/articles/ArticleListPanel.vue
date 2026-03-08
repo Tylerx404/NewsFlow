@@ -20,6 +20,8 @@ const props = defineProps<{
 }>();
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 
 const filter = ref<FilterValue>("all");
@@ -102,7 +104,7 @@ useIntersectionObserver(loadMoreSentinel, ([entry]) => {
 
 const formatDate = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(intlLocale.value, {
     month: "short",
     day: "2-digit",
     hour: "2-digit",
@@ -115,15 +117,15 @@ const formatDate = (value: Date | string) => {
   <div class="space-y-6">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 class="text-2xl font-semibold">{{ title ?? "Latest articles" }}</h1>
+        <h1 class="text-2xl font-semibold">{{ title ?? t("articles.list.latestTitle") }}</h1>
         <p class="text-sm text-muted-foreground">
-          Read, save, and summarize your feed with AI.
+          {{ t("articles.list.subtitle") }}
         </p>
       </div>
       <Input
         v-model="searchInput"
         type="search"
-        placeholder="Search by title, excerpt, link"
+        :placeholder="t('articles.list.searchPlaceholder')"
         class="w-full md:max-w-sm"
       />
     </div>
@@ -131,7 +133,7 @@ const formatDate = (value: Date | string) => {
     <div class="grid gap-4 md:grid-cols-3">
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Total</CardDescription>
+          <CardDescription>{{ t("articles.list.stats.total") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.all ?? 0 }}
           </CardTitle>
@@ -139,7 +141,7 @@ const formatDate = (value: Date | string) => {
       </Card>
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Unread</CardDescription>
+          <CardDescription>{{ t("articles.list.stats.unread") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.unread ?? 0 }}
           </CardTitle>
@@ -147,7 +149,7 @@ const formatDate = (value: Date | string) => {
       </Card>
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Saved</CardDescription>
+          <CardDescription>{{ t("articles.list.stats.saved") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.saved ?? 0 }}
           </CardTitle>
@@ -161,35 +163,35 @@ const formatDate = (value: Date | string) => {
         size="sm"
         @click="filter = 'all'"
       >
-        All
+        {{ t("articles.list.filters.all") }}
       </Button>
       <Button
         :variant="filter === 'unread' ? 'default' : 'outline'"
         size="sm"
         @click="filter = 'unread'"
       >
-        Unread
+        {{ t("articles.list.filters.unread") }}
       </Button>
       <Button
         :variant="filter === 'saved' ? 'default' : 'outline'"
         size="sm"
         @click="filter = 'saved'"
       >
-        Saved
+        {{ t("articles.list.filters.saved") }}
       </Button>
     </div>
 
     <div v-if="articleListQuery.isLoading.value" class="space-y-3">
       <Card v-for="item in 3" :key="item">
         <CardContent class="p-6 text-sm text-muted-foreground">
-          Loading article...
+          {{ t("articles.list.loadingArticle") }}
         </CardContent>
       </Card>
     </div>
 
     <div v-else-if="allArticles.length === 0" class="rounded-lg border p-8 text-center">
       <p class="text-sm text-muted-foreground">
-        No articles found for this filter.
+        {{ t("articles.list.empty") }}
       </p>
     </div>
 
@@ -207,11 +209,11 @@ const formatDate = (value: Date | string) => {
               <span>{{ article.feed.title }}</span>
               <span>•</span>
               <span>{{ formatDate(article.pubDate) }}</span>
-              <span v-if="article.saved" class="rounded bg-secondary px-2 py-0.5">Saved</span>
-              <span v-if="!article.read" class="rounded bg-secondary px-2 py-0.5">Unread</span>
+              <span v-if="article.saved" class="rounded bg-secondary px-2 py-0.5">{{ t("articles.list.badges.saved") }}</span>
+              <span v-if="!article.read" class="rounded bg-secondary px-2 py-0.5">{{ t("articles.list.badges.unread") }}</span>
             </div>
             <p class="text-sm text-muted-foreground">
-              {{ article.excerpt || "No excerpt available." }}
+              {{ article.excerpt || t("articles.list.noExcerpt") }}
             </p>
           </div>
           <div class="flex flex-wrap gap-2">
@@ -221,7 +223,7 @@ const formatDate = (value: Date | string) => {
               :disabled="article.read || markReadMutation.isPending.value"
               @click="markReadMutation.mutate({ id: article.id })"
             >
-              Mark read
+              {{ t("articles.list.actions.markRead") }}
             </Button>
             <Button
               variant="outline"
@@ -229,11 +231,11 @@ const formatDate = (value: Date | string) => {
               :disabled="toggleSavedMutation.isPending.value"
               @click="toggleSavedMutation.mutate({ id: article.id })"
             >
-              {{ article.saved ? "Unsave" : "Save" }}
+              {{ article.saved ? t("articles.list.actions.unsave") : t("articles.list.actions.save") }}
             </Button>
             <Button as-child size="sm">
               <NuxtLink :to="`/articles/${article.id}`">
-                Open reader
+                {{ t("articles.list.actions.openReader") }}
               </NuxtLink>
             </Button>
           </div>
@@ -246,7 +248,7 @@ const formatDate = (value: Date | string) => {
       v-if="articleListQuery.isFetchingNextPage.value"
       class="text-center text-xs text-muted-foreground"
     >
-      Loading more...
+      {{ t("articles.list.loadingMore") }}
     </p>
   </div>
 </template>

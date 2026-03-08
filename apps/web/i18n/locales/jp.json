@@ -223,5 +223,115 @@
         "description": "フィード情報、状態、更新操作、整理を管理します。"
       }
     }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "最新記事",
+      "allFeedsTitle": "すべてのフィード",
+      "subtitle": "AIでフィードを読み、保存し、要約できます。",
+      "searchPlaceholder": "タイトル、抜粋、リンクで検索",
+      "stats": {
+        "total": "合計",
+        "unread": "未読",
+        "saved": "保存済み"
+      },
+      "filters": {
+        "all": "すべて",
+        "unread": "未読",
+        "saved": "保存済み"
+      },
+      "loadingArticle": "記事を読み込み中...",
+      "empty": "この条件に一致する記事はありません。",
+      "badges": {
+        "saved": "保存済み",
+        "unread": "未読"
+      },
+      "noExcerpt": "抜粋はありません。",
+      "actions": {
+        "markRead": "既読にする",
+        "unsave": "保存を解除",
+        "save": "保存",
+        "openReader": "リーダーを開く"
+      },
+      "loadingMore": "さらに読み込み中..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "フィード記事",
+      "panelTitle": "フィード記事"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "現在この記事を要約できません。"
+      },
+      "loadingArticle": "記事を読み込み中...",
+      "actions": {
+        "openOriginal": "元記事を開く",
+        "aiSummarize": "AIで要約"
+      },
+      "noAiProfile": "AI プロファイルが設定されていません。",
+      "addAiProfile": "AI 設定で追加",
+      "generatingSummary": "要約を生成中...",
+      "tokensUsed": "使用トークン: {count}",
+      "streaming": "ストリーミング応答中...",
+      "fullContentUnavailable": "全文を利用できません",
+      "noExcerpt": "この記事の抜粋はありません。",
+      "readingAppearance": {
+        "title": "読書表示",
+        "subtitle": "読書中のタイポグラフィと間隔を調整します。",
+        "fontFamily": "フォント",
+        "fontSize": "文字サイズ",
+        "lineHeight": "行間",
+        "readingWidth": "表示幅",
+        "needFullControls": "テーマとカラープリセットの詳細設定が必要ですか？",
+        "openAppearanceSettings": "外観設定を開く"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "ニュース概要",
+      "subtitle": "読書量やフィード状態を確認し、主要ワークフローへすぐ移動できます。",
+      "neverFetched": "未取得"
+    },
+    "stats": {
+      "totalArticles": "記事総数",
+      "unread": "未読",
+      "saved": "保存済み",
+      "activeFeeds": "有効フィード"
+    },
+    "feedHealth": {
+      "title": "フィード状態",
+      "description": "最終取得に基づく状態、配信問題、古いソースを確認します。",
+      "loading": "フィード状態を読み込み中...",
+      "cards": {
+        "errors": "エラーのあるフィード",
+        "inactive": "無効フィード",
+        "stale": "古いフィード (> {hours}時間)"
+      },
+      "topUnread": {
+        "title": "未読が多いフィード",
+        "empty": "未読記事がある有効フィードはありません。",
+        "lastFetched": "最終取得: {value}",
+        "unreadCount": "未読 {count} 件"
+      }
+    },
+    "quickActions": {
+      "title": "クイック操作",
+      "description": "よく使うタスクへすぐ移動。",
+      "openArticles": "記事一覧を開く",
+      "manageFeeds": "フィード管理",
+      "manageAiProfiles": "AI プロファイル管理"
+    },
+    "queueWatch": {
+      "title": "キュー監視",
+      "description": "現在対応が必要なフィード。",
+      "feedsWithErrors": "エラーのあるフィード",
+      "staleActiveFeeds": "古い有効フィード",
+      "totalConfiguredFeeds": "設定済みフィード総数"
+    }
   }
 }

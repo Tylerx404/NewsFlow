@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import ArticleListPanel from "@/components/articles/ArticleListPanel.vue";
 
+const { t } = useI18n();
+
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Feed Articles",
+  titleKey: "feeds.page.title",
 });
 
 const route = useRoute();
@@ -18,6 +20,6 @@ const feedSubscriptionId = computed(() => {
 <template>
   <ArticleListPanel
     :feed-subscription-id="feedSubscriptionId"
-    title="Feed articles"
+    :title="t('feeds.page.panelTitle')"
   />
 </template>

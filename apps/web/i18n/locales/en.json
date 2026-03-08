@@ -223,5 +223,115 @@
         "description": "Feed metadata, activity status, refresh actions, and cleanup."
       }
     }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "Latest articles",
+      "allFeedsTitle": "All feeds",
+      "subtitle": "Read, save, and summarize your feed with AI.",
+      "searchPlaceholder": "Search by title, excerpt, link",
+      "stats": {
+        "total": "Total",
+        "unread": "Unread",
+        "saved": "Saved"
+      },
+      "filters": {
+        "all": "All",
+        "unread": "Unread",
+        "saved": "Saved"
+      },
+      "loadingArticle": "Loading article...",
+      "empty": "No articles found for this filter.",
+      "badges": {
+        "saved": "Saved",
+        "unread": "Unread"
+      },
+      "noExcerpt": "No excerpt available.",
+      "actions": {
+        "markRead": "Mark read",
+        "unsave": "Unsave",
+        "save": "Save",
+        "openReader": "Open reader"
+      },
+      "loadingMore": "Loading more..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "Feed Articles",
+      "panelTitle": "Feed articles"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "Unable to summarize this article right now."
+      },
+      "loadingArticle": "Loading article...",
+      "actions": {
+        "openOriginal": "Open original article",
+        "aiSummarize": "AI Summarize"
+      },
+      "noAiProfile": "No AI profile configured.",
+      "addAiProfile": "Add one in AI settings",
+      "generatingSummary": "Generating summary...",
+      "tokensUsed": "Tokens used: {count}",
+      "streaming": "Streaming response...",
+      "fullContentUnavailable": "Full content unavailable",
+      "noExcerpt": "No excerpt available for this article.",
+      "readingAppearance": {
+        "title": "Reading Appearance",
+        "subtitle": "Adjust typography and spacing while reading.",
+        "fontFamily": "Font family",
+        "fontSize": "Font size",
+        "lineHeight": "Line height",
+        "readingWidth": "Reading width",
+        "needFullControls": "Need full controls for theme and color presets?",
+        "openAppearanceSettings": "Open appearance settings"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "News Overview",
+      "subtitle": "Monitor reading volume, feed health, and jump directly to your core workflows.",
+      "neverFetched": "Never fetched"
+    },
+    "stats": {
+      "totalArticles": "Total articles",
+      "unread": "Unread",
+      "saved": "Saved",
+      "activeFeeds": "Active feeds"
+    },
+    "feedHealth": {
+      "title": "Feed health",
+      "description": "Active status, delivery issues, and stale sources based on last fetch.",
+      "loading": "Loading feed health...",
+      "cards": {
+        "errors": "Feeds with errors",
+        "inactive": "Inactive feeds",
+        "stale": "Stale feeds (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "Top unread feeds",
+        "empty": "No active feeds with unread articles.",
+        "lastFetched": "Last fetched: {value}",
+        "unreadCount": "{count} unread"
+      }
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "description": "Jump to your most common tasks.",
+      "openArticles": "Open article list",
+      "manageFeeds": "Manage feeds",
+      "manageAiProfiles": "Manage AI profiles"
+    },
+    "queueWatch": {
+      "title": "Queue watch",
+      "description": "Feeds requiring attention right now.",
+      "feedsWithErrors": "Feeds with errors",
+      "staleActiveFeeds": "Stale active feeds",
+      "totalConfiguredFeeds": "Total configured feeds"
+    }
   }
 }

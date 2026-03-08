@@ -223,5 +223,115 @@
         "description": "订阅元数据、状态、刷新操作和清理。"
       }
     }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "最新文章",
+      "allFeedsTitle": "全部订阅",
+      "subtitle": "使用 AI 阅读、收藏并总结你的订阅内容。",
+      "searchPlaceholder": "按标题、摘要、链接搜索",
+      "stats": {
+        "total": "总数",
+        "unread": "未读",
+        "saved": "已收藏"
+      },
+      "filters": {
+        "all": "全部",
+        "unread": "未读",
+        "saved": "已收藏"
+      },
+      "loadingArticle": "正在加载文章...",
+      "empty": "当前筛选条件下没有文章。",
+      "badges": {
+        "saved": "已收藏",
+        "unread": "未读"
+      },
+      "noExcerpt": "暂无摘要。",
+      "actions": {
+        "markRead": "标记已读",
+        "unsave": "取消收藏",
+        "save": "收藏",
+        "openReader": "打开阅读器"
+      },
+      "loadingMore": "正在加载更多..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "订阅文章",
+      "panelTitle": "订阅文章"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "暂时无法总结这篇文章。"
+      },
+      "loadingArticle": "正在加载文章...",
+      "actions": {
+        "openOriginal": "打开原文",
+        "aiSummarize": "AI 总结"
+      },
+      "noAiProfile": "尚未配置 AI 配置。",
+      "addAiProfile": "前往 AI 设置添加",
+      "generatingSummary": "正在生成总结...",
+      "tokensUsed": "已用 Token：{count}",
+      "streaming": "正在流式返回...",
+      "fullContentUnavailable": "暂无全文内容",
+      "noExcerpt": "该文章暂无摘要。",
+      "readingAppearance": {
+        "title": "阅读外观",
+        "subtitle": "阅读时调整排版与间距。",
+        "fontFamily": "字体",
+        "fontSize": "字号",
+        "lineHeight": "行高",
+        "readingWidth": "阅读宽度",
+        "needFullControls": "需要完整的主题和配色控制？",
+        "openAppearanceSettings": "打开外观设置"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "新闻概览",
+      "subtitle": "监控阅读量、订阅健康状态，并快速进入核心工作流。",
+      "neverFetched": "从未抓取"
+    },
+    "stats": {
+      "totalArticles": "文章总数",
+      "unread": "未读",
+      "saved": "已收藏",
+      "activeFeeds": "活跃订阅"
+    },
+    "feedHealth": {
+      "title": "订阅健康",
+      "description": "根据最近抓取情况查看活跃状态、投递问题和过期源。",
+      "loading": "正在加载订阅健康数据...",
+      "cards": {
+        "errors": "有错误的订阅",
+        "inactive": "未激活订阅",
+        "stale": "过期订阅 (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "未读最多的订阅",
+        "empty": "没有包含未读文章的活跃订阅。",
+        "lastFetched": "最近抓取：{value}",
+        "unreadCount": "{count} 未读"
+      }
+    },
+    "quickActions": {
+      "title": "快捷操作",
+      "description": "快速前往常用任务。",
+      "openArticles": "打开文章列表",
+      "manageFeeds": "管理订阅",
+      "manageAiProfiles": "管理 AI 配置"
+    },
+    "queueWatch": {
+      "title": "队列监控",
+      "description": "当前需要关注的订阅。",
+      "feedsWithErrors": "有错误的订阅",
+      "staleActiveFeeds": "过期活跃订阅",
+      "totalConfiguredFeeds": "已配置订阅总数"
+    }
   }
 }
