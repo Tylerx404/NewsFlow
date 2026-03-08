@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type QueueJobRow = {
   jobId: string;
@@ -29,6 +30,9 @@ const props = defineProps<{
   items: QueueJobRow[];
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   retry: [payload: { queueName: QueueJobRow["queueName"]; jobId: string }];
 }>();
@@ -36,11 +40,16 @@ const emit = defineEmits<{
 const loadingRowKeys = [1, 2, 3, 4, 5];
 
 const queueLabel = (queueName: QueueJobRow["queueName"]) =>
-  queueName === "rss-fetch" ? "RSS Fetch" : "Content Extract";
+  queueName === "rss-fetch"
+    ? t("admin.common.queueName.rssFetch")
+    : t("admin.common.queueName.contentExtract");
 
 const formatDateTime = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const stateBadgeClass = (state: QueueJobRow["state"]) => {
@@ -58,6 +67,8 @@ const stateBadgeClass = (state: QueueJobRow["state"]) => {
 
   return "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
 };
+
+const stateLabel = (state: QueueJobRow["state"]) => t(`admin.common.queueState.${state}`);
 </script>
 
 <template>
@@ -65,13 +76,13 @@ const stateBadgeClass = (state: QueueJobRow["state"]) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Queue</TableHead>
-          <TableHead>Job</TableHead>
-          <TableHead>State</TableHead>
-          <TableHead>Attempts</TableHead>
-          <TableHead>Failure</TableHead>
-          <TableHead>Created</TableHead>
-          <TableHead class="text-right">Actions</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.queue") }}</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.job") }}</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.state") }}</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.attempts") }}</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.failure") }}</TableHead>
+          <TableHead>{{ t("admin.systemOps.queueJobs.columns.created") }}</TableHead>
+          <TableHead class="text-right">{{ t("admin.common.actions") }}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -100,7 +111,7 @@ const stateBadgeClass = (state: QueueJobRow["state"]) => {
 
         <TableRow v-else-if="items.length === 0">
           <TableCell :colspan="7" class="py-8 text-center text-sm text-muted-foreground">
-            No queue jobs match the selected filters.
+            {{ t("admin.systemOps.queueJobs.empty") }}
           </TableCell>
         </TableRow>
 
@@ -110,11 +121,13 @@ const stateBadgeClass = (state: QueueJobRow["state"]) => {
           </TableCell>
           <TableCell>
             <p class="font-medium">{{ item.name }}</p>
-            <p class="text-xs text-muted-foreground">ID: {{ item.jobId }}</p>
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.common.id") }}: {{ item.jobId }}
+            </p>
           </TableCell>
           <TableCell>
             <Badge variant="outline" :class="stateBadgeClass(item.state)">
-              {{ item.state }}
+              {{ stateLabel(item.state) }}
             </Badge>
           </TableCell>
           <TableCell class="text-sm text-muted-foreground">
@@ -133,7 +146,7 @@ const stateBadgeClass = (state: QueueJobRow["state"]) => {
               :disabled="isActionPending || item.state !== 'failed'"
               @click="emit('retry', { queueName: item.queueName, jobId: item.jobId })"
             >
-              Retry
+              {{ t("admin.systemOps.queueJobs.actions.retry") }}
             </Button>
           </TableCell>
         </TableRow>

@@ -22,11 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin System Ops",
+  titleKey: "admin.systemOps.metaTitle",
 });
 
 type QueueNameFilter = "all" | "rss-fetch" | "content-extract";
@@ -74,6 +75,8 @@ const ALL_QUEUE_STATES: QueueJobState[] = [
 ];
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 
 const queueFilter = ref<QueueNameFilter>("all");
@@ -172,7 +175,7 @@ const updateStripeConfigMutation = useMutation(
   $orpc.admin.systemOps.updateStripeConfig.mutationOptions({
     onSuccess: async () => {
       stripeConfigError.value = "";
-      stripeConfigSuccess.value = "Stripe config saved.";
+      stripeConfigSuccess.value = t("admin.systemOps.stripe.successSaved");
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
     },
   })
@@ -200,7 +203,7 @@ const overviewErrorMessage = computed(() => {
 
   return overviewQuery.error.value instanceof Error
     ? overviewQuery.error.value.message
-    : "Could not load system runtime summary.";
+    : t("admin.systemOps.errors.runtimeSummary");
 });
 
 const queueJobsErrorMessage = computed(() => {
@@ -210,7 +213,7 @@ const queueJobsErrorMessage = computed(() => {
 
   return queueJobsQuery.error.value instanceof Error
     ? queueJobsQuery.error.value.message
-    : "Could not load queue jobs.";
+    : t("admin.systemOps.errors.queueJobs");
 });
 
 const stripeConfigLoadError = computed(() => {
@@ -220,7 +223,7 @@ const stripeConfigLoadError = computed(() => {
 
   return stripeConfigQuery.error.value instanceof Error
     ? stripeConfigQuery.error.value.message
-    : "Could not load Stripe config.";
+    : t("admin.systemOps.errors.stripeLoad");
 });
 
 watch(
@@ -249,7 +252,14 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString();
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const requestRetryJob = (payload: { queueName: QueueName; jobId: string }) => {
@@ -264,7 +274,7 @@ const requestTriggerFeedFetch = () => {
   const feedSourceId = feedSourceIdInput.value.trim();
 
   if (!feedSourceId) {
-    actionError.value = "Feed source ID is required.";
+    actionError.value = t("admin.systemOps.manualActions.errors.feedSourceIdRequired");
     return;
   }
 
@@ -278,7 +288,7 @@ const requestTriggerContentExtract = () => {
   const sourceArticleId = sourceArticleIdInput.value.trim();
 
   if (!sourceArticleId) {
-    actionError.value = "Source article ID is required.";
+    actionError.value = t("admin.systemOps.manualActions.errors.sourceArticleIdRequired");
     return;
   }
 
@@ -290,50 +300,62 @@ const requestTriggerContentExtract = () => {
 
 const confirmTitle = computed(() => {
   if (!confirmState.value) {
-    return "Confirm action";
+    return t("admin.systemOps.confirm.defaultTitle");
   }
 
   if (confirmState.value.type === "retryJob") {
-    return "Retry this failed job?";
+    return t("admin.systemOps.confirm.retryJob.title");
   }
 
   if (confirmState.value.type === "triggerFeedFetch") {
-    return "Trigger feed fetch now?";
+    return t("admin.systemOps.confirm.triggerFeedFetch.title");
   }
 
-  return "Trigger content extraction now?";
+  return t("admin.systemOps.confirm.triggerContentExtract.title");
 });
 
 const confirmDescription = computed(() => {
   if (!confirmState.value) {
-    return "Confirm this operation.";
+    return t("admin.systemOps.confirm.defaultDescription");
   }
 
   if (confirmState.value.type === "retryJob") {
-    return `Queue retry for job ${confirmState.value.jobId} in ${confirmState.value.queueName}.`;
+    const queueLabel =
+      confirmState.value.queueName === "rss-fetch"
+        ? t("admin.common.queueName.rssFetch")
+        : t("admin.common.queueName.contentExtract");
+
+    return t("admin.systemOps.confirm.retryJob.description", {
+      jobId: confirmState.value.jobId,
+      queueName: queueLabel,
+    });
   }
 
   if (confirmState.value.type === "triggerFeedFetch") {
-    return `Queue one immediate RSS fetch for feed source ${confirmState.value.feedSourceId}.`;
+    return t("admin.systemOps.confirm.triggerFeedFetch.description", {
+      feedSourceId: confirmState.value.feedSourceId,
+    });
   }
 
-  return `Queue one content extraction job for source article ${confirmState.value.sourceArticleId}.`;
+  return t("admin.systemOps.confirm.triggerContentExtract.description", {
+    sourceArticleId: confirmState.value.sourceArticleId,
+  });
 });
 
 const confirmLabel = computed(() => {
   if (!confirmState.value) {
-    return "Confirm";
+    return t("admin.common.confirm");
   }
 
   if (confirmState.value.type === "retryJob") {
-    return "Retry job";
+    return t("admin.systemOps.confirm.retryJob.confirmLabel");
   }
 
   if (confirmState.value.type === "triggerFeedFetch") {
-    return "Trigger feed fetch";
+    return t("admin.systemOps.confirm.triggerFeedFetch.confirmLabel");
   }
 
-  return "Trigger extraction";
+  return t("admin.systemOps.confirm.triggerContentExtract.confirmLabel");
 });
 
 const handleConfirmAction = async () => {
@@ -366,7 +388,7 @@ const handleConfirmAction = async () => {
     });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Could not execute this system operation.";
+      error instanceof Error ? error.message : t("admin.systemOps.errors.executeOperation");
   }
 };
 
@@ -388,7 +410,7 @@ const handleSaveStripeConfig = async () => {
     });
   } catch (error) {
     stripeConfigError.value =
-      error instanceof Error ? error.message : "Could not save Stripe config.";
+      error instanceof Error ? error.message : t("admin.systemOps.errors.stripeSave");
   }
 };
 </script>
@@ -396,9 +418,9 @@ const handleSaveStripeConfig = async () => {
 <template>
   <div class="space-y-6">
     <section class="space-y-1">
-      <h1 class="text-2xl font-semibold">System ops</h1>
+      <h1 class="text-2xl font-semibold">{{ t("admin.systemOps.page.title") }}</h1>
       <p class="text-sm text-muted-foreground">
-        Inspect queue health and run single-item operational actions safely.
+        {{ t("admin.systemOps.page.description") }}
       </p>
     </section>
 
@@ -410,83 +432,90 @@ const handleSaveStripeConfig = async () => {
 
     <Card>
       <CardHeader>
-        <CardTitle>Stripe config</CardTitle>
+        <CardTitle>{{ t("admin.systemOps.stripe.title") }}</CardTitle>
         <CardDescription>
-          Manage Stripe keys and plan price IDs here instead of server environment variables.
+          {{ t("admin.systemOps.stripe.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Status</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.stripe.status.label") }}</p>
             <p class="mt-1 text-sm font-medium">
-              {{ currentStripeConfig?.isConfigured ? "Configured" : "Incomplete" }}
+              {{
+                currentStripeConfig?.isConfigured
+                  ? t("admin.systemOps.stripe.status.configured")
+                  : t("admin.systemOps.stripe.status.incomplete")
+              }}
             </p>
           </div>
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Secret key</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.stripe.status.secretKey") }}</p>
             <p class="mt-1 text-sm font-medium">
-              {{ currentStripeConfig?.secretKeyMasked || "Missing" }}
+              {{ currentStripeConfig?.secretKeyMasked || t("admin.systemOps.stripe.status.missing") }}
             </p>
           </div>
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Webhook secret</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.stripe.status.webhookSecret") }}</p>
             <p class="mt-1 text-sm font-medium">
-              {{ currentStripeConfig?.webhookSecretMasked || "Missing" }}
+              {{ currentStripeConfig?.webhookSecretMasked || t("admin.systemOps.stripe.status.missing") }}
             </p>
           </div>
         </div>
 
         <div class="grid gap-4 md:grid-cols-2">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Publishable key</p>
-            <Input v-model="stripeConfigForm.publishableKey" placeholder="pk_test_..." />
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.publishableKey") }}</p>
+            <Input v-model="stripeConfigForm.publishableKey" :placeholder="t('admin.systemOps.stripe.form.publishablePlaceholder')" />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Secret key</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.secretKey") }}</p>
             <Input
               v-model="stripeConfigForm.secretKey"
               type="password"
-              placeholder="Leave blank to keep current sk_*"
+              :placeholder="t('admin.systemOps.stripe.form.secretPlaceholder')"
             />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Webhook secret</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.webhookSecret") }}</p>
             <Input
               v-model="stripeConfigForm.webhookSecret"
               type="password"
-              placeholder="Leave blank to keep current whsec_*"
+              :placeholder="t('admin.systemOps.stripe.form.webhookPlaceholder')"
             />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Basic monthly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.basicMonthly") }}</p>
             <Input v-model="stripeConfigForm.priceBasicMonthly" placeholder="price_..." />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Basic yearly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.basicYearly") }}</p>
             <Input v-model="stripeConfigForm.priceBasicYearly" placeholder="price_..." />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Pro monthly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.proMonthly") }}</p>
             <Input v-model="stripeConfigForm.priceProMonthly" placeholder="price_..." />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Pro yearly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.proYearly") }}</p>
             <Input v-model="stripeConfigForm.priceProYearly" placeholder="price_..." />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Max monthly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.maxMonthly") }}</p>
             <Input v-model="stripeConfigForm.priceMaxMonthly" placeholder="price_..." />
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Max yearly price</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.stripe.form.maxYearly") }}</p>
             <Input v-model="stripeConfigForm.priceMaxYearly" placeholder="price_..." />
           </div>
         </div>
 
         <div class="rounded-md border p-3 text-xs text-muted-foreground">
-          <p>Last updated: {{ formatDateTime(currentStripeConfig?.updatedAt ?? null) }}</p>
-          <p>Webhook endpoint: `http://localhost:3000/api/auth/stripe/webhook`</p>
+          <p>
+            {{ t("admin.systemOps.stripe.lastUpdated") }}:
+            {{ formatDateTime(currentStripeConfig?.updatedAt ?? null) }}
+          </p>
+          <p>{{ t("admin.systemOps.stripe.webhookEndpoint") }}: `http://localhost:3000/api/auth/stripe/webhook`</p>
         </div>
 
         <p v-if="stripeConfigLoadError" class="text-sm text-destructive">
@@ -501,10 +530,14 @@ const handleSaveStripeConfig = async () => {
 
         <div class="flex items-center gap-2">
           <Button :disabled="isStripeConfigPending" @click="handleSaveStripeConfig">
-            {{ updateStripeConfigMutation.isPending.value ? "Saving..." : "Save Stripe config" }}
+            {{
+              updateStripeConfigMutation.isPending.value
+                ? t("admin.systemOps.stripe.saving")
+                : t("admin.systemOps.stripe.save")
+            }}
           </Button>
           <p class="text-xs text-muted-foreground">
-            Secret inputs can stay empty if you only want to update price IDs.
+            {{ t("admin.systemOps.stripe.secretHint") }}
           </p>
         </div>
       </CardContent>
@@ -512,27 +545,33 @@ const handleSaveStripeConfig = async () => {
 
     <Card>
       <CardHeader>
-        <CardTitle>Manual actions</CardTitle>
+        <CardTitle>{{ t("admin.systemOps.manualActions.title") }}</CardTitle>
         <CardDescription>
-          Trigger one feed fetch or one content extraction by ID.
+          {{ t("admin.systemOps.manualActions.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="grid gap-4 md:grid-cols-2">
         <div class="space-y-2">
-          <p class="text-sm font-medium">Feed source ID</p>
+          <p class="text-sm font-medium">{{ t("admin.systemOps.manualActions.feedSourceId") }}</p>
           <div class="flex gap-2">
-            <Input v-model="feedSourceIdInput" placeholder="feedSourceId" />
+            <Input
+              v-model="feedSourceIdInput"
+              :placeholder="t('admin.systemOps.manualActions.feedSourceIdPlaceholder')"
+            />
             <Button variant="outline" :disabled="isActionPending" @click="requestTriggerFeedFetch">
-              Trigger fetch
+              {{ t("admin.systemOps.manualActions.triggerFetch") }}
             </Button>
           </div>
         </div>
         <div class="space-y-2">
-          <p class="text-sm font-medium">Source article ID</p>
+          <p class="text-sm font-medium">{{ t("admin.systemOps.manualActions.sourceArticleId") }}</p>
           <div class="flex gap-2">
-            <Input v-model="sourceArticleIdInput" placeholder="sourceArticleId" />
+            <Input
+              v-model="sourceArticleIdInput"
+              :placeholder="t('admin.systemOps.manualActions.sourceArticleIdPlaceholder')"
+            />
             <Button variant="outline" :disabled="isActionPending" @click="requestTriggerContentExtract">
-              Trigger extract
+              {{ t("admin.systemOps.manualActions.triggerExtract") }}
             </Button>
           </div>
         </div>
@@ -544,46 +583,46 @@ const handleSaveStripeConfig = async () => {
 
     <Card>
       <CardHeader>
-        <CardTitle>Queue jobs</CardTitle>
+        <CardTitle>{{ t("admin.systemOps.queueJobs.title") }}</CardTitle>
         <CardDescription>
-          Review queue states and retry failed jobs one at a time.
+          {{ t("admin.systemOps.queueJobs.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
         <div class="grid gap-4 md:grid-cols-2">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Queue</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.queueJobs.filters.queue") }}</p>
             <Select
               :model-value="queueFilter"
               @update:model-value="(value) => queueFilter = String(value) as QueueNameFilter"
             >
               <SelectTrigger class="w-full">
-                <SelectValue placeholder="All queues" />
+                <SelectValue :placeholder="t('admin.systemOps.queueJobs.filters.allQueues')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All queues</SelectItem>
-                <SelectItem value="rss-fetch">RSS fetch</SelectItem>
-                <SelectItem value="content-extract">Content extract</SelectItem>
+                <SelectItem value="all">{{ t("admin.systemOps.queueJobs.filters.allQueues") }}</SelectItem>
+                <SelectItem value="rss-fetch">{{ t("admin.common.queueName.rssFetch") }}</SelectItem>
+                <SelectItem value="content-extract">{{ t("admin.common.queueName.contentExtract") }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">State</p>
+            <p class="text-sm font-medium">{{ t("admin.systemOps.queueJobs.filters.state") }}</p>
             <Select
               :model-value="queueStateFilter"
               @update:model-value="(value) => queueStateFilter = String(value) as QueueStateFilter"
             >
               <SelectTrigger class="w-full">
-                <SelectValue placeholder="Failed" />
+                <SelectValue :placeholder="t('admin.common.queueState.failed')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All states</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-                <SelectItem value="waiting">Waiting</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="delayed">Delayed</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="all">{{ t("admin.systemOps.queueJobs.filters.allStates") }}</SelectItem>
+                <SelectItem value="failed">{{ t("admin.common.queueState.failed") }}</SelectItem>
+                <SelectItem value="waiting">{{ t("admin.common.queueState.waiting") }}</SelectItem>
+                <SelectItem value="active">{{ t("admin.common.queueState.active") }}</SelectItem>
+                <SelectItem value="delayed">{{ t("admin.common.queueState.delayed") }}</SelectItem>
+                <SelectItem value="completed">{{ t("admin.common.queueState.completed") }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -604,7 +643,7 @@ const handleSaveStripeConfig = async () => {
       :title="confirmTitle"
       :description="confirmDescription"
       :confirm-label="confirmLabel"
-      :confirm-pending-label="'Processing...'"
+      :confirm-pending-label="t('common.actions.loading')"
       :is-pending="isActionPending"
       @update:open="(open) => { if (!open) confirmState = null; }"
       @confirm="handleConfirmAction"

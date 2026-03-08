@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type FailedJobItem = {
   jobId: string;
@@ -25,19 +26,25 @@ const props = defineProps<{
   items: FailedJobItem[];
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const loadingRowKeys = [1, 2, 3, 4];
 
 const formatDateTime = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const queueLabel = (queueName: FailedJobItem["queueName"]) => {
   if (queueName === "rss-fetch") {
-    return "RSS Fetch";
+    return t("admin.common.queueName.rssFetch");
   }
 
-  return "Content Extract";
+  return t("admin.common.queueName.contentExtract");
 };
 </script>
 
@@ -46,10 +53,10 @@ const queueLabel = (queueName: FailedJobItem["queueName"]) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Queue</TableHead>
-          <TableHead>Job</TableHead>
-          <TableHead>Failure</TableHead>
-          <TableHead>Time</TableHead>
+          <TableHead>{{ t("admin.operations.recentFailedJobs.columns.queue") }}</TableHead>
+          <TableHead>{{ t("admin.operations.recentFailedJobs.columns.job") }}</TableHead>
+          <TableHead>{{ t("admin.operations.recentFailedJobs.columns.failure") }}</TableHead>
+          <TableHead>{{ t("admin.operations.recentFailedJobs.columns.time") }}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -75,7 +82,7 @@ const queueLabel = (queueName: FailedJobItem["queueName"]) => {
 
         <TableRow v-else-if="items.length === 0">
           <TableCell :colspan="4" class="py-8 text-center text-sm text-muted-foreground">
-            No recent failed jobs in queue history.
+            {{ t("admin.operations.recentFailedJobs.empty") }}
           </TableCell>
         </TableRow>
 
@@ -85,10 +92,12 @@ const queueLabel = (queueName: FailedJobItem["queueName"]) => {
           </TableCell>
           <TableCell>
             <p class="font-medium">{{ item.name }}</p>
-            <p class="text-xs text-muted-foreground">ID: {{ item.jobId }}</p>
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.common.id") }}: {{ item.jobId }}
+            </p>
           </TableCell>
           <TableCell class="text-sm text-muted-foreground">
-            {{ item.failedReason || "No failure reason available." }}
+            {{ item.failedReason || t("admin.operations.recentFailedJobs.noFailureReason") }}
           </TableCell>
           <TableCell class="text-sm text-muted-foreground">
             {{ formatDateTime(item.timestamp) }}

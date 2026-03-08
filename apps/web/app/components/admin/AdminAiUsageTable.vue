@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminAiUsageEvent = {
   id: string;
@@ -31,11 +32,17 @@ const props = defineProps<{
   items: AdminAiUsageEvent[];
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const loadingRowKeys = [1, 2, 3, 4, 5];
 
 const formatDateTime = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatDuration = (durationMs: number | null) => {
@@ -54,6 +61,11 @@ const statusBadgeClass = (status: AdminAiUsageEvent["status"]) =>
   status === "FAILED"
     ? "border-destructive/30 bg-destructive/10 text-destructive"
     : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+
+const formatStatus = (status: AdminAiUsageEvent["status"]) =>
+  status === "FAILED"
+    ? t("admin.common.eventStatus.failed")
+    : t("admin.common.eventStatus.success");
 </script>
 
 <template>
@@ -61,13 +73,13 @@ const statusBadgeClass = (status: AdminAiUsageEvent["status"]) =>
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>User</TableHead>
-          <TableHead>Provider / model</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Tokens</TableHead>
-          <TableHead>Duration</TableHead>
-          <TableHead>Error summary</TableHead>
-          <TableHead>Created</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.user") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.providerModel") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.status") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.tokens") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.duration") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.errorSummary") }}</TableHead>
+          <TableHead>{{ t("admin.aiUsage.table.columns.created") }}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -101,7 +113,7 @@ const statusBadgeClass = (status: AdminAiUsageEvent["status"]) =>
 
         <TableRow v-else-if="items.length === 0">
           <TableCell :colspan="7" class="py-8 text-center text-sm text-muted-foreground">
-            No AI usage events match the current filters.
+            {{ t("admin.aiUsage.table.empty") }}
           </TableCell>
         </TableRow>
 
@@ -116,10 +128,10 @@ const statusBadgeClass = (status: AdminAiUsageEvent["status"]) =>
           </TableCell>
           <TableCell>
             <Badge variant="outline" :class="statusBadgeClass(item.status)">
-              {{ item.status }}
+              {{ formatStatus(item.status) }}
             </Badge>
           </TableCell>
-          <TableCell>{{ item.tokens.toLocaleString() }}</TableCell>
+          <TableCell>{{ new Intl.NumberFormat(intlLocale).format(item.tokens) }}</TableCell>
           <TableCell>{{ formatDuration(item.durationMs) }}</TableCell>
           <TableCell class="max-w-[320px] truncate text-sm text-muted-foreground">
             {{ item.errorSummary || "—" }}

@@ -24,7 +24,7 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin Users",
+  titleKey: "admin.users.metaTitle",
 });
 
 type UserRoleFilter = "all" | "USER" | "ADMIN";
@@ -32,6 +32,7 @@ type UserStatusFilter = "all" | "ACTIVE" | "SUSPENDED";
 type SubscriptionTierFilter = "all" | "free" | "basic" | "pro" | "max";
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
 const queryClient = useQueryClient();
 
 const searchQuery = ref("");
@@ -99,7 +100,7 @@ const usersErrorMessage = computed(() => {
 
   return usersQuery.error.value instanceof Error
     ? usersQuery.error.value.message
-    : "Could not load admin users. Refresh and try again.";
+    : t("admin.users.errors.list");
 });
 
 const hasMoreUsers = computed(() => Boolean(usersQuery.data.value?.nextCursor));
@@ -148,7 +149,7 @@ const handleSuspendUser = async (reason?: string) => {
     });
   } catch (error) {
     detailActionError.value =
-      error instanceof Error ? error.message : "Could not suspend this user. Try again.";
+      error instanceof Error ? error.message : t("admin.users.errors.suspend");
   }
 };
 
@@ -165,7 +166,7 @@ const handleReactivateUser = async () => {
     });
   } catch (error) {
     detailActionError.value =
-      error instanceof Error ? error.message : "Could not reactivate this user. Try again.";
+      error instanceof Error ? error.message : t("admin.users.errors.reactivate");
   }
 };
 </script>
@@ -173,65 +174,65 @@ const handleReactivateUser = async () => {
 <template>
   <div class="space-y-6">
     <section class="space-y-1">
-      <h1 class="text-2xl font-semibold">Admin users</h1>
+      <h1 class="text-2xl font-semibold">{{ t("admin.users.page.title") }}</h1>
       <p class="text-sm text-muted-foreground">
-        Review user accounts, subscription state, and account status actions.
+        {{ t("admin.users.page.description") }}
       </p>
     </section>
 
     <Card>
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>{{ t("admin.users.filters.title") }}</CardTitle>
         <CardDescription>
-          Search users and narrow results by role, account status, or subscription tier.
+          {{ t("admin.users.filters.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div class="space-y-2 xl:col-span-2">
-          <p class="text-sm font-medium">Search</p>
-          <Input v-model="searchQuery" placeholder="Name or email" />
+          <p class="text-sm font-medium">{{ t("admin.users.filters.search.label") }}</p>
+          <Input v-model="searchQuery" :placeholder="t('admin.users.filters.search.placeholder')" />
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Role</p>
+          <p class="text-sm font-medium">{{ t("admin.users.filters.role.label") }}</p>
           <Select :model-value="roleFilter" @update:model-value="(value) => handleRoleFilterChange(String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All roles" />
+              <SelectValue :placeholder="t('admin.users.filters.role.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All roles</SelectItem>
-              <SelectItem value="USER">User</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
+              <SelectItem value="all">{{ t("admin.users.filters.role.all") }}</SelectItem>
+              <SelectItem value="USER">{{ t("admin.common.roles.user") }}</SelectItem>
+              <SelectItem value="ADMIN">{{ t("admin.common.roles.admin") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Status</p>
+          <p class="text-sm font-medium">{{ t("admin.users.filters.status.label") }}</p>
           <Select :model-value="statusFilter" @update:model-value="(value) => handleStatusFilterChange(String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All statuses" />
+              <SelectValue :placeholder="t('admin.users.filters.status.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="ACTIVE">Active</SelectItem>
-              <SelectItem value="SUSPENDED">Suspended</SelectItem>
+              <SelectItem value="all">{{ t("admin.users.filters.status.all") }}</SelectItem>
+              <SelectItem value="ACTIVE">{{ t("admin.common.accountStatus.active") }}</SelectItem>
+              <SelectItem value="SUSPENDED">{{ t("admin.common.accountStatus.suspended") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Tier</p>
+          <p class="text-sm font-medium">{{ t("admin.users.filters.tier.label") }}</p>
           <Select :model-value="tierFilter" @update:model-value="(value) => handleTierFilterChange(String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All tiers" />
+              <SelectValue :placeholder="t('admin.users.filters.tier.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All tiers</SelectItem>
-              <SelectItem value="free">Free</SelectItem>
-              <SelectItem value="basic">Basic</SelectItem>
-              <SelectItem value="pro">Pro</SelectItem>
-              <SelectItem value="max">Max</SelectItem>
+              <SelectItem value="all">{{ t("admin.users.filters.tier.all") }}</SelectItem>
+              <SelectItem value="free">{{ t("admin.common.subscriptionTier.free") }}</SelectItem>
+              <SelectItem value="basic">{{ t("admin.common.subscriptionTier.basic") }}</SelectItem>
+              <SelectItem value="pro">{{ t("admin.common.subscriptionTier.pro") }}</SelectItem>
+              <SelectItem value="max">{{ t("admin.common.subscriptionTier.max") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -240,9 +241,9 @@ const handleReactivateUser = async () => {
 
     <Card>
       <CardHeader>
-        <CardTitle>User directory</CardTitle>
+        <CardTitle>{{ t("admin.users.directory.title") }}</CardTitle>
         <CardDescription>
-          Open a user row to review details and update account status.
+          {{ t("admin.users.directory.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent>

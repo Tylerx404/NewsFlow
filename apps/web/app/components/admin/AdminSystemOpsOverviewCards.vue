@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type RuntimeNode = {
   state: "healthy" | "stale" | "offline" | "unknown";
@@ -42,6 +43,9 @@ const props = defineProps<{
   } | null;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const queueMap = computed(() => {
   const map = new Map<string, QueueCountItem>();
 
@@ -54,63 +58,63 @@ const queueMap = computed(() => {
 
 const cards = computed(() => [
   {
-    title: "Failed jobs",
-    description: "Current failed jobs across queues.",
+    title: t("admin.systemOps.overview.metrics.failedJobs.title"),
+    description: t("admin.systemOps.overview.metrics.failedJobs.description"),
     value: props.overview?.failedJobCount ?? 0,
   },
   {
-    title: "Stale feeds",
-    description: "Enabled feeds waiting for refresh.",
+    title: t("admin.systemOps.overview.metrics.staleFeeds.title"),
+    description: t("admin.systemOps.overview.metrics.staleFeeds.description"),
     value: props.overview?.staleFeedCount ?? 0,
   },
   {
-    title: "Extraction backlog",
-    description: "Articles waiting for extraction.",
+    title: t("admin.systemOps.overview.metrics.extractionBacklog.title"),
+    description: t("admin.systemOps.overview.metrics.extractionBacklog.description"),
     value: props.overview?.extractionBacklogCount ?? 0,
   },
   {
-    title: "RSS waiting jobs",
-    description: "Pending RSS fetch jobs.",
+    title: t("admin.systemOps.overview.metrics.rssWaitingJobs.title"),
+    description: t("admin.systemOps.overview.metrics.rssWaitingJobs.description"),
     value: queueMap.value.get("rss-fetch")?.waiting ?? 0,
   },
   {
-    title: "Content waiting jobs",
-    description: "Pending content extraction jobs.",
+    title: t("admin.systemOps.overview.metrics.contentWaitingJobs.title"),
+    description: t("admin.systemOps.overview.metrics.contentWaitingJobs.description"),
     value: queueMap.value.get("content-extract")?.waiting ?? 0,
   },
 ]);
 
 const runtimeRows = computed(() => [
   {
-    label: "Worker",
+    label: t("admin.common.runtimeNodes.worker"),
     node: props.overview?.runtime.worker ?? null,
   },
   {
-    label: "RSS scheduler",
+    label: t("admin.common.runtimeNodes.rssScheduler"),
     node: props.overview?.runtime.rssScheduler ?? null,
   },
   {
-    label: "Content scheduler",
+    label: t("admin.common.runtimeNodes.contentScheduler"),
     node: props.overview?.runtime.contentScheduler ?? null,
   },
 ]);
 
 const formatAge = (ageMs: number | null) => {
   if (ageMs === null) {
-    return "N/A";
+    return t("admin.common.notAvailable");
   }
 
   const seconds = Math.floor(ageMs / 1000);
   if (seconds < 60) {
-    return `${seconds}s`;
+    return t("admin.common.age.secondsShort", { value: seconds });
   }
 
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) {
-    return `${minutes}m`;
+    return t("admin.common.age.minutesShort", { value: minutes });
   }
 
-  return `${Math.floor(minutes / 60)}h`;
+  return t("admin.common.age.hoursShort", { value: Math.floor(minutes / 60) });
 };
 
 const runtimeBadgeClass = (state: RuntimeNode["state"]) => {
@@ -129,8 +133,7 @@ const runtimeBadgeClass = (state: RuntimeNode["state"]) => {
   return "border-muted bg-muted/30 text-muted-foreground";
 };
 
-const formatState = (state: RuntimeNode["state"]) =>
-  state.charAt(0).toUpperCase() + state.slice(1);
+const formatState = (state: RuntimeNode["state"]) => t(`admin.common.runtimeStates.${state}`);
 </script>
 
 <template>
@@ -147,16 +150,18 @@ const formatState = (state: RuntimeNode["state"]) =>
         </CardHeader>
         <CardContent>
           <Skeleton v-if="isLoading" class="h-8 w-16" />
-          <p v-else class="text-2xl font-semibold">{{ card.value.toLocaleString() }}</p>
+          <p v-else class="text-2xl font-semibold">
+            {{ new Intl.NumberFormat(intlLocale).format(card.value) }}
+          </p>
         </CardContent>
       </Card>
     </div>
 
     <Card>
       <CardHeader>
-        <CardTitle>Runtime heartbeat</CardTitle>
+        <CardTitle>{{ t("admin.systemOps.overview.runtimeHeartbeat.title") }}</CardTitle>
         <CardDescription>
-          Worker and scheduler liveness from Redis heartbeat keys.
+          {{ t("admin.systemOps.overview.runtimeHeartbeat.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="grid gap-3 md:grid-cols-3">
@@ -182,9 +187,10 @@ const formatState = (state: RuntimeNode["state"]) =>
           >
             {{ formatState(row.node.state) }}
           </Badge>
-          <Badge v-else variant="outline" class="mt-2">Unknown</Badge>
+          <Badge v-else variant="outline" class="mt-2">{{ t("admin.common.runtimeStates.unknown") }}</Badge>
           <p class="mt-2 text-xs text-muted-foreground">
-            Age: {{ row.node ? formatAge(row.node.ageMs) : "N/A" }}
+            {{ t("admin.common.age.label") }}:
+            {{ row.node ? formatAge(row.node.ageMs) : t("admin.common.notAvailable") }}
           </p>
         </div>
       </CardContent>

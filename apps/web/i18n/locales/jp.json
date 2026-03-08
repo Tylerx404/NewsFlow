@@ -569,5 +569,717 @@
       "staleActiveFeeds": "古い有効フィード",
       "totalConfiguredFeeds": "設定済みフィード総数"
     }
+  },
+  "admin": {
+    "common": {
+      "action": "Action",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "open": "Open",
+      "edit": "Edit",
+      "detail": "Details",
+      "id": "ID",
+      "yes": "Yes",
+      "no": "No",
+      "updating": "Updating...",
+      "queueing": "Queuing...",
+      "notAvailable": "N/A",
+      "noHeartbeat": "No heartbeat",
+      "lastHeartbeat": "Last heartbeat",
+      "expiresAt": "expires",
+      "roles": {
+        "user": "User",
+        "admin": "Admin"
+      },
+      "accountStatus": {
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "eventStatus": {
+        "success": "Success",
+        "failed": "Failed"
+      },
+      "runtimeNodes": {
+        "worker": "Worker",
+        "rssScheduler": "RSS scheduler",
+        "contentScheduler": "Content scheduler"
+      },
+      "runtimeStates": {
+        "healthy": "Healthy",
+        "stale": "Stale",
+        "offline": "Offline",
+        "unknown": "Unknown"
+      },
+      "queueName": {
+        "rssFetch": "RSS fetch",
+        "contentExtract": "Content extract"
+      },
+      "queueState": {
+        "waiting": "Waiting",
+        "active": "Active",
+        "failed": "Failed",
+        "delayed": "Delayed",
+        "completed": "Completed"
+      },
+      "subscriptionTier": {
+        "free": "Free",
+        "basic": "Basic",
+        "pro": "Pro",
+        "max": "Max"
+      },
+      "billingInterval": {
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "stripe": {
+        "customer": "Customer",
+        "subscription": "Subscription",
+        "price": "Price"
+      },
+      "age": {
+        "label": "Age",
+        "secondsAgo": "{value}s ago",
+        "minutesAgo": "{value}m ago",
+        "hoursAgo": "{value}h ago",
+        "secondsShort": "{value}s",
+        "minutesShort": "{value}m",
+        "hoursShort": "{value}h"
+      }
+    },
+    "operations": {
+      "metaTitle": "Admin Operations",
+      "overview": {
+        "title": "Operations overview",
+        "description": "Monitor AI usage, queue health, and runtime heartbeat status.",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "AI tokens (7d)",
+            "description": "Total token usage in the last 7 days."
+          },
+          "aiRequests7d": {
+            "title": "AI requests (7d)",
+            "description": "Total summarize requests in the last 7 days."
+          },
+          "aiFailures7d": {
+            "title": "AI failures (7d)",
+            "description": "Failed summarize attempts in the last 7 days."
+          },
+          "failedQueueJobs": {
+            "title": "Failed queue jobs",
+            "description": "Current failed jobs across worker queues."
+          },
+          "staleFeeds": {
+            "title": "Stale feeds",
+            "description": "Enabled feeds waiting for fetch scheduling."
+          },
+          "extractionBacklog": {
+            "title": "Extraction backlog",
+            "description": "Articles waiting for content extraction."
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "Runtime health",
+        "description": "Heartbeat status for worker and schedulers."
+      },
+      "drillDown": {
+        "title": "Drill-down",
+        "description": "Open detailed pages to inspect AI events or perform queue actions.",
+        "openAiUsage": "Open AI usage",
+        "openSystemOps": "Open system ops"
+      },
+      "recentFailedJobs": {
+        "title": "Recent failed jobs",
+        "description": "Latest queue failures across RSS fetch and content extraction workers.",
+        "empty": "No recent failed jobs in queue history.",
+        "noFailureReason": "No failure reason available.",
+        "columns": {
+          "queue": "Queue",
+          "job": "Job",
+          "failure": "Failure",
+          "time": "Time"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "Could not load AI usage summary.",
+        "systemOverview": "Could not load system overview.",
+        "runtimeHealth": "Could not load runtime health data.",
+        "recentQueueFailures": "Could not load recent queue failures."
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "Admin AI Usage",
+      "page": {
+        "title": "AI usage",
+        "description": "Inspect usage events, recent failures, and AI config state.",
+        "manageConfigs": "Manage AI configs"
+      },
+      "summary": {
+        "title": "Summary (7 days)",
+        "description": "Token usage and failure trends for admin support visibility.",
+        "totalTokens": "Total tokens",
+        "totalRequests": "Total requests",
+        "failures": "Failures",
+        "topUser": "Top user",
+        "empty7Days": "No AI usage requests recorded in the last 7 days."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Filter by user, provider, model, status, and time range.",
+        "from": "From",
+        "to": "To",
+        "user": {
+          "label": "User",
+          "placeholder": "Search name or email"
+        },
+        "provider": {
+          "label": "Provider",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "Model",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "Status",
+          "all": "All statuses"
+        }
+      },
+      "events": {
+        "title": "AI events",
+        "description": "Recent summarize activity with success/failure status and safe error summaries."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "providerModel": "Provider / model",
+          "status": "Status",
+          "tokens": "Tokens",
+          "duration": "Duration",
+          "errorSummary": "Error summary",
+          "created": "Created"
+        },
+        "empty": "No AI usage events match the current filters."
+      },
+      "configDialog": {
+        "title": "AI config controls",
+        "description": "Review config ownership and toggle individual configs.",
+        "empty": "No AI configs match the current filters.",
+        "badges": {
+          "default": "Default"
+        },
+        "select": {
+          "title": "Select config",
+          "description": "Choose a config to inspect and toggle.",
+          "placeholder": "Select an AI config"
+        },
+        "fields": {
+          "owner": "Owner",
+          "baseUrl": "Base URL",
+          "defaultProviderUrl": "Default provider URL",
+          "updated": "Updated"
+        },
+        "actions": {
+          "enable": "Enable config",
+          "disable": "Disable config",
+          "updating": "Updating..."
+        },
+        "confirm": {
+          "enableTitle": "Enable this AI config?",
+          "disableTitle": "Disable this AI config?",
+          "enableDescription": "Enable {name}. Summarize requests can use this config again.",
+          "disableDescription": "Disable {name}. Summarize requests using this config will be blocked."
+        }
+      },
+      "errors": {
+        "summary": "Could not load AI usage summary.",
+        "events": "Could not load AI usage events.",
+        "configs": "Could not load AI configs.",
+        "updateConfig": "Could not update this AI config."
+      }
+    },
+    "users": {
+      "metaTitle": "Admin Users",
+      "page": {
+        "title": "Admin users",
+        "description": "Review user accounts, subscription state, and account status actions."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search users and narrow results by role, account status, or subscription tier.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Name or email"
+        },
+        "role": {
+          "label": "Role",
+          "all": "All roles"
+        },
+        "status": {
+          "label": "Status",
+          "all": "All statuses"
+        },
+        "tier": {
+          "label": "Tier",
+          "all": "All tiers"
+        }
+      },
+      "directory": {
+        "title": "User directory",
+        "description": "Open a user row to review details and update account status."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "role": "Role",
+          "status": "Status",
+          "subscription": "Subscription",
+          "feeds": "Feeds",
+          "created": "Created"
+        },
+        "empty": "No users match the current filters. Adjust role, status, or plan filters to widen the result.",
+        "hasMore": "More users are available. Refine filters to narrow the result set."
+      },
+      "detail": {
+        "title": "User details",
+        "description": "Review account state, subscription details, and support actions.",
+        "empty": "Select a user to review account details.",
+        "accountSummary": {
+          "title": "Account summary",
+          "description": "Membership and feed usage at a glance.",
+          "created": "Created",
+          "updated": "Updated",
+          "feeds": "Feeds",
+          "suspendedAt": "Suspended at"
+        },
+        "subscription": {
+          "title": "Subscription",
+          "description": "Tier, billing cadence, and current expiry.",
+          "plan": "Plan",
+          "status": "Subscription status",
+          "expires": "Expires"
+        },
+        "actions": {
+          "title": "Account actions",
+          "description": "Suspend or reactivate the user account.",
+          "suspendReasonPlaceholder": "Optional suspension reason",
+          "suspendReasonHint": "The reason is visible to admins in the detail view and audit log.",
+          "suspensionReason": "Suspension reason",
+          "noReason": "No reason provided.",
+          "suspend": "Suspend user",
+          "suspending": "Suspending...",
+          "reactivate": "Reactivate user",
+          "reactivating": "Reactivating..."
+        },
+        "confirm": {
+          "thisUser": "this user",
+          "suspend": {
+            "title": "Suspend this user?",
+            "description": "Suspend {name}. They lose access to protected routes until an admin reactivates the account.",
+            "descriptionWithReason": "Suspend {name}. The reason \"{reason}\" will be saved to the admin audit log."
+          },
+          "reactivate": {
+            "title": "Reactivate this user?",
+            "description": "Restore access for {name}. Protected routes become available again immediately."
+          }
+        }
+      },
+      "errors": {
+        "list": "Could not load admin users. Refresh and try again.",
+        "suspend": "Could not suspend this user. Try again.",
+        "reactivate": "Could not reactivate this user. Try again."
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "Admin Subscriptions",
+      "page": {
+        "title": "Admin subscriptions",
+        "description": "Review billing state and apply support-oriented subscription changes."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search by user and narrow the billing slice by plan, status, cadence, or cancellation flag.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Name or email"
+        },
+        "tier": {
+          "label": "Tier",
+          "all": "All tiers"
+        },
+        "billing": {
+          "label": "Billing",
+          "all": "All billing"
+        },
+        "cancelFlag": {
+          "label": "Cancel flag",
+          "all": "All flags",
+          "canceling": "Canceling",
+          "continuing": "Continuing"
+        }
+      },
+      "directory": {
+        "title": "Subscription directory",
+        "description": "Open a row to inspect support controls and persist changes."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "plan": "Plan",
+          "status": "Status",
+          "expires": "Expires",
+          "stripeIds": "Stripe IDs"
+        },
+        "cancelAtPeriodEnd": "Cancel at period end",
+        "empty": "No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.",
+        "hasMore": "More subscriptions are available. Narrow the filters to inspect a smaller slice."
+      },
+      "edit": {
+        "title": "Edit subscription",
+        "description": "Support plan changes, expiry adjustments, and cancellation flags.",
+        "empty": "Select a subscription row to edit support settings.",
+        "currentExpiry": "Current expiry",
+        "fields": {
+          "tier": "Tier",
+          "expiry": "Expires at",
+          "cancellation": "Cancel at period end"
+        },
+        "controls": {
+          "title": "Support controls",
+          "description": "Adjust billing and support flags for this user.",
+          "tierPlaceholder": "Select tier",
+          "cancelAtPeriodEndHint": "Preserve subscription until the current paid period ends.",
+          "save": "Save changes",
+          "saving": "Saving...",
+          "noPendingChanges": "No pending changes to save.",
+          "pendingFields": "Pending fields: {fields}."
+        },
+        "confirm": {
+          "title": "Save subscription changes?",
+          "confirmLabel": "Save subscription changes",
+          "theseChanges": "these changes",
+          "description": "Apply {fields} for {name}. These updates are recorded in the admin audit log.",
+          "descriptionFallback": "Apply the pending subscription changes."
+        }
+      },
+      "errors": {
+        "list": "Could not load subscriptions. Refresh and try again.",
+        "update": "Could not update this subscription. Review the changes and try again."
+      }
+    },
+    "feeds": {
+      "metaTitle": "Admin Feeds",
+      "page": {
+        "title": "Admin feeds",
+        "description": "Track system-wide feed health and trigger operational queue actions."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Feed title or URL"
+        },
+        "enabled": {
+          "label": "Enabled",
+          "all": "All feeds"
+        },
+        "errors": {
+          "label": "Errors",
+          "all": "All error states",
+          "hasErrors": "Has errors",
+          "healthy": "Healthy"
+        },
+        "stale": {
+          "label": "Stale",
+          "all": "All freshness states",
+          "stale": "Stale",
+          "scheduled": "Scheduled"
+        },
+        "extraction": {
+          "label": "Extraction",
+          "all": "All extraction states",
+          "hasFailures": "Has failures",
+          "healthy": "Healthy"
+        }
+      },
+      "operations": {
+        "title": "Feed operations",
+        "description": "Use quick actions or open a feed for detailed operational context."
+      },
+      "table": {
+        "columns": {
+          "feed": "Feed",
+          "enabled": "Enabled",
+          "health": "Health",
+          "coverage": "Coverage",
+          "lastFetched": "Last fetched"
+        },
+        "health": {
+          "errors": "Errors: {count}",
+          "extractionFailures": "Extraction failures: {count}"
+        },
+        "coverage": {
+          "subscriptions": "{count} subscriptions",
+          "articles": "{count} articles"
+        },
+        "nextFetch": "Next",
+        "empty": "No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.",
+        "hasMore": "More feed sources are available. Refine filters to narrow the result set.",
+        "actions": {
+          "retryFetch": "Retry fetch",
+          "retryExtraction": "Retry extraction"
+        },
+        "confirm": {
+          "defaultTitle": "Confirm admin action",
+          "defaultDescription": "Confirm this admin action.",
+          "retryFetch": {
+            "title": "Retry RSS fetch?",
+            "description": "Queue an RSS fetch retry for {label} immediately.",
+            "confirmLabel": "Queue RSS retry"
+          },
+          "retryExtraction": {
+            "title": "Retry feed extraction?",
+            "description": "Queue extraction retries for eligible articles from {label}.",
+            "confirmLabel": "Queue extraction retry"
+          },
+          "enable": {
+            "title": "Enable this feed?",
+            "description": "Enable {label} so scheduled fetches can resume.",
+            "confirmLabel": "Enable feed"
+          },
+          "disable": {
+            "title": "Disable this feed?",
+            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
+            "confirmLabel": "Disable feed"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "Admin Feed Detail",
+        "page": {
+          "title": "Feed operations detail",
+          "description": "Inspect article health and trigger targeted retries for this feed source.",
+          "backToFeeds": "Back to feeds"
+        },
+        "empty": "Feed details are unavailable.",
+        "summary": {
+          "lastFetched": "Last fetched",
+          "nextFetch": "Next fetch",
+          "subscriptions": "Subscriptions",
+          "articles": "Articles",
+          "rssErrors": "RSS errors: {count}",
+          "extractionFailures": "Extraction failures: {count}",
+          "lastError": "Last error",
+          "noRecentErrors": "No recent RSS errors."
+        },
+        "operations": {
+          "title": "Operations",
+          "description": "Toggle source state and trigger queue retries.",
+          "feedEnabled": "Feed enabled",
+          "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
+          "retryFetch": "Retry RSS fetch",
+          "retryFeedExtractionQueue": "Retry feed extraction queue"
+        },
+        "recentArticles": {
+          "title": "Recent articles",
+          "description": "Latest source articles and extraction status.",
+          "columns": {
+            "article": "Article",
+            "published": "Published",
+            "status": "Status"
+          },
+          "empty": "No recent articles found for this feed source.",
+          "attempts": "Attempts: {count}",
+          "retryArticle": "Retry article",
+          "status": {
+            "extracted": "Extracted",
+            "pending": "Pending",
+            "needsAttention": "Needs attention"
+          }
+        },
+        "recentFailures": {
+          "title": "Recent extraction failures",
+          "description": "Articles that most recently failed extraction.",
+          "columns": {
+            "article": "Article",
+            "error": "Error",
+            "updated": "Updated"
+          },
+          "empty": "No recent extraction failures.",
+          "attempts": "Attempts: {count}",
+          "retry": "Retry"
+        },
+        "confirm": {
+          "thisFeed": "this feed",
+          "defaultTitle": "Confirm admin action",
+          "defaultDescription": "Confirm this admin action.",
+          "retryFetch": {
+            "title": "Retry RSS fetch?",
+            "description": "Queue an RSS fetch retry for {label} immediately.",
+            "confirmLabel": "Queue RSS retry"
+          },
+          "retryFeedExtraction": {
+            "title": "Retry feed extraction?",
+            "description": "Queue extraction retries for eligible articles from {label}.",
+            "confirmLabel": "Queue extraction retry"
+          },
+          "retryArticleExtraction": {
+            "title": "Retry article extraction?",
+            "description": "Queue a fresh extraction attempt for {title}.",
+            "confirmLabel": "Queue article retry"
+          },
+          "enable": {
+            "title": "Enable this feed?",
+            "description": "Enable {label} so scheduled fetches can resume.",
+            "confirmLabel": "Enable feed"
+          },
+          "disable": {
+            "title": "Disable this feed?",
+            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
+            "confirmLabel": "Disable feed"
+          }
+        },
+        "errors": {
+          "load": "Could not load feed details. Refresh and try again.",
+          "retryArticleExtraction": "Could not queue an article extraction retry. Try again."
+        }
+      },
+      "errors": {
+        "list": "Could not load feed sources. Refresh and try again.",
+        "updateState": "Could not update this feed state. Try again.",
+        "retryFetch": "Could not queue an RSS fetch retry. Try again.",
+        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+      }
+    },
+    "systemOps": {
+      "metaTitle": "Admin System Ops",
+      "page": {
+        "title": "System ops",
+        "description": "Inspect queue health and run single-item operational actions safely."
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "Failed jobs",
+            "description": "Current failed jobs across queues."
+          },
+          "staleFeeds": {
+            "title": "Stale feeds",
+            "description": "Enabled feeds waiting for refresh."
+          },
+          "extractionBacklog": {
+            "title": "Extraction backlog",
+            "description": "Articles waiting for extraction."
+          },
+          "rssWaitingJobs": {
+            "title": "RSS waiting jobs",
+            "description": "Pending RSS fetch jobs."
+          },
+          "contentWaitingJobs": {
+            "title": "Content waiting jobs",
+            "description": "Pending content extraction jobs."
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "Runtime heartbeat",
+          "description": "Worker and scheduler liveness from Redis heartbeat keys."
+        }
+      },
+      "stripe": {
+        "title": "Stripe config",
+        "description": "Manage Stripe keys and plan price IDs here instead of server environment variables.",
+        "status": {
+          "label": "Status",
+          "configured": "Configured",
+          "incomplete": "Incomplete",
+          "secretKey": "Secret key",
+          "webhookSecret": "Webhook secret",
+          "missing": "Missing"
+        },
+        "form": {
+          "publishableKey": "Publishable key",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "Secret key",
+          "secretPlaceholder": "Leave blank to keep current sk_*",
+          "webhookSecret": "Webhook secret",
+          "webhookPlaceholder": "Leave blank to keep current whsec_*",
+          "basicMonthly": "Basic monthly price",
+          "basicYearly": "Basic yearly price",
+          "proMonthly": "Pro monthly price",
+          "proYearly": "Pro yearly price",
+          "maxMonthly": "Max monthly price",
+          "maxYearly": "Max yearly price"
+        },
+        "lastUpdated": "Last updated",
+        "webhookEndpoint": "Webhook endpoint",
+        "save": "Save Stripe config",
+        "saving": "Saving...",
+        "successSaved": "Stripe config saved.",
+        "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
+      },
+      "manualActions": {
+        "title": "Manual actions",
+        "description": "Trigger one feed fetch or one content extraction by ID.",
+        "feedSourceId": "Feed source ID",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "Source article ID",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "Trigger fetch",
+        "triggerExtract": "Trigger extract",
+        "errors": {
+          "feedSourceIdRequired": "Feed source ID is required.",
+          "sourceArticleIdRequired": "Source article ID is required."
+        }
+      },
+      "queueJobs": {
+        "title": "Queue jobs",
+        "description": "Review queue states and retry failed jobs one at a time.",
+        "filters": {
+          "queue": "Queue",
+          "state": "State",
+          "allQueues": "All queues",
+          "allStates": "All states"
+        },
+        "columns": {
+          "queue": "Queue",
+          "job": "Job",
+          "state": "State",
+          "attempts": "Attempts",
+          "failure": "Failure",
+          "created": "Created"
+        },
+        "actions": {
+          "retry": "Retry"
+        },
+        "empty": "No queue jobs match the selected filters."
+      },
+      "confirm": {
+        "defaultTitle": "Confirm action",
+        "defaultDescription": "Confirm this operation.",
+        "retryJob": {
+          "title": "Retry this failed job?",
+          "description": "Queue retry for job {jobId} in {queueName}.",
+          "confirmLabel": "Retry job"
+        },
+        "triggerFeedFetch": {
+          "title": "Trigger feed fetch now?",
+          "description": "Queue one immediate RSS fetch for feed source {feedSourceId}.",
+          "confirmLabel": "Trigger feed fetch"
+        },
+        "triggerContentExtract": {
+          "title": "Trigger content extraction now?",
+          "description": "Queue one content extraction job for source article {sourceArticleId}.",
+          "confirmLabel": "Trigger extraction"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "Could not load system runtime summary.",
+        "queueJobs": "Could not load queue jobs.",
+        "stripeLoad": "Could not load Stripe config.",
+        "stripeSave": "Could not save Stripe config.",
+        "executeOperation": "Could not execute this system operation."
+      }
+    }
   }
 }

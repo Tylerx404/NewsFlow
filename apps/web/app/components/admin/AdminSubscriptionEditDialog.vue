@@ -27,6 +27,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type SubscriptionTier = "free" | "basic" | "pro" | "max";
 
@@ -56,6 +57,9 @@ const props = defineProps<{
   errorMessage: string;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   "update:open": [open: boolean];
   save: [draft: { tier: SubscriptionTier; expiresAt: string; cancelAtPeriodEnd: boolean }];
@@ -72,7 +76,10 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const toDateTimeLocal = (value: Date | string | null) => {
@@ -110,10 +117,10 @@ const planLabel = computed(() => {
     return "—";
   }
 
-  const tier = props.subscription.tier.toUpperCase();
+  const tier = t(`admin.common.subscriptionTier.${props.subscription.tier}`);
 
   if (props.subscription.billingInterval) {
-    return `${tier} · ${props.subscription.billingInterval}`;
+    return `${tier} · ${t(`admin.common.billingInterval.${props.subscription.billingInterval}`)}`;
   }
 
   return tier;
@@ -133,24 +140,24 @@ const hasPendingChanges = computed(() => {
 
 const changedFieldsLabel = computed(() => {
   if (!props.subscription) {
-    return "these changes";
+    return t("admin.subscriptions.edit.confirm.theseChanges");
   }
 
   const changedFields: string[] = [];
 
   if (draftTier.value !== props.subscription.tier) {
-    changedFields.push("tier");
+    changedFields.push(t("admin.subscriptions.edit.fields.tier"));
   }
 
   if (draftExpiresAt.value !== toDateTimeLocal(props.subscription.expiresAt)) {
-    changedFields.push("expiry");
+    changedFields.push(t("admin.subscriptions.edit.fields.expiry"));
   }
 
   if (draftCancelAtPeriodEnd.value !== props.subscription.cancelAtPeriodEnd) {
-    changedFields.push("cancellation");
+    changedFields.push(t("admin.subscriptions.edit.fields.cancellation"));
   }
 
-  return changedFields.join(", ") || "these changes";
+  return changedFields.join(", ") || t("admin.subscriptions.edit.confirm.theseChanges");
 });
 
 const handleSave = () => {
@@ -175,15 +182,18 @@ const handleConfirmSave = () => {
   <Sheet :open="open" @update:open="(value) => emit('update:open', value)">
     <SheetContent class="sm:max-w-xl">
       <SheetHeader>
-        <SheetTitle>Edit subscription</SheetTitle>
+        <SheetTitle>{{ t("admin.subscriptions.edit.title") }}</SheetTitle>
         <SheetDescription>
-          Support plan changes, expiry adjustments, and cancellation flags.
+          {{ t("admin.subscriptions.edit.description") }}
         </SheetDescription>
       </SheetHeader>
 
       <div class="flex h-full flex-col gap-4 overflow-y-auto pr-1">
-        <div v-if="!subscription" class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          Select a subscription row to edit support settings.
+        <div
+          v-if="!subscription"
+          class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
+        >
+          {{ t("admin.subscriptions.edit.empty") }}
         </div>
         <template v-else>
           <Card>
@@ -197,61 +207,71 @@ const handleConfirmSave = () => {
                 <Badge variant="outline">{{ subscription.status }}</Badge>
               </div>
               <p class="text-muted-foreground">
-                Current expiry: {{ formatDateTime(subscription.expiresAt) }}
+                {{ t("admin.subscriptions.edit.currentExpiry") }}: {{ formatDateTime(subscription.expiresAt) }}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Support controls</CardTitle>
+              <CardTitle>{{ t("admin.subscriptions.edit.controls.title") }}</CardTitle>
               <CardDescription>
-                Adjust billing and support flags for this user.
+                {{ t("admin.subscriptions.edit.controls.description") }}
               </CardDescription>
             </CardHeader>
             <CardContent class="space-y-4">
               <div class="space-y-2">
-                <p class="text-sm font-medium">Tier</p>
+                <p class="text-sm font-medium">{{ t("admin.subscriptions.edit.fields.tier") }}</p>
                 <Select :model-value="draftTier" @update:model-value="(value) => handleTierChange(String(value))">
                   <SelectTrigger class="w-full">
-                    <SelectValue placeholder="Select tier" />
+                    <SelectValue :placeholder="t('admin.subscriptions.edit.controls.tierPlaceholder')" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="free">Free</SelectItem>
-                    <SelectItem value="basic">Basic</SelectItem>
-                    <SelectItem value="pro">Pro</SelectItem>
-                    <SelectItem value="max">Max</SelectItem>
+                    <SelectItem value="free">{{ t("admin.common.subscriptionTier.free") }}</SelectItem>
+                    <SelectItem value="basic">{{ t("admin.common.subscriptionTier.basic") }}</SelectItem>
+                    <SelectItem value="pro">{{ t("admin.common.subscriptionTier.pro") }}</SelectItem>
+                    <SelectItem value="max">{{ t("admin.common.subscriptionTier.max") }}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div class="space-y-2">
-                <p class="text-sm font-medium">Expires at</p>
+                <p class="text-sm font-medium">{{ t("admin.subscriptions.edit.fields.expiry") }}</p>
                 <Input v-model="draftExpiresAt" type="datetime-local" />
               </div>
 
               <div class="flex items-center justify-between rounded-md border p-3">
                 <div>
-                  <p class="text-sm font-medium">Cancel at period end</p>
+                  <p class="text-sm font-medium">
+                    {{ t("admin.subscriptions.edit.fields.cancellation") }}
+                  </p>
                   <p class="text-xs text-muted-foreground">
-                    Preserve subscription until the current paid period ends.
+                    {{ t("admin.subscriptions.edit.controls.cancelAtPeriodEndHint") }}
                   </p>
                 </div>
                 <Switch v-model="draftCancelAtPeriodEnd" />
               </div>
 
               <div class="space-y-1 rounded-md border p-3 text-xs text-muted-foreground">
-                <p>Stripe customer: {{ subscription.stripeCustomerId || "—" }}</p>
-                <p>Stripe subscription: {{ subscription.stripeSubscriptionId || "—" }}</p>
-                <p>Stripe price: {{ subscription.stripePriceId || "—" }}</p>
+                <p>{{ t("admin.common.stripe.customer") }}: {{ subscription.stripeCustomerId || "—" }}</p>
+                <p>{{ t("admin.common.stripe.subscription") }}: {{ subscription.stripeSubscriptionId || "—" }}</p>
+                <p>{{ t("admin.common.stripe.price") }}: {{ subscription.stripePriceId || "—" }}</p>
               </div>
 
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <Button class="w-full sm:w-auto" :disabled="isPending || !hasPendingChanges" @click="handleSave">
-                  {{ isPending ? "Saving..." : "Save changes" }}
+                  {{
+                    isPending
+                      ? t("admin.subscriptions.edit.controls.saving")
+                      : t("admin.subscriptions.edit.controls.save")
+                  }}
                 </Button>
                 <p class="text-xs text-muted-foreground">
-                  {{ hasPendingChanges ? `Pending fields: ${changedFieldsLabel}.` : "No pending changes to save." }}
+                  {{
+                    hasPendingChanges
+                      ? t("admin.subscriptions.edit.controls.pendingFields", { fields: changedFieldsLabel })
+                      : t("admin.subscriptions.edit.controls.noPendingChanges")
+                  }}
                 </p>
               </div>
 
@@ -267,12 +287,12 @@ const handleConfirmSave = () => {
 
   <AdminActionConfirmDialog
     :open="isConfirmOpen"
-    title="Save subscription changes?"
+    :title="t('admin.subscriptions.edit.confirm.title')"
     :description="subscription
-      ? `Apply ${changedFieldsLabel} for ${subscription.name}. These updates are recorded in the admin audit log.`
-      : 'Apply the pending subscription changes.'"
-    confirm-label="Save subscription changes"
-    confirm-pending-label="Saving..."
+      ? t('admin.subscriptions.edit.confirm.description', { fields: changedFieldsLabel, name: subscription.name })
+      : t('admin.subscriptions.edit.confirm.descriptionFallback')"
+    :confirm-label="t('admin.subscriptions.edit.confirm.confirmLabel')"
+    :confirm-pending-label="t('admin.subscriptions.edit.controls.saving')"
     :is-pending="isPending"
     @update:open="(open) => { isConfirmOpen = open; }"
     @confirm="handleConfirmSave"

@@ -9,11 +9,12 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin Feed Detail",
+  titleKey: "admin.feeds.detail.metaTitle",
 });
 
 const route = useRoute();
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
 const queryClient = useQueryClient();
 
 const actionError = ref("");
@@ -72,7 +73,7 @@ const feedErrorMessage = computed(() => {
 
   return feedDetailQuery.error.value instanceof Error
     ? feedDetailQuery.error.value.message
-    : "Could not load feed details. Refresh and try again.";
+    : t("admin.feeds.detail.errors.load");
 });
 
 const isActionPending = computed(
@@ -89,7 +90,7 @@ const handleToggleEnabled = async (payload: { feedSourceId: string; isEnabled: b
   try {
     await updateEnabledMutation.mutateAsync(payload);
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Could not update this feed state. Try again.";
+    actionError.value = error instanceof Error ? error.message : t("admin.feeds.errors.updateState");
   }
 };
 
@@ -99,7 +100,7 @@ const handleRetryFetch = async (feedSourceId: string) => {
   try {
     await retryFetchMutation.mutateAsync({ feedSourceId });
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Could not queue an RSS fetch retry. Try again.";
+    actionError.value = error instanceof Error ? error.message : t("admin.feeds.errors.retryFetch");
   }
 };
 
@@ -110,7 +111,7 @@ const handleRetryFeedExtraction = async (feedSourceId: string) => {
     await retryFeedExtractionMutation.mutateAsync({ feedSourceId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Could not queue a feed extraction retry. Try again.";
+      error instanceof Error ? error.message : t("admin.feeds.errors.retryExtraction");
   }
 };
 
@@ -121,7 +122,7 @@ const handleRetryArticleExtraction = async (sourceArticleId: string) => {
     await retryArticleExtractionMutation.mutateAsync({ sourceArticleId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Could not queue an article extraction retry. Try again.";
+      error instanceof Error ? error.message : t("admin.feeds.detail.errors.retryArticleExtraction");
   }
 };
 </script>
@@ -130,13 +131,13 @@ const handleRetryArticleExtraction = async (sourceArticleId: string) => {
   <div class="space-y-6">
     <section class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="space-y-1">
-        <h1 class="text-2xl font-semibold">Feed operations detail</h1>
+        <h1 class="text-2xl font-semibold">{{ t("admin.feeds.detail.page.title") }}</h1>
         <p class="text-sm text-muted-foreground">
-          Inspect article health and trigger targeted retries for this feed source.
+          {{ t("admin.feeds.detail.page.description") }}
         </p>
       </div>
       <Button variant="outline" @click="navigateTo('/admin/feeds')">
-        Back to feeds
+        {{ t("admin.feeds.detail.page.backToFeeds") }}
       </Button>
     </section>
 

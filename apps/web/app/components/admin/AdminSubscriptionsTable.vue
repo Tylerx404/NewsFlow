@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminSubscriptionRow = {
   userId: string;
@@ -38,6 +39,9 @@ const props = defineProps<{
   selectedUserId: string | null;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   select: [userId: string];
 }>();
@@ -50,14 +54,17 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatPlan = (item: AdminSubscriptionRow) => {
-  const tier = item.tier.toUpperCase();
+  const tier = t(`admin.common.subscriptionTier.${item.tier}`);
 
   if (item.billingInterval) {
-    return `${tier} · ${item.billingInterval}`;
+    return `${tier} · ${t(`admin.common.billingInterval.${item.billingInterval}`)}`;
   }
 
   return tier;
@@ -70,12 +77,12 @@ const formatPlan = (item: AdminSubscriptionRow) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Plan</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Expires</TableHead>
-            <TableHead>Stripe IDs</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead>{{ t("admin.subscriptions.table.columns.user") }}</TableHead>
+            <TableHead>{{ t("admin.subscriptions.table.columns.plan") }}</TableHead>
+            <TableHead>{{ t("admin.subscriptions.table.columns.status") }}</TableHead>
+            <TableHead>{{ t("admin.subscriptions.table.columns.expires") }}</TableHead>
+            <TableHead>{{ t("admin.subscriptions.table.columns.stripeIds") }}</TableHead>
+            <TableHead class="text-right">{{ t("admin.common.actions") }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -111,7 +118,7 @@ const formatPlan = (item: AdminSubscriptionRow) => {
           </TableRow>
           <TableRow v-else-if="items.length === 0">
             <TableCell :colspan="6" class="py-8 text-center text-sm text-muted-foreground">
-              No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.
+              {{ t("admin.subscriptions.table.empty") }}
             </TableCell>
           </TableRow>
           <TableRow
@@ -130,7 +137,8 @@ const formatPlan = (item: AdminSubscriptionRow) => {
               <div class="space-y-1">
                 <p class="text-sm font-medium">{{ formatPlan(item) }}</p>
                 <p class="text-xs text-muted-foreground">
-                  Cancel at period end: {{ item.cancelAtPeriodEnd ? "Yes" : "No" }}
+                  {{ t("admin.subscriptions.table.cancelAtPeriodEnd") }}:
+                  {{ item.cancelAtPeriodEnd ? t("admin.common.yes") : t("admin.common.no") }}
                 </p>
               </div>
             </TableCell>
@@ -142,13 +150,13 @@ const formatPlan = (item: AdminSubscriptionRow) => {
             </TableCell>
             <TableCell>
               <div class="space-y-1 text-xs text-muted-foreground">
-                <p>Customer: {{ item.stripeCustomerId || "—" }}</p>
-                <p>Subscription: {{ item.stripeSubscriptionId || "—" }}</p>
+                <p>{{ t("admin.common.stripe.customer") }}: {{ item.stripeCustomerId || "—" }}</p>
+                <p>{{ t("admin.common.stripe.subscription") }}: {{ item.stripeSubscriptionId || "—" }}</p>
               </div>
             </TableCell>
             <TableCell class="text-right">
               <Button variant="outline" size="sm" @click="emit('select', item.userId)">
-                Edit
+                {{ t("admin.common.edit") }}
               </Button>
             </TableCell>
           </TableRow>
@@ -157,7 +165,7 @@ const formatPlan = (item: AdminSubscriptionRow) => {
     </div>
 
     <p v-if="hasMore" class="text-xs text-muted-foreground">
-      More subscriptions are available. Narrow the filters to inspect a smaller slice.
+      {{ t("admin.subscriptions.table.hasMore") }}
     </p>
   </div>
 </template>
