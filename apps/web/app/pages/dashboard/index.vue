@@ -9,10 +9,12 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Dashboard",
+  titleKey: "layout.titles.dashboard",
 });
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 
 const STALE_FEED_HOURS = 24;
 
@@ -55,27 +57,27 @@ const topUnreadFeeds = computed(() =>
 
 const formatDateTime = (value: Date | string | null) => {
   if (!value) {
-    return "Never fetched";
+    return t("dashboard.overview.neverFetched");
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return date.toLocaleString(intlLocale.value);
 };
 </script>
 
 <template>
   <div class="space-y-6">
     <section class="space-y-1">
-      <h1 class="text-2xl font-semibold">News Overview</h1>
+      <h1 class="text-2xl font-semibold">{{ t("dashboard.overview.title") }}</h1>
       <p class="text-sm text-muted-foreground">
-        Monitor reading volume, feed health, and jump directly to your core workflows.
+        {{ t("dashboard.overview.subtitle") }}
       </p>
     </section>
 
     <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Total articles</CardDescription>
+          <CardDescription>{{ t("dashboard.stats.totalArticles") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.all ?? 0 }}
           </CardTitle>
@@ -84,7 +86,7 @@ const formatDateTime = (value: Date | string | null) => {
 
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Unread</CardDescription>
+          <CardDescription>{{ t("dashboard.stats.unread") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.unread ?? 0 }}
           </CardTitle>
@@ -93,7 +95,7 @@ const formatDateTime = (value: Date | string | null) => {
 
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Saved</CardDescription>
+          <CardDescription>{{ t("dashboard.stats.saved") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ articleStatsQuery.data.value?.saved ?? 0 }}
           </CardTitle>
@@ -102,7 +104,7 @@ const formatDateTime = (value: Date | string | null) => {
 
       <Card>
         <CardHeader class="pb-2">
-          <CardDescription>Active feeds</CardDescription>
+          <CardDescription>{{ t("dashboard.stats.activeFeeds") }}</CardDescription>
           <CardTitle class="text-2xl">
             {{ activeFeeds.length }}
           </CardTitle>
@@ -113,38 +115,38 @@ const formatDateTime = (value: Date | string | null) => {
     <section class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
       <Card>
         <CardHeader>
-          <CardTitle>Feed health</CardTitle>
+          <CardTitle>{{ t("dashboard.feedHealth.title") }}</CardTitle>
           <CardDescription>
-            Active status, delivery issues, and stale sources based on last fetch.
+            {{ t("dashboard.feedHealth.description") }}
           </CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
           <p v-if="feedListQuery.isLoading.value" class="text-sm text-muted-foreground">
-            Loading feed health...
+            {{ t("dashboard.feedHealth.loading") }}
           </p>
           <template v-else>
             <div class="grid gap-3 sm:grid-cols-3">
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Feeds with errors</p>
+                <p class="text-xs text-muted-foreground">{{ t("dashboard.feedHealth.cards.errors") }}</p>
                 <p class="mt-1 text-xl font-semibold">{{ feedsWithErrors.length }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Inactive feeds</p>
+                <p class="text-xs text-muted-foreground">{{ t("dashboard.feedHealth.cards.inactive") }}</p>
                 <p class="mt-1 text-xl font-semibold">{{ inactiveFeeds.length }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Stale feeds (&gt; {{ STALE_FEED_HOURS }}h)</p>
+                <p class="text-xs text-muted-foreground">{{ t("dashboard.feedHealth.cards.stale", { hours: STALE_FEED_HOURS }) }}</p>
                 <p class="mt-1 text-xl font-semibold">{{ staleFeeds.length }}</p>
               </div>
             </div>
 
             <div class="space-y-2">
-              <p class="text-sm font-medium">Top unread feeds</p>
+              <p class="text-sm font-medium">{{ t("dashboard.feedHealth.topUnread.title") }}</p>
               <div
                 v-if="topUnreadFeeds.length === 0"
                 class="rounded-md border border-dashed p-3 text-sm text-muted-foreground"
               >
-                No active feeds with unread articles.
+                {{ t("dashboard.feedHealth.topUnread.empty") }}
               </div>
               <div v-else class="space-y-2">
                 <div
@@ -157,11 +159,11 @@ const formatDateTime = (value: Date | string | null) => {
                       {{ feed.title }}
                     </NuxtLink>
                     <p class="truncate text-xs text-muted-foreground">
-                      Last fetched: {{ formatDateTime(feed.lastFetched) }}
+                      {{ t("dashboard.feedHealth.topUnread.lastFetched", { value: formatDateTime(feed.lastFetched) }) }}
                     </p>
                   </div>
                   <span class="rounded-md bg-secondary px-2 py-1 text-xs font-medium">
-                    {{ feed.unreadCount }} unread
+                    {{ t("dashboard.feedHealth.topUnread.unreadCount", { count: feed.unreadCount }) }}
                   </span>
                 </div>
               </div>
@@ -173,42 +175,42 @@ const formatDateTime = (value: Date | string | null) => {
       <div class="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Quick actions</CardTitle>
+            <CardTitle>{{ t("dashboard.quickActions.title") }}</CardTitle>
             <CardDescription>
-              Jump to your most common tasks.
+              {{ t("dashboard.quickActions.description") }}
             </CardDescription>
           </CardHeader>
           <CardContent class="space-y-2">
             <Button as-child class="w-full justify-start">
-              <NuxtLink to="/articles">Open article list</NuxtLink>
+              <NuxtLink to="/articles">{{ t("dashboard.quickActions.openArticles") }}</NuxtLink>
             </Button>
             <Button as-child variant="outline" class="w-full justify-start">
-              <NuxtLink to="/settings/feeds">Manage feeds</NuxtLink>
+              <NuxtLink to="/settings/feeds">{{ t("dashboard.quickActions.manageFeeds") }}</NuxtLink>
             </Button>
             <Button as-child variant="outline" class="w-full justify-start">
-              <NuxtLink to="/settings/ai">Manage AI profiles</NuxtLink>
+              <NuxtLink to="/settings/ai">{{ t("dashboard.quickActions.manageAiProfiles") }}</NuxtLink>
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Queue watch</CardTitle>
+            <CardTitle>{{ t("dashboard.queueWatch.title") }}</CardTitle>
             <CardDescription>
-              Feeds requiring attention right now.
+              {{ t("dashboard.queueWatch.description") }}
             </CardDescription>
           </CardHeader>
           <CardContent class="space-y-2 text-sm">
             <div class="flex items-center justify-between rounded-md border p-3">
-              <span class="text-muted-foreground">Feeds with errors</span>
+              <span class="text-muted-foreground">{{ t("dashboard.queueWatch.feedsWithErrors") }}</span>
               <span class="font-medium">{{ feedsWithErrors.length }}</span>
             </div>
             <div class="flex items-center justify-between rounded-md border p-3">
-              <span class="text-muted-foreground">Stale active feeds</span>
+              <span class="text-muted-foreground">{{ t("dashboard.queueWatch.staleActiveFeeds") }}</span>
               <span class="font-medium">{{ staleFeeds.length }}</span>
             </div>
             <div class="flex items-center justify-between rounded-md border p-3">
-              <span class="text-muted-foreground">Total configured feeds</span>
+              <span class="text-muted-foreground">{{ t("dashboard.queueWatch.totalConfiguredFeeds") }}</span>
               <span class="font-medium">{{ feeds.length }}</span>
             </div>
           </CardContent>

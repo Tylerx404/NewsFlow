@@ -1,0 +1,1285 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "Personal AI RSS"
+  },
+  "locale": {
+    "label": "Language",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "manage": "Manage",
+      "loading": "Loading..."
+    },
+    "states": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "Dashboard",
+      "articles": "Articles",
+      "settings": "Settings",
+      "reader": "Reader"
+    }
+  },
+  "shell": {
+    "groups": {
+      "platform": "Platform",
+      "navigation": "Navigation",
+      "admin": "Admin",
+      "yourFeeds": "Your feeds",
+      "discover": "Discover"
+    },
+    "nav": {
+      "toggle": "Toggle",
+      "moreActions": "More actions"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "articles": "Articles",
+      "settings": "Settings",
+      "operations": "Operations",
+      "aiUsage": "AI Usage",
+      "systemOps": "System Ops",
+      "users": "Users",
+      "subscriptions": "Subscriptions",
+      "feeds": "Feeds"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "Add feed",
+      "loading": "Loading feeds...",
+      "empty": "No feeds yet. Add your first RSS feed above.",
+      "actions": {
+        "refreshNow": "Refresh now",
+        "manageFeeds": "Manage feeds",
+        "removeFeed": "Remove feed"
+      },
+      "confirm": {
+        "remove": "Remove feed \"{title}\"?"
+      }
+    },
+    "discover": {
+      "empty": "All suggested feeds are already added."
+    },
+    "errors": {
+      "addFeed": "Unable to add feed.",
+      "refreshFeed": "Unable to refresh feed.",
+      "removeFeed": "Unable to remove feed."
+    },
+    "user": {
+      "defaultName": "NewsFlow User",
+      "personalSettings": "Personal Settings",
+      "appearance": "Appearance",
+      "logOut": "Log out"
+    }
+  },
+  "auth": {
+    "common": {
+      "name": "Name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "name{'@'}example.com",
+      "password": "Password",
+      "orContinueWith": "Or continue with",
+      "heroImageAlt": "Authentication visual",
+      "termsPrefix": "By clicking continue, you agree to our",
+      "termsOfService": "Terms of Service",
+      "termsAnd": "and",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Login to your NewsFlow account",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Login",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "sso": {
+        "apple": "Login with Apple",
+        "google": "Login with Google",
+        "meta": "Login with Meta"
+      },
+      "errors": {
+        "generic": "Unable to sign in right now. Please try again.",
+        "invalidCredentials": "Invalid email or password."
+      }
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Enter your email below to create your account",
+      "emailDescription": "We'll use this to contact you. We will not share your email with anyone else.",
+      "confirmPassword": "Confirm Password",
+      "passwordHint": "Must be at least 8 characters long.",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "sso": {
+        "apple": "Sign up with Apple",
+        "google": "Sign up with Google",
+        "meta": "Sign up with Meta"
+      },
+      "errors": {
+        "generic": "Unable to create account right now. Please try again.",
+        "passwordConfirmationMismatch": "Password confirmation does not match.",
+        "createFailed": "Could not create your account."
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "Personalized AI-powered RSS reader.",
+      "login": "Login",
+      "signUp": "Sign up",
+      "pricing": "Pricing"
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Choose Your Growth Plan",
+      "subtitle": "Pick a plan and get instant access after checkout. Upgrade when your AI workflow needs more speed and capacity.",
+      "bestValue": "Best value",
+      "billing": {
+        "monthly": "Monthly billing",
+        "yearly": "Yearly billing"
+      },
+      "suffix": {
+        "month": "mo",
+        "year": "yr"
+      },
+      "meta": {
+        "monthly": "Per month, cancel anytime.",
+        "yearly": "Per year, about {price}/month.",
+        "discount": "Save around {percent}% with yearly billing."
+      },
+      "actions": {
+        "choosePlan": "Choose plan",
+        "createAccount": "Create account",
+        "backHome": "Back to home",
+        "goSubscriptionSettings": "Go to subscription settings"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "Entry-level plan for personal testing and discovery.",
+          "features": {
+            "coreRss": "Core RSS reading workflow",
+            "aiOccasional": "AI summarize for occasional usage",
+            "instantAccess": "Instant access after checkout"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "Recommended for frequent AI summarization and daily reading.",
+          "features": {
+            "everythingBasic": "Everything in Basic",
+            "higherAiLimits": "Higher AI usage limits",
+            "instantAccess": "Instant access after checkout"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "Power users who want highest quota and priority support.",
+          "features": {
+            "everythingPro": "Everything in Pro",
+            "highestAiCapacity": "Highest AI usage capacity",
+            "prioritySupport": "Priority support lane"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "Appearance",
+        "description": "Theme mode, reading colors, typography, and article layout preferences."
+      },
+      "personal": {
+        "label": "Personal",
+        "description": "Profile, password, active sessions, and subscription overview."
+      },
+      "ai": {
+        "label": "AI Profiles",
+        "description": "Provider, model, and default profile configuration for summarize actions."
+      },
+      "feeds": {
+        "label": "Feed Management",
+        "description": "Feed metadata, activity status, refresh actions, and cleanup."
+      }
+    },
+    "index": {
+      "redirecting": "Redirecting to settings..."
+    },
+    "appearance": {
+      "metaTitle": "Appearance Settings",
+      "page": {
+        "readingExperience": {
+          "title": "Reading Experience",
+          "description": "Tune appearance, typography, and layout for a reading flow that fits your preference."
+        },
+        "fields": {
+          "themeMode": "Theme mode",
+          "colorPreset": "Color preset",
+          "fontFamily": "Font family",
+          "fontSize": "Font size",
+          "lineHeight": "Line height",
+          "readingWidth": "Reading width"
+        },
+        "savedNotice": "Preferences are saved locally in your browser and applied immediately.",
+        "resetDefaults": "Reset defaults"
+      },
+      "preview": {
+        "title": "Live Preview",
+        "description": "Preview typography and spacing before reading full articles.",
+        "sample": {
+          "heading": "Morning Briefing: Markets Open Mixed",
+          "highlightsLabel": "Highlights:",
+          "paragraph1": "Global indexes opened with mixed movement while energy stocks outperformed. Analysts expect volatility to remain elevated.",
+          "paragraph2Prefix": "This paragraph shows",
+          "italic": "italic emphasis",
+          "bold": "bold segments",
+          "paragraph2Suffix": ", and normal body copy rhythm.",
+          "quote": "Readers should be able to stay focused for long sessions without eye strain.",
+          "bullet1": "More consistent text hierarchy",
+          "bullet2": "Improved spacing between sections",
+          "bullet3": "Cleaner link visibility for source tracking",
+          "openSourceReport": "Open source report"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "System",
+            "description": "Follow your device appearance setting."
+          },
+          "light": {
+            "label": "Light",
+            "description": "Always use the light interface."
+          },
+          "dark": {
+            "label": "Dark",
+            "description": "Always use the dark interface."
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "Neutral",
+            "description": "Balanced contrast with neutral tones."
+          },
+          "paper": {
+            "label": "Warm paper",
+            "description": "Soft warm background for long reading."
+          },
+          "slate": {
+            "label": "Slate",
+            "description": "Cooler tones with sharper text contrast."
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "Modern sans",
+            "description": "Clean sans-serif text with high legibility."
+          },
+          "serif": {
+            "label": "Editorial serif",
+            "description": "Magazine-like serif rhythm for long-form reading."
+          },
+          "mono": {
+            "label": "Monospace",
+            "description": "Fixed-width text for dense technical content."
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "Small",
+            "description": "Compact layout that keeps more content in view."
+          },
+          "md": {
+            "label": "Medium",
+            "description": "Balanced size for everyday reading."
+          },
+          "lg": {
+            "label": "Large",
+            "description": "Larger text for easier scanning."
+          },
+          "xl": {
+            "label": "Extra large",
+            "description": "Maximum readability with larger body text."
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "Compact",
+            "description": "Tighter lines for denser reading."
+          },
+          "normal": {
+            "label": "Normal",
+            "description": "Standard spacing for most articles."
+          },
+          "relaxed": {
+            "label": "Relaxed",
+            "description": "More vertical space for slower reading."
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "Narrow",
+            "description": "Shorter lines for focused reading."
+          },
+          "normal": {
+            "label": "Normal",
+            "description": "Balanced width for mixed content."
+          },
+          "wide": {
+            "label": "Wide",
+            "description": "More horizontal room for rich media."
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "Feed Management",
+      "page": {
+        "title": "Feed Management",
+        "description": "Update feed metadata, toggle activity, refresh, or remove feeds."
+      },
+      "labels": {
+        "tableCaption": "Feed management table with metadata and feed actions.",
+        "customTitle": "Custom title",
+        "category": "Category",
+        "unread": "Unread",
+        "lastFetched": "Last fetched",
+        "errors": "Errors",
+        "active": "Active",
+        "actions": "Actions",
+        "useSourceTitle": "Use source title",
+        "loading": "Loading feeds...",
+        "empty": "No feeds available.",
+        "never": "Never"
+      },
+      "actions": {
+        "save": "Save",
+        "saving": "Saving...",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
+        "delete": "Delete",
+        "deleteAria": "Delete feed {title}",
+        "deleting": "Deleting...",
+        "deleteFeed": "Delete feed"
+      },
+      "dialogs": {
+        "deleteTitle": "Delete this feed?",
+        "deleteDescriptionWithTitle": "Feed \"{title}\" will be removed.",
+        "cannotUndo": "This action cannot be undone."
+      },
+      "errors": {
+        "update": "Unable to update feed.",
+        "refresh": "Unable to refresh feed.",
+        "delete": "Unable to delete feed."
+      }
+    },
+    "ai": {
+      "metaTitle": "AI Profiles",
+      "page": {
+        "title": "AI profiles",
+        "description": "Manage default profile for reader summarize action."
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "Loading profiles...",
+        "noProfiles": "No profiles yet. Create one to enable AI summarize.",
+        "default": "Default",
+        "currentKey": "Current key",
+        "model": "Model",
+        "loadingModels": "Loading models...",
+        "selectModel": "Select model",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "Use provider default when empty",
+        "newApiKey": "New API key",
+        "keepCurrentKey": "Leave blank to keep current key",
+        "mainOpenAi": "Main OpenAI",
+        "provider": "Provider",
+        "selectProvider": "Select provider",
+        "selectToLoadModels": "Select to load models",
+        "apiKey": "API key",
+        "optional": "optional",
+        "defaultPrefix": "Default",
+        "canCustomizeByok": "can customize for BYOK",
+        "managedAutomatically": "managed automatically"
+      },
+      "actions": {
+        "createProfile": "Create profile",
+        "setDefault": "Set default",
+        "setting": "Setting...",
+        "saveChanges": "Save changes",
+        "saving": "Saving...",
+        "deleting": "Deleting...",
+        "deleteProfile": "Delete profile",
+        "deleteAria": "Delete profile {name}",
+        "creating": "Creating..."
+      },
+      "dialogs": {
+        "createTitle": "Create profile",
+        "createDescription": "Configure your provider and model. API key is encrypted on server.",
+        "deleteTitle": "Delete AI profile?",
+        "deleteDescriptionWithName": "This will remove profile \"{name}\".",
+        "cannotUndo": "This action cannot be undone."
+      },
+      "errors": {
+        "create": "Unable to create AI profile.",
+        "fetchModels": "Unable to fetch models.",
+        "loadModels": "Unable to load models.",
+        "setDefault": "Unable to set default profile.",
+        "nameRequired": "Name is required.",
+        "modelRequired": "Model is required.",
+        "update": "Unable to update profile.",
+        "delete": "Unable to delete profile."
+      }
+    }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "Latest articles",
+      "allFeedsTitle": "All feeds",
+      "subtitle": "Read, save, and summarize your feed with AI.",
+      "searchPlaceholder": "Search by title, excerpt, link",
+      "stats": {
+        "total": "Total",
+        "unread": "Unread",
+        "saved": "Saved"
+      },
+      "filters": {
+        "all": "All",
+        "unread": "Unread",
+        "saved": "Saved"
+      },
+      "loadingArticle": "Loading article...",
+      "empty": "No articles found for this filter.",
+      "badges": {
+        "saved": "Saved",
+        "unread": "Unread"
+      },
+      "noExcerpt": "No excerpt available.",
+      "actions": {
+        "markRead": "Mark read",
+        "unsave": "Unsave",
+        "save": "Save",
+        "openReader": "Open reader"
+      },
+      "loadingMore": "Loading more..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "Feed Articles",
+      "panelTitle": "Feed articles"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "Unable to summarize this article right now."
+      },
+      "loadingArticle": "Loading article...",
+      "actions": {
+        "openOriginal": "Open original article",
+        "aiSummarize": "AI Summarize"
+      },
+      "noAiProfile": "No AI profile configured.",
+      "addAiProfile": "Add one in AI settings",
+      "generatingSummary": "Generating summary...",
+      "tokensUsed": "Tokens used: {count}",
+      "streaming": "Streaming response...",
+      "fullContentUnavailable": "Full content unavailable",
+      "noExcerpt": "No excerpt available for this article.",
+      "readingAppearance": {
+        "title": "Reading Appearance",
+        "subtitle": "Adjust typography and spacing while reading.",
+        "fontFamily": "Font family",
+        "fontSize": "Font size",
+        "lineHeight": "Line height",
+        "readingWidth": "Reading width",
+        "needFullControls": "Need full controls for theme and color presets?",
+        "openAppearanceSettings": "Open appearance settings"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "News Overview",
+      "subtitle": "Monitor reading volume, feed health, and jump directly to your core workflows.",
+      "neverFetched": "Never fetched"
+    },
+    "stats": {
+      "totalArticles": "Total articles",
+      "unread": "Unread",
+      "saved": "Saved",
+      "activeFeeds": "Active feeds"
+    },
+    "feedHealth": {
+      "title": "Feed health",
+      "description": "Active status, delivery issues, and stale sources based on last fetch.",
+      "loading": "Loading feed health...",
+      "cards": {
+        "errors": "Feeds with errors",
+        "inactive": "Inactive feeds",
+        "stale": "Stale feeds (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "Top unread feeds",
+        "empty": "No active feeds with unread articles.",
+        "lastFetched": "Last fetched: {value}",
+        "unreadCount": "{count} unread"
+      }
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "description": "Jump to your most common tasks.",
+      "openArticles": "Open article list",
+      "manageFeeds": "Manage feeds",
+      "manageAiProfiles": "Manage AI profiles"
+    },
+    "queueWatch": {
+      "title": "Queue watch",
+      "description": "Feeds requiring attention right now.",
+      "feedsWithErrors": "Feeds with errors",
+      "staleActiveFeeds": "Stale active feeds",
+      "totalConfiguredFeeds": "Total configured feeds"
+    }
+  },
+  "admin": {
+    "common": {
+      "action": "Action",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "open": "Open",
+      "edit": "Edit",
+      "detail": "Details",
+      "id": "ID",
+      "yes": "Yes",
+      "no": "No",
+      "updating": "Updating...",
+      "queueing": "Queuing...",
+      "notAvailable": "N/A",
+      "noHeartbeat": "No heartbeat",
+      "lastHeartbeat": "Last heartbeat",
+      "expiresAt": "expires",
+      "roles": {
+        "user": "User",
+        "admin": "Admin"
+      },
+      "accountStatus": {
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "eventStatus": {
+        "success": "Success",
+        "failed": "Failed"
+      },
+      "runtimeNodes": {
+        "worker": "Worker",
+        "rssScheduler": "RSS scheduler",
+        "contentScheduler": "Content scheduler"
+      },
+      "runtimeStates": {
+        "healthy": "Healthy",
+        "stale": "Stale",
+        "offline": "Offline",
+        "unknown": "Unknown"
+      },
+      "queueName": {
+        "rssFetch": "RSS fetch",
+        "contentExtract": "Content extract"
+      },
+      "queueState": {
+        "waiting": "Waiting",
+        "active": "Active",
+        "failed": "Failed",
+        "delayed": "Delayed",
+        "completed": "Completed"
+      },
+      "subscriptionTier": {
+        "free": "Free",
+        "basic": "Basic",
+        "pro": "Pro",
+        "max": "Max"
+      },
+      "billingInterval": {
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "stripe": {
+        "customer": "Customer",
+        "subscription": "Subscription",
+        "price": "Price"
+      },
+      "age": {
+        "label": "Age",
+        "secondsAgo": "{value}s ago",
+        "minutesAgo": "{value}m ago",
+        "hoursAgo": "{value}h ago",
+        "secondsShort": "{value}s",
+        "minutesShort": "{value}m",
+        "hoursShort": "{value}h"
+      }
+    },
+    "operations": {
+      "metaTitle": "Admin Operations",
+      "overview": {
+        "title": "Operations overview",
+        "description": "Monitor AI usage, queue health, and runtime heartbeat status.",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "AI tokens (7d)",
+            "description": "Total token usage in the last 7 days."
+          },
+          "aiRequests7d": {
+            "title": "AI requests (7d)",
+            "description": "Total summarize requests in the last 7 days."
+          },
+          "aiFailures7d": {
+            "title": "AI failures (7d)",
+            "description": "Failed summarize attempts in the last 7 days."
+          },
+          "failedQueueJobs": {
+            "title": "Failed queue jobs",
+            "description": "Current failed jobs across worker queues."
+          },
+          "staleFeeds": {
+            "title": "Stale feeds",
+            "description": "Enabled feeds waiting for fetch scheduling."
+          },
+          "extractionBacklog": {
+            "title": "Extraction backlog",
+            "description": "Articles waiting for content extraction."
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "Runtime health",
+        "description": "Heartbeat status for worker and schedulers."
+      },
+      "drillDown": {
+        "title": "Drill-down",
+        "description": "Open detailed pages to inspect AI events or perform queue actions.",
+        "openAiUsage": "Open AI usage",
+        "openSystemOps": "Open system ops"
+      },
+      "recentFailedJobs": {
+        "title": "Recent failed jobs",
+        "description": "Latest queue failures across RSS fetch and content extraction workers.",
+        "empty": "No recent failed jobs in queue history.",
+        "noFailureReason": "No failure reason available.",
+        "columns": {
+          "queue": "Queue",
+          "job": "Job",
+          "failure": "Failure",
+          "time": "Time"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "Could not load AI usage summary.",
+        "systemOverview": "Could not load system overview.",
+        "runtimeHealth": "Could not load runtime health data.",
+        "recentQueueFailures": "Could not load recent queue failures."
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "Admin AI Usage",
+      "page": {
+        "title": "AI usage",
+        "description": "Inspect usage events, recent failures, and AI config state.",
+        "manageConfigs": "Manage AI configs"
+      },
+      "summary": {
+        "title": "Summary (7 days)",
+        "description": "Token usage and failure trends for admin support visibility.",
+        "totalTokens": "Total tokens",
+        "totalRequests": "Total requests",
+        "failures": "Failures",
+        "topUser": "Top user",
+        "empty7Days": "No AI usage requests recorded in the last 7 days."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Filter by user, provider, model, status, and time range.",
+        "from": "From",
+        "to": "To",
+        "user": {
+          "label": "User",
+          "placeholder": "Search name or email"
+        },
+        "provider": {
+          "label": "Provider",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "Model",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "Status",
+          "all": "All statuses"
+        }
+      },
+      "events": {
+        "title": "AI events",
+        "description": "Recent summarize activity with success/failure status and safe error summaries."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "providerModel": "Provider / model",
+          "status": "Status",
+          "tokens": "Tokens",
+          "duration": "Duration",
+          "errorSummary": "Error summary",
+          "created": "Created"
+        },
+        "empty": "No AI usage events match the current filters."
+      },
+      "configDialog": {
+        "title": "AI config controls",
+        "description": "Review config ownership and toggle individual configs.",
+        "empty": "No AI configs match the current filters.",
+        "badges": {
+          "default": "Default"
+        },
+        "select": {
+          "title": "Select config",
+          "description": "Choose a config to inspect and toggle.",
+          "placeholder": "Select an AI config"
+        },
+        "fields": {
+          "owner": "Owner",
+          "baseUrl": "Base URL",
+          "defaultProviderUrl": "Default provider URL",
+          "updated": "Updated"
+        },
+        "actions": {
+          "enable": "Enable config",
+          "disable": "Disable config",
+          "updating": "Updating..."
+        },
+        "confirm": {
+          "enableTitle": "Enable this AI config?",
+          "disableTitle": "Disable this AI config?",
+          "enableDescription": "Enable {name}. Summarize requests can use this config again.",
+          "disableDescription": "Disable {name}. Summarize requests using this config will be blocked."
+        }
+      },
+      "errors": {
+        "summary": "Could not load AI usage summary.",
+        "events": "Could not load AI usage events.",
+        "configs": "Could not load AI configs.",
+        "updateConfig": "Could not update this AI config."
+      }
+    },
+    "users": {
+      "metaTitle": "Admin Users",
+      "page": {
+        "title": "Admin users",
+        "description": "Review user accounts, subscription state, and account status actions."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search users and narrow results by role, account status, or subscription tier.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Name or email"
+        },
+        "role": {
+          "label": "Role",
+          "all": "All roles"
+        },
+        "status": {
+          "label": "Status",
+          "all": "All statuses"
+        },
+        "tier": {
+          "label": "Tier",
+          "all": "All tiers"
+        }
+      },
+      "directory": {
+        "title": "User directory",
+        "description": "Open a user row to review details and update account status."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "role": "Role",
+          "status": "Status",
+          "subscription": "Subscription",
+          "feeds": "Feeds",
+          "created": "Created"
+        },
+        "empty": "No users match the current filters. Adjust role, status, or plan filters to widen the result.",
+        "hasMore": "More users are available. Refine filters to narrow the result set."
+      },
+      "detail": {
+        "title": "User details",
+        "description": "Review account state, subscription details, and support actions.",
+        "empty": "Select a user to review account details.",
+        "accountSummary": {
+          "title": "Account summary",
+          "description": "Membership and feed usage at a glance.",
+          "created": "Created",
+          "updated": "Updated",
+          "feeds": "Feeds",
+          "suspendedAt": "Suspended at"
+        },
+        "subscription": {
+          "title": "Subscription",
+          "description": "Tier, billing cadence, and current expiry.",
+          "plan": "Plan",
+          "status": "Subscription status",
+          "expires": "Expires"
+        },
+        "actions": {
+          "title": "Account actions",
+          "description": "Suspend or reactivate the user account.",
+          "suspendReasonPlaceholder": "Optional suspension reason",
+          "suspendReasonHint": "The reason is visible to admins in the detail view and audit log.",
+          "suspensionReason": "Suspension reason",
+          "noReason": "No reason provided.",
+          "suspend": "Suspend user",
+          "suspending": "Suspending...",
+          "reactivate": "Reactivate user",
+          "reactivating": "Reactivating..."
+        },
+        "confirm": {
+          "thisUser": "this user",
+          "suspend": {
+            "title": "Suspend this user?",
+            "description": "Suspend {name}. They lose access to protected routes until an admin reactivates the account.",
+            "descriptionWithReason": "Suspend {name}. The reason \"{reason}\" will be saved to the admin audit log."
+          },
+          "reactivate": {
+            "title": "Reactivate this user?",
+            "description": "Restore access for {name}. Protected routes become available again immediately."
+          }
+        }
+      },
+      "errors": {
+        "list": "Could not load admin users. Refresh and try again.",
+        "suspend": "Could not suspend this user. Try again.",
+        "reactivate": "Could not reactivate this user. Try again."
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "Admin Subscriptions",
+      "page": {
+        "title": "Admin subscriptions",
+        "description": "Review billing state and apply support-oriented subscription changes."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search by user and narrow the billing slice by plan, status, cadence, or cancellation flag.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Name or email"
+        },
+        "tier": {
+          "label": "Tier",
+          "all": "All tiers"
+        },
+        "billing": {
+          "label": "Billing",
+          "all": "All billing"
+        },
+        "cancelFlag": {
+          "label": "Cancel flag",
+          "all": "All flags",
+          "canceling": "Canceling",
+          "continuing": "Continuing"
+        }
+      },
+      "directory": {
+        "title": "Subscription directory",
+        "description": "Open a row to inspect support controls and persist changes."
+      },
+      "table": {
+        "columns": {
+          "user": "User",
+          "plan": "Plan",
+          "status": "Status",
+          "expires": "Expires",
+          "stripeIds": "Stripe IDs"
+        },
+        "cancelAtPeriodEnd": "Cancel at period end",
+        "empty": "No subscriptions match the current filters. Adjust the billing filters to inspect a wider slice.",
+        "hasMore": "More subscriptions are available. Narrow the filters to inspect a smaller slice."
+      },
+      "edit": {
+        "title": "Edit subscription",
+        "description": "Support plan changes, expiry adjustments, and cancellation flags.",
+        "empty": "Select a subscription row to edit support settings.",
+        "currentExpiry": "Current expiry",
+        "fields": {
+          "tier": "Tier",
+          "expiry": "Expires at",
+          "cancellation": "Cancel at period end"
+        },
+        "controls": {
+          "title": "Support controls",
+          "description": "Adjust billing and support flags for this user.",
+          "tierPlaceholder": "Select tier",
+          "cancelAtPeriodEndHint": "Preserve subscription until the current paid period ends.",
+          "save": "Save changes",
+          "saving": "Saving...",
+          "noPendingChanges": "No pending changes to save.",
+          "pendingFields": "Pending fields: {fields}."
+        },
+        "confirm": {
+          "title": "Save subscription changes?",
+          "confirmLabel": "Save subscription changes",
+          "theseChanges": "these changes",
+          "description": "Apply {fields} for {name}. These updates are recorded in the admin audit log.",
+          "descriptionFallback": "Apply the pending subscription changes."
+        }
+      },
+      "errors": {
+        "list": "Could not load subscriptions. Refresh and try again.",
+        "update": "Could not update this subscription. Review the changes and try again."
+      }
+    },
+    "feeds": {
+      "metaTitle": "Admin Feeds",
+      "page": {
+        "title": "Admin feeds",
+        "description": "Track system-wide feed health and trigger operational queue actions."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Feed title or URL"
+        },
+        "enabled": {
+          "label": "Enabled",
+          "all": "All feeds"
+        },
+        "errors": {
+          "label": "Errors",
+          "all": "All error states",
+          "hasErrors": "Has errors",
+          "healthy": "Healthy"
+        },
+        "stale": {
+          "label": "Stale",
+          "all": "All freshness states",
+          "stale": "Stale",
+          "scheduled": "Scheduled"
+        },
+        "extraction": {
+          "label": "Extraction",
+          "all": "All extraction states",
+          "hasFailures": "Has failures",
+          "healthy": "Healthy"
+        }
+      },
+      "operations": {
+        "title": "Feed operations",
+        "description": "Use quick actions or open a feed for detailed operational context."
+      },
+      "table": {
+        "columns": {
+          "feed": "Feed",
+          "enabled": "Enabled",
+          "health": "Health",
+          "coverage": "Coverage",
+          "lastFetched": "Last fetched"
+        },
+        "health": {
+          "errors": "Errors: {count}",
+          "extractionFailures": "Extraction failures: {count}"
+        },
+        "coverage": {
+          "subscriptions": "{count} subscriptions",
+          "articles": "{count} articles"
+        },
+        "nextFetch": "Next",
+        "empty": "No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.",
+        "hasMore": "More feed sources are available. Refine filters to narrow the result set.",
+        "actions": {
+          "retryFetch": "Retry fetch",
+          "retryExtraction": "Retry extraction"
+        },
+        "confirm": {
+          "defaultTitle": "Confirm admin action",
+          "defaultDescription": "Confirm this admin action.",
+          "retryFetch": {
+            "title": "Retry RSS fetch?",
+            "description": "Queue an RSS fetch retry for {label} immediately.",
+            "confirmLabel": "Queue RSS retry"
+          },
+          "retryExtraction": {
+            "title": "Retry feed extraction?",
+            "description": "Queue extraction retries for eligible articles from {label}.",
+            "confirmLabel": "Queue extraction retry"
+          },
+          "enable": {
+            "title": "Enable this feed?",
+            "description": "Enable {label} so scheduled fetches can resume.",
+            "confirmLabel": "Enable feed"
+          },
+          "disable": {
+            "title": "Disable this feed?",
+            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
+            "confirmLabel": "Disable feed"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "Admin Feed Detail",
+        "page": {
+          "title": "Feed operations detail",
+          "description": "Inspect article health and trigger targeted retries for this feed source.",
+          "backToFeeds": "Back to feeds"
+        },
+        "empty": "Feed details are unavailable.",
+        "summary": {
+          "lastFetched": "Last fetched",
+          "nextFetch": "Next fetch",
+          "subscriptions": "Subscriptions",
+          "articles": "Articles",
+          "rssErrors": "RSS errors: {count}",
+          "extractionFailures": "Extraction failures: {count}",
+          "lastError": "Last error",
+          "noRecentErrors": "No recent RSS errors."
+        },
+        "operations": {
+          "title": "Operations",
+          "description": "Toggle source state and trigger queue retries.",
+          "feedEnabled": "Feed enabled",
+          "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
+          "retryFetch": "Retry RSS fetch",
+          "retryFeedExtractionQueue": "Retry feed extraction queue"
+        },
+        "recentArticles": {
+          "title": "Recent articles",
+          "description": "Latest source articles and extraction status.",
+          "columns": {
+            "article": "Article",
+            "published": "Published",
+            "status": "Status"
+          },
+          "empty": "No recent articles found for this feed source.",
+          "attempts": "Attempts: {count}",
+          "retryArticle": "Retry article",
+          "status": {
+            "extracted": "Extracted",
+            "pending": "Pending",
+            "needsAttention": "Needs attention"
+          }
+        },
+        "recentFailures": {
+          "title": "Recent extraction failures",
+          "description": "Articles that most recently failed extraction.",
+          "columns": {
+            "article": "Article",
+            "error": "Error",
+            "updated": "Updated"
+          },
+          "empty": "No recent extraction failures.",
+          "attempts": "Attempts: {count}",
+          "retry": "Retry"
+        },
+        "confirm": {
+          "thisFeed": "this feed",
+          "defaultTitle": "Confirm admin action",
+          "defaultDescription": "Confirm this admin action.",
+          "retryFetch": {
+            "title": "Retry RSS fetch?",
+            "description": "Queue an RSS fetch retry for {label} immediately.",
+            "confirmLabel": "Queue RSS retry"
+          },
+          "retryFeedExtraction": {
+            "title": "Retry feed extraction?",
+            "description": "Queue extraction retries for eligible articles from {label}.",
+            "confirmLabel": "Queue extraction retry"
+          },
+          "retryArticleExtraction": {
+            "title": "Retry article extraction?",
+            "description": "Queue a fresh extraction attempt for {title}.",
+            "confirmLabel": "Queue article retry"
+          },
+          "enable": {
+            "title": "Enable this feed?",
+            "description": "Enable {label} so scheduled fetches can resume.",
+            "confirmLabel": "Enable feed"
+          },
+          "disable": {
+            "title": "Disable this feed?",
+            "description": "Disable {label}. Scheduled fetches stop until an admin enables it again or forces a retry.",
+            "confirmLabel": "Disable feed"
+          }
+        },
+        "errors": {
+          "load": "Could not load feed details. Refresh and try again.",
+          "retryArticleExtraction": "Could not queue an article extraction retry. Try again."
+        }
+      },
+      "errors": {
+        "list": "Could not load feed sources. Refresh and try again.",
+        "updateState": "Could not update this feed state. Try again.",
+        "retryFetch": "Could not queue an RSS fetch retry. Try again.",
+        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+      }
+    },
+    "systemOps": {
+      "metaTitle": "Admin System Ops",
+      "page": {
+        "title": "System ops",
+        "description": "Inspect queue health and run single-item operational actions safely."
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "Failed jobs",
+            "description": "Current failed jobs across queues."
+          },
+          "staleFeeds": {
+            "title": "Stale feeds",
+            "description": "Enabled feeds waiting for refresh."
+          },
+          "extractionBacklog": {
+            "title": "Extraction backlog",
+            "description": "Articles waiting for extraction."
+          },
+          "rssWaitingJobs": {
+            "title": "RSS waiting jobs",
+            "description": "Pending RSS fetch jobs."
+          },
+          "contentWaitingJobs": {
+            "title": "Content waiting jobs",
+            "description": "Pending content extraction jobs."
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "Runtime heartbeat",
+          "description": "Worker and scheduler liveness from Redis heartbeat keys."
+        }
+      },
+      "stripe": {
+        "title": "Stripe config",
+        "description": "Manage Stripe keys and plan price IDs here instead of server environment variables.",
+        "status": {
+          "label": "Status",
+          "configured": "Configured",
+          "incomplete": "Incomplete",
+          "secretKey": "Secret key",
+          "webhookSecret": "Webhook secret",
+          "missing": "Missing"
+        },
+        "form": {
+          "publishableKey": "Publishable key",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "Secret key",
+          "secretPlaceholder": "Leave blank to keep current sk_*",
+          "webhookSecret": "Webhook secret",
+          "webhookPlaceholder": "Leave blank to keep current whsec_*",
+          "basicMonthly": "Basic monthly price",
+          "basicYearly": "Basic yearly price",
+          "proMonthly": "Pro monthly price",
+          "proYearly": "Pro yearly price",
+          "maxMonthly": "Max monthly price",
+          "maxYearly": "Max yearly price"
+        },
+        "lastUpdated": "Last updated",
+        "webhookEndpoint": "Webhook endpoint",
+        "save": "Save Stripe config",
+        "saving": "Saving...",
+        "successSaved": "Stripe config saved.",
+        "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
+      },
+      "manualActions": {
+        "title": "Manual actions",
+        "description": "Trigger one feed fetch or one content extraction by ID.",
+        "feedSourceId": "Feed source ID",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "Source article ID",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "Trigger fetch",
+        "triggerExtract": "Trigger extract",
+        "errors": {
+          "feedSourceIdRequired": "Feed source ID is required.",
+          "sourceArticleIdRequired": "Source article ID is required."
+        }
+      },
+      "queueJobs": {
+        "title": "Queue jobs",
+        "description": "Review queue states and retry failed jobs one at a time.",
+        "filters": {
+          "queue": "Queue",
+          "state": "State",
+          "allQueues": "All queues",
+          "allStates": "All states"
+        },
+        "columns": {
+          "queue": "Queue",
+          "job": "Job",
+          "state": "State",
+          "attempts": "Attempts",
+          "failure": "Failure",
+          "created": "Created"
+        },
+        "actions": {
+          "retry": "Retry"
+        },
+        "empty": "No queue jobs match the selected filters."
+      },
+      "confirm": {
+        "defaultTitle": "Confirm action",
+        "defaultDescription": "Confirm this operation.",
+        "retryJob": {
+          "title": "Retry this failed job?",
+          "description": "Queue retry for job {jobId} in {queueName}.",
+          "confirmLabel": "Retry job"
+        },
+        "triggerFeedFetch": {
+          "title": "Trigger feed fetch now?",
+          "description": "Queue one immediate RSS fetch for feed source {feedSourceId}.",
+          "confirmLabel": "Trigger feed fetch"
+        },
+        "triggerContentExtract": {
+          "title": "Trigger content extraction now?",
+          "description": "Queue one content extraction job for source article {sourceArticleId}.",
+          "confirmLabel": "Trigger extraction"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "Could not load system runtime summary.",
+        "queueJobs": "Could not load queue jobs.",
+        "stripeLoad": "Could not load Stripe config.",
+        "stripeSave": "Could not save Stripe config.",
+        "executeOperation": "Could not execute this system operation."
+      }
+    }
+  }
+}

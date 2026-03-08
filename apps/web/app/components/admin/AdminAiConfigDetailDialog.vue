@@ -26,6 +26,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminAiConfigListItem = {
   id: string;
@@ -50,6 +51,9 @@ const props = defineProps<{
   actionError: string;
   configs: AdminAiConfigListItem[];
 }>();
+
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 
 const emit = defineEmits<{
   "update:open": [open: boolean];
@@ -84,7 +88,10 @@ const selectedConfig = computed(
 
 const formatDateTime = (value: Date | string) => {
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const requestToggle = () => {
@@ -113,9 +120,9 @@ const handleConfirmToggle = () => {
   <Sheet :open="open" @update:open="(value) => emit('update:open', value)">
     <SheetContent class="sm:max-w-xl">
       <SheetHeader>
-        <SheetTitle>AI config controls</SheetTitle>
+        <SheetTitle>{{ t("admin.aiUsage.configDialog.title") }}</SheetTitle>
         <SheetDescription>
-          Review config ownership and toggle individual configs.
+          {{ t("admin.aiUsage.configDialog.description") }}
         </SheetDescription>
       </SheetHeader>
 
@@ -138,16 +145,19 @@ const handleConfirmToggle = () => {
           </Card>
         </template>
 
-        <div v-else-if="configs.length === 0" class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          No AI configs match the current filters.
+        <div
+          v-else-if="configs.length === 0"
+          class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
+        >
+          {{ t("admin.aiUsage.configDialog.empty") }}
         </div>
 
         <template v-else>
           <Card>
             <CardHeader>
-              <CardTitle>Select config</CardTitle>
+              <CardTitle>{{ t("admin.aiUsage.configDialog.select.title") }}</CardTitle>
               <CardDescription>
-                Choose a config to inspect and toggle.
+                {{ t("admin.aiUsage.configDialog.select.description") }}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -156,7 +166,7 @@ const handleConfirmToggle = () => {
                 @update:model-value="(value) => selectedConfigId = String(value)"
               >
                 <SelectTrigger class="w-full">
-                  <SelectValue placeholder="Select an AI config" />
+                  <SelectValue :placeholder="t('admin.aiUsage.configDialog.select.placeholder')" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
@@ -179,17 +189,30 @@ const handleConfirmToggle = () => {
             <CardContent class="space-y-3">
               <div class="flex flex-wrap gap-2">
                 <Badge variant="outline">
-                  {{ selectedConfig.isEnabled ? "Enabled" : "Disabled" }}
+                  {{
+                    selectedConfig.isEnabled
+                      ? t("common.states.enabled")
+                      : t("common.states.disabled")
+                  }}
                 </Badge>
                 <Badge v-if="selectedConfig.isDefault" variant="secondary">
-                  Default
+                  {{ t("admin.aiUsage.configDialog.badges.default") }}
                 </Badge>
               </div>
 
               <div class="rounded-md border p-3 text-sm">
-                <p><span class="text-muted-foreground">Owner:</span> {{ selectedConfig.userName }} ({{ selectedConfig.userEmail }})</p>
-                <p><span class="text-muted-foreground">Base URL:</span> {{ selectedConfig.baseUrl || "Default provider URL" }}</p>
-                <p><span class="text-muted-foreground">Updated:</span> {{ formatDateTime(selectedConfig.updatedAt) }}</p>
+                <p>
+                  <span class="text-muted-foreground">{{ t("admin.aiUsage.configDialog.fields.owner") }}:</span>
+                  {{ selectedConfig.userName }} ({{ selectedConfig.userEmail }})
+                </p>
+                <p>
+                  <span class="text-muted-foreground">{{ t("admin.aiUsage.configDialog.fields.baseUrl") }}:</span>
+                  {{ selectedConfig.baseUrl || t("admin.aiUsage.configDialog.fields.defaultProviderUrl") }}
+                </p>
+                <p>
+                  <span class="text-muted-foreground">{{ t("admin.aiUsage.configDialog.fields.updated") }}:</span>
+                  {{ formatDateTime(selectedConfig.updatedAt) }}
+                </p>
               </div>
 
               <Button
@@ -199,10 +222,10 @@ const handleConfirmToggle = () => {
               >
                 {{
                   actionPending
-                    ? "Updating..."
+                    ? t("admin.aiUsage.configDialog.actions.updating")
                     : selectedConfig.isEnabled
-                      ? "Disable config"
-                      : "Enable config"
+                      ? t("admin.aiUsage.configDialog.actions.disable")
+                      : t("admin.aiUsage.configDialog.actions.enable")
                 }}
               </Button>
 
@@ -218,14 +241,22 @@ const handleConfirmToggle = () => {
 
   <AdminActionConfirmDialog
     :open="confirmOpen"
-    :title="selectedConfig?.isEnabled ? 'Disable this AI config?' : 'Enable this AI config?'"
+    :title="
+      selectedConfig?.isEnabled
+        ? t('admin.aiUsage.configDialog.confirm.disableTitle')
+        : t('admin.aiUsage.configDialog.confirm.enableTitle')
+    "
     :description="
       selectedConfig?.isEnabled
-        ? `Disable ${selectedConfig.name}. Summarize requests using this config will be blocked.`
-        : `Enable ${selectedConfig?.name}. Summarize requests can use this config again.`
+        ? t('admin.aiUsage.configDialog.confirm.disableDescription', { name: selectedConfig.name })
+        : t('admin.aiUsage.configDialog.confirm.enableDescription', { name: selectedConfig?.name || '' })
     "
-    :confirm-label="selectedConfig?.isEnabled ? 'Disable config' : 'Enable config'"
-    :confirm-pending-label="'Updating...'"
+    :confirm-label="
+      selectedConfig?.isEnabled
+        ? t('admin.aiUsage.configDialog.actions.disable')
+        : t('admin.aiUsage.configDialog.actions.enable')
+    "
+    :confirm-pending-label="t('admin.aiUsage.configDialog.actions.updating')"
     :confirm-variant="selectedConfig?.isEnabled ? 'destructive' : 'default'"
     :is-pending="actionPending"
     @update:open="(open) => { confirmOpen = open; }"

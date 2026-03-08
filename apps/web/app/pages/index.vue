@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { $authClient } = useNuxtApp();
+const { t } = useI18n();
 
 onMounted(async () => {
   const { data } = await $authClient.getSession();
@@ -12,19 +13,19 @@ onMounted(async () => {
 <template>
   <div class="flex min-h-screen items-center justify-center bg-background p-6">
     <div class="w-full max-w-xl space-y-4 rounded-xl border bg-card p-8 text-center">
-      <h1 class="text-3xl font-semibold">NewsFlow</h1>
+      <h1 class="text-3xl font-semibold">{{ t("app.name") }}</h1>
       <p class="text-muted-foreground">
-        Personalized AI-powered RSS reader.
+        {{ t("public.home.subtitle") }}
       </p>
       <div class="flex justify-center gap-3">
         <NuxtLink to="/login" class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground">
-          Login
+          {{ t("public.home.login") }}
         </NuxtLink>
         <NuxtLink to="/signup" class="inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium">
-          Sign up
+          {{ t("public.home.signUp") }}
         </NuxtLink>
         <NuxtLink to="/pricing" class="inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium">
-          Pricing
+          {{ t("public.home.pricing") }}
         </NuxtLink>
       </div>
     </div>

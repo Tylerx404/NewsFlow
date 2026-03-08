@@ -9,6 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
+
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 
 const props = defineProps<{
   isLoading: boolean;
@@ -25,38 +29,39 @@ const props = defineProps<{
 
 const cards = computed(() => [
   {
-    title: "AI tokens (7d)",
-    description: "Total token usage in the last 7 days.",
+    title: t("admin.operations.overview.metrics.aiTokens7d.title"),
+    description: t("admin.operations.overview.metrics.aiTokens7d.description"),
     value: props.metrics?.totalTokens ?? 0,
   },
   {
-    title: "AI requests (7d)",
-    description: "Total summarize requests in the last 7 days.",
+    title: t("admin.operations.overview.metrics.aiRequests7d.title"),
+    description: t("admin.operations.overview.metrics.aiRequests7d.description"),
     value: props.metrics?.totalRequests ?? 0,
   },
   {
-    title: "AI failures (7d)",
-    description: "Failed summarize attempts in the last 7 days.",
+    title: t("admin.operations.overview.metrics.aiFailures7d.title"),
+    description: t("admin.operations.overview.metrics.aiFailures7d.description"),
     value: props.metrics?.aiFailureCount ?? 0,
   },
   {
-    title: "Failed queue jobs",
-    description: "Current failed jobs across worker queues.",
+    title: t("admin.operations.overview.metrics.failedQueueJobs.title"),
+    description: t("admin.operations.overview.metrics.failedQueueJobs.description"),
     value: props.metrics?.failedJobCount ?? 0,
   },
   {
-    title: "Stale feeds",
-    description: "Enabled feeds waiting for fetch scheduling.",
+    title: t("admin.operations.overview.metrics.staleFeeds.title"),
+    description: t("admin.operations.overview.metrics.staleFeeds.description"),
     value: props.metrics?.staleFeedCount ?? 0,
   },
   {
-    title: "Extraction backlog",
-    description: "Articles waiting for content extraction.",
+    title: t("admin.operations.overview.metrics.extractionBacklog.title"),
+    description: t("admin.operations.overview.metrics.extractionBacklog.description"),
     value: props.metrics?.extractionBacklogCount ?? 0,
   },
 ]);
 
-const formatNumber = (value: number) => value.toLocaleString();
+const formatNumber = (value: number) =>
+  new Intl.NumberFormat(intlLocale.value).format(value);
 </script>
 
 <template>

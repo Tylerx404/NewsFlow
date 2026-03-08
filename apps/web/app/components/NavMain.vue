@@ -18,6 +18,8 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 
+const { t } = useI18n()
+
 defineProps<{
   label?: string
   items: {
@@ -36,7 +38,7 @@ defineProps<{
 
 <template>
   <SidebarGroup>
-    <SidebarGroupLabel>{{ label ?? "Platform" }}</SidebarGroupLabel>
+    <SidebarGroupLabel>{{ label ?? t("shell.groups.platform") }}</SidebarGroupLabel>
     <SidebarMenu>
       <Collapsible v-for="item in items" :key="item.title" as-child :default-open="item.isActive">
         <SidebarMenuItem>
@@ -50,7 +52,7 @@ defineProps<{
             <CollapsibleTrigger as-child>
               <SidebarMenuAction class="data-[state=open]:rotate-90">
                 <ChevronRight />
-                <span class="sr-only">Toggle</span>
+                <span class="sr-only">{{ t("shell.nav.toggle") }}</span>
               </SidebarMenuAction>
             </CollapsibleTrigger>
             <CollapsibleContent>

@@ -1,0 +1,1285 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "个人 AI RSS"
+  },
+  "locale": {
+    "label": "语言",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "添加",
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "refresh": "刷新",
+      "manage": "管理",
+      "loading": "加载中..."
+    },
+    "states": {
+      "enabled": "启用",
+      "disabled": "停用"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "仪表盘",
+      "articles": "文章",
+      "settings": "设置",
+      "reader": "阅读器"
+    }
+  },
+  "shell": {
+    "groups": {
+      "platform": "平台",
+      "navigation": "导航",
+      "admin": "管理",
+      "yourFeeds": "你的订阅",
+      "discover": "发现"
+    },
+    "nav": {
+      "toggle": "切换",
+      "moreActions": "更多操作"
+    },
+    "navigation": {
+      "dashboard": "仪表盘",
+      "articles": "文章",
+      "settings": "设置",
+      "operations": "运维",
+      "aiUsage": "AI 使用",
+      "systemOps": "系统运维",
+      "users": "用户",
+      "subscriptions": "订阅",
+      "feeds": "订阅源"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "添加订阅",
+      "loading": "正在加载订阅...",
+      "empty": "还没有订阅，请先添加第一个 RSS 订阅。",
+      "actions": {
+        "refreshNow": "立即刷新",
+        "manageFeeds": "管理订阅",
+        "removeFeed": "移除订阅"
+      },
+      "confirm": {
+        "remove": "移除订阅 \"{title}\"？"
+      }
+    },
+    "discover": {
+      "empty": "所有推荐订阅都已添加。"
+    },
+    "errors": {
+      "addFeed": "无法添加订阅。",
+      "refreshFeed": "无法刷新订阅。",
+      "removeFeed": "无法移除订阅。"
+    },
+    "user": {
+      "defaultName": "NewsFlow 用户",
+      "personalSettings": "个人设置",
+      "appearance": "外观",
+      "logOut": "退出登录"
+    }
+  },
+  "auth": {
+    "common": {
+      "name": "姓名",
+      "namePlaceholder": "张三",
+      "email": "邮箱",
+      "emailPlaceholder": "name{'@'}example.com",
+      "password": "密码",
+      "orContinueWith": "或使用以下方式继续",
+      "heroImageAlt": "认证页面插图",
+      "termsPrefix": "点击继续即表示你同意我们的",
+      "termsOfService": "服务条款",
+      "termsAnd": "和",
+      "privacyPolicy": "隐私政策"
+    },
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录你的 NewsFlow 账户",
+      "forgotPassword": "忘记密码？",
+      "submit": "登录",
+      "submitting": "登录中...",
+      "noAccount": "还没有账户？",
+      "signUp": "注册",
+      "sso": {
+        "apple": "使用 Apple 登录",
+        "google": "使用 Google 登录",
+        "meta": "使用 Meta 登录"
+      },
+      "errors": {
+        "generic": "当前无法登录，请稍后重试。",
+        "invalidCredentials": "邮箱或密码错误。"
+      }
+    },
+    "signup": {
+      "title": "创建账户",
+      "subtitle": "输入你的邮箱以创建账户",
+      "emailDescription": "我们会用此邮箱与你联系，不会与他人共享。",
+      "confirmPassword": "确认密码",
+      "passwordHint": "密码长度至少 8 位。",
+      "submit": "创建账户",
+      "submitting": "账户创建中...",
+      "haveAccount": "已有账户？",
+      "signIn": "登录",
+      "sso": {
+        "apple": "使用 Apple 注册",
+        "google": "使用 Google 注册",
+        "meta": "使用 Meta 注册"
+      },
+      "errors": {
+        "generic": "当前无法创建账户，请稍后重试。",
+        "passwordConfirmationMismatch": "两次输入的密码不一致。",
+        "createFailed": "无法创建你的账户。"
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "个性化 AI 驱动的 RSS 阅读器。",
+      "login": "登录",
+      "signUp": "注册",
+      "pricing": "定价"
+    },
+    "pricing": {
+      "badge": "定价",
+      "title": "选择你的成长方案",
+      "subtitle": "选择方案后即可立即使用。随着 AI 工作流增长，随时升级以获得更高速度与容量。",
+      "bestValue": "最佳性价比",
+      "billing": {
+        "monthly": "按月计费",
+        "yearly": "按年计费"
+      },
+      "suffix": {
+        "month": "月",
+        "year": "年"
+      },
+      "meta": {
+        "monthly": "按月支付，可随时取消。",
+        "yearly": "按年支付，约合每月 {price}。",
+        "discount": "按年计费可节省约 {percent}%。"
+      },
+      "actions": {
+        "choosePlan": "选择方案",
+        "createAccount": "创建账户",
+        "backHome": "返回首页",
+        "goSubscriptionSettings": "前往订阅设置"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "适合个人测试与探索的入门方案。",
+          "features": {
+            "coreRss": "核心 RSS 阅读流程",
+            "aiOccasional": "适合偶尔使用的 AI 摘要",
+            "instantAccess": "结账后立即可用"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "适合高频 AI 摘要和日常阅读。",
+          "features": {
+            "everythingBasic": "包含 Basic 全部功能",
+            "higherAiLimits": "更高 AI 使用额度",
+            "instantAccess": "结账后立即可用"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "适合需要最高配额和优先支持的重度用户。",
+          "features": {
+            "everythingPro": "包含 Pro 全部功能",
+            "highestAiCapacity": "最高 AI 使用容量",
+            "prioritySupport": "优先支持通道"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "外观",
+        "description": "主题模式、阅读配色、字体排版和文章布局偏好。"
+      },
+      "personal": {
+        "label": "个人",
+        "description": "个人资料、密码、活跃会话和订阅概览。"
+      },
+      "ai": {
+        "label": "AI 配置",
+        "description": "用于摘要操作的提供商、模型和默认配置。"
+      },
+      "feeds": {
+        "label": "订阅管理",
+        "description": "订阅元数据、状态、刷新操作和清理。"
+      }
+    },
+    "index": {
+      "redirecting": "正在跳转到设置..."
+    },
+    "appearance": {
+      "metaTitle": "外观设置",
+      "page": {
+        "readingExperience": {
+          "title": "阅读体验",
+          "description": "调整外观、排版与布局，让阅读更符合你的偏好。"
+        },
+        "fields": {
+          "themeMode": "主题模式",
+          "colorPreset": "颜色预设",
+          "fontFamily": "字体",
+          "fontSize": "字号",
+          "lineHeight": "行高",
+          "readingWidth": "阅读宽度"
+        },
+        "savedNotice": "偏好已保存在浏览器中并立即生效。",
+        "resetDefaults": "恢复默认"
+      },
+      "preview": {
+        "title": "实时预览",
+        "description": "在阅读完整文章前预览排版和间距。",
+        "sample": {
+          "heading": "早间简报：市场开盘涨跌不一",
+          "highlightsLabel": "重点：",
+          "paragraph1": "全球指数开盘表现分化，能源股表现更强。分析师预计波动仍将维持高位。",
+          "paragraph2Prefix": "此段展示",
+          "italic": "斜体强调",
+          "bold": "加粗片段",
+          "paragraph2Suffix": "以及常规正文节奏。",
+          "quote": "读者应能在长时间阅读中保持专注且不易疲劳。",
+          "bullet1": "更一致的文本层级",
+          "bullet2": "更合理的段落间距",
+          "bullet3": "更清晰的来源链接可见性",
+          "openSourceReport": "打开来源报告"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "跟随系统",
+            "description": "跟随设备外观设置。"
+          },
+          "light": {
+            "label": "浅色",
+            "description": "始终使用浅色界面。"
+          },
+          "dark": {
+            "label": "深色",
+            "description": "始终使用深色界面。"
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "中性",
+            "description": "中性色调下平衡的对比度。"
+          },
+          "paper": {
+            "label": "暖纸色",
+            "description": "适合长时间阅读的柔和暖色背景。"
+          },
+          "slate": {
+            "label": "石板色",
+            "description": "更冷的色调与更锐利的文本对比。"
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "现代无衬线",
+            "description": "干净易读的无衬线字体。"
+          },
+          "serif": {
+            "label": "编辑衬线",
+            "description": "适合长文阅读的杂志风衬线节奏。"
+          },
+          "mono": {
+            "label": "等宽字体",
+            "description": "适合技术内容的等宽文本。"
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "小",
+            "description": "更紧凑的布局，显示更多内容。"
+          },
+          "md": {
+            "label": "中",
+            "description": "适合日常阅读的平衡字号。"
+          },
+          "lg": {
+            "label": "大",
+            "description": "更大字号，更易快速浏览。"
+          },
+          "xl": {
+            "label": "超大",
+            "description": "最大可读性。"
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "紧凑",
+            "description": "更紧凑的行距，提升密度。"
+          },
+          "normal": {
+            "label": "标准",
+            "description": "适用于多数文章的标准行距。"
+          },
+          "relaxed": {
+            "label": "宽松",
+            "description": "更大的垂直间距，阅读更舒缓。"
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "窄",
+            "description": "更短行宽，聚焦阅读。"
+          },
+          "normal": {
+            "label": "标准",
+            "description": "混合内容的平衡宽度。"
+          },
+          "wide": {
+            "label": "宽",
+            "description": "为富媒体内容提供更大横向空间。"
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "订阅管理",
+      "page": {
+        "title": "订阅管理",
+        "description": "更新订阅信息、切换状态、刷新或删除订阅。"
+      },
+      "labels": {
+        "tableCaption": "订阅管理表，包含元数据与操作。",
+        "customTitle": "自定义标题",
+        "category": "分类",
+        "unread": "未读",
+        "lastFetched": "最近抓取",
+        "errors": "错误",
+        "active": "启用",
+        "actions": "操作",
+        "useSourceTitle": "使用源标题",
+        "loading": "正在加载订阅...",
+        "empty": "暂无订阅。",
+        "never": "从未"
+      },
+      "actions": {
+        "save": "保存",
+        "saving": "保存中...",
+        "refresh": "刷新",
+        "refreshing": "刷新中...",
+        "delete": "删除",
+        "deleteAria": "删除订阅 {title}",
+        "deleting": "删除中...",
+        "deleteFeed": "删除订阅"
+      },
+      "dialogs": {
+        "deleteTitle": "删除此订阅？",
+        "deleteDescriptionWithTitle": "订阅“{title}”将被删除。",
+        "cannotUndo": "此操作无法撤销。"
+      },
+      "errors": {
+        "update": "无法更新订阅。",
+        "refresh": "无法刷新订阅。",
+        "delete": "无法删除订阅。"
+      }
+    },
+    "ai": {
+      "metaTitle": "AI 配置",
+      "page": {
+        "title": "AI 配置",
+        "description": "管理阅读器摘要动作的默认配置。"
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "正在加载配置...",
+        "noProfiles": "还没有配置，创建后即可启用 AI 摘要。",
+        "default": "默认",
+        "currentKey": "当前密钥",
+        "model": "模型",
+        "loadingModels": "模型加载中...",
+        "selectModel": "选择模型",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "留空时使用提供商默认值",
+        "newApiKey": "新 API Key",
+        "keepCurrentKey": "留空则保留当前密钥",
+        "mainOpenAi": "主 OpenAI",
+        "provider": "提供商",
+        "selectProvider": "选择提供商",
+        "selectToLoadModels": "选择以加载模型",
+        "apiKey": "API Key",
+        "optional": "可选",
+        "defaultPrefix": "默认",
+        "canCustomizeByok": "可自定义 BYOK",
+        "managedAutomatically": "自动管理"
+      },
+      "actions": {
+        "createProfile": "创建配置",
+        "setDefault": "设为默认",
+        "setting": "设置中...",
+        "saveChanges": "保存更改",
+        "saving": "保存中...",
+        "deleting": "删除中...",
+        "deleteProfile": "删除配置",
+        "deleteAria": "删除配置 {name}",
+        "creating": "创建中..."
+      },
+      "dialogs": {
+        "createTitle": "创建配置",
+        "createDescription": "配置提供商和模型。API 密钥会在服务端加密。",
+        "deleteTitle": "删除 AI 配置？",
+        "deleteDescriptionWithName": "将删除配置“{name}”。",
+        "cannotUndo": "此操作无法撤销。"
+      },
+      "errors": {
+        "create": "无法创建 AI 配置。",
+        "fetchModels": "无法获取模型列表。",
+        "loadModels": "无法加载模型。",
+        "setDefault": "无法设置默认配置。",
+        "nameRequired": "名称不能为空。",
+        "modelRequired": "模型不能为空。",
+        "update": "无法更新配置。",
+        "delete": "无法删除配置。"
+      }
+    }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "最新文章",
+      "allFeedsTitle": "全部订阅",
+      "subtitle": "使用 AI 阅读、收藏并总结你的订阅内容。",
+      "searchPlaceholder": "按标题、摘要、链接搜索",
+      "stats": {
+        "total": "总数",
+        "unread": "未读",
+        "saved": "已收藏"
+      },
+      "filters": {
+        "all": "全部",
+        "unread": "未读",
+        "saved": "已收藏"
+      },
+      "loadingArticle": "正在加载文章...",
+      "empty": "当前筛选条件下没有文章。",
+      "badges": {
+        "saved": "已收藏",
+        "unread": "未读"
+      },
+      "noExcerpt": "暂无摘要。",
+      "actions": {
+        "markRead": "标记已读",
+        "unsave": "取消收藏",
+        "save": "收藏",
+        "openReader": "打开阅读器"
+      },
+      "loadingMore": "正在加载更多..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "订阅文章",
+      "panelTitle": "订阅文章"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "暂时无法总结这篇文章。"
+      },
+      "loadingArticle": "正在加载文章...",
+      "actions": {
+        "openOriginal": "打开原文",
+        "aiSummarize": "AI 总结"
+      },
+      "noAiProfile": "尚未配置 AI 配置。",
+      "addAiProfile": "前往 AI 设置添加",
+      "generatingSummary": "正在生成总结...",
+      "tokensUsed": "已用 Token：{count}",
+      "streaming": "正在流式返回...",
+      "fullContentUnavailable": "暂无全文内容",
+      "noExcerpt": "该文章暂无摘要。",
+      "readingAppearance": {
+        "title": "阅读外观",
+        "subtitle": "阅读时调整排版与间距。",
+        "fontFamily": "字体",
+        "fontSize": "字号",
+        "lineHeight": "行高",
+        "readingWidth": "阅读宽度",
+        "needFullControls": "需要完整的主题和配色控制？",
+        "openAppearanceSettings": "打开外观设置"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "新闻概览",
+      "subtitle": "监控阅读量、订阅健康状态，并快速进入核心工作流。",
+      "neverFetched": "从未抓取"
+    },
+    "stats": {
+      "totalArticles": "文章总数",
+      "unread": "未读",
+      "saved": "已收藏",
+      "activeFeeds": "活跃订阅"
+    },
+    "feedHealth": {
+      "title": "订阅健康",
+      "description": "根据最近抓取情况查看活跃状态、投递问题和过期源。",
+      "loading": "正在加载订阅健康数据...",
+      "cards": {
+        "errors": "有错误的订阅",
+        "inactive": "未激活订阅",
+        "stale": "过期订阅 (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "未读最多的订阅",
+        "empty": "没有包含未读文章的活跃订阅。",
+        "lastFetched": "最近抓取：{value}",
+        "unreadCount": "{count} 未读"
+      }
+    },
+    "quickActions": {
+      "title": "快捷操作",
+      "description": "快速前往常用任务。",
+      "openArticles": "打开文章列表",
+      "manageFeeds": "管理订阅",
+      "manageAiProfiles": "管理 AI 配置"
+    },
+    "queueWatch": {
+      "title": "队列监控",
+      "description": "当前需要关注的订阅。",
+      "feedsWithErrors": "有错误的订阅",
+      "staleActiveFeeds": "过期活跃订阅",
+      "totalConfiguredFeeds": "已配置订阅总数"
+    }
+  },
+  "admin": {
+    "common": {
+      "action": "操作",
+      "actions": "操作",
+      "confirm": "确认",
+      "open": "打开",
+      "edit": "编辑",
+      "detail": "详情",
+      "id": "ID",
+      "yes": "是",
+      "no": "否",
+      "updating": "更新中...",
+      "queueing": "加入队列中...",
+      "notAvailable": "不可用",
+      "noHeartbeat": "无心跳",
+      "lastHeartbeat": "最近心跳",
+      "expiresAt": "到期",
+      "roles": {
+        "user": "用户",
+        "admin": "管理员"
+      },
+      "accountStatus": {
+        "active": "启用",
+        "suspended": "已停用"
+      },
+      "eventStatus": {
+        "success": "成功",
+        "failed": "失败"
+      },
+      "runtimeNodes": {
+        "worker": "Worker",
+        "rssScheduler": "RSS 调度器",
+        "contentScheduler": "内容调度器"
+      },
+      "runtimeStates": {
+        "healthy": "正常",
+        "stale": "过期",
+        "offline": "离线",
+        "unknown": "未知"
+      },
+      "queueName": {
+        "rssFetch": "RSS 抓取",
+        "contentExtract": "内容提取"
+      },
+      "queueState": {
+        "waiting": "等待中",
+        "active": "运行中",
+        "failed": "失败",
+        "delayed": "延迟",
+        "completed": "已完成"
+      },
+      "subscriptionTier": {
+        "free": "免费",
+        "basic": "基础",
+        "pro": "专业",
+        "max": "高级"
+      },
+      "billingInterval": {
+        "monthly": "按月",
+        "yearly": "按年"
+      },
+      "stripe": {
+        "customer": "客户",
+        "subscription": "订阅",
+        "price": "价格"
+      },
+      "age": {
+        "label": "时长",
+        "secondsAgo": "{value} 秒前",
+        "minutesAgo": "{value} 分钟前",
+        "hoursAgo": "{value} 小时前",
+        "secondsShort": "{value}秒",
+        "minutesShort": "{value}分",
+        "hoursShort": "{value}小时"
+      }
+    },
+    "operations": {
+      "metaTitle": "管理运维",
+      "overview": {
+        "title": "运维总览",
+        "description": "监控 AI 使用情况、队列健康状态和运行时心跳状态。",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "AI Token（7天）",
+            "description": "最近 7 天的 token 使用总量。"
+          },
+          "aiRequests7d": {
+            "title": "AI 请求（7天）",
+            "description": "最近 7 天的摘要请求总数。"
+          },
+          "aiFailures7d": {
+            "title": "AI 失败（7天）",
+            "description": "最近 7 天摘要失败次数。"
+          },
+          "failedQueueJobs": {
+            "title": "失败队列任务",
+            "description": "当前各工作队列中的失败任务数。"
+          },
+          "staleFeeds": {
+            "title": "过期订阅源",
+            "description": "已启用但等待抓取调度的订阅源。"
+          },
+          "extractionBacklog": {
+            "title": "提取积压",
+            "description": "等待内容提取的文章。"
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "运行时健康状态",
+        "description": "Worker 和调度器的心跳状态。"
+      },
+      "drillDown": {
+        "title": "深入查看",
+        "description": "打开详细页面以检查 AI 事件或执行队列操作。",
+        "openAiUsage": "打开 AI 使用情况",
+        "openSystemOps": "打开系统运维"
+      },
+      "recentFailedJobs": {
+        "title": "最近失败任务",
+        "description": "RSS 抓取和内容提取 worker 的最新队列失败记录。",
+        "empty": "队列历史中暂无最近失败任务。",
+        "noFailureReason": "没有可用的失败原因。",
+        "columns": {
+          "queue": "队列",
+          "job": "任务",
+          "failure": "失败原因",
+          "time": "时间"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "无法加载 AI 使用摘要。",
+        "systemOverview": "无法加载系统总览。",
+        "runtimeHealth": "无法加载运行时健康数据。",
+        "recentQueueFailures": "无法加载最近的队列失败记录。"
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "管理 AI 使用情况",
+      "page": {
+        "title": "AI 使用情况",
+        "description": "检查使用事件、近期失败和 AI 配置状态。",
+        "manageConfigs": "管理 AI 配置"
+      },
+      "summary": {
+        "title": "摘要（7天）",
+        "description": "用于管理支持可见性的 token 使用和失败趋势。",
+        "totalTokens": "总 Token",
+        "totalRequests": "总请求数",
+        "failures": "失败数",
+        "topUser": "最高用户",
+        "empty7Days": "最近 7 天没有记录到 AI 使用请求。"
+      },
+      "filters": {
+        "title": "筛选",
+        "description": "按用户、提供商、模型、状态和时间范围筛选。",
+        "from": "从",
+        "to": "到",
+        "user": {
+          "label": "用户",
+          "placeholder": "按姓名或邮箱搜索"
+        },
+        "provider": {
+          "label": "提供商",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "模型",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "状态",
+          "all": "全部状态"
+        }
+      },
+      "events": {
+        "title": "AI 事件",
+        "description": "近期摘要活动，包括成功/失败状态和安全的错误摘要。"
+      },
+      "table": {
+        "columns": {
+          "user": "用户",
+          "providerModel": "提供商 / 模型",
+          "status": "状态",
+          "tokens": "Token",
+          "duration": "耗时",
+          "errorSummary": "错误摘要",
+          "created": "创建时间"
+        },
+        "empty": "没有 AI 使用事件符合当前筛选条件。"
+      },
+      "configDialog": {
+        "title": "AI 配置控制",
+        "description": "查看配置归属并启用/停用单个配置。",
+        "empty": "没有 AI 配置符合当前筛选条件。",
+        "badges": {
+          "default": "默认"
+        },
+        "select": {
+          "title": "选择配置",
+          "description": "选择一个配置进行查看和启停。",
+          "placeholder": "选择一个 AI 配置"
+        },
+        "fields": {
+          "owner": "所有者",
+          "baseUrl": "基础 URL",
+          "defaultProviderUrl": "默认提供商 URL",
+          "updated": "更新时间"
+        },
+        "actions": {
+          "enable": "启用配置",
+          "disable": "停用配置",
+          "updating": "更新中..."
+        },
+        "confirm": {
+          "enableTitle": "启用这个 AI 配置？",
+          "disableTitle": "停用这个 AI 配置？",
+          "enableDescription": "启用 {name}。摘要请求可以再次使用此配置。",
+          "disableDescription": "停用 {name}。使用此配置的摘要请求将被阻止。"
+        }
+      },
+      "errors": {
+        "summary": "无法加载 AI 使用摘要。",
+        "events": "无法加载 AI 使用事件。",
+        "configs": "无法加载 AI 配置。",
+        "updateConfig": "无法更新此 AI 配置。"
+      }
+    },
+    "users": {
+      "metaTitle": "管理用户",
+      "page": {
+        "title": "管理用户",
+        "description": "查看用户账户、订阅状态和账户状态操作。"
+      },
+      "filters": {
+        "title": "筛选",
+        "description": "搜索用户，并按角色、账户状态或订阅等级缩小结果。",
+        "search": {
+          "label": "搜索",
+          "placeholder": "姓名或邮箱"
+        },
+        "role": {
+          "label": "角色",
+          "all": "全部角色"
+        },
+        "status": {
+          "label": "状态",
+          "all": "全部状态"
+        },
+        "tier": {
+          "label": "等级",
+          "all": "全部等级"
+        }
+      },
+      "directory": {
+        "title": "用户目录",
+        "description": "打开用户行以查看详情并更新账户状态。"
+      },
+      "table": {
+        "columns": {
+          "user": "用户",
+          "role": "角色",
+          "status": "状态",
+          "subscription": "订阅",
+          "feeds": "订阅源",
+          "created": "创建时间"
+        },
+        "empty": "没有用户符合当前筛选条件。请调整角色、状态或套餐筛选。",
+        "hasMore": "还有更多用户可用。请优化筛选条件以缩小结果范围。"
+      },
+      "detail": {
+        "title": "用户详情",
+        "description": "查看账户状态、订阅详情和支持操作。",
+        "empty": "请选择一个用户以查看账户详情。",
+        "accountSummary": {
+          "title": "账户摘要",
+          "description": "快速查看会员信息和订阅源使用情况。",
+          "created": "创建时间",
+          "updated": "更新时间",
+          "feeds": "订阅源",
+          "suspendedAt": "停用时间"
+        },
+        "subscription": {
+          "title": "订阅",
+          "description": "套餐、计费周期和当前到期时间。",
+          "plan": "套餐",
+          "status": "订阅状态",
+          "expires": "到期时间"
+        },
+        "actions": {
+          "title": "账户操作",
+          "description": "停用或重新激活用户账户。",
+          "suspendReasonPlaceholder": "可选的停用原因",
+          "suspendReasonHint": "此原因会显示给管理员，并写入审计日志。",
+          "suspensionReason": "停用原因",
+          "noReason": "未提供原因。",
+          "suspend": "停用用户",
+          "suspending": "停用中...",
+          "reactivate": "重新激活用户",
+          "reactivating": "重新激活中..."
+        },
+        "confirm": {
+          "thisUser": "该用户",
+          "suspend": {
+            "title": "停用该用户？",
+            "description": "停用 {name}。在管理员重新激活之前，他们将无法访问受保护路由。",
+            "descriptionWithReason": "停用 {name}。原因“{reason}”将保存到管理员审计日志中。"
+          },
+          "reactivate": {
+            "title": "重新激活该用户？",
+            "description": "恢复 {name} 的访问权限。受保护路由会立即再次可用。"
+          }
+        }
+      },
+      "errors": {
+        "list": "无法加载管理用户。请刷新后重试。",
+        "suspend": "无法停用该用户。请重试。",
+        "reactivate": "无法重新激活该用户。请重试。"
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "管理订阅",
+      "page": {
+        "title": "管理订阅",
+        "description": "查看计费状态并应用面向支持的订阅调整。"
+      },
+      "filters": {
+        "title": "筛选",
+        "description": "按用户搜索，并按套餐、状态、周期或取消标记缩小计费范围。",
+        "search": {
+          "label": "搜索",
+          "placeholder": "姓名或邮箱"
+        },
+        "tier": {
+          "label": "等级",
+          "all": "全部等级"
+        },
+        "billing": {
+          "label": "计费",
+          "all": "全部计费方式"
+        },
+        "cancelFlag": {
+          "label": "取消标记",
+          "all": "全部标记",
+          "canceling": "取消中",
+          "continuing": "继续中"
+        }
+      },
+      "directory": {
+        "title": "订阅目录",
+        "description": "打开一行以查看支持控制并保存更改。"
+      },
+      "table": {
+        "columns": {
+          "user": "用户",
+          "plan": "套餐",
+          "status": "状态",
+          "expires": "到期时间",
+          "stripeIds": "Stripe ID"
+        },
+        "cancelAtPeriodEnd": "周期结束时取消",
+        "empty": "没有订阅符合当前筛选条件。请调整计费筛选以查看更多。",
+        "hasMore": "还有更多订阅。请收窄筛选范围。"
+      },
+      "edit": {
+        "title": "编辑订阅",
+        "description": "支持套餐变更、到期时间调整和取消标记。",
+        "empty": "请选择一条订阅记录以编辑支持设置。",
+        "currentExpiry": "当前到期时间",
+        "fields": {
+          "tier": "等级",
+          "expiry": "到期时间",
+          "cancellation": "周期结束时取消"
+        },
+        "controls": {
+          "title": "支持控制",
+          "description": "为该用户调整计费和支持标记。",
+          "tierPlaceholder": "选择等级",
+          "cancelAtPeriodEndHint": "在当前已付款周期结束前保留订阅。",
+          "save": "保存更改",
+          "saving": "保存中...",
+          "noPendingChanges": "没有待保存的更改。",
+          "pendingFields": "待变更字段：{fields}。"
+        },
+        "confirm": {
+          "title": "保存订阅更改？",
+          "confirmLabel": "保存订阅更改",
+          "theseChanges": "这些更改",
+          "description": "为 {name} 应用 {fields}。这些更新将记录到管理员审计日志。",
+          "descriptionFallback": "应用待处理的订阅更改。"
+        }
+      },
+      "errors": {
+        "list": "无法加载订阅。请刷新后重试。",
+        "update": "无法更新此订阅。请检查更改后重试。"
+      }
+    },
+    "feeds": {
+      "metaTitle": "管理订阅源",
+      "page": {
+        "title": "管理订阅源",
+        "description": "跟踪全系统订阅源健康状态并触发运维队列操作。"
+      },
+      "filters": {
+        "title": "筛选",
+        "description": "搜索订阅源，并按启用状态、错误、过期计划或提取失败进行聚焦。",
+        "search": {
+          "label": "搜索",
+          "placeholder": "订阅源标题或 URL"
+        },
+        "enabled": {
+          "label": "启用",
+          "all": "全部订阅源"
+        },
+        "errors": {
+          "label": "错误",
+          "all": "全部错误状态",
+          "hasErrors": "有错误",
+          "healthy": "健康"
+        },
+        "stale": {
+          "label": "过期",
+          "all": "全部新鲜度状态",
+          "stale": "过期",
+          "scheduled": "按计划"
+        },
+        "extraction": {
+          "label": "提取",
+          "all": "全部提取状态",
+          "hasFailures": "有失败",
+          "healthy": "健康"
+        }
+      },
+      "operations": {
+        "title": "订阅源运维",
+        "description": "使用快捷操作或打开订阅源以查看详细运维上下文。"
+      },
+      "table": {
+        "columns": {
+          "feed": "订阅源",
+          "enabled": "启用",
+          "health": "健康状态",
+          "coverage": "覆盖范围",
+          "lastFetched": "最近抓取"
+        },
+        "health": {
+          "errors": "错误：{count}",
+          "extractionFailures": "提取失败：{count}"
+        },
+        "coverage": {
+          "subscriptions": "{count} 个订阅",
+          "articles": "{count} 篇文章"
+        },
+        "nextFetch": "下次抓取",
+        "empty": "没有订阅源符合当前筛选条件。请放宽健康或启用筛选。",
+        "hasMore": "还有更多订阅源。请优化筛选条件以缩小结果。",
+        "actions": {
+          "retryFetch": "重试抓取",
+          "retryExtraction": "重试提取"
+        },
+        "confirm": {
+          "defaultTitle": "确认管理操作",
+          "defaultDescription": "确认此管理操作。",
+          "retryFetch": {
+            "title": "重试 RSS 抓取？",
+            "description": "立即为 {label} 加入一次 RSS 抓取重试任务。",
+            "confirmLabel": "加入 RSS 重试任务"
+          },
+          "retryExtraction": {
+            "title": "重试订阅源提取？",
+            "description": "为 {label} 中符合条件的文章加入提取重试任务。",
+            "confirmLabel": "加入提取重试任务"
+          },
+          "enable": {
+            "title": "启用此订阅源？",
+            "description": "启用 {label}，以便计划抓取可以恢复。",
+            "confirmLabel": "启用订阅源"
+          },
+          "disable": {
+            "title": "停用此订阅源？",
+            "description": "停用 {label}。计划抓取会停止，直到管理员重新启用或强制重试。",
+            "confirmLabel": "停用订阅源"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "管理订阅源详情",
+        "page": {
+          "title": "订阅源运维详情",
+          "description": "检查文章健康状态，并为此订阅源触发定向重试。",
+          "backToFeeds": "返回订阅源列表"
+        },
+        "empty": "订阅源详情不可用。",
+        "summary": {
+          "lastFetched": "最近抓取",
+          "nextFetch": "下次抓取",
+          "subscriptions": "订阅数",
+          "articles": "文章数",
+          "rssErrors": "RSS 错误：{count}",
+          "extractionFailures": "提取失败：{count}",
+          "lastError": "最近错误",
+          "noRecentErrors": "最近没有 RSS 错误。"
+        },
+        "operations": {
+          "title": "操作",
+          "description": "切换订阅源状态并触发队列重试。",
+          "feedEnabled": "订阅源已启用",
+          "feedEnabledHint": "被停用的订阅源会被调度器跳过，除非被强制执行。",
+          "retryFetch": "重试 RSS 抓取",
+          "retryFeedExtractionQueue": "重试订阅源提取队列"
+        },
+        "recentArticles": {
+          "title": "最近文章",
+          "description": "最新来源文章及提取状态。",
+          "columns": {
+            "article": "文章",
+            "published": "发布时间",
+            "status": "状态"
+          },
+          "empty": "该订阅源没有最近文章。",
+          "attempts": "尝试次数：{count}",
+          "retryArticle": "重试文章",
+          "status": {
+            "extracted": "已提取",
+            "pending": "待处理",
+            "needsAttention": "需要关注"
+          }
+        },
+        "recentFailures": {
+          "title": "最近提取失败",
+          "description": "最近提取失败的文章。",
+          "columns": {
+            "article": "文章",
+            "error": "错误",
+            "updated": "更新时间"
+          },
+          "empty": "最近没有提取失败。",
+          "attempts": "尝试次数：{count}",
+          "retry": "重试"
+        },
+        "confirm": {
+          "thisFeed": "该订阅源",
+          "defaultTitle": "确认管理操作",
+          "defaultDescription": "确认此管理操作。",
+          "retryFetch": {
+            "title": "重试 RSS 抓取？",
+            "description": "立即为 {label} 加入一次 RSS 抓取重试任务。",
+            "confirmLabel": "加入 RSS 重试任务"
+          },
+          "retryFeedExtraction": {
+            "title": "重试订阅源提取？",
+            "description": "为 {label} 中符合条件的文章加入提取重试任务。",
+            "confirmLabel": "加入提取重试任务"
+          },
+          "retryArticleExtraction": {
+            "title": "重试文章提取？",
+            "description": "为 {title} 加入一次新的提取尝试任务。",
+            "confirmLabel": "加入文章重试任务"
+          },
+          "enable": {
+            "title": "启用此订阅源？",
+            "description": "启用 {label}，以便计划抓取可以恢复。",
+            "confirmLabel": "启用订阅源"
+          },
+          "disable": {
+            "title": "停用此订阅源？",
+            "description": "停用 {label}。计划抓取会停止，直到管理员重新启用或强制重试。",
+            "confirmLabel": "停用订阅源"
+          }
+        },
+        "errors": {
+          "load": "无法加载订阅源详情。请刷新后重试。",
+          "retryArticleExtraction": "无法加入文章提取重试任务。请重试。"
+        }
+      },
+      "errors": {
+        "list": "无法加载订阅源。请刷新后重试。",
+        "updateState": "无法更新此订阅源状态。请重试。",
+        "retryFetch": "无法加入 RSS 抓取重试任务。请重试。",
+        "retryExtraction": "无法加入订阅源提取重试任务。请重试。"
+      }
+    },
+    "systemOps": {
+      "metaTitle": "管理系统运维",
+      "page": {
+        "title": "系统运维",
+        "description": "检查队列健康状态，并安全执行单项运维操作。"
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "失败任务",
+            "description": "当前各队列中的失败任务数。"
+          },
+          "staleFeeds": {
+            "title": "过期订阅源",
+            "description": "等待刷新的已启用订阅源。"
+          },
+          "extractionBacklog": {
+            "title": "提取积压",
+            "description": "等待提取的文章。"
+          },
+          "rssWaitingJobs": {
+            "title": "RSS 等待任务",
+            "description": "等待处理的 RSS 抓取任务。"
+          },
+          "contentWaitingJobs": {
+            "title": "内容等待任务",
+            "description": "等待处理的内容提取任务。"
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "运行时心跳",
+          "description": "来自 Redis 心跳键的 Worker 和调度器存活状态。"
+        }
+      },
+      "stripe": {
+        "title": "Stripe 配置",
+        "description": "在此管理 Stripe 密钥和套餐价格 ID，而不是依赖服务器环境变量。",
+        "status": {
+          "label": "状态",
+          "configured": "已配置",
+          "incomplete": "未完成",
+          "secretKey": "密钥",
+          "webhookSecret": "Webhook 密钥",
+          "missing": "缺失"
+        },
+        "form": {
+          "publishableKey": "可发布密钥",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "密钥",
+          "secretPlaceholder": "留空可保留当前 sk_*",
+          "webhookSecret": "Webhook 密钥",
+          "webhookPlaceholder": "留空可保留当前 whsec_*",
+          "basicMonthly": "Basic 月付价格",
+          "basicYearly": "Basic 年付价格",
+          "proMonthly": "Pro 月付价格",
+          "proYearly": "Pro 年付价格",
+          "maxMonthly": "Max 月付价格",
+          "maxYearly": "Max 年付价格"
+        },
+        "lastUpdated": "最后更新",
+        "webhookEndpoint": "Webhook 地址",
+        "save": "保存 Stripe 配置",
+        "saving": "保存中...",
+        "successSaved": "Stripe 配置已保存。",
+        "secretHint": "如果你只想更新价格 ID，可将密钥字段留空。"
+      },
+      "manualActions": {
+        "title": "手动操作",
+        "description": "按 ID 触发一次订阅源抓取或一次内容提取。",
+        "feedSourceId": "订阅源 ID",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "来源文章 ID",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "触发抓取",
+        "triggerExtract": "触发提取",
+        "errors": {
+          "feedSourceIdRequired": "必须提供订阅源 ID。",
+          "sourceArticleIdRequired": "必须提供来源文章 ID。"
+        }
+      },
+      "queueJobs": {
+        "title": "队列任务",
+        "description": "查看队列状态，并逐个重试失败任务。",
+        "filters": {
+          "queue": "队列",
+          "state": "状态",
+          "allQueues": "全部队列",
+          "allStates": "全部状态"
+        },
+        "columns": {
+          "queue": "队列",
+          "job": "任务",
+          "state": "状态",
+          "attempts": "尝试次数",
+          "failure": "失败原因",
+          "created": "创建时间"
+        },
+        "actions": {
+          "retry": "重试"
+        },
+        "empty": "没有队列任务符合所选筛选条件。"
+      },
+      "confirm": {
+        "defaultTitle": "确认操作",
+        "defaultDescription": "确认此操作。",
+        "retryJob": {
+          "title": "重试此失败任务？",
+          "description": "为 {queueName} 中的任务 {jobId} 加入重试。",
+          "confirmLabel": "重试任务"
+        },
+        "triggerFeedFetch": {
+          "title": "立即触发订阅源抓取？",
+          "description": "为订阅源 {feedSourceId} 加入一次立即 RSS 抓取任务。",
+          "confirmLabel": "触发订阅源抓取"
+        },
+        "triggerContentExtract": {
+          "title": "立即触发内容提取？",
+          "description": "为来源文章 {sourceArticleId} 加入一次内容提取任务。",
+          "confirmLabel": "触发提取"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "无法加载系统运行摘要。",
+        "queueJobs": "无法加载队列任务。",
+        "stripeLoad": "无法加载 Stripe 配置。",
+        "stripeSave": "无法保存 Stripe 配置。",
+        "executeOperation": "无法执行此系统操作。"
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminUserListItem = {
   id: string;
@@ -37,6 +38,9 @@ const props = defineProps<{
   selectedUserId: string | null;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   select: [userId: string];
 }>();
@@ -49,14 +53,17 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatSubscription = (item: AdminUserListItem) => {
-  const tier = item.subscription.tier.toUpperCase();
+  const tier = t(`admin.common.subscriptionTier.${item.subscription.tier}`);
 
   if (item.subscription.billingInterval) {
-    return `${tier} · ${item.subscription.billingInterval}`;
+    return `${tier} · ${t(`admin.common.billingInterval.${item.subscription.billingInterval}`)}`;
   }
 
   return tier;
@@ -77,6 +84,14 @@ const avatarFallback = (name: string) =>
     .join("")
     .slice(0, 2)
     .toUpperCase();
+
+const formatRole = (role: AdminUserListItem["role"]) =>
+  role === "ADMIN" ? t("admin.common.roles.admin") : t("admin.common.roles.user");
+
+const formatAccountStatus = (status: AdminUserListItem["status"]) =>
+  status === "SUSPENDED"
+    ? t("admin.common.accountStatus.suspended")
+    : t("admin.common.accountStatus.active");
 </script>
 
 <template>
@@ -85,13 +100,13 @@ const avatarFallback = (name: string) =>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Subscription</TableHead>
-            <TableHead>Feeds</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.user") }}</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.role") }}</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.status") }}</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.subscription") }}</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.feeds") }}</TableHead>
+            <TableHead>{{ t("admin.users.table.columns.created") }}</TableHead>
+            <TableHead class="text-right">{{ t("admin.common.actions") }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -126,7 +141,7 @@ const avatarFallback = (name: string) =>
           </TableRow>
           <TableRow v-else-if="items.length === 0">
             <TableCell :colspan="7" class="py-8 text-center text-sm text-muted-foreground">
-              No users match the current filters. Adjust role, status, or plan filters to widen the result.
+              {{ t("admin.users.table.empty") }}
             </TableCell>
           </TableRow>
           <TableRow
@@ -148,16 +163,19 @@ const avatarFallback = (name: string) =>
               </div>
             </TableCell>
             <TableCell>
-              <Badge :variant="roleBadgeVariant(item.role)">{{ item.role }}</Badge>
+              <Badge :variant="roleBadgeVariant(item.role)">{{ formatRole(item.role) }}</Badge>
             </TableCell>
             <TableCell>
-              <Badge variant="outline" :class="statusBadgeClass(item.status)">{{ item.status }}</Badge>
+              <Badge variant="outline" :class="statusBadgeClass(item.status)">
+                {{ formatAccountStatus(item.status) }}
+              </Badge>
             </TableCell>
             <TableCell>
               <div class="space-y-1">
                 <p class="text-sm font-medium">{{ formatSubscription(item) }}</p>
                 <p class="text-xs text-muted-foreground">
-                  {{ item.subscription.status }} · expires {{ formatDateTime(item.subscription.expiresAt) }}
+                  {{ item.subscription.status }} ·
+                  {{ t("admin.common.expiresAt") }} {{ formatDateTime(item.subscription.expiresAt) }}
                 </p>
               </div>
             </TableCell>
@@ -167,7 +185,7 @@ const avatarFallback = (name: string) =>
             </TableCell>
             <TableCell class="text-right">
               <Button variant="outline" size="sm" @click="emit('select', item.id)">
-                Details
+                {{ t("admin.common.detail") }}
               </Button>
             </TableCell>
           </TableRow>
@@ -176,7 +194,7 @@ const avatarFallback = (name: string) =>
     </div>
 
     <p v-if="hasMore" class="text-xs text-muted-foreground">
-      More users are available. Refine filters to narrow the result set.
+      {{ t("admin.users.table.hasMore") }}
     </p>
   </div>
 </template>

@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import ArticleListPanel from "@/components/articles/ArticleListPanel.vue";
 
+const { t } = useI18n();
+
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Articles",
+  titleKey: "layout.titles.articles",
 });
 </script>
 
 <template>
-  <ArticleListPanel title="All feeds" />
+  <ArticleListPanel :title="t('articles.list.allFeedsTitle')" />
 </template>

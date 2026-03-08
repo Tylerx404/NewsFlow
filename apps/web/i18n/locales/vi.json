@@ -1,0 +1,1285 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "RSS AI cá nhân"
+  },
+  "locale": {
+    "label": "Ngôn ngữ",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "Thêm",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "refresh": "Làm mới",
+      "manage": "Quản lý",
+      "loading": "Đang tải..."
+    },
+    "states": {
+      "enabled": "Bật",
+      "disabled": "Tắt"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "Tổng quan",
+      "articles": "Bài viết",
+      "settings": "Cài đặt",
+      "reader": "Đọc bài"
+    }
+  },
+  "shell": {
+    "groups": {
+      "platform": "Nền tảng",
+      "navigation": "Điều hướng",
+      "admin": "Quản trị",
+      "yourFeeds": "Nguồn feed của bạn",
+      "discover": "Khám phá"
+    },
+    "nav": {
+      "toggle": "Bật/Tắt",
+      "moreActions": "Thao tác khác"
+    },
+    "navigation": {
+      "dashboard": "Tổng quan",
+      "articles": "Bài viết",
+      "settings": "Cài đặt",
+      "operations": "Vận hành",
+      "aiUsage": "Sử dụng AI",
+      "systemOps": "Hệ thống",
+      "users": "Người dùng",
+      "subscriptions": "Gói đăng ký",
+      "feeds": "Feed"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "Thêm feed",
+      "loading": "Đang tải feed...",
+      "empty": "Chưa có feed nào. Hãy thêm feed RSS đầu tiên ở trên.",
+      "actions": {
+        "refreshNow": "Làm mới ngay",
+        "manageFeeds": "Quản lý feed",
+        "removeFeed": "Xóa feed"
+      },
+      "confirm": {
+        "remove": "Xóa feed \"{title}\"?"
+      }
+    },
+    "discover": {
+      "empty": "Bạn đã thêm tất cả feed gợi ý."
+    },
+    "errors": {
+      "addFeed": "Không thể thêm feed.",
+      "refreshFeed": "Không thể làm mới feed.",
+      "removeFeed": "Không thể xóa feed."
+    },
+    "user": {
+      "defaultName": "Người dùng NewsFlow",
+      "personalSettings": "Cài đặt cá nhân",
+      "appearance": "Giao diện",
+      "logOut": "Đăng xuất"
+    }
+  },
+  "auth": {
+    "common": {
+      "name": "Tên",
+      "namePlaceholder": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPlaceholder": "name{'@'}example.com",
+      "password": "Mật khẩu",
+      "orContinueWith": "Hoặc tiếp tục với",
+      "heroImageAlt": "Hình minh họa xác thực",
+      "termsPrefix": "Khi nhấn tiếp tục, bạn đồng ý với",
+      "termsOfService": "Điều khoản dịch vụ",
+      "termsAnd": "và",
+      "privacyPolicy": "Chính sách quyền riêng tư"
+    },
+    "login": {
+      "title": "Chào mừng quay lại",
+      "subtitle": "Đăng nhập vào tài khoản NewsFlow của bạn",
+      "forgotPassword": "Quên mật khẩu?",
+      "submit": "Đăng nhập",
+      "submitting": "Đang đăng nhập...",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký",
+      "sso": {
+        "apple": "Đăng nhập với Apple",
+        "google": "Đăng nhập với Google",
+        "meta": "Đăng nhập với Meta"
+      },
+      "errors": {
+        "generic": "Không thể đăng nhập lúc này. Vui lòng thử lại.",
+        "invalidCredentials": "Email hoặc mật khẩu không đúng."
+      }
+    },
+    "signup": {
+      "title": "Tạo tài khoản",
+      "subtitle": "Nhập email của bạn để tạo tài khoản",
+      "emailDescription": "Chúng tôi sẽ dùng email này để liên hệ. Chúng tôi không chia sẻ email của bạn.",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "passwordHint": "Mật khẩu tối thiểu 8 ký tự.",
+      "submit": "Tạo tài khoản",
+      "submitting": "Đang tạo tài khoản...",
+      "haveAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "sso": {
+        "apple": "Đăng ký với Apple",
+        "google": "Đăng ký với Google",
+        "meta": "Đăng ký với Meta"
+      },
+      "errors": {
+        "generic": "Không thể tạo tài khoản lúc này. Vui lòng thử lại.",
+        "passwordConfirmationMismatch": "Xác nhận mật khẩu không khớp.",
+        "createFailed": "Không thể tạo tài khoản của bạn."
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "Trình đọc RSS cá nhân hóa bằng AI.",
+      "login": "Đăng nhập",
+      "signUp": "Đăng ký",
+      "pricing": "Bảng giá"
+    },
+    "pricing": {
+      "badge": "Bảng giá",
+      "title": "Chọn Gói Phát Triển",
+      "subtitle": "Chọn gói và truy cập ngay sau khi thanh toán. Nâng cấp khi workflow AI của bạn cần tốc độ và dung lượng cao hơn.",
+      "bestValue": "Đáng giá nhất",
+      "billing": {
+        "monthly": "Thanh toán theo tháng",
+        "yearly": "Thanh toán theo năm"
+      },
+      "suffix": {
+        "month": "tháng",
+        "year": "năm"
+      },
+      "meta": {
+        "monthly": "Theo tháng, có thể hủy bất cứ lúc nào.",
+        "yearly": "Theo năm, tương đương khoảng {price}/tháng.",
+        "discount": "Tiết kiệm khoảng {percent}% khi thanh toán năm."
+      },
+      "actions": {
+        "choosePlan": "Chọn gói",
+        "createAccount": "Tạo tài khoản",
+        "backHome": "Về trang chủ",
+        "goSubscriptionSettings": "Đến cài đặt gói đăng ký"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "Gói cơ bản cho nhu cầu thử nghiệm và khám phá cá nhân.",
+          "features": {
+            "coreRss": "Quy trình đọc RSS cốt lõi",
+            "aiOccasional": "Tóm tắt AI cho nhu cầu thỉnh thoảng",
+            "instantAccess": "Truy cập ngay sau khi thanh toán"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "Khuyến nghị cho nhu cầu tóm tắt AI thường xuyên và đọc hằng ngày.",
+          "features": {
+            "everythingBasic": "Bao gồm toàn bộ Basic",
+            "higherAiLimits": "Hạn mức AI cao hơn",
+            "instantAccess": "Truy cập ngay sau khi thanh toán"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "Cho người dùng chuyên sâu cần hạn mức cao nhất và hỗ trợ ưu tiên.",
+          "features": {
+            "everythingPro": "Bao gồm toàn bộ Pro",
+            "highestAiCapacity": "Dung lượng AI cao nhất",
+            "prioritySupport": "Kênh hỗ trợ ưu tiên"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "Giao diện",
+        "description": "Chế độ màu, tông đọc, kiểu chữ và bố cục bài viết."
+      },
+      "personal": {
+        "label": "Cá nhân",
+        "description": "Hồ sơ, mật khẩu, phiên đăng nhập và tổng quan gói dịch vụ."
+      },
+      "ai": {
+        "label": "Hồ sơ AI",
+        "description": "Nhà cung cấp, model và cấu hình mặc định cho tác vụ tóm tắt."
+      },
+      "feeds": {
+        "label": "Quản lý Feed",
+        "description": "Thông tin feed, trạng thái hoạt động, làm mới và dọn dẹp."
+      }
+    },
+    "index": {
+      "redirecting": "Đang chuyển đến cài đặt..."
+    },
+    "appearance": {
+      "metaTitle": "Cài đặt giao diện",
+      "page": {
+        "readingExperience": {
+          "title": "Trải nghiệm đọc",
+          "description": "Tinh chỉnh giao diện, kiểu chữ và bố cục để phù hợp với thói quen đọc của bạn."
+        },
+        "fields": {
+          "themeMode": "Chế độ giao diện",
+          "colorPreset": "Bảng màu",
+          "fontFamily": "Phông chữ",
+          "fontSize": "Cỡ chữ",
+          "lineHeight": "Giãn dòng",
+          "readingWidth": "Độ rộng đọc"
+        },
+        "savedNotice": "Thiết lập được lưu trên trình duyệt và áp dụng ngay.",
+        "resetDefaults": "Khôi phục mặc định"
+      },
+      "preview": {
+        "title": "Xem trước trực tiếp",
+        "description": "Xem trước kiểu chữ và khoảng cách trước khi đọc toàn bộ bài viết.",
+        "sample": {
+          "heading": "Bản tin sáng: Thị trường mở cửa trái chiều",
+          "highlightsLabel": "Điểm nổi bật:",
+          "paragraph1": "Các chỉ số toàn cầu mở cửa trái chiều trong khi nhóm năng lượng tăng tốt. Chuyên gia dự báo biến động vẫn ở mức cao.",
+          "paragraph2Prefix": "Đoạn này hiển thị",
+          "italic": "nhấn mạnh in nghiêng",
+          "bold": "đoạn in đậm",
+          "paragraph2Suffix": " và nhịp đọc nội dung tiêu chuẩn.",
+          "quote": "Người đọc cần giữ được sự tập trung trong thời gian dài mà không mỏi mắt.",
+          "bullet1": "Cấu trúc chữ nhất quán hơn",
+          "bullet2": "Khoảng cách giữa các phần rõ ràng hơn",
+          "bullet3": "Liên kết nguồn dễ nhìn hơn",
+          "openSourceReport": "Mở báo cáo nguồn"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "Theo hệ thống",
+            "description": "Theo cài đặt giao diện của thiết bị."
+          },
+          "light": {
+            "label": "Sáng",
+            "description": "Luôn dùng giao diện sáng."
+          },
+          "dark": {
+            "label": "Tối",
+            "description": "Luôn dùng giao diện tối."
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "Trung tính",
+            "description": "Tương phản cân bằng với tông trung tính."
+          },
+          "paper": {
+            "label": "Giấy ấm",
+            "description": "Nền ấm dịu cho đọc lâu."
+          },
+          "slate": {
+            "label": "Slate",
+            "description": "Tông lạnh với tương phản chữ sắc nét."
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "Sans hiện đại",
+            "description": "Chữ sans-serif sạch, dễ đọc."
+          },
+          "serif": {
+            "label": "Serif biên tập",
+            "description": "Nhịp serif kiểu tạp chí cho bài dài."
+          },
+          "mono": {
+            "label": "Monospace",
+            "description": "Chữ đơn cách cho nội dung kỹ thuật dày."
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "Nhỏ",
+            "description": "Bố cục gọn, hiển thị nhiều nội dung hơn."
+          },
+          "md": {
+            "label": "Vừa",
+            "description": "Kích thước cân bằng cho đọc hằng ngày."
+          },
+          "lg": {
+            "label": "Lớn",
+            "description": "Chữ lớn hơn, dễ quét nhanh."
+          },
+          "xl": {
+            "label": "Rất lớn",
+            "description": "Tối đa khả năng đọc với thân bài lớn hơn."
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "Gọn",
+            "description": "Khoảng dòng hẹp để đọc dày nội dung."
+          },
+          "normal": {
+            "label": "Chuẩn",
+            "description": "Khoảng cách chuẩn cho đa số bài viết."
+          },
+          "relaxed": {
+            "label": "Thoáng",
+            "description": "Nhiều khoảng dọc hơn cho đọc chậm."
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "Hẹp",
+            "description": "Dòng ngắn giúp tập trung."
+          },
+          "normal": {
+            "label": "Chuẩn",
+            "description": "Độ rộng cân bằng cho nội dung hỗn hợp."
+          },
+          "wide": {
+            "label": "Rộng",
+            "description": "Nhiều không gian ngang cho media phong phú."
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "Quản lý Feed",
+      "page": {
+        "title": "Quản lý Feed",
+        "description": "Cập nhật thông tin feed, bật/tắt hoạt động, làm mới hoặc xóa feed."
+      },
+      "labels": {
+        "tableCaption": "Bảng quản lý feed với metadata và thao tác feed.",
+        "customTitle": "Tiêu đề tùy chỉnh",
+        "category": "Danh mục",
+        "unread": "Chưa đọc",
+        "lastFetched": "Lần fetch gần nhất",
+        "errors": "Lỗi",
+        "active": "Hoạt động",
+        "actions": "Thao tác",
+        "useSourceTitle": "Dùng tiêu đề nguồn",
+        "loading": "Đang tải feed...",
+        "empty": "Không có feed nào.",
+        "never": "Chưa từng"
+      },
+      "actions": {
+        "save": "Lưu",
+        "saving": "Đang lưu...",
+        "refresh": "Làm mới",
+        "refreshing": "Đang làm mới...",
+        "delete": "Xóa",
+        "deleteAria": "Xóa feed {title}",
+        "deleting": "Đang xóa...",
+        "deleteFeed": "Xóa feed"
+      },
+      "dialogs": {
+        "deleteTitle": "Xóa feed này?",
+        "deleteDescriptionWithTitle": "Feed \"{title}\" sẽ bị xóa.",
+        "cannotUndo": "Hành động này không thể hoàn tác."
+      },
+      "errors": {
+        "update": "Không thể cập nhật feed.",
+        "refresh": "Không thể làm mới feed.",
+        "delete": "Không thể xóa feed."
+      }
+    },
+    "ai": {
+      "metaTitle": "Hồ sơ AI",
+      "page": {
+        "title": "Hồ sơ AI",
+        "description": "Quản lý hồ sơ mặc định cho tác vụ tóm tắt trong trình đọc."
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "Đang tải hồ sơ...",
+        "noProfiles": "Chưa có hồ sơ nào. Hãy tạo để bật tóm tắt AI.",
+        "default": "Mặc định",
+        "currentKey": "Khóa hiện tại",
+        "model": "Model",
+        "loadingModels": "Đang tải model...",
+        "selectModel": "Chọn model",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "Để trống để dùng mặc định của nhà cung cấp",
+        "newApiKey": "API key mới",
+        "keepCurrentKey": "Để trống để giữ key hiện tại",
+        "mainOpenAi": "OpenAI chính",
+        "provider": "Nhà cung cấp",
+        "selectProvider": "Chọn nhà cung cấp",
+        "selectToLoadModels": "Mở để tải model",
+        "apiKey": "API key",
+        "optional": "tùy chọn",
+        "defaultPrefix": "Mặc định",
+        "canCustomizeByok": "có thể tùy chỉnh cho BYOK",
+        "managedAutomatically": "được hệ thống quản lý"
+      },
+      "actions": {
+        "createProfile": "Tạo hồ sơ",
+        "setDefault": "Đặt mặc định",
+        "setting": "Đang đặt...",
+        "saveChanges": "Lưu thay đổi",
+        "saving": "Đang lưu...",
+        "deleting": "Đang xóa...",
+        "deleteProfile": "Xóa hồ sơ",
+        "deleteAria": "Xóa hồ sơ {name}",
+        "creating": "Đang tạo..."
+      },
+      "dialogs": {
+        "createTitle": "Tạo hồ sơ",
+        "createDescription": "Cấu hình nhà cung cấp và model. API key được mã hóa ở server.",
+        "deleteTitle": "Xóa hồ sơ AI?",
+        "deleteDescriptionWithName": "Hồ sơ \"{name}\" sẽ bị xóa.",
+        "cannotUndo": "Hành động này không thể hoàn tác."
+      },
+      "errors": {
+        "create": "Không thể tạo hồ sơ AI.",
+        "fetchModels": "Không thể tải danh sách model.",
+        "loadModels": "Không thể tải model.",
+        "setDefault": "Không thể đặt hồ sơ mặc định.",
+        "nameRequired": "Tên là bắt buộc.",
+        "modelRequired": "Model là bắt buộc.",
+        "update": "Không thể cập nhật hồ sơ.",
+        "delete": "Không thể xóa hồ sơ."
+      }
+    }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "Bài viết mới nhất",
+      "allFeedsTitle": "Tất cả feed",
+      "subtitle": "Đọc, lưu và tóm tắt feed của bạn bằng AI.",
+      "searchPlaceholder": "Tìm theo tiêu đề, trích đoạn, liên kết",
+      "stats": {
+        "total": "Tổng",
+        "unread": "Chưa đọc",
+        "saved": "Đã lưu"
+      },
+      "filters": {
+        "all": "Tất cả",
+        "unread": "Chưa đọc",
+        "saved": "Đã lưu"
+      },
+      "loadingArticle": "Đang tải bài viết...",
+      "empty": "Không có bài viết cho bộ lọc này.",
+      "badges": {
+        "saved": "Đã lưu",
+        "unread": "Chưa đọc"
+      },
+      "noExcerpt": "Không có trích đoạn.",
+      "actions": {
+        "markRead": "Đánh dấu đã đọc",
+        "unsave": "Bỏ lưu",
+        "save": "Lưu",
+        "openReader": "Mở trình đọc"
+      },
+      "loadingMore": "Đang tải thêm..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "Bài viết từ Feed",
+      "panelTitle": "Bài viết feed"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "Không thể tóm tắt bài viết lúc này."
+      },
+      "loadingArticle": "Đang tải bài viết...",
+      "actions": {
+        "openOriginal": "Mở bài gốc",
+        "aiSummarize": "Tóm tắt AI"
+      },
+      "noAiProfile": "Chưa cấu hình hồ sơ AI.",
+      "addAiProfile": "Thêm trong cài đặt AI",
+      "generatingSummary": "Đang tạo tóm tắt...",
+      "tokensUsed": "Token đã dùng: {count}",
+      "streaming": "Đang stream phản hồi...",
+      "fullContentUnavailable": "Không có nội dung đầy đủ",
+      "noExcerpt": "Bài viết này chưa có trích đoạn.",
+      "readingAppearance": {
+        "title": "Giao diện đọc",
+        "subtitle": "Điều chỉnh kiểu chữ và khoảng cách khi đọc.",
+        "fontFamily": "Phông chữ",
+        "fontSize": "Cỡ chữ",
+        "lineHeight": "Giãn dòng",
+        "readingWidth": "Độ rộng đọc",
+        "needFullControls": "Cần đầy đủ tùy chọn chủ đề và màu sắc?",
+        "openAppearanceSettings": "Mở cài đặt giao diện"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Tổng quan tin tức",
+      "subtitle": "Theo dõi khối lượng đọc, tình trạng feed và truy cập nhanh workflow chính.",
+      "neverFetched": "Chưa từng fetch"
+    },
+    "stats": {
+      "totalArticles": "Tổng bài viết",
+      "unread": "Chưa đọc",
+      "saved": "Đã lưu",
+      "activeFeeds": "Feed đang hoạt động"
+    },
+    "feedHealth": {
+      "title": "Sức khỏe feed",
+      "description": "Trạng thái hoạt động, lỗi phân phối và feed cũ theo lần fetch gần nhất.",
+      "loading": "Đang tải sức khỏe feed...",
+      "cards": {
+        "errors": "Feed có lỗi",
+        "inactive": "Feed tạm dừng",
+        "stale": "Feed cũ (> {hours}h)"
+      },
+      "topUnread": {
+        "title": "Feed có nhiều bài chưa đọc",
+        "empty": "Không có feed hoạt động nào có bài chưa đọc.",
+        "lastFetched": "Lần fetch gần nhất: {value}",
+        "unreadCount": "{count} bài chưa đọc"
+      }
+    },
+    "quickActions": {
+      "title": "Thao tác nhanh",
+      "description": "Đi đến các tác vụ bạn dùng thường xuyên.",
+      "openArticles": "Mở danh sách bài viết",
+      "manageFeeds": "Quản lý feed",
+      "manageAiProfiles": "Quản lý hồ sơ AI"
+    },
+    "queueWatch": {
+      "title": "Theo dõi hàng đợi",
+      "description": "Các feed cần chú ý ngay lúc này.",
+      "feedsWithErrors": "Feed có lỗi",
+      "staleActiveFeeds": "Feed hoạt động bị cũ",
+      "totalConfiguredFeeds": "Tổng feed đã cấu hình"
+    }
+  },
+  "admin": {
+    "common": {
+      "action": "Thao tác",
+      "actions": "Hành động",
+      "confirm": "Xác nhận",
+      "open": "Mở",
+      "edit": "Chỉnh sửa",
+      "detail": "Chi tiết",
+      "id": "ID",
+      "yes": "Có",
+      "no": "Không",
+      "updating": "Đang cập nhật...",
+      "queueing": "Đang đưa vào hàng đợi...",
+      "notAvailable": "Không có",
+      "noHeartbeat": "Không có heartbeat",
+      "lastHeartbeat": "Heartbeat gần nhất",
+      "expiresAt": "hết hạn",
+      "roles": {
+        "user": "Người dùng",
+        "admin": "Quản trị viên"
+      },
+      "accountStatus": {
+        "active": "Hoạt động",
+        "suspended": "Đã tạm khóa"
+      },
+      "eventStatus": {
+        "success": "Thành công",
+        "failed": "Thất bại"
+      },
+      "runtimeNodes": {
+        "worker": "Worker",
+        "rssScheduler": "Bộ lập lịch RSS",
+        "contentScheduler": "Bộ lập lịch nội dung"
+      },
+      "runtimeStates": {
+        "healthy": "Ổn định",
+        "stale": "Cũ",
+        "offline": "Ngoại tuyến",
+        "unknown": "Không rõ"
+      },
+      "queueName": {
+        "rssFetch": "Lấy RSS",
+        "contentExtract": "Trích xuất nội dung"
+      },
+      "queueState": {
+        "waiting": "Đang chờ",
+        "active": "Đang chạy",
+        "failed": "Thất bại",
+        "delayed": "Trì hoãn",
+        "completed": "Hoàn tất"
+      },
+      "subscriptionTier": {
+        "free": "Miễn phí",
+        "basic": "Cơ bản",
+        "pro": "Pro",
+        "max": "Max"
+      },
+      "billingInterval": {
+        "monthly": "Hàng tháng",
+        "yearly": "Hàng năm"
+      },
+      "stripe": {
+        "customer": "Khách hàng",
+        "subscription": "Gói đăng ký",
+        "price": "Giá"
+      },
+      "age": {
+        "label": "Thời gian",
+        "secondsAgo": "{value} giây trước",
+        "minutesAgo": "{value} phút trước",
+        "hoursAgo": "{value} giờ trước",
+        "secondsShort": "{value}gi",
+        "minutesShort": "{value}ph",
+        "hoursShort": "{value}g"
+      }
+    },
+    "operations": {
+      "metaTitle": "Vận hành quản trị",
+      "overview": {
+        "title": "Tổng quan vận hành",
+        "description": "Theo dõi mức sử dụng AI, sức khỏe hàng đợi và trạng thái heartbeat runtime.",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "Token AI (7 ngày)",
+            "description": "Tổng số token đã dùng trong 7 ngày gần nhất."
+          },
+          "aiRequests7d": {
+            "title": "Yêu cầu AI (7 ngày)",
+            "description": "Tổng số yêu cầu tóm tắt trong 7 ngày gần nhất."
+          },
+          "aiFailures7d": {
+            "title": "Lỗi AI (7 ngày)",
+            "description": "Số lần tóm tắt thất bại trong 7 ngày gần nhất."
+          },
+          "failedQueueJobs": {
+            "title": "Job hàng đợi lỗi",
+            "description": "Số job lỗi hiện tại trên các hàng đợi worker."
+          },
+          "staleFeeds": {
+            "title": "Feed cũ",
+            "description": "Các feed đang bật nhưng đang chờ lên lịch fetch."
+          },
+          "extractionBacklog": {
+            "title": "Hàng chờ trích xuất",
+            "description": "Các bài viết đang chờ trích xuất nội dung."
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "Sức khỏe runtime",
+        "description": "Trạng thái heartbeat của worker và scheduler."
+      },
+      "drillDown": {
+        "title": "Xem chi tiết",
+        "description": "Mở các trang chi tiết để kiểm tra sự kiện AI hoặc thao tác với hàng đợi.",
+        "openAiUsage": "Mở trang sử dụng AI",
+        "openSystemOps": "Mở trang vận hành hệ thống"
+      },
+      "recentFailedJobs": {
+        "title": "Job lỗi gần đây",
+        "description": "Các lỗi hàng đợi mới nhất từ worker lấy RSS và trích xuất nội dung.",
+        "empty": "Không có job lỗi gần đây trong lịch sử hàng đợi.",
+        "noFailureReason": "Không có lý do lỗi.",
+        "columns": {
+          "queue": "Hàng đợi",
+          "job": "Job",
+          "failure": "Lỗi",
+          "time": "Thời gian"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "Không thể tải tổng hợp sử dụng AI.",
+        "systemOverview": "Không thể tải tổng quan hệ thống.",
+        "runtimeHealth": "Không thể tải dữ liệu sức khỏe runtime.",
+        "recentQueueFailures": "Không thể tải các lỗi hàng đợi gần đây."
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "Sử dụng AI quản trị",
+      "page": {
+        "title": "Sử dụng AI",
+        "description": "Kiểm tra các sự kiện sử dụng, lỗi gần đây và trạng thái cấu hình AI.",
+        "manageConfigs": "Quản lý cấu hình AI"
+      },
+      "summary": {
+        "title": "Tổng hợp (7 ngày)",
+        "description": "Xu hướng sử dụng token và lỗi để hỗ trợ theo dõi quản trị.",
+        "totalTokens": "Tổng token",
+        "totalRequests": "Tổng yêu cầu",
+        "failures": "Lỗi",
+        "topUser": "Người dùng nhiều nhất",
+        "empty7Days": "Không có yêu cầu AI nào được ghi nhận trong 7 ngày gần nhất."
+      },
+      "filters": {
+        "title": "Bộ lọc",
+        "description": "Lọc theo người dùng, nhà cung cấp, model, trạng thái và khoảng thời gian.",
+        "from": "Từ",
+        "to": "Đến",
+        "user": {
+          "label": "Người dùng",
+          "placeholder": "Tìm theo tên hoặc email"
+        },
+        "provider": {
+          "label": "Nhà cung cấp",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "Model",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "Trạng thái",
+          "all": "Tất cả trạng thái"
+        }
+      },
+      "events": {
+        "title": "Sự kiện AI",
+        "description": "Hoạt động tóm tắt gần đây với trạng thái thành công/thất bại và tóm tắt lỗi an toàn."
+      },
+      "table": {
+        "columns": {
+          "user": "Người dùng",
+          "providerModel": "Nhà cung cấp / model",
+          "status": "Trạng thái",
+          "tokens": "Token",
+          "duration": "Thời lượng",
+          "errorSummary": "Tóm tắt lỗi",
+          "created": "Tạo lúc"
+        },
+        "empty": "Không có sự kiện AI nào khớp với bộ lọc hiện tại."
+      },
+      "configDialog": {
+        "title": "Điều khiển cấu hình AI",
+        "description": "Xem quyền sở hữu cấu hình và bật/tắt từng cấu hình.",
+        "empty": "Không có cấu hình AI nào khớp với bộ lọc hiện tại.",
+        "badges": {
+          "default": "Mặc định"
+        },
+        "select": {
+          "title": "Chọn cấu hình",
+          "description": "Chọn một cấu hình để xem và bật/tắt.",
+          "placeholder": "Chọn một cấu hình AI"
+        },
+        "fields": {
+          "owner": "Chủ sở hữu",
+          "baseUrl": "Base URL",
+          "defaultProviderUrl": "URL nhà cung cấp mặc định",
+          "updated": "Cập nhật lúc"
+        },
+        "actions": {
+          "enable": "Bật cấu hình",
+          "disable": "Tắt cấu hình",
+          "updating": "Đang cập nhật..."
+        },
+        "confirm": {
+          "enableTitle": "Bật cấu hình AI này?",
+          "disableTitle": "Tắt cấu hình AI này?",
+          "enableDescription": "Bật {name}. Các yêu cầu tóm tắt có thể dùng lại cấu hình này.",
+          "disableDescription": "Tắt {name}. Các yêu cầu tóm tắt dùng cấu hình này sẽ bị chặn."
+        }
+      },
+      "errors": {
+        "summary": "Không thể tải tổng hợp sử dụng AI.",
+        "events": "Không thể tải các sự kiện sử dụng AI.",
+        "configs": "Không thể tải các cấu hình AI.",
+        "updateConfig": "Không thể cập nhật cấu hình AI này."
+      }
+    },
+    "users": {
+      "metaTitle": "Người dùng quản trị",
+      "page": {
+        "title": "Người dùng quản trị",
+        "description": "Xem tài khoản người dùng, trạng thái gói đăng ký và thao tác trạng thái tài khoản."
+      },
+      "filters": {
+        "title": "Bộ lọc",
+        "description": "Tìm người dùng và thu hẹp kết quả theo vai trò, trạng thái tài khoản hoặc gói đăng ký.",
+        "search": {
+          "label": "Tìm kiếm",
+          "placeholder": "Tên hoặc email"
+        },
+        "role": {
+          "label": "Vai trò",
+          "all": "Tất cả vai trò"
+        },
+        "status": {
+          "label": "Trạng thái",
+          "all": "Tất cả trạng thái"
+        },
+        "tier": {
+          "label": "Gói",
+          "all": "Tất cả gói"
+        }
+      },
+      "directory": {
+        "title": "Danh sách người dùng",
+        "description": "Mở một dòng người dùng để xem chi tiết và cập nhật trạng thái tài khoản."
+      },
+      "table": {
+        "columns": {
+          "user": "Người dùng",
+          "role": "Vai trò",
+          "status": "Trạng thái",
+          "subscription": "Gói đăng ký",
+          "feeds": "Feed",
+          "created": "Tạo lúc"
+        },
+        "empty": "Không có người dùng nào khớp với bộ lọc hiện tại. Hãy nới bộ lọc vai trò, trạng thái hoặc gói.",
+        "hasMore": "Còn nhiều người dùng hơn. Hãy tinh chỉnh bộ lọc để thu hẹp kết quả."
+      },
+      "detail": {
+        "title": "Chi tiết người dùng",
+        "description": "Xem trạng thái tài khoản, thông tin gói đăng ký và các thao tác hỗ trợ.",
+        "empty": "Chọn một người dùng để xem chi tiết tài khoản.",
+        "accountSummary": {
+          "title": "Tóm tắt tài khoản",
+          "description": "Tổng quan nhanh về thành viên và mức sử dụng feed.",
+          "created": "Tạo lúc",
+          "updated": "Cập nhật lúc",
+          "feeds": "Feed",
+          "suspendedAt": "Tạm khóa lúc"
+        },
+        "subscription": {
+          "title": "Gói đăng ký",
+          "description": "Gói, chu kỳ thanh toán và thời điểm hết hạn hiện tại.",
+          "plan": "Gói",
+          "status": "Trạng thái đăng ký",
+          "expires": "Hết hạn"
+        },
+        "actions": {
+          "title": "Hành động tài khoản",
+          "description": "Tạm khóa hoặc kích hoạt lại tài khoản người dùng.",
+          "suspendReasonPlaceholder": "Lý do tạm khóa (không bắt buộc)",
+          "suspendReasonHint": "Lý do này hiển thị với admin trong trang chi tiết và log kiểm tra.",
+          "suspensionReason": "Lý do tạm khóa",
+          "noReason": "Không có lý do.",
+          "suspend": "Tạm khóa người dùng",
+          "suspending": "Đang tạm khóa...",
+          "reactivate": "Kích hoạt lại người dùng",
+          "reactivating": "Đang kích hoạt lại..."
+        },
+        "confirm": {
+          "thisUser": "người dùng này",
+          "suspend": {
+            "title": "Tạm khóa người dùng này?",
+            "description": "Tạm khóa {name}. Họ sẽ mất quyền truy cập vào các route bảo vệ cho tới khi admin kích hoạt lại tài khoản.",
+            "descriptionWithReason": "Tạm khóa {name}. Lý do \"{reason}\" sẽ được lưu vào nhật ký kiểm tra của admin."
+          },
+          "reactivate": {
+            "title": "Kích hoạt lại người dùng này?",
+            "description": "Khôi phục quyền truy cập cho {name}. Các route bảo vệ sẽ dùng lại ngay lập tức."
+          }
+        }
+      },
+      "errors": {
+        "list": "Không thể tải danh sách người dùng quản trị. Hãy làm mới và thử lại.",
+        "suspend": "Không thể tạm khóa người dùng này. Hãy thử lại.",
+        "reactivate": "Không thể kích hoạt lại người dùng này. Hãy thử lại."
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "Gói đăng ký quản trị",
+      "page": {
+        "title": "Gói đăng ký quản trị",
+        "description": "Xem trạng thái thanh toán và áp dụng các thay đổi hỗ trợ cho gói đăng ký."
+      },
+      "filters": {
+        "title": "Bộ lọc",
+        "description": "Tìm theo người dùng và thu hẹp danh sách theo gói, trạng thái, chu kỳ hoặc cờ hủy.",
+        "search": {
+          "label": "Tìm kiếm",
+          "placeholder": "Tên hoặc email"
+        },
+        "tier": {
+          "label": "Gói",
+          "all": "Tất cả gói"
+        },
+        "billing": {
+          "label": "Thanh toán",
+          "all": "Tất cả kiểu thanh toán"
+        },
+        "cancelFlag": {
+          "label": "Cờ hủy",
+          "all": "Tất cả cờ",
+          "canceling": "Đang hủy",
+          "continuing": "Tiếp tục"
+        }
+      },
+      "directory": {
+        "title": "Danh sách gói đăng ký",
+        "description": "Mở một dòng để xem điều khiển hỗ trợ và lưu thay đổi."
+      },
+      "table": {
+        "columns": {
+          "user": "Người dùng",
+          "plan": "Gói",
+          "status": "Trạng thái",
+          "expires": "Hết hạn",
+          "stripeIds": "Stripe ID"
+        },
+        "cancelAtPeriodEnd": "Hủy vào cuối kỳ",
+        "empty": "Không có gói đăng ký nào khớp với bộ lọc hiện tại. Hãy điều chỉnh bộ lọc thanh toán để xem nhiều hơn.",
+        "hasMore": "Còn nhiều gói đăng ký hơn. Hãy thu hẹp bộ lọc để xem phạm vi nhỏ hơn."
+      },
+      "edit": {
+        "title": "Chỉnh sửa gói đăng ký",
+        "description": "Hỗ trợ đổi gói, điều chỉnh thời hạn và cờ hủy.",
+        "empty": "Chọn một dòng gói đăng ký để chỉnh sửa thiết lập hỗ trợ.",
+        "currentExpiry": "Hết hạn hiện tại",
+        "fields": {
+          "tier": "Gói",
+          "expiry": "Hết hạn lúc",
+          "cancellation": "Hủy vào cuối kỳ"
+        },
+        "controls": {
+          "title": "Điều khiển hỗ trợ",
+          "description": "Điều chỉnh thông tin thanh toán và cờ hỗ trợ cho người dùng này.",
+          "tierPlaceholder": "Chọn gói",
+          "cancelAtPeriodEndHint": "Giữ gói đăng ký cho tới khi kỳ thanh toán hiện tại kết thúc.",
+          "save": "Lưu thay đổi",
+          "saving": "Đang lưu...",
+          "noPendingChanges": "Không có thay đổi nào để lưu.",
+          "pendingFields": "Các trường đang chờ: {fields}."
+        },
+        "confirm": {
+          "title": "Lưu thay đổi gói đăng ký?",
+          "confirmLabel": "Lưu thay đổi gói đăng ký",
+          "theseChanges": "những thay đổi này",
+          "description": "Áp dụng {fields} cho {name}. Các cập nhật này sẽ được ghi vào nhật ký kiểm tra của admin.",
+          "descriptionFallback": "Áp dụng các thay đổi gói đăng ký đang chờ."
+        }
+      },
+      "errors": {
+        "list": "Không thể tải các gói đăng ký. Hãy làm mới và thử lại.",
+        "update": "Không thể cập nhật gói đăng ký này. Hãy kiểm tra lại thay đổi và thử lại."
+      }
+    },
+    "feeds": {
+      "metaTitle": "Feed quản trị",
+      "page": {
+        "title": "Feed quản trị",
+        "description": "Theo dõi sức khỏe feed toàn hệ thống và kích hoạt các hành động vận hành hàng đợi."
+      },
+      "filters": {
+        "title": "Bộ lọc",
+        "description": "Tìm feed và tập trung theo trạng thái bật/tắt, lỗi, lịch cũ hoặc lỗi trích xuất.",
+        "search": {
+          "label": "Tìm kiếm",
+          "placeholder": "Tiêu đề feed hoặc URL"
+        },
+        "enabled": {
+          "label": "Đang bật",
+          "all": "Tất cả feed"
+        },
+        "errors": {
+          "label": "Lỗi",
+          "all": "Tất cả trạng thái lỗi",
+          "hasErrors": "Có lỗi",
+          "healthy": "Ổn định"
+        },
+        "stale": {
+          "label": "Cũ",
+          "all": "Tất cả trạng thái độ mới",
+          "stale": "Cũ",
+          "scheduled": "Đúng lịch"
+        },
+        "extraction": {
+          "label": "Trích xuất",
+          "all": "Tất cả trạng thái trích xuất",
+          "hasFailures": "Có lỗi",
+          "healthy": "Ổn định"
+        }
+      },
+      "operations": {
+        "title": "Vận hành feed",
+        "description": "Dùng thao tác nhanh hoặc mở feed để xem ngữ cảnh vận hành chi tiết."
+      },
+      "table": {
+        "columns": {
+          "feed": "Feed",
+          "enabled": "Bật",
+          "health": "Sức khỏe",
+          "coverage": "Phạm vi",
+          "lastFetched": "Fetch gần nhất"
+        },
+        "health": {
+          "errors": "Lỗi: {count}",
+          "extractionFailures": "Lỗi trích xuất: {count}"
+        },
+        "coverage": {
+          "subscriptions": "{count} lượt đăng ký",
+          "articles": "{count} bài viết"
+        },
+        "nextFetch": "Lần kế tiếp",
+        "empty": "Không có feed nào khớp với bộ lọc hiện tại. Hãy nới bộ lọc lỗi hoặc bật/tắt để xem thêm.",
+        "hasMore": "Còn nhiều feed hơn. Hãy tinh chỉnh bộ lọc để thu hẹp kết quả.",
+        "actions": {
+          "retryFetch": "Thử fetch lại",
+          "retryExtraction": "Thử trích xuất lại"
+        },
+        "confirm": {
+          "defaultTitle": "Xác nhận hành động quản trị",
+          "defaultDescription": "Xác nhận hành động quản trị này.",
+          "retryFetch": {
+            "title": "Thử lấy RSS lại?",
+            "description": "Đưa ngay một lần thử lấy RSS lại cho {label} vào hàng đợi.",
+            "confirmLabel": "Đưa retry RSS vào hàng đợi"
+          },
+          "retryExtraction": {
+            "title": "Thử trích xuất feed lại?",
+            "description": "Đưa các bài đủ điều kiện của {label} vào hàng đợi trích xuất lại.",
+            "confirmLabel": "Đưa retry trích xuất vào hàng đợi"
+          },
+          "enable": {
+            "title": "Bật feed này?",
+            "description": "Bật {label} để các lịch fetch có thể tiếp tục.",
+            "confirmLabel": "Bật feed"
+          },
+          "disable": {
+            "title": "Tắt feed này?",
+            "description": "Tắt {label}. Các lần fetch theo lịch sẽ dừng cho tới khi admin bật lại hoặc ép retry.",
+            "confirmLabel": "Tắt feed"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "Chi tiết feed quản trị",
+        "page": {
+          "title": "Chi tiết vận hành feed",
+          "description": "Kiểm tra sức khỏe bài viết và kích hoạt retry có mục tiêu cho feed này.",
+          "backToFeeds": "Quay lại danh sách feed"
+        },
+        "empty": "Không có dữ liệu chi tiết feed.",
+        "summary": {
+          "lastFetched": "Fetch gần nhất",
+          "nextFetch": "Lần fetch tiếp theo",
+          "subscriptions": "Lượt đăng ký",
+          "articles": "Bài viết",
+          "rssErrors": "Lỗi RSS: {count}",
+          "extractionFailures": "Lỗi trích xuất: {count}",
+          "lastError": "Lỗi gần nhất",
+          "noRecentErrors": "Không có lỗi RSS gần đây."
+        },
+        "operations": {
+          "title": "Thao tác",
+          "description": "Bật/tắt nguồn feed và kích hoạt retry hàng đợi.",
+          "feedEnabled": "Feed đang bật",
+          "feedEnabledHint": "Feed bị tắt sẽ bị scheduler bỏ qua trừ khi bị ép chạy.",
+          "retryFetch": "Thử fetch RSS lại",
+          "retryFeedExtractionQueue": "Thử lại hàng đợi trích xuất feed"
+        },
+        "recentArticles": {
+          "title": "Bài viết gần đây",
+          "description": "Các bài nguồn mới nhất và trạng thái trích xuất.",
+          "columns": {
+            "article": "Bài viết",
+            "published": "Xuất bản",
+            "status": "Trạng thái"
+          },
+          "empty": "Không tìm thấy bài viết gần đây cho feed này.",
+          "attempts": "Số lần thử: {count}",
+          "retryArticle": "Thử lại bài viết",
+          "status": {
+            "extracted": "Đã trích xuất",
+            "pending": "Đang chờ",
+            "needsAttention": "Cần chú ý"
+          }
+        },
+        "recentFailures": {
+          "title": "Lỗi trích xuất gần đây",
+          "description": "Các bài viết vừa thất bại trích xuất gần nhất.",
+          "columns": {
+            "article": "Bài viết",
+            "error": "Lỗi",
+            "updated": "Cập nhật lúc"
+          },
+          "empty": "Không có lỗi trích xuất gần đây.",
+          "attempts": "Số lần thử: {count}",
+          "retry": "Thử lại"
+        },
+        "confirm": {
+          "thisFeed": "feed này",
+          "defaultTitle": "Xác nhận hành động quản trị",
+          "defaultDescription": "Xác nhận hành động quản trị này.",
+          "retryFetch": {
+            "title": "Thử lấy RSS lại?",
+            "description": "Đưa ngay một lần thử lấy RSS lại cho {label} vào hàng đợi.",
+            "confirmLabel": "Đưa retry RSS vào hàng đợi"
+          },
+          "retryFeedExtraction": {
+            "title": "Thử trích xuất feed lại?",
+            "description": "Đưa các bài đủ điều kiện của {label} vào hàng đợi trích xuất lại.",
+            "confirmLabel": "Đưa retry trích xuất vào hàng đợi"
+          },
+          "retryArticleExtraction": {
+            "title": "Thử trích xuất bài viết lại?",
+            "description": "Đưa một lần trích xuất mới cho {title} vào hàng đợi.",
+            "confirmLabel": "Đưa retry bài viết vào hàng đợi"
+          },
+          "enable": {
+            "title": "Bật feed này?",
+            "description": "Bật {label} để các lịch fetch có thể tiếp tục.",
+            "confirmLabel": "Bật feed"
+          },
+          "disable": {
+            "title": "Tắt feed này?",
+            "description": "Tắt {label}. Các lần fetch theo lịch sẽ dừng cho tới khi admin bật lại hoặc ép retry.",
+            "confirmLabel": "Tắt feed"
+          }
+        },
+        "errors": {
+          "load": "Không thể tải chi tiết feed. Hãy làm mới và thử lại.",
+          "retryArticleExtraction": "Không thể đưa thao tác trích xuất lại bài viết vào hàng đợi. Hãy thử lại."
+        }
+      },
+      "errors": {
+        "list": "Không thể tải các nguồn feed. Hãy làm mới và thử lại.",
+        "updateState": "Không thể cập nhật trạng thái feed này. Hãy thử lại.",
+        "retryFetch": "Không thể đưa retry RSS vào hàng đợi. Hãy thử lại.",
+        "retryExtraction": "Không thể đưa retry trích xuất feed vào hàng đợi. Hãy thử lại."
+      }
+    },
+    "systemOps": {
+      "metaTitle": "Vận hành hệ thống quản trị",
+      "page": {
+        "title": "Vận hành hệ thống",
+        "description": "Kiểm tra sức khỏe hàng đợi và chạy các thao tác vận hành đơn lẻ an toàn."
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "Job lỗi",
+            "description": "Số job lỗi hiện tại trên các hàng đợi."
+          },
+          "staleFeeds": {
+            "title": "Feed cũ",
+            "description": "Các feed đang bật đang chờ làm mới."
+          },
+          "extractionBacklog": {
+            "title": "Hàng chờ trích xuất",
+            "description": "Các bài viết đang chờ trích xuất."
+          },
+          "rssWaitingJobs": {
+            "title": "Job RSS đang chờ",
+            "description": "Các job lấy RSS đang chờ xử lý."
+          },
+          "contentWaitingJobs": {
+            "title": "Job nội dung đang chờ",
+            "description": "Các job trích xuất nội dung đang chờ xử lý."
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "Heartbeat runtime",
+          "description": "Tình trạng sống của worker và scheduler từ các khóa heartbeat trên Redis."
+        }
+      },
+      "stripe": {
+        "title": "Cấu hình Stripe",
+        "description": "Quản lý khóa Stripe và price ID của gói tại đây thay vì biến môi trường server.",
+        "status": {
+          "label": "Trạng thái",
+          "configured": "Đã cấu hình",
+          "incomplete": "Chưa đầy đủ",
+          "secretKey": "Khóa bí mật",
+          "webhookSecret": "Webhook secret",
+          "missing": "Thiếu"
+        },
+        "form": {
+          "publishableKey": "Publishable key",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "Secret key",
+          "secretPlaceholder": "Để trống để giữ nguyên sk_* hiện tại",
+          "webhookSecret": "Webhook secret",
+          "webhookPlaceholder": "Để trống để giữ nguyên whsec_* hiện tại",
+          "basicMonthly": "Giá Basic tháng",
+          "basicYearly": "Giá Basic năm",
+          "proMonthly": "Giá Pro tháng",
+          "proYearly": "Giá Pro năm",
+          "maxMonthly": "Giá Max tháng",
+          "maxYearly": "Giá Max năm"
+        },
+        "lastUpdated": "Cập nhật lần cuối",
+        "webhookEndpoint": "Webhook endpoint",
+        "save": "Lưu cấu hình Stripe",
+        "saving": "Đang lưu...",
+        "successSaved": "Đã lưu cấu hình Stripe.",
+        "secretHint": "Bạn có thể để trống các trường secret nếu chỉ muốn cập nhật price ID."
+      },
+      "manualActions": {
+        "title": "Thao tác thủ công",
+        "description": "Kích hoạt một lần fetch feed hoặc một lần trích xuất nội dung theo ID.",
+        "feedSourceId": "ID nguồn feed",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "ID bài nguồn",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "Kích hoạt fetch",
+        "triggerExtract": "Kích hoạt trích xuất",
+        "errors": {
+          "feedSourceIdRequired": "Bắt buộc phải có ID nguồn feed.",
+          "sourceArticleIdRequired": "Bắt buộc phải có ID bài nguồn."
+        }
+      },
+      "queueJobs": {
+        "title": "Job hàng đợi",
+        "description": "Xem trạng thái hàng đợi và thử lại từng job lỗi một.",
+        "filters": {
+          "queue": "Hàng đợi",
+          "state": "Trạng thái",
+          "allQueues": "Tất cả hàng đợi",
+          "allStates": "Tất cả trạng thái"
+        },
+        "columns": {
+          "queue": "Hàng đợi",
+          "job": "Job",
+          "state": "Trạng thái",
+          "attempts": "Số lần thử",
+          "failure": "Lỗi",
+          "created": "Tạo lúc"
+        },
+        "actions": {
+          "retry": "Thử lại"
+        },
+        "empty": "Không có job hàng đợi nào khớp với bộ lọc đã chọn."
+      },
+      "confirm": {
+        "defaultTitle": "Xác nhận thao tác",
+        "defaultDescription": "Xác nhận thao tác này.",
+        "retryJob": {
+          "title": "Thử lại job lỗi này?",
+          "description": "Đưa thao tác retry cho job {jobId} trong {queueName} vào hàng đợi.",
+          "confirmLabel": "Thử lại job"
+        },
+        "triggerFeedFetch": {
+          "title": "Kích hoạt fetch feed ngay?",
+          "description": "Đưa một lần fetch RSS ngay cho nguồn feed {feedSourceId} vào hàng đợi.",
+          "confirmLabel": "Kích hoạt fetch feed"
+        },
+        "triggerContentExtract": {
+          "title": "Kích hoạt trích xuất nội dung ngay?",
+          "description": "Đưa một job trích xuất nội dung cho bài nguồn {sourceArticleId} vào hàng đợi.",
+          "confirmLabel": "Kích hoạt trích xuất"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "Không thể tải tổng hợp runtime hệ thống.",
+        "queueJobs": "Không thể tải các job hàng đợi.",
+        "stripeLoad": "Không thể tải cấu hình Stripe.",
+        "stripeSave": "Không thể lưu cấu hình Stripe.",
+        "executeOperation": "Không thể thực thi thao tác hệ thống này."
+      }
+    }
+  }
+}

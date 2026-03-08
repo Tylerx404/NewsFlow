@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminFeedListItem = {
   id: string;
@@ -50,6 +51,9 @@ const props = defineProps<{
   isActionPending: boolean;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   open: [feedSourceId: string];
   toggleEnabled: [payload: { feedSourceId: string; isEnabled: boolean }];
@@ -66,7 +70,10 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const statusBadgeClass = (count: number) =>
@@ -78,64 +85,70 @@ const feedLabel = (item: AdminFeedListItem) => item.title || item.normalizedUrl;
 
 const confirmTitle = computed(() => {
   if (!confirmState.value) {
-    return "Confirm admin action";
+    return t("admin.feeds.table.confirm.defaultTitle");
   }
 
   if (confirmState.value.type === "retryFetch") {
-    return "Retry RSS fetch?";
+    return t("admin.feeds.table.confirm.retryFetch.title");
   }
 
   if (confirmState.value.type === "retryExtraction") {
-    return "Retry feed extraction?";
+    return t("admin.feeds.table.confirm.retryExtraction.title");
   }
 
-  return confirmState.value.isEnabled ? "Enable this feed?" : "Disable this feed?";
+  return confirmState.value.isEnabled
+    ? t("admin.feeds.table.confirm.enable.title")
+    : t("admin.feeds.table.confirm.disable.title");
 });
 
 const confirmDescription = computed(() => {
   if (!confirmState.value) {
-    return "Confirm this admin action.";
+    return t("admin.feeds.table.confirm.defaultDescription");
   }
 
   const label = feedLabel(confirmState.value.item);
 
   if (confirmState.value.type === "retryFetch") {
-    return `Queue an RSS fetch retry for ${label} immediately.`;
+    return t("admin.feeds.table.confirm.retryFetch.description", { label });
   }
 
   if (confirmState.value.type === "retryExtraction") {
-    return `Queue extraction retries for eligible articles from ${label}.`;
+    return t("admin.feeds.table.confirm.retryExtraction.description", { label });
   }
 
   if (confirmState.value.isEnabled) {
-    return `Enable ${label} so scheduled fetches can resume.`;
+    return t("admin.feeds.table.confirm.enable.description", { label });
   }
 
-  return `Disable ${label}. Scheduled fetches stop until an admin enables it again or forces a retry.`;
+  return t("admin.feeds.table.confirm.disable.description", { label });
 });
 
 const confirmLabel = computed(() => {
   if (!confirmState.value) {
-    return "Confirm";
+    return t("admin.common.confirm");
   }
 
   if (confirmState.value.type === "retryFetch") {
-    return "Queue RSS retry";
+    return t("admin.feeds.table.confirm.retryFetch.confirmLabel");
   }
 
   if (confirmState.value.type === "retryExtraction") {
-    return "Queue extraction retry";
+    return t("admin.feeds.table.confirm.retryExtraction.confirmLabel");
   }
 
-  return confirmState.value.isEnabled ? "Enable feed" : "Disable feed";
+  return confirmState.value.isEnabled
+    ? t("admin.feeds.table.confirm.enable.confirmLabel")
+    : t("admin.feeds.table.confirm.disable.confirmLabel");
 });
 
 const confirmPendingLabel = computed(() => {
   if (!confirmState.value) {
-    return "Processing...";
+    return t("common.actions.loading");
   }
 
-  return confirmState.value.type === "toggle" ? "Updating..." : "Queuing...";
+  return confirmState.value.type === "toggle"
+    ? t("admin.common.updating")
+    : t("admin.common.queueing");
 });
 
 const confirmVariant = computed(() =>
@@ -197,12 +210,12 @@ const handleConfirmAction = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Feed</TableHead>
-            <TableHead>Enabled</TableHead>
-            <TableHead>Health</TableHead>
-            <TableHead>Coverage</TableHead>
-            <TableHead>Last fetched</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead>{{ t("admin.feeds.table.columns.feed") }}</TableHead>
+            <TableHead>{{ t("admin.feeds.table.columns.enabled") }}</TableHead>
+            <TableHead>{{ t("admin.feeds.table.columns.health") }}</TableHead>
+            <TableHead>{{ t("admin.feeds.table.columns.coverage") }}</TableHead>
+            <TableHead>{{ t("admin.feeds.table.columns.lastFetched") }}</TableHead>
+            <TableHead class="text-right">{{ t("admin.common.actions") }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -254,7 +267,7 @@ const handleConfirmAction = () => {
           </TableRow>
           <TableRow v-else-if="items.length === 0">
             <TableCell :colspan="6" class="py-8 text-center text-sm text-muted-foreground">
-              No feed sources match the current filters. Widen the health or enabled filters to inspect more sources.
+              {{ t("admin.feeds.table.empty") }}
             </TableCell>
           </TableRow>
           <TableRow v-for="item in items" v-else :key="item.id">
@@ -272,38 +285,54 @@ const handleConfirmAction = () => {
                   @update:model-value="(value) => requestToggleEnabled(item, Boolean(value))"
                 />
                 <span class="text-xs text-muted-foreground">
-                  {{ item.isEnabled ? "Enabled" : "Disabled" }}
+                  {{ item.isEnabled ? t("common.states.enabled") : t("common.states.disabled") }}
                 </span>
               </div>
             </TableCell>
             <TableCell>
               <div class="space-y-2">
                 <Badge variant="outline" :class="statusBadgeClass(item.errorCount)">
-                  Errors: {{ item.errorCount }}
+                  {{ t("admin.feeds.table.health.errors", { count: item.errorCount }) }}
                 </Badge>
                 <Badge variant="outline" :class="statusBadgeClass(item.extractionFailureCount)">
-                  Extraction failures: {{ item.extractionFailureCount }}
+                  {{
+                    t("admin.feeds.table.health.extractionFailures", {
+                      count: item.extractionFailureCount,
+                    })
+                  }}
                 </Badge>
               </div>
             </TableCell>
             <TableCell class="text-sm text-muted-foreground">
-              <p>{{ item.subscriptionCount }} subscriptions</p>
-              <p>{{ item.articleCount }} articles</p>
+              <p>
+                {{
+                  t("admin.feeds.table.coverage.subscriptions", {
+                    count: new Intl.NumberFormat(intlLocale).format(item.subscriptionCount),
+                  })
+                }}
+              </p>
+              <p>
+                {{
+                  t("admin.feeds.table.coverage.articles", {
+                    count: new Intl.NumberFormat(intlLocale).format(item.articleCount),
+                  })
+                }}
+              </p>
             </TableCell>
             <TableCell class="text-sm text-muted-foreground">
               <p>{{ formatDateTime(item.lastFetched) }}</p>
-              <p>Next: {{ formatDateTime(item.nextFetchAt) }}</p>
+              <p>{{ t("admin.feeds.table.nextFetch") }}: {{ formatDateTime(item.nextFetchAt) }}</p>
             </TableCell>
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
                 <Button variant="outline" size="sm" :disabled="isActionPending" @click="requestRetryFetch(item)">
-                  Retry fetch
+                  {{ t("admin.feeds.table.actions.retryFetch") }}
                 </Button>
                 <Button variant="outline" size="sm" :disabled="isActionPending" @click="requestRetryExtraction(item)">
-                  Retry extraction
+                  {{ t("admin.feeds.table.actions.retryExtraction") }}
                 </Button>
                 <Button size="sm" :disabled="isActionPending" @click="emit('open', item.id)">
-                  Open
+                  {{ t("admin.common.open") }}
                 </Button>
               </div>
             </TableCell>
@@ -313,7 +342,7 @@ const handleConfirmAction = () => {
     </div>
 
     <p v-if="hasMore" class="text-xs text-muted-foreground">
-      More feed sources are available. Refine filters to narrow the result set.
+      {{ t("admin.feeds.table.hasMore") }}
     </p>
   </div>
 

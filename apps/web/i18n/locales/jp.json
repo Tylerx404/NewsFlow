@@ -1,0 +1,1285 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "個人向け AI RSS"
+  },
+  "locale": {
+    "label": "言語",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "追加",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "refresh": "更新",
+      "manage": "管理",
+      "loading": "読み込み中..."
+    },
+    "states": {
+      "enabled": "有効",
+      "disabled": "無効"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "ダッシュボード",
+      "articles": "記事",
+      "settings": "設定",
+      "reader": "リーダー"
+    }
+  },
+  "shell": {
+    "groups": {
+      "platform": "プラットフォーム",
+      "navigation": "ナビゲーション",
+      "admin": "管理",
+      "yourFeeds": "あなたのフィード",
+      "discover": "発見"
+    },
+    "nav": {
+      "toggle": "切り替え",
+      "moreActions": "その他の操作"
+    },
+    "navigation": {
+      "dashboard": "ダッシュボード",
+      "articles": "記事",
+      "settings": "設定",
+      "operations": "運用",
+      "aiUsage": "AI 利用状況",
+      "systemOps": "システム運用",
+      "users": "ユーザー",
+      "subscriptions": "サブスクリプション",
+      "feeds": "フィード"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "フィードを追加",
+      "loading": "フィードを読み込み中...",
+      "empty": "まだフィードがありません。上で最初の RSS フィードを追加してください。",
+      "actions": {
+        "refreshNow": "今すぐ更新",
+        "manageFeeds": "フィード管理",
+        "removeFeed": "フィードを削除"
+      },
+      "confirm": {
+        "remove": "フィード \"{title}\" を削除しますか？"
+      }
+    },
+    "discover": {
+      "empty": "提案されたフィードはすべて追加済みです。"
+    },
+    "errors": {
+      "addFeed": "フィードを追加できません。",
+      "refreshFeed": "フィードを更新できません。",
+      "removeFeed": "フィードを削除できません。"
+    },
+    "user": {
+      "defaultName": "NewsFlow ユーザー",
+      "personalSettings": "個人設定",
+      "appearance": "外観",
+      "logOut": "ログアウト"
+    }
+  },
+  "auth": {
+    "common": {
+      "name": "名前",
+      "namePlaceholder": "山田 太郎",
+      "email": "メール",
+      "emailPlaceholder": "name{'@'}example.com",
+      "password": "パスワード",
+      "orContinueWith": "または次で続行",
+      "heroImageAlt": "認証ページ画像",
+      "termsPrefix": "続行をクリックすると、次に同意したことになります。",
+      "termsOfService": "利用規約",
+      "termsAnd": "および",
+      "privacyPolicy": "プライバシーポリシー"
+    },
+    "login": {
+      "title": "おかえりなさい",
+      "subtitle": "NewsFlow アカウントにログイン",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "submit": "ログイン",
+      "submitting": "ログイン中...",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUp": "新規登録",
+      "sso": {
+        "apple": "Appleでログイン",
+        "google": "Googleでログイン",
+        "meta": "Metaでログイン"
+      },
+      "errors": {
+        "generic": "現在サインインできません。もう一度お試しください。",
+        "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。"
+      }
+    },
+    "signup": {
+      "title": "アカウント作成",
+      "subtitle": "メールアドレスを入力してアカウントを作成します",
+      "emailDescription": "このメールアドレスを連絡に利用します。第三者には共有しません。",
+      "confirmPassword": "パスワード確認",
+      "passwordHint": "8文字以上である必要があります。",
+      "submit": "アカウントを作成",
+      "submitting": "アカウント作成中...",
+      "haveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "sso": {
+        "apple": "Appleで登録",
+        "google": "Googleで登録",
+        "meta": "Metaで登録"
+      },
+      "errors": {
+        "generic": "現在アカウントを作成できません。もう一度お試しください。",
+        "passwordConfirmationMismatch": "パスワード確認が一致しません。",
+        "createFailed": "アカウントを作成できませんでした。"
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "パーソナライズされた AI 駆動 RSS リーダー。",
+      "login": "ログイン",
+      "signUp": "新規登録",
+      "pricing": "料金"
+    },
+    "pricing": {
+      "badge": "料金",
+      "title": "成長プランを選択",
+      "subtitle": "プランを選ぶと決済後すぐ利用できます。AI ワークフローの規模に合わせてアップグレードしてください。",
+      "bestValue": "おすすめ",
+      "billing": {
+        "monthly": "月額課金",
+        "yearly": "年額課金"
+      },
+      "suffix": {
+        "month": "月",
+        "year": "年"
+      },
+      "meta": {
+        "monthly": "月払い、いつでも解約可能。",
+        "yearly": "年払い、月あたり約 {price}。",
+        "discount": "年額課金で約 {percent}% お得です。"
+      },
+      "actions": {
+        "choosePlan": "プランを選択",
+        "createAccount": "アカウント作成",
+        "backHome": "ホームへ戻る",
+        "goSubscriptionSettings": "サブスクリプション設定へ"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "個人での試用と探索向けの入門プラン。",
+          "features": {
+            "coreRss": "基本的な RSS 読書フロー",
+            "aiOccasional": "軽度利用向け AI 要約",
+            "instantAccess": "決済後すぐ利用可能"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "日常的に AI 要約を使うユーザー向け。",
+          "features": {
+            "everythingBasic": "Basic の全機能を含む",
+            "higherAiLimits": "より高い AI 利用上限",
+            "instantAccess": "決済後すぐ利用可能"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "最大枠と優先サポートが必要なヘビーユーザー向け。",
+          "features": {
+            "everythingPro": "Pro の全機能を含む",
+            "highestAiCapacity": "最大の AI 利用容量",
+            "prioritySupport": "優先サポートレーン"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "外観",
+        "description": "テーマ、読書配色、文字設定、記事レイアウトの設定。"
+      },
+      "personal": {
+        "label": "個人",
+        "description": "プロフィール、パスワード、ログインセッション、契約状況。"
+      },
+      "ai": {
+        "label": "AI プロファイル",
+        "description": "要約機能で使うプロバイダー、モデル、既定プロファイル設定。"
+      },
+      "feeds": {
+        "label": "フィード管理",
+        "description": "フィード情報、状態、更新操作、整理を管理します。"
+      }
+    },
+    "index": {
+      "redirecting": "設定にリダイレクトしています..."
+    },
+    "appearance": {
+      "metaTitle": "外観設定",
+      "page": {
+        "readingExperience": {
+          "title": "読書体験",
+          "description": "あなたの読書スタイルに合わせて外観・文字・レイアウトを調整します。"
+        },
+        "fields": {
+          "themeMode": "テーマモード",
+          "colorPreset": "カラープリセット",
+          "fontFamily": "フォント",
+          "fontSize": "文字サイズ",
+          "lineHeight": "行間",
+          "readingWidth": "表示幅"
+        },
+        "savedNotice": "設定はブラウザに保存され、すぐに適用されます。",
+        "resetDefaults": "初期設定に戻す"
+      },
+      "preview": {
+        "title": "ライブプレビュー",
+        "description": "本文を読む前に文字と間隔を確認できます。",
+        "sample": {
+          "heading": "朝の速報: 市場はまちまちで開始",
+          "highlightsLabel": "ハイライト:",
+          "paragraph1": "世界の指数はまちまちの動きで始まり、エネルギー株が優位でした。変動性は高止まりすると見られています。",
+          "paragraph2Prefix": "この段落は",
+          "italic": "斜体強調",
+          "bold": "太字セグメント",
+          "paragraph2Suffix": "と通常本文のリズムを示します。",
+          "quote": "読者は長時間でも目の負担なく集中できるべきです。",
+          "bullet1": "より一貫した文字階層",
+          "bullet2": "セクション間隔の改善",
+          "bullet3": "ソースリンクの視認性向上",
+          "openSourceReport": "ソースレポートを開く"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "システム",
+            "description": "デバイスの外観設定に従います。"
+          },
+          "light": {
+            "label": "ライト",
+            "description": "常にライト表示を使います。"
+          },
+          "dark": {
+            "label": "ダーク",
+            "description": "常にダーク表示を使います。"
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "ニュートラル",
+            "description": "中立トーンのバランス良いコントラスト。"
+          },
+          "paper": {
+            "label": "ウォームペーパー",
+            "description": "長時間読書向けの柔らかい暖色背景。"
+          },
+          "slate": {
+            "label": "スレート",
+            "description": "寒色寄りでシャープな文字コントラスト。"
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "モダンサンセリフ",
+            "description": "可読性の高いサンセリフ。"
+          },
+          "serif": {
+            "label": "エディトリアルセリフ",
+            "description": "長文向けの雑誌風セリフ。"
+          },
+          "mono": {
+            "label": "等幅フォント",
+            "description": "技術コンテンツ向け固定幅テキスト。"
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "小",
+            "description": "多くの内容を表示するコンパクトレイアウト。"
+          },
+          "md": {
+            "label": "中",
+            "description": "日常読書向けの標準サイズ。"
+          },
+          "lg": {
+            "label": "大",
+            "description": "視認性を高める大きめ文字。"
+          },
+          "xl": {
+            "label": "特大",
+            "description": "最大の可読性を提供。"
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "詰める",
+            "description": "密度の高い読書向け。"
+          },
+          "normal": {
+            "label": "標準",
+            "description": "多くの記事に最適な標準間隔。"
+          },
+          "relaxed": {
+            "label": "広め",
+            "description": "ゆったり読書向けの広い間隔。"
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "狭め",
+            "description": "集中しやすい短い行長。"
+          },
+          "normal": {
+            "label": "標準",
+            "description": "混在コンテンツ向けのバランス幅。"
+          },
+          "wide": {
+            "label": "広め",
+            "description": "リッチメディア向けの横幅拡張。"
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "フィード管理",
+      "page": {
+        "title": "フィード管理",
+        "description": "フィード情報の更新、有効化、更新、削除を管理します。"
+      },
+      "labels": {
+        "tableCaption": "メタデータと操作を含むフィード管理テーブル。",
+        "customTitle": "カスタムタイトル",
+        "category": "カテゴリ",
+        "unread": "未読",
+        "lastFetched": "最終取得",
+        "errors": "エラー",
+        "active": "有効",
+        "actions": "操作",
+        "useSourceTitle": "元タイトルを使用",
+        "loading": "フィードを読み込み中...",
+        "empty": "利用可能なフィードがありません。",
+        "never": "なし"
+      },
+      "actions": {
+        "save": "保存",
+        "saving": "保存中...",
+        "refresh": "更新",
+        "refreshing": "更新中...",
+        "delete": "削除",
+        "deleteAria": "フィード {title} を削除",
+        "deleting": "削除中...",
+        "deleteFeed": "フィードを削除"
+      },
+      "dialogs": {
+        "deleteTitle": "このフィードを削除しますか？",
+        "deleteDescriptionWithTitle": "フィード「{title}」は削除されます。",
+        "cannotUndo": "この操作は元に戻せません。"
+      },
+      "errors": {
+        "update": "フィードを更新できません。",
+        "refresh": "フィードを更新できません。",
+        "delete": "フィードを削除できません。"
+      }
+    },
+    "ai": {
+      "metaTitle": "AI プロファイル",
+      "page": {
+        "title": "AI プロファイル",
+        "description": "リーダー要約アクションの既定プロファイルを管理します。"
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "プロファイルを読み込み中...",
+        "noProfiles": "まだプロファイルがありません。作成すると AI 要約が利用できます。",
+        "default": "既定",
+        "currentKey": "現在のキー",
+        "model": "モデル",
+        "loadingModels": "モデルを読み込み中...",
+        "selectModel": "モデルを選択",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "空の場合はプロバイダー既定を使用",
+        "newApiKey": "新しい API キー",
+        "keepCurrentKey": "空欄で現在のキーを維持",
+        "mainOpenAi": "メイン OpenAI",
+        "provider": "プロバイダー",
+        "selectProvider": "プロバイダーを選択",
+        "selectToLoadModels": "開いてモデルを読み込む",
+        "apiKey": "API キー",
+        "optional": "任意",
+        "defaultPrefix": "既定",
+        "canCustomizeByok": "BYOK 向けにカスタマイズ可能",
+        "managedAutomatically": "自動管理"
+      },
+      "actions": {
+        "createProfile": "プロファイル作成",
+        "setDefault": "既定に設定",
+        "setting": "設定中...",
+        "saveChanges": "変更を保存",
+        "saving": "保存中...",
+        "deleting": "削除中...",
+        "deleteProfile": "プロファイル削除",
+        "deleteAria": "プロファイル {name} を削除",
+        "creating": "作成中..."
+      },
+      "dialogs": {
+        "createTitle": "プロファイル作成",
+        "createDescription": "プロバイダーとモデルを設定します。API キーはサーバーで暗号化されます。",
+        "deleteTitle": "AI プロファイルを削除しますか？",
+        "deleteDescriptionWithName": "プロファイル「{name}」を削除します。",
+        "cannotUndo": "この操作は元に戻せません。"
+      },
+      "errors": {
+        "create": "AI プロファイルを作成できません。",
+        "fetchModels": "モデル一覧を取得できません。",
+        "loadModels": "モデルを読み込めません。",
+        "setDefault": "既定プロファイルを設定できません。",
+        "nameRequired": "名前は必須です。",
+        "modelRequired": "モデルは必須です。",
+        "update": "プロファイルを更新できません。",
+        "delete": "プロファイルを削除できません。"
+      }
+    }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "最新記事",
+      "allFeedsTitle": "すべてのフィード",
+      "subtitle": "AIでフィードを読み、保存し、要約できます。",
+      "searchPlaceholder": "タイトル、抜粋、リンクで検索",
+      "stats": {
+        "total": "合計",
+        "unread": "未読",
+        "saved": "保存済み"
+      },
+      "filters": {
+        "all": "すべて",
+        "unread": "未読",
+        "saved": "保存済み"
+      },
+      "loadingArticle": "記事を読み込み中...",
+      "empty": "この条件に一致する記事はありません。",
+      "badges": {
+        "saved": "保存済み",
+        "unread": "未読"
+      },
+      "noExcerpt": "抜粋はありません。",
+      "actions": {
+        "markRead": "既読にする",
+        "unsave": "保存を解除",
+        "save": "保存",
+        "openReader": "リーダーを開く"
+      },
+      "loadingMore": "さらに読み込み中..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "フィード記事",
+      "panelTitle": "フィード記事"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "現在この記事を要約できません。"
+      },
+      "loadingArticle": "記事を読み込み中...",
+      "actions": {
+        "openOriginal": "元記事を開く",
+        "aiSummarize": "AIで要約"
+      },
+      "noAiProfile": "AI プロファイルが設定されていません。",
+      "addAiProfile": "AI 設定で追加",
+      "generatingSummary": "要約を生成中...",
+      "tokensUsed": "使用トークン: {count}",
+      "streaming": "ストリーミング応答中...",
+      "fullContentUnavailable": "全文を利用できません",
+      "noExcerpt": "この記事の抜粋はありません。",
+      "readingAppearance": {
+        "title": "読書表示",
+        "subtitle": "読書中のタイポグラフィと間隔を調整します。",
+        "fontFamily": "フォント",
+        "fontSize": "文字サイズ",
+        "lineHeight": "行間",
+        "readingWidth": "表示幅",
+        "needFullControls": "テーマとカラープリセットの詳細設定が必要ですか？",
+        "openAppearanceSettings": "外観設定を開く"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "ニュース概要",
+      "subtitle": "読書量やフィード状態を確認し、主要ワークフローへすぐ移動できます。",
+      "neverFetched": "未取得"
+    },
+    "stats": {
+      "totalArticles": "記事総数",
+      "unread": "未読",
+      "saved": "保存済み",
+      "activeFeeds": "有効フィード"
+    },
+    "feedHealth": {
+      "title": "フィード状態",
+      "description": "最終取得に基づく状態、配信問題、古いソースを確認します。",
+      "loading": "フィード状態を読み込み中...",
+      "cards": {
+        "errors": "エラーのあるフィード",
+        "inactive": "無効フィード",
+        "stale": "古いフィード (> {hours}時間)"
+      },
+      "topUnread": {
+        "title": "未読が多いフィード",
+        "empty": "未読記事がある有効フィードはありません。",
+        "lastFetched": "最終取得: {value}",
+        "unreadCount": "未読 {count} 件"
+      }
+    },
+    "quickActions": {
+      "title": "クイック操作",
+      "description": "よく使うタスクへすぐ移動。",
+      "openArticles": "記事一覧を開く",
+      "manageFeeds": "フィード管理",
+      "manageAiProfiles": "AI プロファイル管理"
+    },
+    "queueWatch": {
+      "title": "キュー監視",
+      "description": "現在対応が必要なフィード。",
+      "feedsWithErrors": "エラーのあるフィード",
+      "staleActiveFeeds": "古い有効フィード",
+      "totalConfiguredFeeds": "設定済みフィード総数"
+    }
+  },
+  "admin": {
+    "common": {
+      "action": "操作",
+      "actions": "操作",
+      "confirm": "確認",
+      "open": "開く",
+      "edit": "編集",
+      "detail": "詳細",
+      "id": "ID",
+      "yes": "はい",
+      "no": "いいえ",
+      "updating": "更新中...",
+      "queueing": "キューに追加中...",
+      "notAvailable": "なし",
+      "noHeartbeat": "ハートビートなし",
+      "lastHeartbeat": "最終ハートビート",
+      "expiresAt": "有効期限",
+      "roles": {
+        "user": "ユーザー",
+        "admin": "管理者"
+      },
+      "accountStatus": {
+        "active": "有効",
+        "suspended": "停止中"
+      },
+      "eventStatus": {
+        "success": "成功",
+        "failed": "失敗"
+      },
+      "runtimeNodes": {
+        "worker": "ワーカー",
+        "rssScheduler": "RSS スケジューラ",
+        "contentScheduler": "コンテンツスケジューラ"
+      },
+      "runtimeStates": {
+        "healthy": "正常",
+        "stale": "古い",
+        "offline": "オフライン",
+        "unknown": "不明"
+      },
+      "queueName": {
+        "rssFetch": "RSS 取得",
+        "contentExtract": "コンテンツ抽出"
+      },
+      "queueState": {
+        "waiting": "待機中",
+        "active": "実行中",
+        "failed": "失敗",
+        "delayed": "遅延",
+        "completed": "完了"
+      },
+      "subscriptionTier": {
+        "free": "無料",
+        "basic": "Basic",
+        "pro": "Pro",
+        "max": "Max"
+      },
+      "billingInterval": {
+        "monthly": "月額",
+        "yearly": "年額"
+      },
+      "stripe": {
+        "customer": "顧客",
+        "subscription": "サブスクリプション",
+        "price": "価格"
+      },
+      "age": {
+        "label": "経過時間",
+        "secondsAgo": "{value}秒前",
+        "minutesAgo": "{value}分前",
+        "hoursAgo": "{value}時間前",
+        "secondsShort": "{value}秒",
+        "minutesShort": "{value}分",
+        "hoursShort": "{value}時間"
+      }
+    },
+    "operations": {
+      "metaTitle": "管理運用",
+      "overview": {
+        "title": "運用概要",
+        "description": "AI 利用状況、キューの健全性、ランタイムのハートビート状態を監視します。",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "AI トークン（7日）",
+            "description": "直近 7 日間の総トークン使用量です。"
+          },
+          "aiRequests7d": {
+            "title": "AI リクエスト（7日）",
+            "description": "直近 7 日間の要約リクエスト総数です。"
+          },
+          "aiFailures7d": {
+            "title": "AI 失敗（7日）",
+            "description": "直近 7 日間の要約失敗回数です。"
+          },
+          "failedQueueJobs": {
+            "title": "失敗したキュージョブ",
+            "description": "現在のワーカーキュー全体の失敗ジョブ数です。"
+          },
+          "staleFeeds": {
+            "title": "古いフィード",
+            "description": "再取得スケジュール待ちの有効なフィードです。"
+          },
+          "extractionBacklog": {
+            "title": "抽出バックログ",
+            "description": "コンテンツ抽出待ちの記事です。"
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "ランタイム状態",
+        "description": "ワーカーとスケジューラのハートビート状態です。"
+      },
+      "drillDown": {
+        "title": "詳細へ",
+        "description": "AI イベントを確認したりキュー操作を行うために詳細ページを開きます。",
+        "openAiUsage": "AI 利用状況を開く",
+        "openSystemOps": "システム運用を開く"
+      },
+      "recentFailedJobs": {
+        "title": "最近の失敗ジョブ",
+        "description": "RSS 取得とコンテンツ抽出ワーカーの最新のキュー失敗です。",
+        "empty": "最近の失敗ジョブはありません。",
+        "noFailureReason": "失敗理由はありません。",
+        "columns": {
+          "queue": "キュー",
+          "job": "ジョブ",
+          "failure": "失敗",
+          "time": "時間"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "AI 利用状況の概要を読み込めません。",
+        "systemOverview": "システム概要を読み込めません。",
+        "runtimeHealth": "ランタイム状態データを読み込めません。",
+        "recentQueueFailures": "最近のキュー失敗を読み込めません。"
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "管理 AI 利用状況",
+      "page": {
+        "title": "AI 利用状況",
+        "description": "利用イベント、最近の失敗、AI 設定の状態を確認します。",
+        "manageConfigs": "AI 設定を管理"
+      },
+      "summary": {
+        "title": "概要（7日）",
+        "description": "管理サポート向けのトークン使用量と失敗傾向です。",
+        "totalTokens": "総トークン",
+        "totalRequests": "総リクエスト",
+        "failures": "失敗数",
+        "topUser": "上位ユーザー",
+        "empty7Days": "直近 7 日間に記録された AI リクエストはありません。"
+      },
+      "filters": {
+        "title": "フィルター",
+        "description": "ユーザー、プロバイダー、モデル、状態、期間で絞り込みます。",
+        "from": "開始",
+        "to": "終了",
+        "user": {
+          "label": "ユーザー",
+          "placeholder": "名前またはメールで検索"
+        },
+        "provider": {
+          "label": "プロバイダー",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "モデル",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "状態",
+          "all": "すべての状態"
+        }
+      },
+      "events": {
+        "title": "AI イベント",
+        "description": "成功/失敗状態と安全なエラー要約を含む最近の要約アクティビティです。"
+      },
+      "table": {
+        "columns": {
+          "user": "ユーザー",
+          "providerModel": "プロバイダー / モデル",
+          "status": "状態",
+          "tokens": "トークン",
+          "duration": "所要時間",
+          "errorSummary": "エラー要約",
+          "created": "作成日時"
+        },
+        "empty": "現在のフィルターに一致する AI イベントはありません。"
+      },
+      "configDialog": {
+        "title": "AI 設定コントロール",
+        "description": "設定の所有者を確認し、個別設定を有効/無効にします。",
+        "empty": "現在のフィルターに一致する AI 設定はありません。",
+        "badges": {
+          "default": "デフォルト"
+        },
+        "select": {
+          "title": "設定を選択",
+          "description": "確認して切り替える設定を選択します。",
+          "placeholder": "AI 設定を選択"
+        },
+        "fields": {
+          "owner": "所有者",
+          "baseUrl": "ベース URL",
+          "defaultProviderUrl": "デフォルトのプロバイダー URL",
+          "updated": "更新日時"
+        },
+        "actions": {
+          "enable": "設定を有効化",
+          "disable": "設定を無効化",
+          "updating": "更新中..."
+        },
+        "confirm": {
+          "enableTitle": "この AI 設定を有効にしますか？",
+          "disableTitle": "この AI 設定を無効にしますか？",
+          "enableDescription": "{name} を有効にします。要約リクエストで再びこの設定を利用できます。",
+          "disableDescription": "{name} を無効にします。この設定を使う要約リクエストはブロックされます。"
+        }
+      },
+      "errors": {
+        "summary": "AI 利用状況の概要を読み込めません。",
+        "events": "AI 利用イベントを読み込めません。",
+        "configs": "AI 設定を読み込めません。",
+        "updateConfig": "この AI 設定を更新できません。"
+      }
+    },
+    "users": {
+      "metaTitle": "管理ユーザー",
+      "page": {
+        "title": "管理ユーザー",
+        "description": "ユーザーアカウント、契約状態、アカウント状態操作を確認します。"
+      },
+      "filters": {
+        "title": "フィルター",
+        "description": "ユーザーを検索し、ロール、アカウント状態、契約プランで結果を絞り込みます。",
+        "search": {
+          "label": "検索",
+          "placeholder": "名前またはメール"
+        },
+        "role": {
+          "label": "ロール",
+          "all": "すべてのロール"
+        },
+        "status": {
+          "label": "状態",
+          "all": "すべての状態"
+        },
+        "tier": {
+          "label": "プラン",
+          "all": "すべてのプラン"
+        }
+      },
+      "directory": {
+        "title": "ユーザー一覧",
+        "description": "ユーザー行を開いて詳細を確認し、アカウント状態を更新します。"
+      },
+      "table": {
+        "columns": {
+          "user": "ユーザー",
+          "role": "ロール",
+          "status": "状態",
+          "subscription": "契約",
+          "feeds": "フィード",
+          "created": "作成日時"
+        },
+        "empty": "現在のフィルターに一致するユーザーはいません。ロール、状態、プランのフィルターを調整してください。",
+        "hasMore": "さらにユーザーがあります。結果を絞り込むにはフィルターを調整してください。"
+      },
+      "detail": {
+        "title": "ユーザー詳細",
+        "description": "アカウント状態、契約内容、サポート操作を確認します。",
+        "empty": "アカウント詳細を確認するにはユーザーを選択してください。",
+        "accountSummary": {
+          "title": "アカウント概要",
+          "description": "メンバーシップとフィード利用状況を一目で確認します。",
+          "created": "作成日時",
+          "updated": "更新日時",
+          "feeds": "フィード",
+          "suspendedAt": "停止日時"
+        },
+        "subscription": {
+          "title": "契約",
+          "description": "プラン、課金周期、現在の有効期限です。",
+          "plan": "プラン",
+          "status": "契約状態",
+          "expires": "有効期限"
+        },
+        "actions": {
+          "title": "アカウント操作",
+          "description": "ユーザーアカウントを停止または再有効化します。",
+          "suspendReasonPlaceholder": "停止理由（任意）",
+          "suspendReasonHint": "この理由は管理者の詳細画面と監査ログに表示されます。",
+          "suspensionReason": "停止理由",
+          "noReason": "理由はありません。",
+          "suspend": "ユーザーを停止",
+          "suspending": "停止中...",
+          "reactivate": "ユーザーを再有効化",
+          "reactivating": "再有効化中..."
+        },
+        "confirm": {
+          "thisUser": "このユーザー",
+          "suspend": {
+            "title": "このユーザーを停止しますか？",
+            "description": "{name} を停止します。管理者が再有効化するまで保護されたルートにアクセスできません。",
+            "descriptionWithReason": "{name} を停止します。理由「{reason}」は管理者の監査ログに保存されます。"
+          },
+          "reactivate": {
+            "title": "このユーザーを再有効化しますか？",
+            "description": "{name} のアクセスを復元します。保護されたルートはすぐに再び利用可能になります。"
+          }
+        }
+      },
+      "errors": {
+        "list": "管理ユーザーを読み込めません。更新して再試行してください。",
+        "suspend": "このユーザーを停止できません。再試行してください。",
+        "reactivate": "このユーザーを再有効化できません。再試行してください。"
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "管理サブスクリプション",
+      "page": {
+        "title": "管理サブスクリプション",
+        "description": "課金状態を確認し、サポート用の契約変更を適用します。"
+      },
+      "filters": {
+        "title": "フィルター",
+        "description": "ユーザーで検索し、プラン、状態、課金周期、キャンセルフラグで絞り込みます。",
+        "search": {
+          "label": "検索",
+          "placeholder": "名前またはメール"
+        },
+        "tier": {
+          "label": "プラン",
+          "all": "すべてのプラン"
+        },
+        "billing": {
+          "label": "課金",
+          "all": "すべての課金タイプ"
+        },
+        "cancelFlag": {
+          "label": "キャンセルフラグ",
+          "all": "すべてのフラグ",
+          "canceling": "キャンセル予定",
+          "continuing": "継続中"
+        }
+      },
+      "directory": {
+        "title": "契約一覧",
+        "description": "行を開いてサポート用コントロールを確認し、変更を保存します。"
+      },
+      "table": {
+        "columns": {
+          "user": "ユーザー",
+          "plan": "プラン",
+          "status": "状態",
+          "expires": "有効期限",
+          "stripeIds": "Stripe ID"
+        },
+        "cancelAtPeriodEnd": "期間終了時にキャンセル",
+        "empty": "現在のフィルターに一致する契約はありません。課金フィルターを調整してください。",
+        "hasMore": "さらに契約があります。フィルターを絞り込んでください。"
+      },
+      "edit": {
+        "title": "契約を編集",
+        "description": "プラン変更、有効期限調整、キャンセルフラグをサポートします。",
+        "empty": "サポート設定を編集するには契約行を選択してください。",
+        "currentExpiry": "現在の有効期限",
+        "fields": {
+          "tier": "プラン",
+          "expiry": "有効期限",
+          "cancellation": "期間終了時にキャンセル"
+        },
+        "controls": {
+          "title": "サポートコントロール",
+          "description": "このユーザーの課金およびサポートフラグを調整します。",
+          "tierPlaceholder": "プランを選択",
+          "cancelAtPeriodEndHint": "現在の支払い期間が終わるまで契約を維持します。",
+          "save": "変更を保存",
+          "saving": "保存中...",
+          "noPendingChanges": "保存する変更はありません。",
+          "pendingFields": "保留中の項目: {fields}。"
+        },
+        "confirm": {
+          "title": "契約変更を保存しますか？",
+          "confirmLabel": "契約変更を保存",
+          "theseChanges": "これらの変更",
+          "description": "{name} に {fields} を適用します。これらの更新は管理者の監査ログに記録されます。",
+          "descriptionFallback": "保留中の契約変更を適用します。"
+        }
+      },
+      "errors": {
+        "list": "契約情報を読み込めません。更新して再試行してください。",
+        "update": "この契約を更新できません。変更内容を確認して再試行してください。"
+      }
+    },
+    "feeds": {
+      "metaTitle": "管理フィード",
+      "page": {
+        "title": "管理フィード",
+        "description": "システム全体のフィード健全性を追跡し、運用キュー操作を実行します。"
+      },
+      "filters": {
+        "title": "フィルター",
+        "description": "フィードを検索し、有効状態、エラー、古いスケジュール、抽出失敗に注目します。",
+        "search": {
+          "label": "検索",
+          "placeholder": "フィードタイトルまたは URL"
+        },
+        "enabled": {
+          "label": "有効",
+          "all": "すべてのフィード"
+        },
+        "errors": {
+          "label": "エラー",
+          "all": "すべてのエラー状態",
+          "hasErrors": "エラーあり",
+          "healthy": "正常"
+        },
+        "stale": {
+          "label": "古さ",
+          "all": "すべての鮮度状態",
+          "stale": "古い",
+          "scheduled": "予定通り"
+        },
+        "extraction": {
+          "label": "抽出",
+          "all": "すべての抽出状態",
+          "hasFailures": "失敗あり",
+          "healthy": "正常"
+        }
+      },
+      "operations": {
+        "title": "フィード運用",
+        "description": "クイック操作を使うかフィードを開いて詳細な運用情報を確認します。"
+      },
+      "table": {
+        "columns": {
+          "feed": "フィード",
+          "enabled": "有効",
+          "health": "状態",
+          "coverage": "範囲",
+          "lastFetched": "最終取得"
+        },
+        "health": {
+          "errors": "エラー: {count}",
+          "extractionFailures": "抽出失敗: {count}"
+        },
+        "coverage": {
+          "subscriptions": "{count} 件の購読",
+          "articles": "{count} 件の記事"
+        },
+        "nextFetch": "次回取得",
+        "empty": "現在のフィルターに一致するフィードはありません。状態または有効フィルターを広げてください。",
+        "hasMore": "さらにフィードがあります。結果を絞るにはフィルターを調整してください。",
+        "actions": {
+          "retryFetch": "取得を再試行",
+          "retryExtraction": "抽出を再試行"
+        },
+        "confirm": {
+          "defaultTitle": "管理操作を確認",
+          "defaultDescription": "この管理操作を確認してください。",
+          "retryFetch": {
+            "title": "RSS 取得を再試行しますか？",
+            "description": "{label} に対する RSS 取得再試行をすぐにキューへ追加します。",
+            "confirmLabel": "RSS 再試行をキューへ追加"
+          },
+          "retryExtraction": {
+            "title": "フィード抽出を再試行しますか？",
+            "description": "{label} の対象記事に対して抽出再試行をキューへ追加します。",
+            "confirmLabel": "抽出再試行をキューへ追加"
+          },
+          "enable": {
+            "title": "このフィードを有効にしますか？",
+            "description": "{label} を有効化し、定期取得を再開します。",
+            "confirmLabel": "フィードを有効化"
+          },
+          "disable": {
+            "title": "このフィードを無効にしますか？",
+            "description": "{label} を無効化します。管理者が再度有効化するか強制再試行するまで定期取得は停止します。",
+            "confirmLabel": "フィードを無効化"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "管理フィード詳細",
+        "page": {
+          "title": "フィード運用詳細",
+          "description": "記事の状態を確認し、このフィードに対する対象再試行を実行します。",
+          "backToFeeds": "フィード一覧へ戻る"
+        },
+        "empty": "フィード詳細は利用できません。",
+        "summary": {
+          "lastFetched": "最終取得",
+          "nextFetch": "次回取得",
+          "subscriptions": "購読数",
+          "articles": "記事数",
+          "rssErrors": "RSS エラー: {count}",
+          "extractionFailures": "抽出失敗: {count}",
+          "lastError": "最新エラー",
+          "noRecentErrors": "最近の RSS エラーはありません。"
+        },
+        "operations": {
+          "title": "操作",
+          "description": "フィード状態を切り替え、キュー再試行を実行します。",
+          "feedEnabled": "フィード有効化",
+          "feedEnabledHint": "無効なフィードは強制実行しない限りスケジューラでスキップされます。",
+          "retryFetch": "RSS 取得を再試行",
+          "retryFeedExtractionQueue": "フィード抽出キューを再試行"
+        },
+        "recentArticles": {
+          "title": "最近の記事",
+          "description": "最新の元記事と抽出状態です。",
+          "columns": {
+            "article": "記事",
+            "published": "公開日",
+            "status": "状態"
+          },
+          "empty": "このフィードに最近の記事はありません。",
+          "attempts": "試行回数: {count}",
+          "retryArticle": "記事を再試行",
+          "status": {
+            "extracted": "抽出済み",
+            "pending": "待機中",
+            "needsAttention": "要確認"
+          }
+        },
+        "recentFailures": {
+          "title": "最近の抽出失敗",
+          "description": "最近抽出に失敗した記事です。",
+          "columns": {
+            "article": "記事",
+            "error": "エラー",
+            "updated": "更新日時"
+          },
+          "empty": "最近の抽出失敗はありません。",
+          "attempts": "試行回数: {count}",
+          "retry": "再試行"
+        },
+        "confirm": {
+          "thisFeed": "このフィード",
+          "defaultTitle": "管理操作を確認",
+          "defaultDescription": "この管理操作を確認してください。",
+          "retryFetch": {
+            "title": "RSS 取得を再試行しますか？",
+            "description": "{label} に対する RSS 取得再試行をすぐにキューへ追加します。",
+            "confirmLabel": "RSS 再試行をキューへ追加"
+          },
+          "retryFeedExtraction": {
+            "title": "フィード抽出を再試行しますか？",
+            "description": "{label} の対象記事に対して抽出再試行をキューへ追加します。",
+            "confirmLabel": "抽出再試行をキューへ追加"
+          },
+          "retryArticleExtraction": {
+            "title": "記事抽出を再試行しますか？",
+            "description": "{title} に対する新しい抽出試行をキューへ追加します。",
+            "confirmLabel": "記事再試行をキューへ追加"
+          },
+          "enable": {
+            "title": "このフィードを有効にしますか？",
+            "description": "{label} を有効化し、定期取得を再開します。",
+            "confirmLabel": "フィードを有効化"
+          },
+          "disable": {
+            "title": "このフィードを無効にしますか？",
+            "description": "{label} を無効化します。管理者が再度有効化するか強制再試行するまで定期取得は停止します。",
+            "confirmLabel": "フィードを無効化"
+          }
+        },
+        "errors": {
+          "load": "フィード詳細を読み込めません。更新して再試行してください。",
+          "retryArticleExtraction": "記事抽出再試行をキューへ追加できません。再試行してください。"
+        }
+      },
+      "errors": {
+        "list": "フィードソースを読み込めません。更新して再試行してください。",
+        "updateState": "このフィード状態を更新できません。再試行してください。",
+        "retryFetch": "RSS 取得再試行をキューへ追加できません。再試行してください。",
+        "retryExtraction": "フィード抽出再試行をキューへ追加できません。再試行してください。"
+      }
+    },
+    "systemOps": {
+      "metaTitle": "管理システム運用",
+      "page": {
+        "title": "システム運用",
+        "description": "キュー状態を確認し、安全に単発の運用操作を実行します。"
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "失敗ジョブ",
+            "description": "現在のキュー全体の失敗ジョブ数です。"
+          },
+          "staleFeeds": {
+            "title": "古いフィード",
+            "description": "更新待ちの有効フィードです。"
+          },
+          "extractionBacklog": {
+            "title": "抽出バックログ",
+            "description": "抽出待ちの記事です。"
+          },
+          "rssWaitingJobs": {
+            "title": "RSS 待機ジョブ",
+            "description": "処理待ちの RSS 取得ジョブです。"
+          },
+          "contentWaitingJobs": {
+            "title": "コンテンツ待機ジョブ",
+            "description": "処理待ちのコンテンツ抽出ジョブです。"
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "ランタイムハートビート",
+          "description": "Redis のハートビートキーに基づくワーカーとスケジューラの稼働状況です。"
+        }
+      },
+      "stripe": {
+        "title": "Stripe 設定",
+        "description": "サーバー環境変数ではなく、ここで Stripe キーとプラン価格 ID を管理します。",
+        "status": {
+          "label": "状態",
+          "configured": "設定済み",
+          "incomplete": "未完了",
+          "secretKey": "シークレットキー",
+          "webhookSecret": "Webhook シークレット",
+          "missing": "未設定"
+        },
+        "form": {
+          "publishableKey": "公開キー",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "シークレットキー",
+          "secretPlaceholder": "現在の sk_* を保持するには空欄のままにします",
+          "webhookSecret": "Webhook シークレット",
+          "webhookPlaceholder": "現在の whsec_* を保持するには空欄のままにします",
+          "basicMonthly": "Basic 月額価格",
+          "basicYearly": "Basic 年額価格",
+          "proMonthly": "Pro 月額価格",
+          "proYearly": "Pro 年額価格",
+          "maxMonthly": "Max 月額価格",
+          "maxYearly": "Max 年額価格"
+        },
+        "lastUpdated": "最終更新",
+        "webhookEndpoint": "Webhook エンドポイント",
+        "save": "Stripe 設定を保存",
+        "saving": "保存中...",
+        "successSaved": "Stripe 設定を保存しました。",
+        "secretHint": "価格 ID だけ更新する場合はシークレット入力を空のままにできます。"
+      },
+      "manualActions": {
+        "title": "手動操作",
+        "description": "ID を指定して 1 回のフィード取得またはコンテンツ抽出を実行します。",
+        "feedSourceId": "フィードソース ID",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "ソース記事 ID",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "取得を実行",
+        "triggerExtract": "抽出を実行",
+        "errors": {
+          "feedSourceIdRequired": "フィードソース ID が必要です。",
+          "sourceArticleIdRequired": "ソース記事 ID が必要です。"
+        }
+      },
+      "queueJobs": {
+        "title": "キュージョブ",
+        "description": "キュー状態を確認し、失敗したジョブを 1 件ずつ再試行します。",
+        "filters": {
+          "queue": "キュー",
+          "state": "状態",
+          "allQueues": "すべてのキュー",
+          "allStates": "すべての状態"
+        },
+        "columns": {
+          "queue": "キュー",
+          "job": "ジョブ",
+          "state": "状態",
+          "attempts": "試行回数",
+          "failure": "失敗理由",
+          "created": "作成日時"
+        },
+        "actions": {
+          "retry": "再試行"
+        },
+        "empty": "選択したフィルターに一致するキュージョブはありません。"
+      },
+      "confirm": {
+        "defaultTitle": "操作を確認",
+        "defaultDescription": "この操作を確認してください。",
+        "retryJob": {
+          "title": "この失敗ジョブを再試行しますか？",
+          "description": "{queueName} のジョブ {jobId} の再試行をキューへ追加します。",
+          "confirmLabel": "ジョブを再試行"
+        },
+        "triggerFeedFetch": {
+          "title": "今すぐフィード取得を実行しますか？",
+          "description": "フィードソース {feedSourceId} に対して即時 RSS 取得をキューへ追加します。",
+          "confirmLabel": "フィード取得を実行"
+        },
+        "triggerContentExtract": {
+          "title": "今すぐコンテンツ抽出を実行しますか？",
+          "description": "ソース記事 {sourceArticleId} に対してコンテンツ抽出ジョブをキューへ追加します。",
+          "confirmLabel": "抽出を実行"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "システムランタイム概要を読み込めません。",
+        "queueJobs": "キュージョブを読み込めません。",
+        "stripeLoad": "Stripe 設定を読み込めません。",
+        "stripeSave": "Stripe 設定を保存できません。",
+        "executeOperation": "このシステム操作を実行できません。"
+      }
+    }
+  }
+}

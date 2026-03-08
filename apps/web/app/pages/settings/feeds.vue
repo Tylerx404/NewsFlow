@@ -29,10 +29,12 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Feed Management",
+  titleKey: "settings.feeds.metaTitle",
 });
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 
 type FeedDraft = {
@@ -157,7 +159,7 @@ const handleUpdate = async (id: string) => {
     });
   } catch (error) {
     rowErrorByFeedId[id] =
-      error instanceof Error ? error.message : "Unable to update feed.";
+      error instanceof Error ? error.message : t("settings.feeds.errors.update");
   } finally {
     rowPendingUpdateByFeedId[id] = false;
   }
@@ -171,7 +173,7 @@ const handleRefresh = async (id: string) => {
     await refreshMutation.mutateAsync({ id });
   } catch (error) {
     rowErrorByFeedId[id] =
-      error instanceof Error ? error.message : "Unable to refresh feed.";
+      error instanceof Error ? error.message : t("settings.feeds.errors.refresh");
   } finally {
     rowPendingRefreshByFeedId[id] = false;
   }
@@ -201,50 +203,50 @@ const confirmDeleteFeed = async () => {
     deleteDialogFeedId.value = null;
   } catch (error) {
     rowErrorByFeedId[id] =
-      error instanceof Error ? error.message : "Unable to delete feed.";
+      error instanceof Error ? error.message : t("settings.feeds.errors.delete");
   } finally {
     rowPendingDeleteByFeedId[id] = false;
   }
 };
 
 const formatDate = (value: Date | string | null) => {
-  if (!value) return "Never";
+  if (!value) return t("settings.feeds.labels.never");
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return date.toLocaleString(intlLocale.value);
 };
 </script>
 
 <template>
-  <Card>
+    <Card>
       <CardHeader>
-        <CardTitle>Feed Management</CardTitle>
+        <CardTitle>{{ t("settings.feeds.page.title") }}</CardTitle>
         <CardDescription>
-          Update feed metadata, toggle activity, refresh, or remove feeds.
+          {{ t("settings.feeds.page.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
         <p v-if="feedListQuery.isLoading.value" class="text-sm text-muted-foreground">
-          Loading feeds...
+          {{ t("settings.feeds.labels.loading") }}
         </p>
         <p v-else-if="feedList.length === 0" class="text-sm text-muted-foreground">
-          No feeds available.
+          {{ t("settings.feeds.labels.empty") }}
         </p>
 
         <div v-else class="space-y-4">
           <div class="hidden overflow-x-auto rounded-md border md:block">
             <Table>
               <TableCaption class="sr-only">
-                Feed management table with metadata and feed actions.
+                {{ t("settings.feeds.labels.tableCaption") }}
               </TableCaption>
               <TableHeader class="bg-muted/60 text-left">
                 <TableRow>
-                  <TableHead class="px-3 py-2">Custom title</TableHead>
-                  <TableHead class="px-3 py-2">Category</TableHead>
-                  <TableHead class="px-3 py-2">Unread</TableHead>
-                  <TableHead class="px-3 py-2">Last fetched</TableHead>
-                  <TableHead class="px-3 py-2">Errors</TableHead>
-                  <TableHead class="px-3 py-2">Active</TableHead>
-                  <TableHead class="px-3 py-2">Actions</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.customTitle") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.category") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.unread") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.lastFetched") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.errors") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.active") }}</TableHead>
+                  <TableHead class="px-3 py-2">{{ t("settings.feeds.labels.actions") }}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -257,7 +259,7 @@ const formatDate = (value: Date | string | null) => {
                     <div class="space-y-2">
                       <Input
                         v-model="draftByFeedId[feed.id].title"
-                        placeholder="Use source title"
+                        :placeholder="t('settings.feeds.labels.useSourceTitle')"
                       />
                       <p class="break-all text-xs text-muted-foreground">
                         {{ feed.url }}
@@ -266,7 +268,7 @@ const formatDate = (value: Date | string | null) => {
                   </TableCell>
 
                   <TableCell class="px-3 py-3 align-top">
-                    <Input v-model="draftByFeedId[feed.id].category" placeholder="Category" />
+                    <Input v-model="draftByFeedId[feed.id].category" :placeholder="t('settings.feeds.labels.category')" />
                   </TableCell>
 
                   <TableCell class="px-3 py-3 align-top">{{ feed.unreadCount }}</TableCell>
@@ -285,7 +287,7 @@ const formatDate = (value: Date | string | null) => {
                   <TableCell class="px-3 py-3 align-top">
                     <label class="flex items-center gap-2 text-xs">
                       <Switch v-model="draftByFeedId[feed.id].isActive" />
-                      Active
+                      {{ t("settings.feeds.labels.active") }}
                     </label>
                   </TableCell>
 
@@ -298,7 +300,7 @@ const formatDate = (value: Date | string | null) => {
                           :disabled="isRowBusy(feed.id)"
                           @click="handleUpdate(feed.id)"
                         >
-                          {{ rowPendingUpdateByFeedId[feed.id] ? "Saving..." : "Save" }}
+                          {{ rowPendingUpdateByFeedId[feed.id] ? t("settings.feeds.actions.saving") : t("settings.feeds.actions.save") }}
                         </Button>
                         <Button
                           size="sm"
@@ -306,16 +308,16 @@ const formatDate = (value: Date | string | null) => {
                           :disabled="isRowBusy(feed.id)"
                           @click="handleRefresh(feed.id)"
                         >
-                          {{ rowPendingRefreshByFeedId[feed.id] ? "Refreshing..." : "Refresh" }}
+                          {{ rowPendingRefreshByFeedId[feed.id] ? t("settings.feeds.actions.refreshing") : t("settings.feeds.actions.refresh") }}
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           :disabled="isRowBusy(feed.id)"
-                          :aria-label="`Delete feed ${feed.title}`"
+                          :aria-label="t('settings.feeds.actions.deleteAria', { title: feed.title })"
                           @click="openDeleteDialog(feed.id)"
                         >
-                          Delete
+                          {{ t("settings.feeds.actions.delete") }}
                         </Button>
                       </div>
                       <p v-if="rowErrorByFeedId[feed.id]" aria-live="polite" class="text-xs text-destructive">
@@ -335,35 +337,35 @@ const formatDate = (value: Date | string | null) => {
               class="space-y-4 rounded-lg border p-4"
             >
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`feed-title-${feed.id}`">Custom title</label>
+                <label class="text-sm font-medium" :for="`feed-title-${feed.id}`">{{ t("settings.feeds.labels.customTitle") }}</label>
                 <Input
                   :id="`feed-title-${feed.id}`"
                   v-model="draftByFeedId[feed.id].title"
-                  placeholder="Use source title"
+                  :placeholder="t('settings.feeds.labels.useSourceTitle')"
                 />
                 <p class="break-all text-xs text-muted-foreground">{{ feed.url }}</p>
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`feed-category-${feed.id}`">Category</label>
+                <label class="text-sm font-medium" :for="`feed-category-${feed.id}`">{{ t("settings.feeds.labels.category") }}</label>
                 <Input
                   :id="`feed-category-${feed.id}`"
                   v-model="draftByFeedId[feed.id].category"
-                  placeholder="Category"
+                  :placeholder="t('settings.feeds.labels.category')"
                 />
               </div>
 
               <div class="grid grid-cols-2 gap-3 rounded-md border p-3 text-xs">
                 <div>
-                  <p class="text-muted-foreground">Unread</p>
+                  <p class="text-muted-foreground">{{ t("settings.feeds.labels.unread") }}</p>
                   <p class="font-medium">{{ feed.unreadCount }}</p>
                 </div>
                 <div>
-                  <p class="text-muted-foreground">Last fetched</p>
+                  <p class="text-muted-foreground">{{ t("settings.feeds.labels.lastFetched") }}</p>
                   <p class="font-medium">{{ formatDate(feed.lastFetched) }}</p>
                 </div>
                 <div class="col-span-2">
-                  <p class="text-muted-foreground">Errors</p>
+                  <p class="text-muted-foreground">{{ t("settings.feeds.labels.errors") }}</p>
                   <p class="font-medium">{{ feed.errorCount }}</p>
                   <p v-if="feed.lastError" class="mt-1 text-destructive">
                     {{ feed.lastError }}
@@ -372,7 +374,7 @@ const formatDate = (value: Date | string | null) => {
               </div>
 
               <label class="flex items-center justify-between gap-3 rounded-md border p-3 text-sm">
-                <span>Active</span>
+                <span>{{ t("settings.feeds.labels.active") }}</span>
                 <Switch v-model="draftByFeedId[feed.id].isActive" />
               </label>
 
@@ -383,7 +385,7 @@ const formatDate = (value: Date | string | null) => {
                   :disabled="isRowBusy(feed.id)"
                   @click="handleUpdate(feed.id)"
                 >
-                  {{ rowPendingUpdateByFeedId[feed.id] ? "Saving..." : "Save" }}
+                  {{ rowPendingUpdateByFeedId[feed.id] ? t("settings.feeds.actions.saving") : t("settings.feeds.actions.save") }}
                 </Button>
                 <Button
                   size="sm"
@@ -391,16 +393,16 @@ const formatDate = (value: Date | string | null) => {
                   :disabled="isRowBusy(feed.id)"
                   @click="handleRefresh(feed.id)"
                 >
-                  {{ rowPendingRefreshByFeedId[feed.id] ? "Refreshing..." : "Refresh" }}
+                  {{ rowPendingRefreshByFeedId[feed.id] ? t("settings.feeds.actions.refreshing") : t("settings.feeds.actions.refresh") }}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   :disabled="isRowBusy(feed.id)"
-                  :aria-label="`Delete feed ${feed.title}`"
+                  :aria-label="t('settings.feeds.actions.deleteAria', { title: feed.title })"
                   @click="openDeleteDialog(feed.id)"
                 >
-                  Delete
+                  {{ t("settings.feeds.actions.delete") }}
                 </Button>
               </div>
 
@@ -419,20 +421,20 @@ const formatDate = (value: Date | string | null) => {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete this feed?</AlertDialogTitle>
+          <AlertDialogTitle>{{ t("settings.feeds.dialogs.deleteTitle") }}</AlertDialogTitle>
           <AlertDialogDescription>
             <span v-if="selectedDeleteFeed">
-              Feed "{{ selectedDeleteFeed.title }}" will be removed.
+              {{ t("settings.feeds.dialogs.deleteDescriptionWithTitle", { title: selectedDeleteFeed.title }) }}
             </span>
             <span v-else>
-              This action cannot be undone.
+              {{ t("settings.feeds.dialogs.cannotUndo") }}
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
           <AlertDialogCancel :disabled="deleteDialogFeedId ? rowPendingDeleteByFeedId[deleteDialogFeedId] : false">
-            Cancel
+            {{ t("common.actions.cancel") }}
           </AlertDialogCancel>
           <Button
             type="button"
@@ -442,8 +444,8 @@ const formatDate = (value: Date | string | null) => {
           >
             {{
               deleteDialogFeedId && rowPendingDeleteByFeedId[deleteDialogFeedId]
-                ? "Deleting..."
-                : "Delete feed"
+                ? t("settings.feeds.actions.deleting")
+                : t("settings.feeds.actions.deleteFeed")
             }}
           </Button>
         </AlertDialogFooter>

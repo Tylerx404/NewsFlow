@@ -16,25 +16,27 @@ import { useReadingPreferences } from "@/composables/use-reading-preferences";
 import { formatArticleContent } from "@/lib/article-content";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import {
+  getReaderContentWidthOptions,
+  getReaderFontFamilyOptions,
+  getReaderFontSizeOptions,
+  getReaderLineHeightOptions,
   isReaderContentWidth,
   isReaderFontFamily,
   isReaderFontSize,
   isReaderLineHeight,
-  readerContentWidthOptions,
-  readerFontFamilyOptions,
-  readerFontSizeOptions,
-  readerLineHeightOptions,
 } from "@/lib/reader-preferences";
 import { formatSummaryMarkdown } from "@/lib/summary-markdown";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Reader",
+  titleKey: "layout.titles.reader",
 });
 
 const route = useRoute();
 const { $orpc } = useNuxtApp();
+const { locale, t } = useI18n();
+const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 const readingPreferences = useReadingPreferences();
 
@@ -127,7 +129,7 @@ const summarizeMutation = useMutation(
       summaryError.value =
         error instanceof Error
           ? error.message
-          : "Unable to summarize this article right now.";
+          : t("article.detail.errors.summarize");
       stopSummaryStream();
     },
   })
@@ -168,6 +170,7 @@ const handleSummarize = async () => {
 
   await summarizeMutation.mutateAsync({
     articleId: articleId.value,
+    language: locale.value,
     ...(selectedAiConfigId.value ? { aiConfigId: selectedAiConfigId.value } : {}),
   });
 };
@@ -175,6 +178,10 @@ const handleSummarize = async () => {
 const formattedArticleContent = computed(() =>
   formatArticleContent(articleQuery.data.value?.content ?? null)
 );
+const readerFontFamilyOptions = computed(() => getReaderFontFamilyOptions(t));
+const readerFontSizeOptions = computed(() => getReaderFontSizeOptions(t));
+const readerLineHeightOptions = computed(() => getReaderLineHeightOptions(t));
+const readerContentWidthOptions = computed(() => getReaderContentWidthOptions(t));
 const formattedSummaryContent = computed(() =>
   formatSummaryMarkdown(streamedSummaryText.value)
 );
@@ -223,7 +230,7 @@ const publishedAtLabel = computed(() => {
     return "";
   }
 
-  return new Date(dateValue).toLocaleString();
+  return new Date(dateValue).toLocaleString(intlLocale.value);
 });
 
 onBeforeUnmount(() => {
@@ -250,7 +257,7 @@ onBeforeUnmount(() => {
       </CardHeader>
       <CardContent class="p-0">
         <p v-if="articleQuery.isLoading.value" class="p-6 text-sm text-muted-foreground">
-          Loading article...
+          {{ t("article.detail.loadingArticle") }}
         </p>
         <p v-else-if="articleQuery.error.value" class="p-6 text-sm text-destructive">
           {{ articleQuery.error.value.message }}
@@ -259,20 +266,20 @@ onBeforeUnmount(() => {
           <div class="flex flex-wrap items-center gap-3">
             <Button as-child variant="outline">
               <a :href="articleQuery.data.value.link" target="_blank" rel="noreferrer">
-                Open original article
+                {{ t("article.detail.actions.openOriginal") }}
               </a>
             </Button>
             <Button
               :disabled="isSummaryBusy || articleQuery.isLoading.value || !hasAiProfiles"
               @click="handleSummarize"
             >
-              AI Summarize
+              {{ t("article.detail.actions.aiSummarize") }}
             </Button>
           </div>
           <p v-if="!hasAiProfiles" class="text-sm text-muted-foreground">
-            No AI profile configured.
+            {{ t("article.detail.noAiProfile") }}
             <NuxtLink class="underline underline-offset-4" to="/settings/ai">
-              Add one in AI settings
+              {{ t("article.detail.addAiProfile") }}
             </NuxtLink>
           </p>
           <div
@@ -287,7 +294,7 @@ onBeforeUnmount(() => {
           >
             <div class="flex items-center gap-2 text-sm font-medium">
               <span class="size-2 animate-pulse rounded-full bg-primary" />
-              Generating summary...
+              {{ t("article.detail.generatingSummary") }}
             </div>
             <div class="space-y-2">
               <div class="h-2 rounded bg-muted/80 animate-pulse" />
@@ -300,10 +307,10 @@ onBeforeUnmount(() => {
             class="space-y-2 rounded-md border bg-background p-4"
           >
             <p class="text-xs text-muted-foreground">
-              Tokens used: {{ summaryTokens ?? 0 }}
+              {{ t("article.detail.tokensUsed", { count: summaryTokens ?? 0 }) }}
             </p>
             <p v-if="isStreamingSummary" class="text-xs text-muted-foreground animate-pulse">
-              Streaming response...
+              {{ t("article.detail.streaming") }}
             </p>
             <div
               class="reader-content max-w-none"
@@ -317,9 +324,9 @@ onBeforeUnmount(() => {
               v-html="formattedArticleContent"
             />
             <div v-else class="space-y-2 text-sm">
-              <p class="font-medium">Full content unavailable</p>
+              <p class="font-medium">{{ t("article.detail.fullContentUnavailable") }}</p>
               <p class="text-muted-foreground">
-                {{ articleQuery.data.value.excerpt || "No excerpt available for this article." }}
+                {{ articleQuery.data.value.excerpt || t("article.detail.noExcerpt") }}
               </p>
             </div>
           </article>
@@ -329,14 +336,14 @@ onBeforeUnmount(() => {
 
     <Card class="h-fit xl:sticky xl:top-6">
       <CardHeader class="space-y-2">
-        <CardTitle class="text-base">Reading Appearance</CardTitle>
+        <CardTitle class="text-base">{{ t("article.detail.readingAppearance.title") }}</CardTitle>
         <p class="text-sm text-muted-foreground">
-          Adjust typography and spacing while reading.
+          {{ t("article.detail.readingAppearance.subtitle") }}
         </p>
       </CardHeader>
       <CardContent class="space-y-4">
         <div class="space-y-2">
-          <p class="text-sm font-medium">Font family</p>
+          <p class="text-sm font-medium">{{ t("article.detail.readingAppearance.fontFamily") }}</p>
           <Select
             :model-value="readingPreferences.fontFamily"
             @update:model-value="updateFontFamily"
@@ -357,7 +364,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Font size</p>
+          <p class="text-sm font-medium">{{ t("article.detail.readingAppearance.fontSize") }}</p>
           <Select
             :model-value="readingPreferences.fontSize"
             @update:model-value="updateFontSize"
@@ -378,7 +385,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Line height</p>
+          <p class="text-sm font-medium">{{ t("article.detail.readingAppearance.lineHeight") }}</p>
           <Select
             :model-value="readingPreferences.lineHeight"
             @update:model-value="updateLineHeight"
@@ -399,7 +406,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Reading width</p>
+          <p class="text-sm font-medium">{{ t("article.detail.readingAppearance.readingWidth") }}</p>
           <Select
             :model-value="readingPreferences.contentWidth"
             @update:model-value="updateContentWidth"
@@ -421,11 +428,11 @@ onBeforeUnmount(() => {
 
         <div class="rounded-lg border bg-muted/20 p-3">
           <p class="text-xs text-muted-foreground">
-            Need full controls for theme and color presets?
+            {{ t("article.detail.readingAppearance.needFullControls") }}
           </p>
           <Button as-child class="mt-3 w-full" size="sm" variant="outline">
             <NuxtLink to="/settings/appearance">
-              Open appearance settings
+              {{ t("article.detail.readingAppearance.openAppearanceSettings") }}
             </NuxtLink>
           </Button>
         </div>

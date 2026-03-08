@@ -1,0 +1,1285 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "개인 AI RSS"
+  },
+  "locale": {
+    "label": "언어",
+    "options": {
+      "en": "English",
+      "vi": "Tiếng Việt",
+      "zh": "中文",
+      "kr": "한국어",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "추가",
+      "save": "저장",
+      "cancel": "취소",
+      "delete": "삭제",
+      "refresh": "새로고침",
+      "manage": "관리",
+      "loading": "불러오는 중..."
+    },
+    "states": {
+      "enabled": "사용",
+      "disabled": "사용 안 함"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "대시보드",
+      "articles": "아티클",
+      "settings": "설정",
+      "reader": "리더"
+    }
+  },
+  "shell": {
+    "groups": {
+      "platform": "플랫폼",
+      "navigation": "탐색",
+      "admin": "관리자",
+      "yourFeeds": "내 피드",
+      "discover": "탐색"
+    },
+    "nav": {
+      "toggle": "토글",
+      "moreActions": "추가 작업"
+    },
+    "navigation": {
+      "dashboard": "대시보드",
+      "articles": "아티클",
+      "settings": "설정",
+      "operations": "운영",
+      "aiUsage": "AI 사용량",
+      "systemOps": "시스템 운영",
+      "users": "사용자",
+      "subscriptions": "구독",
+      "feeds": "피드"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "피드 추가",
+      "loading": "피드를 불러오는 중...",
+      "empty": "아직 피드가 없습니다. 위에서 첫 RSS 피드를 추가하세요.",
+      "actions": {
+        "refreshNow": "지금 새로고침",
+        "manageFeeds": "피드 관리",
+        "removeFeed": "피드 제거"
+      },
+      "confirm": {
+        "remove": "\"{title}\" 피드를 제거할까요?"
+      }
+    },
+    "discover": {
+      "empty": "추천 피드를 모두 추가했습니다."
+    },
+    "errors": {
+      "addFeed": "피드를 추가할 수 없습니다.",
+      "refreshFeed": "피드를 새로고침할 수 없습니다.",
+      "removeFeed": "피드를 제거할 수 없습니다."
+    },
+    "user": {
+      "defaultName": "NewsFlow 사용자",
+      "personalSettings": "개인 설정",
+      "appearance": "외형",
+      "logOut": "로그아웃"
+    }
+  },
+  "auth": {
+    "common": {
+      "name": "이름",
+      "namePlaceholder": "홍길동",
+      "email": "이메일",
+      "emailPlaceholder": "name{'@'}example.com",
+      "password": "비밀번호",
+      "orContinueWith": "또는 다음으로 계속",
+      "heroImageAlt": "인증 화면 이미지",
+      "termsPrefix": "계속을 누르면 다음에 동의하게 됩니다.",
+      "termsOfService": "서비스 약관",
+      "termsAnd": "및",
+      "privacyPolicy": "개인정보 처리방침"
+    },
+    "login": {
+      "title": "다시 오신 것을 환영합니다",
+      "subtitle": "NewsFlow 계정에 로그인하세요",
+      "forgotPassword": "비밀번호를 잊으셨나요?",
+      "submit": "로그인",
+      "submitting": "로그인 중...",
+      "noAccount": "계정이 없으신가요?",
+      "signUp": "회원가입",
+      "sso": {
+        "apple": "Apple로 로그인",
+        "google": "Google로 로그인",
+        "meta": "Meta로 로그인"
+      },
+      "errors": {
+        "generic": "지금은 로그인할 수 없습니다. 다시 시도하세요.",
+        "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다."
+      }
+    },
+    "signup": {
+      "title": "계정 만들기",
+      "subtitle": "이메일을 입력해 계정을 생성하세요",
+      "emailDescription": "연락을 위해 이 이메일을 사용합니다. 다른 사람과 공유하지 않습니다.",
+      "confirmPassword": "비밀번호 확인",
+      "passwordHint": "최소 8자 이상이어야 합니다.",
+      "submit": "계정 만들기",
+      "submitting": "계정 생성 중...",
+      "haveAccount": "이미 계정이 있나요?",
+      "signIn": "로그인",
+      "sso": {
+        "apple": "Apple로 가입",
+        "google": "Google로 가입",
+        "meta": "Meta로 가입"
+      },
+      "errors": {
+        "generic": "지금은 계정을 만들 수 없습니다. 다시 시도하세요.",
+        "passwordConfirmationMismatch": "비밀번호 확인이 일치하지 않습니다.",
+        "createFailed": "계정을 생성할 수 없습니다."
+      }
+    }
+  },
+  "public": {
+    "home": {
+      "subtitle": "개인화된 AI 기반 RSS 리더입니다.",
+      "login": "로그인",
+      "signUp": "회원가입",
+      "pricing": "요금제"
+    },
+    "pricing": {
+      "badge": "요금제",
+      "title": "성장 플랜을 선택하세요",
+      "subtitle": "플랜을 선택하면 결제 후 즉시 사용 가능합니다. AI 워크플로우에 더 많은 속도와 용량이 필요할 때 업그레이드하세요.",
+      "bestValue": "최고의 선택",
+      "billing": {
+        "monthly": "월간 결제",
+        "yearly": "연간 결제"
+      },
+      "suffix": {
+        "month": "월",
+        "year": "년"
+      },
+      "meta": {
+        "monthly": "월 단위 결제, 언제든 해지 가능.",
+        "yearly": "연 단위 결제, 월 {price} 수준입니다.",
+        "discount": "연간 결제로 약 {percent}% 절약할 수 있습니다."
+      },
+      "actions": {
+        "choosePlan": "플랜 선택",
+        "createAccount": "계정 만들기",
+        "backHome": "홈으로 돌아가기",
+        "goSubscriptionSettings": "구독 설정으로 이동"
+      },
+      "plans": {
+        "basic": {
+          "label": "Basic",
+          "subtitle": "개인 테스트와 탐색을 위한 입문 플랜입니다.",
+          "features": {
+            "coreRss": "핵심 RSS 읽기 워크플로우",
+            "aiOccasional": "가벼운 사용을 위한 AI 요약",
+            "instantAccess": "결제 후 즉시 사용 가능"
+          }
+        },
+        "pro": {
+          "label": "Pro",
+          "subtitle": "자주 AI 요약을 사용하고 매일 읽는 사용자에게 권장됩니다.",
+          "features": {
+            "everythingBasic": "Basic의 모든 기능 포함",
+            "higherAiLimits": "더 높은 AI 사용 한도",
+            "instantAccess": "결제 후 즉시 사용 가능"
+          }
+        },
+        "max": {
+          "label": "Max",
+          "subtitle": "최대 한도와 우선 지원이 필요한 파워 유저용 플랜입니다.",
+          "features": {
+            "everythingPro": "Pro의 모든 기능 포함",
+            "highestAiCapacity": "최대 AI 사용 용량",
+            "prioritySupport": "우선 지원 채널"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "외형",
+        "description": "테마 모드, 읽기 색상, 타이포그래피, 글 레이아웃 설정입니다."
+      },
+      "personal": {
+        "label": "개인",
+        "description": "프로필, 비밀번호, 활성 세션, 구독 개요를 관리합니다."
+      },
+      "ai": {
+        "label": "AI 프로필",
+        "description": "요약 작업을 위한 공급자, 모델, 기본 프로필 설정입니다."
+      },
+      "feeds": {
+        "label": "피드 관리",
+        "description": "피드 메타데이터, 상태, 새로고침 작업, 정리 기능입니다."
+      }
+    },
+    "index": {
+      "redirecting": "설정으로 이동 중..."
+    },
+    "appearance": {
+      "metaTitle": "외형 설정",
+      "page": {
+        "readingExperience": {
+          "title": "읽기 경험",
+          "description": "읽기 습관에 맞게 외형, 타이포그래피, 레이아웃을 조정하세요."
+        },
+        "fields": {
+          "themeMode": "테마 모드",
+          "colorPreset": "색상 프리셋",
+          "fontFamily": "글꼴",
+          "fontSize": "글자 크기",
+          "lineHeight": "줄 높이",
+          "readingWidth": "읽기 폭"
+        },
+        "savedNotice": "설정은 브라우저에 저장되며 즉시 적용됩니다.",
+        "resetDefaults": "기본값으로 재설정"
+      },
+      "preview": {
+        "title": "실시간 미리보기",
+        "description": "전체 아티클을 읽기 전에 타이포그래피와 간격을 미리 확인하세요.",
+        "sample": {
+          "heading": "모닝 브리핑: 시장 혼조 출발",
+          "highlightsLabel": "핵심:",
+          "paragraph1": "글로벌 지수는 혼조로 출발했고 에너지 주식이 상대적으로 강세를 보였습니다. 변동성은 당분간 높게 유지될 것으로 보입니다.",
+          "paragraph2Prefix": "이 문단은",
+          "italic": "기울임 강조",
+          "bold": "굵은 텍스트",
+          "paragraph2Suffix": "와 일반 본문 리듬을 보여줍니다.",
+          "quote": "독자는 눈의 피로 없이 장시간 집중해서 읽을 수 있어야 합니다.",
+          "bullet1": "더 일관된 텍스트 계층",
+          "bullet2": "섹션 간 간격 개선",
+          "bullet3": "출처 링크 가시성 향상",
+          "openSourceReport": "원문 보고서 열기"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "시스템",
+            "description": "기기 외형 설정을 따릅니다."
+          },
+          "light": {
+            "label": "라이트",
+            "description": "항상 밝은 인터페이스를 사용합니다."
+          },
+          "dark": {
+            "label": "다크",
+            "description": "항상 어두운 인터페이스를 사용합니다."
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "중립",
+            "description": "중립 톤의 균형 잡힌 대비."
+          },
+          "paper": {
+            "label": "웜 페이퍼",
+            "description": "장시간 읽기에 적합한 따뜻한 배경."
+          },
+          "slate": {
+            "label": "슬레이트",
+            "description": "차가운 톤과 선명한 텍스트 대비."
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "모던 산세리프",
+            "description": "가독성이 높은 산세리프 텍스트."
+          },
+          "serif": {
+            "label": "에디토리얼 세리프",
+            "description": "장문 읽기에 어울리는 세리프 리듬."
+          },
+          "mono": {
+            "label": "모노스페이스",
+            "description": "기술 문서에 적합한 고정폭 텍스트."
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "작게",
+            "description": "더 많은 콘텐츠를 보여주는 컴팩트 레이아웃."
+          },
+          "md": {
+            "label": "보통",
+            "description": "일상 읽기에 균형 잡힌 크기."
+          },
+          "lg": {
+            "label": "크게",
+            "description": "더 쉽게 훑어볼 수 있는 큰 글자."
+          },
+          "xl": {
+            "label": "매우 크게",
+            "description": "최대 가독성을 위한 큰 본문."
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "촘촘하게",
+            "description": "밀도 높은 읽기를 위한 좁은 줄 간격."
+          },
+          "normal": {
+            "label": "보통",
+            "description": "대부분 기사에 적합한 표준 간격."
+          },
+          "relaxed": {
+            "label": "여유롭게",
+            "description": "느린 읽기를 위한 넓은 세로 간격."
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "좁게",
+            "description": "집중 읽기에 적합한 짧은 줄 길이."
+          },
+          "normal": {
+            "label": "보통",
+            "description": "혼합 콘텐츠에 균형 잡힌 폭."
+          },
+          "wide": {
+            "label": "넓게",
+            "description": "풍부한 미디어를 위한 넓은 가로 공간."
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "피드 관리",
+      "page": {
+        "title": "피드 관리",
+        "description": "피드 메타데이터를 업데이트하고 활성화, 새로고침, 삭제를 관리합니다."
+      },
+      "labels": {
+        "tableCaption": "메타데이터와 작업을 포함한 피드 관리 테이블.",
+        "customTitle": "사용자 지정 제목",
+        "category": "카테고리",
+        "unread": "읽지 않음",
+        "lastFetched": "마지막 가져오기",
+        "errors": "오류",
+        "active": "활성",
+        "actions": "작업",
+        "useSourceTitle": "원본 제목 사용",
+        "loading": "피드를 불러오는 중...",
+        "empty": "사용 가능한 피드가 없습니다.",
+        "never": "없음"
+      },
+      "actions": {
+        "save": "저장",
+        "saving": "저장 중...",
+        "refresh": "새로고침",
+        "refreshing": "새로고침 중...",
+        "delete": "삭제",
+        "deleteAria": "피드 {title} 삭제",
+        "deleting": "삭제 중...",
+        "deleteFeed": "피드 삭제"
+      },
+      "dialogs": {
+        "deleteTitle": "이 피드를 삭제할까요?",
+        "deleteDescriptionWithTitle": "피드 \"{title}\" 이(가) 삭제됩니다.",
+        "cannotUndo": "이 작업은 되돌릴 수 없습니다."
+      },
+      "errors": {
+        "update": "피드를 업데이트할 수 없습니다.",
+        "refresh": "피드를 새로고침할 수 없습니다.",
+        "delete": "피드를 삭제할 수 없습니다."
+      }
+    },
+    "ai": {
+      "metaTitle": "AI 프로필",
+      "page": {
+        "title": "AI 프로필",
+        "description": "리더 요약 동작의 기본 프로필을 관리합니다."
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "프로필을 불러오는 중...",
+        "noProfiles": "아직 프로필이 없습니다. 생성하면 AI 요약을 사용할 수 있습니다.",
+        "default": "기본",
+        "currentKey": "현재 키",
+        "model": "모델",
+        "loadingModels": "모델 로딩 중...",
+        "selectModel": "모델 선택",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "비워두면 제공자 기본값 사용",
+        "newApiKey": "새 API 키",
+        "keepCurrentKey": "비워두면 현재 키 유지",
+        "mainOpenAi": "메인 OpenAI",
+        "provider": "제공자",
+        "selectProvider": "제공자 선택",
+        "selectToLoadModels": "열어 모델 불러오기",
+        "apiKey": "API 키",
+        "optional": "선택",
+        "defaultPrefix": "기본값",
+        "canCustomizeByok": "BYOK 사용자 지정 가능",
+        "managedAutomatically": "자동 관리"
+      },
+      "actions": {
+        "createProfile": "프로필 생성",
+        "setDefault": "기본으로 설정",
+        "setting": "설정 중...",
+        "saveChanges": "변경 사항 저장",
+        "saving": "저장 중...",
+        "deleting": "삭제 중...",
+        "deleteProfile": "프로필 삭제",
+        "deleteAria": "프로필 {name} 삭제",
+        "creating": "생성 중..."
+      },
+      "dialogs": {
+        "createTitle": "프로필 생성",
+        "createDescription": "제공자와 모델을 설정하세요. API 키는 서버에서 암호화됩니다.",
+        "deleteTitle": "AI 프로필을 삭제할까요?",
+        "deleteDescriptionWithName": "프로필 \"{name}\" 이(가) 삭제됩니다.",
+        "cannotUndo": "이 작업은 되돌릴 수 없습니다."
+      },
+      "errors": {
+        "create": "AI 프로필을 생성할 수 없습니다.",
+        "fetchModels": "모델을 불러올 수 없습니다.",
+        "loadModels": "모델 로드에 실패했습니다.",
+        "setDefault": "기본 프로필 설정에 실패했습니다.",
+        "nameRequired": "이름은 필수입니다.",
+        "modelRequired": "모델은 필수입니다.",
+        "update": "프로필을 업데이트할 수 없습니다.",
+        "delete": "프로필을 삭제할 수 없습니다."
+      }
+    }
+  },
+  "articles": {
+    "list": {
+      "latestTitle": "최신 아티클",
+      "allFeedsTitle": "전체 피드",
+      "subtitle": "AI로 피드를 읽고 저장하고 요약하세요.",
+      "searchPlaceholder": "제목, 요약, 링크로 검색",
+      "stats": {
+        "total": "전체",
+        "unread": "읽지 않음",
+        "saved": "저장됨"
+      },
+      "filters": {
+        "all": "전체",
+        "unread": "읽지 않음",
+        "saved": "저장됨"
+      },
+      "loadingArticle": "아티클을 불러오는 중...",
+      "empty": "이 필터에 맞는 아티클이 없습니다.",
+      "badges": {
+        "saved": "저장됨",
+        "unread": "읽지 않음"
+      },
+      "noExcerpt": "요약이 없습니다.",
+      "actions": {
+        "markRead": "읽음 표시",
+        "unsave": "저장 취소",
+        "save": "저장",
+        "openReader": "리더 열기"
+      },
+      "loadingMore": "더 불러오는 중..."
+    }
+  },
+  "feeds": {
+    "page": {
+      "title": "피드 아티클",
+      "panelTitle": "피드 아티클"
+    }
+  },
+  "article": {
+    "detail": {
+      "errors": {
+        "summarize": "지금은 이 아티클을 요약할 수 없습니다."
+      },
+      "loadingArticle": "아티클을 불러오는 중...",
+      "actions": {
+        "openOriginal": "원문 열기",
+        "aiSummarize": "AI 요약"
+      },
+      "noAiProfile": "구성된 AI 프로필이 없습니다.",
+      "addAiProfile": "AI 설정에서 추가",
+      "generatingSummary": "요약 생성 중...",
+      "tokensUsed": "사용 토큰: {count}",
+      "streaming": "응답 스트리밍 중...",
+      "fullContentUnavailable": "전체 내용을 사용할 수 없음",
+      "noExcerpt": "이 아티클의 요약이 없습니다.",
+      "readingAppearance": {
+        "title": "읽기 외형",
+        "subtitle": "읽는 동안 타이포그래피와 간격을 조정합니다.",
+        "fontFamily": "글꼴",
+        "fontSize": "글자 크기",
+        "lineHeight": "줄 높이",
+        "readingWidth": "읽기 폭",
+        "needFullControls": "테마와 색상 프리셋의 전체 제어가 필요하신가요?",
+        "openAppearanceSettings": "외형 설정 열기"
+      }
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "뉴스 개요",
+      "subtitle": "읽기량, 피드 상태를 모니터링하고 핵심 작업으로 바로 이동하세요.",
+      "neverFetched": "가져온 적 없음"
+    },
+    "stats": {
+      "totalArticles": "전체 아티클",
+      "unread": "읽지 않음",
+      "saved": "저장됨",
+      "activeFeeds": "활성 피드"
+    },
+    "feedHealth": {
+      "title": "피드 상태",
+      "description": "마지막 가져오기 기준으로 활성 상태, 전달 문제, 오래된 소스를 확인합니다.",
+      "loading": "피드 상태를 불러오는 중...",
+      "cards": {
+        "errors": "오류가 있는 피드",
+        "inactive": "비활성 피드",
+        "stale": "오래된 피드 (> {hours}시간)"
+      },
+      "topUnread": {
+        "title": "읽지 않은 항목이 많은 피드",
+        "empty": "읽지 않은 아티클이 있는 활성 피드가 없습니다.",
+        "lastFetched": "마지막 가져오기: {value}",
+        "unreadCount": "읽지 않음 {count}개"
+      }
+    },
+    "quickActions": {
+      "title": "빠른 작업",
+      "description": "자주 쓰는 작업으로 바로 이동합니다.",
+      "openArticles": "아티클 목록 열기",
+      "manageFeeds": "피드 관리",
+      "manageAiProfiles": "AI 프로필 관리"
+    },
+    "queueWatch": {
+      "title": "큐 모니터링",
+      "description": "지금 주의가 필요한 피드입니다.",
+      "feedsWithErrors": "오류가 있는 피드",
+      "staleActiveFeeds": "오래된 활성 피드",
+      "totalConfiguredFeeds": "구성된 전체 피드"
+    }
+  },
+  "admin": {
+    "common": {
+      "action": "작업",
+      "actions": "작업",
+      "confirm": "확인",
+      "open": "열기",
+      "edit": "수정",
+      "detail": "상세",
+      "id": "ID",
+      "yes": "예",
+      "no": "아니오",
+      "updating": "업데이트 중...",
+      "queueing": "대기열에 추가 중...",
+      "notAvailable": "없음",
+      "noHeartbeat": "하트비트 없음",
+      "lastHeartbeat": "최근 하트비트",
+      "expiresAt": "만료",
+      "roles": {
+        "user": "사용자",
+        "admin": "관리자"
+      },
+      "accountStatus": {
+        "active": "활성",
+        "suspended": "정지됨"
+      },
+      "eventStatus": {
+        "success": "성공",
+        "failed": "실패"
+      },
+      "runtimeNodes": {
+        "worker": "워커",
+        "rssScheduler": "RSS 스케줄러",
+        "contentScheduler": "콘텐츠 스케줄러"
+      },
+      "runtimeStates": {
+        "healthy": "정상",
+        "stale": "오래됨",
+        "offline": "오프라인",
+        "unknown": "알 수 없음"
+      },
+      "queueName": {
+        "rssFetch": "RSS 수집",
+        "contentExtract": "콘텐츠 추출"
+      },
+      "queueState": {
+        "waiting": "대기 중",
+        "active": "실행 중",
+        "failed": "실패",
+        "delayed": "지연됨",
+        "completed": "완료"
+      },
+      "subscriptionTier": {
+        "free": "무료",
+        "basic": "베이직",
+        "pro": "프로",
+        "max": "맥스"
+      },
+      "billingInterval": {
+        "monthly": "월간",
+        "yearly": "연간"
+      },
+      "stripe": {
+        "customer": "고객",
+        "subscription": "구독",
+        "price": "가격"
+      },
+      "age": {
+        "label": "경과 시간",
+        "secondsAgo": "{value}초 전",
+        "minutesAgo": "{value}분 전",
+        "hoursAgo": "{value}시간 전",
+        "secondsShort": "{value}초",
+        "minutesShort": "{value}분",
+        "hoursShort": "{value}시간"
+      }
+    },
+    "operations": {
+      "metaTitle": "관리 운영",
+      "overview": {
+        "title": "운영 개요",
+        "description": "AI 사용량, 대기열 상태, 런타임 하트비트 상태를 모니터링합니다.",
+        "metrics": {
+          "aiTokens7d": {
+            "title": "AI 토큰 (7일)",
+            "description": "최근 7일간 총 토큰 사용량입니다."
+          },
+          "aiRequests7d": {
+            "title": "AI 요청 (7일)",
+            "description": "최근 7일간 요약 요청 총수입니다."
+          },
+          "aiFailures7d": {
+            "title": "AI 실패 (7일)",
+            "description": "최근 7일간 요약 실패 횟수입니다."
+          },
+          "failedQueueJobs": {
+            "title": "실패한 대기열 작업",
+            "description": "현재 워커 대기열 전체의 실패 작업 수입니다."
+          },
+          "staleFeeds": {
+            "title": "오래된 피드",
+            "description": "새로고침 스케줄을 기다리는 활성 피드입니다."
+          },
+          "extractionBacklog": {
+            "title": "추출 대기",
+            "description": "콘텐츠 추출을 기다리는 기사입니다."
+          }
+        }
+      },
+      "runtimeHealth": {
+        "title": "런타임 상태",
+        "description": "워커와 스케줄러의 하트비트 상태입니다."
+      },
+      "drillDown": {
+        "title": "상세 보기",
+        "description": "AI 이벤트를 확인하거나 대기열 작업을 수행할 상세 페이지를 엽니다.",
+        "openAiUsage": "AI 사용량 열기",
+        "openSystemOps": "시스템 운영 열기"
+      },
+      "recentFailedJobs": {
+        "title": "최근 실패 작업",
+        "description": "RSS 수집 및 콘텐츠 추출 워커의 최신 실패 기록입니다.",
+        "empty": "최근 실패한 작업이 없습니다.",
+        "noFailureReason": "실패 사유가 없습니다.",
+        "columns": {
+          "queue": "대기열",
+          "job": "작업",
+          "failure": "실패",
+          "time": "시간"
+        }
+      },
+      "errors": {
+        "aiUsageSummary": "AI 사용량 요약을 불러올 수 없습니다.",
+        "systemOverview": "시스템 개요를 불러올 수 없습니다.",
+        "runtimeHealth": "런타임 상태 데이터를 불러올 수 없습니다.",
+        "recentQueueFailures": "최근 대기열 실패를 불러올 수 없습니다."
+      }
+    },
+    "aiUsage": {
+      "metaTitle": "관리 AI 사용량",
+      "page": {
+        "title": "AI 사용량",
+        "description": "사용 이벤트, 최근 실패, AI 설정 상태를 확인합니다.",
+        "manageConfigs": "AI 설정 관리"
+      },
+      "summary": {
+        "title": "요약 (7일)",
+        "description": "관리 지원 가시성을 위한 토큰 사용 및 실패 추세입니다.",
+        "totalTokens": "총 토큰",
+        "totalRequests": "총 요청",
+        "failures": "실패",
+        "topUser": "상위 사용자",
+        "empty7Days": "최근 7일 동안 기록된 AI 요청이 없습니다."
+      },
+      "filters": {
+        "title": "필터",
+        "description": "사용자, 제공자, 모델, 상태, 시간 범위로 필터링합니다.",
+        "from": "시작",
+        "to": "종료",
+        "user": {
+          "label": "사용자",
+          "placeholder": "이름 또는 이메일 검색"
+        },
+        "provider": {
+          "label": "제공자",
+          "placeholder": "openai, anthropic..."
+        },
+        "model": {
+          "label": "모델",
+          "placeholder": "gpt-4.1..."
+        },
+        "status": {
+          "label": "상태",
+          "all": "모든 상태"
+        }
+      },
+      "events": {
+        "title": "AI 이벤트",
+        "description": "성공/실패 상태와 안전한 오류 요약이 포함된 최근 요약 활동입니다."
+      },
+      "table": {
+        "columns": {
+          "user": "사용자",
+          "providerModel": "제공자 / 모델",
+          "status": "상태",
+          "tokens": "토큰",
+          "duration": "소요 시간",
+          "errorSummary": "오류 요약",
+          "created": "생성일"
+        },
+        "empty": "현재 필터에 맞는 AI 이벤트가 없습니다."
+      },
+      "configDialog": {
+        "title": "AI 설정 제어",
+        "description": "설정 소유자 정보를 확인하고 개별 설정을 활성화/비활성화합니다.",
+        "empty": "현재 필터에 맞는 AI 설정이 없습니다.",
+        "badges": {
+          "default": "기본값"
+        },
+        "select": {
+          "title": "설정 선택",
+          "description": "확인하고 제어할 설정을 선택하세요.",
+          "placeholder": "AI 설정 선택"
+        },
+        "fields": {
+          "owner": "소유자",
+          "baseUrl": "기본 URL",
+          "defaultProviderUrl": "기본 제공자 URL",
+          "updated": "업데이트됨"
+        },
+        "actions": {
+          "enable": "설정 활성화",
+          "disable": "설정 비활성화",
+          "updating": "업데이트 중..."
+        },
+        "confirm": {
+          "enableTitle": "이 AI 설정을 활성화할까요?",
+          "disableTitle": "이 AI 설정을 비활성화할까요?",
+          "enableDescription": "{name}을(를) 활성화합니다. 요약 요청이 이 설정을 다시 사용할 수 있습니다.",
+          "disableDescription": "{name}을(를) 비활성화합니다. 이 설정을 사용하는 요약 요청은 차단됩니다."
+        }
+      },
+      "errors": {
+        "summary": "AI 사용량 요약을 불러올 수 없습니다.",
+        "events": "AI 사용 이벤트를 불러올 수 없습니다.",
+        "configs": "AI 설정을 불러올 수 없습니다.",
+        "updateConfig": "이 AI 설정을 업데이트할 수 없습니다."
+      }
+    },
+    "users": {
+      "metaTitle": "관리 사용자",
+      "page": {
+        "title": "관리 사용자",
+        "description": "사용자 계정, 구독 상태, 계정 상태 작업을 검토합니다."
+      },
+      "filters": {
+        "title": "필터",
+        "description": "사용자를 검색하고 역할, 계정 상태, 구독 등급으로 결과를 좁힙니다.",
+        "search": {
+          "label": "검색",
+          "placeholder": "이름 또는 이메일"
+        },
+        "role": {
+          "label": "역할",
+          "all": "모든 역할"
+        },
+        "status": {
+          "label": "상태",
+          "all": "모든 상태"
+        },
+        "tier": {
+          "label": "등급",
+          "all": "모든 등급"
+        }
+      },
+      "directory": {
+        "title": "사용자 목록",
+        "description": "사용자 행을 열어 상세 정보를 보고 계정 상태를 업데이트합니다."
+      },
+      "table": {
+        "columns": {
+          "user": "사용자",
+          "role": "역할",
+          "status": "상태",
+          "subscription": "구독",
+          "feeds": "피드",
+          "created": "생성일"
+        },
+        "empty": "현재 필터와 일치하는 사용자가 없습니다. 역할, 상태 또는 요금제 필터를 조정하세요.",
+        "hasMore": "더 많은 사용자가 있습니다. 결과를 좁히려면 필터를 조정하세요."
+      },
+      "detail": {
+        "title": "사용자 상세",
+        "description": "계정 상태, 구독 정보, 지원 작업을 검토합니다.",
+        "empty": "계정 상세 정보를 보려면 사용자를 선택하세요.",
+        "accountSummary": {
+          "title": "계정 요약",
+          "description": "멤버십과 피드 사용 현황을 한눈에 봅니다.",
+          "created": "생성일",
+          "updated": "수정일",
+          "feeds": "피드",
+          "suspendedAt": "정지 시각"
+        },
+        "subscription": {
+          "title": "구독",
+          "description": "요금제, 결제 주기, 현재 만료 시각입니다.",
+          "plan": "요금제",
+          "status": "구독 상태",
+          "expires": "만료일"
+        },
+        "actions": {
+          "title": "계정 작업",
+          "description": "사용자 계정을 정지하거나 다시 활성화합니다.",
+          "suspendReasonPlaceholder": "정지 사유(선택 사항)",
+          "suspendReasonHint": "이 사유는 관리자 상세 화면과 감사 로그에 표시됩니다.",
+          "suspensionReason": "정지 사유",
+          "noReason": "사유 없음",
+          "suspend": "사용자 정지",
+          "suspending": "정지 중...",
+          "reactivate": "사용자 재활성화",
+          "reactivating": "재활성화 중..."
+        },
+        "confirm": {
+          "thisUser": "이 사용자",
+          "suspend": {
+            "title": "이 사용자를 정지할까요?",
+            "description": "{name}을(를) 정지합니다. 관리자가 다시 활성화할 때까지 보호된 경로에 접근할 수 없습니다.",
+            "descriptionWithReason": "{name}을(를) 정지합니다. 사유 \"{reason}\" 는 관리자 감사 로그에 저장됩니다."
+          },
+          "reactivate": {
+            "title": "이 사용자를 다시 활성화할까요?",
+            "description": "{name}의 접근 권한을 복구합니다. 보호된 경로를 즉시 다시 사용할 수 있습니다."
+          }
+        }
+      },
+      "errors": {
+        "list": "관리자 사용자 목록을 불러올 수 없습니다. 새로고침 후 다시 시도하세요.",
+        "suspend": "이 사용자를 정지할 수 없습니다. 다시 시도하세요.",
+        "reactivate": "이 사용자를 다시 활성화할 수 없습니다. 다시 시도하세요."
+      }
+    },
+    "subscriptions": {
+      "metaTitle": "관리 구독",
+      "page": {
+        "title": "관리 구독",
+        "description": "결제 상태를 검토하고 지원 목적의 구독 변경을 적용합니다."
+      },
+      "filters": {
+        "title": "필터",
+        "description": "사용자로 검색하고 요금제, 상태, 주기, 취소 플래그로 범위를 좁힙니다.",
+        "search": {
+          "label": "검색",
+          "placeholder": "이름 또는 이메일"
+        },
+        "tier": {
+          "label": "등급",
+          "all": "모든 등급"
+        },
+        "billing": {
+          "label": "결제",
+          "all": "모든 결제 유형"
+        },
+        "cancelFlag": {
+          "label": "취소 플래그",
+          "all": "모든 플래그",
+          "canceling": "취소 예정",
+          "continuing": "계속 유지"
+        }
+      },
+      "directory": {
+        "title": "구독 목록",
+        "description": "행을 열어 지원 제어를 확인하고 변경 사항을 저장합니다."
+      },
+      "table": {
+        "columns": {
+          "user": "사용자",
+          "plan": "요금제",
+          "status": "상태",
+          "expires": "만료일",
+          "stripeIds": "Stripe ID"
+        },
+        "cancelAtPeriodEnd": "기간 종료 시 취소",
+        "empty": "현재 필터에 맞는 구독이 없습니다. 결제 필터를 조정해 더 넓게 확인하세요.",
+        "hasMore": "더 많은 구독이 있습니다. 필터를 좁혀 더 작은 범위를 확인하세요."
+      },
+      "edit": {
+        "title": "구독 수정",
+        "description": "요금제 변경, 만료일 조정, 취소 플래그를 지원합니다.",
+        "empty": "지원 설정을 수정하려면 구독 행을 선택하세요.",
+        "currentExpiry": "현재 만료일",
+        "fields": {
+          "tier": "등급",
+          "expiry": "만료 시각",
+          "cancellation": "기간 종료 시 취소"
+        },
+        "controls": {
+          "title": "지원 제어",
+          "description": "이 사용자의 결제 및 지원 플래그를 조정합니다.",
+          "tierPlaceholder": "등급 선택",
+          "cancelAtPeriodEndHint": "현재 결제 기간이 끝날 때까지 구독을 유지합니다.",
+          "save": "변경 저장",
+          "saving": "저장 중...",
+          "noPendingChanges": "저장할 변경 사항이 없습니다.",
+          "pendingFields": "대기 중인 필드: {fields}."
+        },
+        "confirm": {
+          "title": "구독 변경을 저장할까요?",
+          "confirmLabel": "구독 변경 저장",
+          "theseChanges": "이 변경 사항",
+          "description": "{name}에 대해 {fields}를 적용합니다. 이 업데이트는 관리자 감사 로그에 기록됩니다.",
+          "descriptionFallback": "대기 중인 구독 변경을 적용합니다."
+        }
+      },
+      "errors": {
+        "list": "구독 목록을 불러올 수 없습니다. 새로고침 후 다시 시도하세요.",
+        "update": "이 구독을 업데이트할 수 없습니다. 변경 사항을 검토한 뒤 다시 시도하세요."
+      }
+    },
+    "feeds": {
+      "metaTitle": "관리 피드",
+      "page": {
+        "title": "관리 피드",
+        "description": "시스템 전체 피드 상태를 추적하고 운영용 대기열 작업을 실행합니다."
+      },
+      "filters": {
+        "title": "필터",
+        "description": "피드를 검색하고 활성 상태, 오류, 오래된 스케줄, 추출 실패에 집중합니다.",
+        "search": {
+          "label": "검색",
+          "placeholder": "피드 제목 또는 URL"
+        },
+        "enabled": {
+          "label": "활성화",
+          "all": "모든 피드"
+        },
+        "errors": {
+          "label": "오류",
+          "all": "모든 오류 상태",
+          "hasErrors": "오류 있음",
+          "healthy": "정상"
+        },
+        "stale": {
+          "label": "오래됨",
+          "all": "모든 최신 상태",
+          "stale": "오래됨",
+          "scheduled": "예정됨"
+        },
+        "extraction": {
+          "label": "추출",
+          "all": "모든 추출 상태",
+          "hasFailures": "실패 있음",
+          "healthy": "정상"
+        }
+      },
+      "operations": {
+        "title": "피드 운영",
+        "description": "빠른 작업을 사용하거나 피드를 열어 상세 운영 정보를 확인합니다."
+      },
+      "table": {
+        "columns": {
+          "feed": "피드",
+          "enabled": "활성",
+          "health": "상태",
+          "coverage": "범위",
+          "lastFetched": "마지막 수집"
+        },
+        "health": {
+          "errors": "오류: {count}",
+          "extractionFailures": "추출 실패: {count}"
+        },
+        "coverage": {
+          "subscriptions": "{count}개 구독",
+          "articles": "{count}개 기사"
+        },
+        "nextFetch": "다음 수집",
+        "empty": "현재 필터에 맞는 피드가 없습니다. 상태 또는 활성 필터를 넓혀 보세요.",
+        "hasMore": "더 많은 피드가 있습니다. 결과를 좁히려면 필터를 조정하세요.",
+        "actions": {
+          "retryFetch": "수집 재시도",
+          "retryExtraction": "추출 재시도"
+        },
+        "confirm": {
+          "defaultTitle": "관리 작업 확인",
+          "defaultDescription": "이 관리 작업을 확인하세요.",
+          "retryFetch": {
+            "title": "RSS 수집을 다시 시도할까요?",
+            "description": "{label}에 대해 즉시 RSS 수집 재시도 작업을 대기열에 추가합니다.",
+            "confirmLabel": "RSS 재시도 대기열 추가"
+          },
+          "retryExtraction": {
+            "title": "피드 추출을 다시 시도할까요?",
+            "description": "{label}의 대상 기사들에 대해 추출 재시도 작업을 대기열에 추가합니다.",
+            "confirmLabel": "추출 재시도 대기열 추가"
+          },
+          "enable": {
+            "title": "이 피드를 활성화할까요?",
+            "description": "{label}을(를) 활성화하여 예약된 수집을 다시 시작합니다.",
+            "confirmLabel": "피드 활성화"
+          },
+          "disable": {
+            "title": "이 피드를 비활성화할까요?",
+            "description": "{label}을(를) 비활성화합니다. 관리자가 다시 활성화하거나 강제 재시도할 때까지 예약 수집이 중지됩니다.",
+            "confirmLabel": "피드 비활성화"
+          }
+        }
+      },
+      "detail": {
+        "metaTitle": "관리 피드 상세",
+        "page": {
+          "title": "피드 운영 상세",
+          "description": "기사 상태를 확인하고 이 피드에 대한 대상 재시도를 실행합니다.",
+          "backToFeeds": "피드 목록으로 돌아가기"
+        },
+        "empty": "피드 상세 정보를 사용할 수 없습니다.",
+        "summary": {
+          "lastFetched": "마지막 수집",
+          "nextFetch": "다음 수집",
+          "subscriptions": "구독 수",
+          "articles": "기사 수",
+          "rssErrors": "RSS 오류: {count}",
+          "extractionFailures": "추출 실패: {count}",
+          "lastError": "최근 오류",
+          "noRecentErrors": "최근 RSS 오류가 없습니다."
+        },
+        "operations": {
+          "title": "작업",
+          "description": "피드 상태를 전환하고 대기열 재시도를 실행합니다.",
+          "feedEnabled": "피드 활성화",
+          "feedEnabledHint": "비활성화된 피드는 강제 실행하지 않는 한 스케줄러에서 건너뜁니다.",
+          "retryFetch": "RSS 수집 재시도",
+          "retryFeedExtractionQueue": "피드 추출 대기열 재시도"
+        },
+        "recentArticles": {
+          "title": "최근 기사",
+          "description": "최신 원문 기사와 추출 상태입니다.",
+          "columns": {
+            "article": "기사",
+            "published": "발행일",
+            "status": "상태"
+          },
+          "empty": "이 피드에 최근 기사가 없습니다.",
+          "attempts": "시도 횟수: {count}",
+          "retryArticle": "기사 재시도",
+          "status": {
+            "extracted": "추출됨",
+            "pending": "대기 중",
+            "needsAttention": "확인 필요"
+          }
+        },
+        "recentFailures": {
+          "title": "최근 추출 실패",
+          "description": "최근 추출에 실패한 기사입니다.",
+          "columns": {
+            "article": "기사",
+            "error": "오류",
+            "updated": "업데이트 시각"
+          },
+          "empty": "최근 추출 실패가 없습니다.",
+          "attempts": "시도 횟수: {count}",
+          "retry": "재시도"
+        },
+        "confirm": {
+          "thisFeed": "이 피드",
+          "defaultTitle": "관리 작업 확인",
+          "defaultDescription": "이 관리 작업을 확인하세요.",
+          "retryFetch": {
+            "title": "RSS 수집을 다시 시도할까요?",
+            "description": "{label}에 대해 즉시 RSS 수집 재시도 작업을 대기열에 추가합니다.",
+            "confirmLabel": "RSS 재시도 대기열 추가"
+          },
+          "retryFeedExtraction": {
+            "title": "피드 추출을 다시 시도할까요?",
+            "description": "{label}의 대상 기사들에 대해 추출 재시도 작업을 대기열에 추가합니다.",
+            "confirmLabel": "추출 재시도 대기열 추가"
+          },
+          "retryArticleExtraction": {
+            "title": "기사 추출을 다시 시도할까요?",
+            "description": "{title}에 대해 새로운 추출 시도를 대기열에 추가합니다.",
+            "confirmLabel": "기사 재시도 대기열 추가"
+          },
+          "enable": {
+            "title": "이 피드를 활성화할까요?",
+            "description": "{label}을(를) 활성화하여 예약된 수집을 다시 시작합니다.",
+            "confirmLabel": "피드 활성화"
+          },
+          "disable": {
+            "title": "이 피드를 비활성화할까요?",
+            "description": "{label}을(를) 비활성화합니다. 관리자가 다시 활성화하거나 강제 재시도할 때까지 예약 수집이 중지됩니다.",
+            "confirmLabel": "피드 비활성화"
+          }
+        },
+        "errors": {
+          "load": "피드 상세 정보를 불러올 수 없습니다. 새로고침 후 다시 시도하세요.",
+          "retryArticleExtraction": "기사 추출 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요."
+        }
+      },
+      "errors": {
+        "list": "피드 소스를 불러올 수 없습니다. 새로고침 후 다시 시도하세요.",
+        "updateState": "이 피드 상태를 업데이트할 수 없습니다. 다시 시도하세요.",
+        "retryFetch": "RSS 수집 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요.",
+        "retryExtraction": "피드 추출 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요."
+      }
+    },
+    "systemOps": {
+      "metaTitle": "관리 시스템 운영",
+      "page": {
+        "title": "시스템 운영",
+        "description": "대기열 상태를 점검하고 단일 운영 작업을 안전하게 실행합니다."
+      },
+      "overview": {
+        "metrics": {
+          "failedJobs": {
+            "title": "실패 작업",
+            "description": "현재 대기열 전체의 실패 작업 수입니다."
+          },
+          "staleFeeds": {
+            "title": "오래된 피드",
+            "description": "새로고침을 기다리는 활성 피드입니다."
+          },
+          "extractionBacklog": {
+            "title": "추출 대기",
+            "description": "추출을 기다리는 기사입니다."
+          },
+          "rssWaitingJobs": {
+            "title": "RSS 대기 작업",
+            "description": "대기 중인 RSS 수집 작업입니다."
+          },
+          "contentWaitingJobs": {
+            "title": "콘텐츠 대기 작업",
+            "description": "대기 중인 콘텐츠 추출 작업입니다."
+          }
+        },
+        "runtimeHeartbeat": {
+          "title": "런타임 하트비트",
+          "description": "Redis 하트비트 키를 기반으로 한 워커와 스케줄러의 활성 상태입니다."
+        }
+      },
+      "stripe": {
+        "title": "Stripe 설정",
+        "description": "서버 환경 변수 대신 여기서 Stripe 키와 요금제 가격 ID를 관리합니다.",
+        "status": {
+          "label": "상태",
+          "configured": "설정됨",
+          "incomplete": "미완료",
+          "secretKey": "비밀 키",
+          "webhookSecret": "웹훅 시크릿",
+          "missing": "없음"
+        },
+        "form": {
+          "publishableKey": "공개 키",
+          "publishablePlaceholder": "pk_test_...",
+          "secretKey": "비밀 키",
+          "secretPlaceholder": "현재 sk_* 를 유지하려면 비워두세요",
+          "webhookSecret": "웹훅 시크릿",
+          "webhookPlaceholder": "현재 whsec_* 를 유지하려면 비워두세요",
+          "basicMonthly": "Basic 월간 가격",
+          "basicYearly": "Basic 연간 가격",
+          "proMonthly": "Pro 월간 가격",
+          "proYearly": "Pro 연간 가격",
+          "maxMonthly": "Max 월간 가격",
+          "maxYearly": "Max 연간 가격"
+        },
+        "lastUpdated": "마지막 업데이트",
+        "webhookEndpoint": "웹훅 엔드포인트",
+        "save": "Stripe 설정 저장",
+        "saving": "저장 중...",
+        "successSaved": "Stripe 설정이 저장되었습니다.",
+        "secretHint": "가격 ID만 업데이트하려는 경우 비밀 입력은 비워둘 수 있습니다."
+      },
+      "manualActions": {
+        "title": "수동 작업",
+        "description": "ID로 단일 피드 수집 또는 콘텐츠 추출을 실행합니다.",
+        "feedSourceId": "피드 소스 ID",
+        "feedSourceIdPlaceholder": "feedSourceId",
+        "sourceArticleId": "원문 기사 ID",
+        "sourceArticleIdPlaceholder": "sourceArticleId",
+        "triggerFetch": "수집 실행",
+        "triggerExtract": "추출 실행",
+        "errors": {
+          "feedSourceIdRequired": "피드 소스 ID가 필요합니다.",
+          "sourceArticleIdRequired": "원문 기사 ID가 필요합니다."
+        }
+      },
+      "queueJobs": {
+        "title": "대기열 작업",
+        "description": "대기열 상태를 검토하고 실패한 작업을 하나씩 재시도합니다.",
+        "filters": {
+          "queue": "대기열",
+          "state": "상태",
+          "allQueues": "모든 대기열",
+          "allStates": "모든 상태"
+        },
+        "columns": {
+          "queue": "대기열",
+          "job": "작업",
+          "state": "상태",
+          "attempts": "시도 횟수",
+          "failure": "실패 사유",
+          "created": "생성일"
+        },
+        "actions": {
+          "retry": "재시도"
+        },
+        "empty": "선택한 필터와 일치하는 대기열 작업이 없습니다."
+      },
+      "confirm": {
+        "defaultTitle": "작업 확인",
+        "defaultDescription": "이 작업을 확인하세요.",
+        "retryJob": {
+          "title": "이 실패 작업을 재시도할까요?",
+          "description": "{queueName}의 작업 {jobId}에 대한 재시도를 대기열에 추가합니다.",
+          "confirmLabel": "작업 재시도"
+        },
+        "triggerFeedFetch": {
+          "title": "지금 피드 수집을 실행할까요?",
+          "description": "피드 소스 {feedSourceId}에 대해 즉시 RSS 수집 작업을 대기열에 추가합니다.",
+          "confirmLabel": "피드 수집 실행"
+        },
+        "triggerContentExtract": {
+          "title": "지금 콘텐츠 추출을 실행할까요?",
+          "description": "원문 기사 {sourceArticleId}에 대해 콘텐츠 추출 작업을 대기열에 추가합니다.",
+          "confirmLabel": "추출 실행"
+        }
+      },
+      "errors": {
+        "runtimeSummary": "시스템 런타임 요약을 불러올 수 없습니다.",
+        "queueJobs": "대기열 작업을 불러올 수 없습니다.",
+        "stripeLoad": "Stripe 설정을 불러올 수 없습니다.",
+        "stripeSave": "Stripe 설정을 저장할 수 없습니다.",
+        "executeOperation": "이 시스템 작업을 실행할 수 없습니다."
+      }
+    }
+  }
+}

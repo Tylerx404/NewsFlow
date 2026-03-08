@@ -20,6 +20,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 
+const { t } = useI18n()
+
 type NavProjectsItemAction = {
   id: string
   label: string
@@ -107,7 +109,7 @@ const setItemActionsOpen = (itemId: string, open: boolean) => {
               class="group-focus-within/menu-item:opacity-0 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100"
             >
               <MoreHorizontal />
-              <span class="sr-only">More actions</span>
+              <span class="sr-only">{{ t("shell.nav.moreActions") }}</span>
             </SidebarMenuAction>
           </DropdownMenuTrigger>
           <DropdownMenuContent

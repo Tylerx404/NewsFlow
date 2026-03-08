@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type RuntimeNode = {
   state: "healthy" | "stale" | "offline" | "unknown";
@@ -27,17 +28,20 @@ const props = defineProps<{
   } | null;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const healthRows = computed(() => [
   {
-    label: "Worker",
+    label: t("admin.common.runtimeNodes.worker"),
     node: props.runtime?.worker ?? null,
   },
   {
-    label: "RSS scheduler",
+    label: t("admin.common.runtimeNodes.rssScheduler"),
     node: props.runtime?.rssScheduler ?? null,
   },
   {
-    label: "Content scheduler",
+    label: t("admin.common.runtimeNodes.contentScheduler"),
     node: props.runtime?.contentScheduler ?? null,
   },
 ]);
@@ -58,44 +62,46 @@ const badgeClassByState = (state: RuntimeNode["state"]) => {
   return "border-muted bg-muted/30 text-muted-foreground";
 };
 
-const formatState = (state: RuntimeNode["state"]) =>
-  state.charAt(0).toUpperCase() + state.slice(1);
+const formatState = (state: RuntimeNode["state"]) => t(`admin.common.runtimeStates.${state}`);
 
 const formatLastSeen = (value: RuntimeNode["lastSeenAt"]) => {
   if (!value) {
-    return "No heartbeat";
+    return t("admin.common.noHeartbeat");
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatAge = (ageMs: number | null) => {
   if (ageMs === null) {
-    return "N/A";
+    return t("admin.common.notAvailable");
   }
 
   const seconds = Math.floor(ageMs / 1000);
   if (seconds < 60) {
-    return `${seconds}s ago`;
+    return t("admin.common.age.secondsAgo", { value: seconds });
   }
 
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) {
-    return `${minutes}m ago`;
+    return t("admin.common.age.minutesAgo", { value: minutes });
   }
 
   const hours = Math.floor(minutes / 60);
-  return `${hours}h ago`;
+  return t("admin.common.age.hoursAgo", { value: hours });
 };
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>Runtime health</CardTitle>
+      <CardTitle>{{ t("admin.operations.runtimeHealth.title") }}</CardTitle>
       <CardDescription>
-        Heartbeat status for worker and schedulers.
+        {{ t("admin.operations.runtimeHealth.description") }}
       </CardDescription>
     </CardHeader>
     <CardContent class="space-y-3">
@@ -125,13 +131,15 @@ const formatAge = (ageMs: number | null) => {
             >
               {{ formatState(row.node.state) }}
             </Badge>
-            <Badge v-else variant="outline">Unknown</Badge>
+            <Badge v-else variant="outline">{{ t("admin.common.runtimeStates.unknown") }}</Badge>
           </div>
           <p class="mt-2 text-xs text-muted-foreground">
-            Last heartbeat: {{ row.node ? formatLastSeen(row.node.lastSeenAt) : "N/A" }}
+            {{ t("admin.common.lastHeartbeat") }}:
+            {{ row.node ? formatLastSeen(row.node.lastSeenAt) : t("admin.common.notAvailable") }}
           </p>
           <p class="text-xs text-muted-foreground">
-            Age: {{ row.node ? formatAge(row.node.ageMs) : "N/A" }}
+            {{ t("admin.common.age.label") }}:
+            {{ row.node ? formatAge(row.node.ageMs) : t("admin.common.notAvailable") }}
           </p>
         </div>
       </template>

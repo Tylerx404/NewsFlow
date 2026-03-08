@@ -15,16 +15,19 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin AI Usage",
+  titleKey: "admin.aiUsage.metaTitle",
 });
 
 type AiUsageStatusFilter = "all" | "SUCCESS" | "FAILED";
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
 
 const providerFilter = ref("");
@@ -126,7 +129,7 @@ const eventsErrorMessage = computed(() => {
 
   return eventsQuery.error.value instanceof Error
     ? eventsQuery.error.value.message
-    : "Could not load AI usage events.";
+    : t("admin.aiUsage.errors.events");
 });
 
 const summaryErrorMessage = computed(() => {
@@ -136,7 +139,7 @@ const summaryErrorMessage = computed(() => {
 
   return overviewQuery.error.value instanceof Error
     ? overviewQuery.error.value.message
-    : "Could not load AI usage summary.";
+    : t("admin.aiUsage.errors.summary");
 });
 
 const configsLoadError = computed(() => {
@@ -146,7 +149,7 @@ const configsLoadError = computed(() => {
 
   return configsQuery.error.value instanceof Error
     ? configsQuery.error.value.message
-    : "Could not load AI configs.";
+    : t("admin.aiUsage.errors.configs");
 });
 
 const handleToggleConfigEnabled = async (payload: {
@@ -159,7 +162,7 @@ const handleToggleConfigEnabled = async (payload: {
     await updateConfigMutation.mutateAsync(payload);
   } catch (error) {
     configActionError.value =
-      error instanceof Error ? error.message : "Could not update this AI config.";
+      error instanceof Error ? error.message : t("admin.aiUsage.errors.updateConfig");
   }
 };
 </script>
@@ -168,21 +171,21 @@ const handleToggleConfigEnabled = async (payload: {
   <div class="space-y-6">
     <section class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="space-y-1">
-        <h1 class="text-2xl font-semibold">AI usage</h1>
+        <h1 class="text-2xl font-semibold">{{ t("admin.aiUsage.page.title") }}</h1>
         <p class="text-sm text-muted-foreground">
-          Inspect usage events, recent failures, and AI config state.
+          {{ t("admin.aiUsage.page.description") }}
         </p>
       </div>
       <Button variant="outline" @click="isConfigDialogOpen = true">
-        Manage AI configs
+        {{ t("admin.aiUsage.page.manageConfigs") }}
       </Button>
     </section>
 
     <Card>
       <CardHeader>
-        <CardTitle>Summary (7 days)</CardTitle>
+        <CardTitle>{{ t("admin.aiUsage.summary.title") }}</CardTitle>
         <CardDescription>
-          Token usage and failure trends for admin support visibility.
+          {{ t("admin.aiUsage.summary.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-3">
@@ -191,31 +194,31 @@ const handleToggleConfigEnabled = async (payload: {
         </p>
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Total tokens</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.aiUsage.summary.totalTokens") }}</p>
             <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-20" />
             <p v-else class="mt-1 text-lg font-semibold">
-              {{ overviewQuery.data.value?.totalTokens?.toLocaleString() ?? "0" }}
+              {{ new Intl.NumberFormat(intlLocale).format(overviewQuery.data.value?.totalTokens ?? 0) }}
             </p>
           </div>
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Total requests</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.aiUsage.summary.totalRequests") }}</p>
             <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-20" />
             <p v-else class="mt-1 text-lg font-semibold">
-              {{ overviewQuery.data.value?.totalRequests?.toLocaleString() ?? "0" }}
+              {{ new Intl.NumberFormat(intlLocale).format(overviewQuery.data.value?.totalRequests ?? 0) }}
             </p>
           </div>
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Failures</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.aiUsage.summary.failures") }}</p>
             <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-6 w-16" />
             <p v-else class="mt-1 text-lg font-semibold">
-              {{ overviewQuery.data.value?.failureCount?.toLocaleString() ?? "0" }}
+              {{ new Intl.NumberFormat(intlLocale).format(overviewQuery.data.value?.failureCount ?? 0) }}
             </p>
           </div>
           <div class="rounded-md border p-3">
-            <p class="text-xs text-muted-foreground">Top user</p>
+            <p class="text-xs text-muted-foreground">{{ t("admin.aiUsage.summary.topUser") }}</p>
             <Skeleton v-if="overviewQuery.isLoading.value" class="mt-2 h-5 w-32" />
             <p v-else class="mt-1 text-sm font-semibold">
-              {{ overviewQuery.data.value?.topUsers?.[0]?.userEmail ?? "N/A" }}
+              {{ overviewQuery.data.value?.topUsers?.[0]?.userEmail ?? t("admin.common.notAvailable") }}
             </p>
           </div>
         </div>
@@ -227,16 +230,16 @@ const handleToggleConfigEnabled = async (payload: {
           "
           class="text-xs text-muted-foreground"
         >
-          No AI usage requests recorded in the last 7 days.
+          {{ t("admin.aiUsage.summary.empty7Days") }}
         </p>
       </CardContent>
     </Card>
 
     <Card>
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>{{ t("admin.aiUsage.filters.title") }}</CardTitle>
         <CardDescription>
-          Filter by user, provider, model, status, and time range.
+          {{ t("admin.aiUsage.filters.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -259,9 +262,9 @@ const handleToggleConfigEnabled = async (payload: {
 
     <Card>
       <CardHeader>
-        <CardTitle>AI events</CardTitle>
+        <CardTitle>{{ t("admin.aiUsage.events.title") }}</CardTitle>
         <CardDescription>
-          Recent summarize activity with success/failure status and safe error summaries.
+          {{ t("admin.aiUsage.events.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent>

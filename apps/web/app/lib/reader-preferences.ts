@@ -20,6 +20,19 @@ export type ReaderPreferenceOption<TValue extends string> = {
   description: string;
 };
 
+type Translate = (key: string) => string;
+
+const localizeOptions = <TValue extends string>(
+  options: ReaderPreferenceOption<TValue>[],
+  t: Translate,
+  keyPrefix: string
+): ReaderPreferenceOption<TValue>[] =>
+  options.map((option) => ({
+    ...option,
+    label: t(`${keyPrefix}.${option.value}.label`),
+    description: t(`${keyPrefix}.${option.value}.description`),
+  }));
+
 export const themeModeOptions: ReaderPreferenceOption<ThemeMode>[] = [
   {
     value: "system",
@@ -37,6 +50,11 @@ export const themeModeOptions: ReaderPreferenceOption<ThemeMode>[] = [
     description: "Always use the dark interface.",
   },
 ];
+
+export const getThemeModeOptions = (
+  t: Translate
+): ReaderPreferenceOption<ThemeMode>[] =>
+  localizeOptions(themeModeOptions, t, "settings.appearance.options.themeMode");
 
 export const readerColorPresetOptions: ReaderPreferenceOption<ReaderColorPreset>[] = [
   {
@@ -56,6 +74,15 @@ export const readerColorPresetOptions: ReaderPreferenceOption<ReaderColorPreset>
   },
 ];
 
+export const getReaderColorPresetOptions = (
+  t: Translate
+): ReaderPreferenceOption<ReaderColorPreset>[] =>
+  localizeOptions(
+    readerColorPresetOptions,
+    t,
+    "settings.appearance.options.colorPreset"
+  );
+
 export const readerFontFamilyOptions: ReaderPreferenceOption<ReaderFontFamily>[] = [
   {
     value: "sans",
@@ -73,6 +100,15 @@ export const readerFontFamilyOptions: ReaderPreferenceOption<ReaderFontFamily>[]
     description: "Fixed-width text for dense technical content.",
   },
 ];
+
+export const getReaderFontFamilyOptions = (
+  t: Translate
+): ReaderPreferenceOption<ReaderFontFamily>[] =>
+  localizeOptions(
+    readerFontFamilyOptions,
+    t,
+    "settings.appearance.options.fontFamily"
+  );
 
 export const readerFontSizeOptions: ReaderPreferenceOption<ReaderFontSize>[] = [
   {
@@ -97,6 +133,15 @@ export const readerFontSizeOptions: ReaderPreferenceOption<ReaderFontSize>[] = [
   },
 ];
 
+export const getReaderFontSizeOptions = (
+  t: Translate
+): ReaderPreferenceOption<ReaderFontSize>[] =>
+  localizeOptions(
+    readerFontSizeOptions,
+    t,
+    "settings.appearance.options.fontSize"
+  );
+
 export const readerLineHeightOptions: ReaderPreferenceOption<ReaderLineHeight>[] = [
   {
     value: "compact",
@@ -115,6 +160,15 @@ export const readerLineHeightOptions: ReaderPreferenceOption<ReaderLineHeight>[]
   },
 ];
 
+export const getReaderLineHeightOptions = (
+  t: Translate
+): ReaderPreferenceOption<ReaderLineHeight>[] =>
+  localizeOptions(
+    readerLineHeightOptions,
+    t,
+    "settings.appearance.options.lineHeight"
+  );
+
 export const readerContentWidthOptions: ReaderPreferenceOption<ReaderContentWidth>[] = [
   {
     value: "narrow",
@@ -132,6 +186,15 @@ export const readerContentWidthOptions: ReaderPreferenceOption<ReaderContentWidt
     description: "More horizontal room for rich media.",
   },
 ];
+
+export const getReaderContentWidthOptions = (
+  t: Translate
+): ReaderPreferenceOption<ReaderContentWidth>[] =>
+  localizeOptions(
+    readerContentWidthOptions,
+    t,
+    "settings.appearance.options.contentWidth"
+  );
 
 export const DEFAULT_READER_PREFERENCES: ReaderPreferences = {
   themeMode: "system",

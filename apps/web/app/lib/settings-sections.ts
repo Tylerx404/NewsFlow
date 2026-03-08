@@ -7,29 +7,31 @@ export type SettingsSection = {
   href: `/settings/${SettingsSectionId}`;
 };
 
-export const settingsSections: SettingsSection[] = [
+type Translate = (key: string) => string;
+
+export const getSettingsSections = (t: Translate): SettingsSection[] => [
   {
     id: "appearance",
-    label: "Appearance",
-    description: "Theme mode, reading colors, typography, and article layout preferences.",
+    label: t("settings.sections.appearance.label"),
+    description: t("settings.sections.appearance.description"),
     href: "/settings/appearance",
   },
   {
     id: "personal",
-    label: "Personal",
-    description: "Profile, password, active sessions, and subscription overview.",
+    label: t("settings.sections.personal.label"),
+    description: t("settings.sections.personal.description"),
     href: "/settings/personal",
   },
   {
     id: "ai",
-    label: "AI Profiles",
-    description: "Provider, model, and default profile configuration for summarize actions.",
+    label: t("settings.sections.ai.label"),
+    description: t("settings.sections.ai.description"),
     href: "/settings/ai",
   },
   {
     id: "feeds",
-    label: "Feed Management",
-    description: "Feed metadata, activity status, refresh actions, and cleanup.",
+    label: t("settings.sections.feeds.label"),
+    description: t("settings.sections.feeds.description"),
     href: "/settings/feeds",
   },
 ];

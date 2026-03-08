@@ -18,10 +18,11 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin Operations",
+  titleKey: "admin.operations.metaTitle",
 });
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
 
 const aiOverviewDays = 7;
 
@@ -46,14 +47,16 @@ const isOverviewLoading = computed(
 const overviewErrorMessage = computed(() => {
   const aiError = aiOverviewQuery.error.value;
   if (aiError) {
-    return aiError instanceof Error ? aiError.message : "Could not load AI usage summary.";
+    return aiError instanceof Error
+      ? aiError.message
+      : t("admin.operations.errors.aiUsageSummary");
   }
 
   const systemError = systemOverviewQuery.error.value;
   if (systemError) {
     return systemError instanceof Error
       ? systemError.message
-      : "Could not load system overview.";
+      : t("admin.operations.errors.systemOverview");
   }
 
   return "";
@@ -81,7 +84,7 @@ const runtimeErrorMessage = computed(() => {
 
   return systemOverviewQuery.error.value instanceof Error
     ? systemOverviewQuery.error.value.message
-    : "Could not load runtime health data.";
+    : t("admin.operations.errors.runtimeHealth");
 });
 
 const recentJobsErrorMessage = computed(() => {
@@ -91,16 +94,16 @@ const recentJobsErrorMessage = computed(() => {
 
   return systemOverviewQuery.error.value instanceof Error
     ? systemOverviewQuery.error.value.message
-    : "Could not load recent queue failures.";
+    : t("admin.operations.errors.recentQueueFailures");
 });
 </script>
 
 <template>
   <div class="space-y-6">
     <section class="space-y-1">
-      <h1 class="text-2xl font-semibold">Operations overview</h1>
+      <h1 class="text-2xl font-semibold">{{ t("admin.operations.overview.title") }}</h1>
       <p class="text-sm text-muted-foreground">
-        Monitor AI usage, queue health, and runtime heartbeat status.
+        {{ t("admin.operations.overview.description") }}
       </p>
     </section>
 
@@ -119,17 +122,17 @@ const recentJobsErrorMessage = computed(() => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Drill-down</CardTitle>
+          <CardTitle>{{ t("admin.operations.drillDown.title") }}</CardTitle>
           <CardDescription>
-            Open detailed pages to inspect AI events or perform queue actions.
+            {{ t("admin.operations.drillDown.description") }}
           </CardDescription>
         </CardHeader>
         <CardContent class="space-y-3">
           <Button class="w-full" variant="outline" @click="navigateTo('/admin/ai-usage')">
-            Open AI usage
+            {{ t("admin.operations.drillDown.openAiUsage") }}
           </Button>
           <Button class="w-full" variant="outline" @click="navigateTo('/admin/system-ops')">
-            Open system ops
+            {{ t("admin.operations.drillDown.openSystemOps") }}
           </Button>
         </CardContent>
       </Card>
@@ -137,9 +140,9 @@ const recentJobsErrorMessage = computed(() => {
 
     <Card>
       <CardHeader>
-        <CardTitle>Recent failed jobs</CardTitle>
+        <CardTitle>{{ t("admin.operations.recentFailedJobs.title") }}</CardTitle>
         <CardDescription>
-          Latest queue failures across RSS fetch and content extraction workers.
+          {{ t("admin.operations.recentFailedJobs.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent>

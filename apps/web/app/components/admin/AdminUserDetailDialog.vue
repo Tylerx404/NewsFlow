@@ -21,6 +21,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 type AdminUserDetail = {
   id: string;
@@ -50,6 +51,9 @@ const props = defineProps<{
   actionError: string;
 }>();
 
+const { t } = useI18n();
+const intlLocale = useIntlLocale();
+
 const emit = defineEmits<{
   "update:open": [open: boolean];
   suspend: [reason: string | undefined];
@@ -78,14 +82,17 @@ const formatDateTime = (value: Date | string | null) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatSubscription = (user: AdminUserDetail) => {
-  const tier = user.subscription.tier.toUpperCase();
+  const tier = t(`admin.common.subscriptionTier.${user.subscription.tier}`);
 
   if (user.subscription.billingInterval) {
-    return `${tier} · ${user.subscription.billingInterval}`;
+    return `${tier} · ${t(`admin.common.billingInterval.${user.subscription.billingInterval}`)}`;
   }
 
   return tier;
@@ -106,34 +113,41 @@ const avatarFallback = (name: string) =>
 
 const confirmTitle = computed(() => {
   if (confirmAction.value === "reactivate") {
-    return "Reactivate this user?";
+    return t("admin.users.detail.confirm.reactivate.title");
   }
 
-  return "Suspend this user?";
+  return t("admin.users.detail.confirm.suspend.title");
 });
 
 const confirmDescription = computed(() => {
-  const userName = props.user?.name || "this user";
+  const userName = props.user?.name || t("admin.users.detail.confirm.thisUser");
 
   if (confirmAction.value === "reactivate") {
-    return `Restore access for ${userName}. Protected routes become available again immediately.`;
+    return t("admin.users.detail.confirm.reactivate.description", { name: userName });
   }
 
   const reason = suspendReason.value.trim();
 
   if (reason.length > 0) {
-    return `Suspend ${userName}. The reason \"${reason}\" will be saved to the admin audit log.`;
+    return t("admin.users.detail.confirm.suspend.descriptionWithReason", {
+      name: userName,
+      reason,
+    });
   }
 
-  return `Suspend ${userName}. They lose access to protected routes until an admin reactivates the account.`;
+  return t("admin.users.detail.confirm.suspend.description", { name: userName });
 });
 
 const confirmLabel = computed(() =>
-  confirmAction.value === "reactivate" ? "Reactivate user" : "Suspend user"
+  confirmAction.value === "reactivate"
+    ? t("admin.users.detail.actions.reactivate")
+    : t("admin.users.detail.actions.suspend")
 );
 
 const confirmPendingLabel = computed(() =>
-  confirmAction.value === "reactivate" ? "Reactivating..." : "Suspending..."
+  confirmAction.value === "reactivate"
+    ? t("admin.users.detail.actions.reactivating")
+    : t("admin.users.detail.actions.suspending")
 );
 
 const confirmVariant = computed(() =>
@@ -159,15 +173,23 @@ const handleConfirmAction = () => {
 
   emit("suspend", suspendReason.value.trim() || undefined);
 };
+
+const formatRole = (role: AdminUserDetail["role"]) =>
+  role === "ADMIN" ? t("admin.common.roles.admin") : t("admin.common.roles.user");
+
+const formatAccountStatus = (status: AdminUserDetail["status"]) =>
+  status === "SUSPENDED"
+    ? t("admin.common.accountStatus.suspended")
+    : t("admin.common.accountStatus.active");
 </script>
 
 <template>
   <Sheet :open="open" @update:open="(value) => emit('update:open', value)">
     <SheetContent class="sm:max-w-xl">
       <SheetHeader>
-        <SheetTitle>User details</SheetTitle>
+        <SheetTitle>{{ t("admin.users.detail.title") }}</SheetTitle>
         <SheetDescription>
-          Review account state, subscription details, and support actions.
+          {{ t("admin.users.detail.description") }}
         </SheetDescription>
       </SheetHeader>
 
@@ -209,8 +231,11 @@ const handleConfirmAction = () => {
             </CardContent>
           </Card>
         </template>
-        <div v-else-if="!user" class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          Select a user to review account details.
+        <div
+          v-else-if="!user"
+          class="rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
+        >
+          {{ t("admin.users.detail.empty") }}
         </div>
         <template v-else>
           <div class="flex items-start gap-3 rounded-lg border p-4">
@@ -224,34 +249,38 @@ const handleConfirmAction = () => {
                 <p class="truncate text-sm text-muted-foreground">{{ user.email }}</p>
               </div>
               <div class="flex flex-wrap gap-2">
-                <Badge :variant="user.role === 'ADMIN' ? 'default' : 'secondary'">{{ user.role }}</Badge>
-                <Badge variant="outline" :class="statusBadgeClass(user.status)">{{ user.status }}</Badge>
+                <Badge :variant="user.role === 'ADMIN' ? 'default' : 'secondary'">
+                  {{ formatRole(user.role) }}
+                </Badge>
+                <Badge variant="outline" :class="statusBadgeClass(user.status)">
+                  {{ formatAccountStatus(user.status) }}
+                </Badge>
               </div>
             </div>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>Account summary</CardTitle>
+              <CardTitle>{{ t("admin.users.detail.accountSummary.title") }}</CardTitle>
               <CardDescription>
-                Membership and feed usage at a glance.
+                {{ t("admin.users.detail.accountSummary.description") }}
               </CardDescription>
             </CardHeader>
             <CardContent class="grid gap-3 sm:grid-cols-2">
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Created</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.accountSummary.created") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ formatDateTime(user.createdAt) }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Updated</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.accountSummary.updated") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ formatDateTime(user.updatedAt) }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Feeds</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.accountSummary.feeds") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ user.feedCount }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Suspended at</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.accountSummary.suspendedAt") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ formatDateTime(user.suspendedAt) }}</p>
               </div>
             </CardContent>
@@ -259,22 +288,24 @@ const handleConfirmAction = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Subscription</CardTitle>
+              <CardTitle>{{ t("admin.users.detail.subscription.title") }}</CardTitle>
               <CardDescription>
-                Tier, billing cadence, and current expiry.
+                {{ t("admin.users.detail.subscription.description") }}
               </CardDescription>
             </CardHeader>
             <CardContent class="grid gap-3 sm:grid-cols-2">
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Plan</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.subscription.plan") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ formatSubscription(user) }}</p>
               </div>
               <div class="rounded-md border p-3">
-                <p class="text-xs text-muted-foreground">Subscription status</p>
+                <p class="text-xs text-muted-foreground">
+                  {{ t("admin.users.detail.subscription.status") }}
+                </p>
                 <p class="mt-1 text-sm font-medium">{{ user.subscription.status }}</p>
               </div>
               <div class="rounded-md border p-3 sm:col-span-2">
-                <p class="text-xs text-muted-foreground">Expires</p>
+                <p class="text-xs text-muted-foreground">{{ t("admin.users.detail.subscription.expires") }}</p>
                 <p class="mt-1 text-sm font-medium">{{ formatDateTime(user.subscription.expiresAt) }}</p>
               </div>
             </CardContent>
@@ -282,9 +313,9 @@ const handleConfirmAction = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Account actions</CardTitle>
+              <CardTitle>{{ t("admin.users.detail.actions.title") }}</CardTitle>
               <CardDescription>
-                Suspend or reactivate the user account.
+                {{ t("admin.users.detail.actions.description") }}
               </CardDescription>
             </CardHeader>
             <CardContent class="space-y-3">
@@ -292,11 +323,11 @@ const handleConfirmAction = () => {
                 <div class="space-y-2">
                   <Input
                     v-model="suspendReason"
-                    placeholder="Optional suspension reason"
+                    :placeholder="t('admin.users.detail.actions.suspendReasonPlaceholder')"
                     :disabled="actionPending"
                   />
                   <p class="text-xs text-muted-foreground">
-                    The reason is visible to admins in the detail view and audit log.
+                    {{ t("admin.users.detail.actions.suspendReasonHint") }}
                   </p>
                 </div>
                 <Button
@@ -305,14 +336,20 @@ const handleConfirmAction = () => {
                   :disabled="actionPending"
                   @click="requestSuspendConfirmation"
                 >
-                  {{ actionPending ? "Suspending..." : "Suspend user" }}
+                  {{
+                    actionPending
+                      ? t("admin.users.detail.actions.suspending")
+                      : t("admin.users.detail.actions.suspend")
+                  }}
                 </Button>
               </template>
               <template v-else>
                 <div class="rounded-md border p-3 text-sm">
-                  <p class="text-xs text-muted-foreground">Suspension reason</p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ t("admin.users.detail.actions.suspensionReason") }}
+                  </p>
                   <p class="mt-1 font-medium">
-                    {{ user.suspendedReason || "No reason provided." }}
+                    {{ user.suspendedReason || t("admin.users.detail.actions.noReason") }}
                   </p>
                 </div>
                 <Button
@@ -321,7 +358,11 @@ const handleConfirmAction = () => {
                   :disabled="actionPending"
                   @click="requestReactivateConfirmation"
                 >
-                  {{ actionPending ? "Reactivating..." : "Reactivate user" }}
+                  {{
+                    actionPending
+                      ? t("admin.users.detail.actions.reactivating")
+                      : t("admin.users.detail.actions.reactivate")
+                  }}
                 </Button>
               </template>
 

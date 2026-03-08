@@ -20,6 +20,7 @@ const props = defineProps<{
 
 const { $authClient } = useNuxtApp()
 const route = useRoute()
+const { t } = useI18n()
 
 const DEFAULT_REDIRECT_PATH = "/dashboard"
 
@@ -37,7 +38,7 @@ const getErrorMessage = (error: unknown) => {
     return error.message
   }
 
-  return "Unable to create account right now. Please try again."
+  return t("auth.signup.errors.generic")
 }
 
 const getSafeRedirectPath = () => {
@@ -68,7 +69,7 @@ const handleSubmit = async () => {
   submitError.value = ""
 
   if (form.password !== form.confirmPassword) {
-    submitError.value = "Password confirmation does not match."
+    submitError.value = t("auth.signup.errors.passwordConfirmationMismatch")
     return
   }
 
@@ -82,7 +83,7 @@ const handleSubmit = async () => {
     })
 
     if (error) {
-      submitError.value = error.message ?? "Could not create your account."
+      submitError.value = error.message ?? t("auth.signup.errors.createFailed")
       return
     }
 
@@ -109,47 +110,46 @@ const handleSubmit = async () => {
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
-                Create your account
+                {{ t("auth.signup.title") }}
               </h1>
               <p class="text-muted-foreground text-sm text-balance">
-                Enter your email below to create your account
+                {{ t("auth.signup.subtitle") }}
               </p>
             </div>
             <Field>
               <FieldLabel for="name">
-                Name
+                {{ t("auth.common.name") }}
               </FieldLabel>
               <Input
                 id="name"
                 type="text"
                 autocomplete="name"
-                placeholder="John Doe"
+                :placeholder="t('auth.common.namePlaceholder')"
                 v-model="form.name"
                 required
               />
             </Field>
             <Field>
               <FieldLabel for="email">
-                Email
+                {{ t("auth.common.email") }}
               </FieldLabel>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                :placeholder="t('auth.common.emailPlaceholder')"
                 autocomplete="email"
                 v-model="form.email"
                 required
               />
               <FieldDescription>
-                We'll use this to contact you. We will not share your
-                email with anyone else.
+                {{ t("auth.signup.emailDescription") }}
               </FieldDescription>
             </Field>
             <Field>
               <Field class="grid grid-cols-2 gap-4">
                 <Field>
                   <FieldLabel for="password">
-                    Password
+                    {{ t("auth.common.password") }}
                   </FieldLabel>
                   <Input
                     id="password"
@@ -161,7 +161,7 @@ const handleSubmit = async () => {
                 </Field>
                 <Field>
                   <FieldLabel for="confirm-password">
-                    Confirm Password
+                    {{ t("auth.signup.confirmPassword") }}
                   </FieldLabel>
                   <Input
                     id="confirm-password"
@@ -173,7 +173,7 @@ const handleSubmit = async () => {
                 </Field>
               </Field>
               <FieldDescription>
-                Must be at least 8 characters long.
+                {{ t("auth.signup.passwordHint") }}
               </FieldDescription>
             </Field>
             <Field v-if="submitError">
@@ -181,11 +181,11 @@ const handleSubmit = async () => {
             </Field>
             <Field>
               <Button type="submit" :disabled="isSubmitting">
-                {{ isSubmitting ? "Creating account..." : "Create Account" }}
+                {{ isSubmitting ? t("auth.signup.submitting") : t("auth.signup.submit") }}
               </Button>
             </Field>
             <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
-              Or continue with
+              {{ t("auth.common.orContinueWith") }}
             </FieldSeparator>
             <Field class="grid grid-cols-3 gap-4">
               <Button variant="outline" type="button">
@@ -195,7 +195,7 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Sign up with Apple</span>
+                <span class="sr-only">{{ t("auth.signup.sso.apple") }}</span>
               </Button>
               <Button variant="outline" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -204,7 +204,7 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Sign up with Google</span>
+                <span class="sr-only">{{ t("auth.signup.sso.google") }}</span>
               </Button>
               <Button variant="outline" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -213,27 +213,27 @@ const handleSubmit = async () => {
                     fill="currentColor"
                   />
                 </svg>
-                <span class="sr-only">Sign up with Meta</span>
+                <span class="sr-only">{{ t("auth.signup.sso.meta") }}</span>
               </Button>
             </Field>
             <FieldDescription class="text-center">
-              Already have an account?
-              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">Sign in</NuxtLink>
+              {{ t("auth.signup.haveAccount") }}
+              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">{{ t("auth.signup.signIn") }}</NuxtLink>
             </FieldDescription>
           </FieldGroup>
         </form>
         <div class="bg-muted relative hidden md:block">
           <img
             src="/placeholder.svg"
-            alt="Image"
+            :alt="t('auth.common.heroImageAlt')"
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           >
         </div>
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a>
-      and <a href="#">Privacy Policy</a>.
+      {{ t("auth.common.termsPrefix") }} <a href="#">{{ t("auth.common.termsOfService") }}</a>
+      {{ t("auth.common.termsAnd") }} <a href="#">{{ t("auth.common.privacyPolicy") }}</a>.
     </FieldDescription>
   </div>
 </template>

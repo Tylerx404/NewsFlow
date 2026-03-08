@@ -36,7 +36,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
-import { settingsSections } from "@/lib/settings-sections";
+import { getSettingsSections } from "@/lib/settings-sections";
 
 type AdminCapableUser = {
   role?: string | null;
@@ -45,6 +45,7 @@ type AdminCapableUser = {
 const { $authClient, $orpc } = useNuxtApp();
 const route = useRoute();
 const queryClient = useQueryClient();
+const { t } = useI18n();
 
 const addFeedUrl = ref("");
 const addFeedError = ref("");
@@ -72,8 +73,8 @@ const sessionQuery = useQuery({
 const user = computed(() => sessionQuery.data.value ?? null);
 const isAdmin = computed(() => user.value?.role === "ADMIN");
 const sidebarUser = computed(() => ({
-  name: user.value?.name ?? "NewsFlow User",
-  email: user.value?.email ?? "Loading...",
+  name: user.value?.name ?? t("shell.user.defaultName"),
+  email: user.value?.email ?? t("common.actions.loading"),
   avatar: user.value?.avatar ?? null,
   plan: sidebarPlan.value,
 }));
@@ -129,27 +130,31 @@ const discoverFeeds = computed(() => {
     .slice(0, 6);
 });
 
-const defaultSettingsHref = settingsSections[0]?.href ?? "/settings/personal";
+const settingsSections = computed(() => getSettingsSections(t));
+
+const defaultSettingsHref = computed(
+  () => settingsSections.value[0]?.href ?? "/settings/personal"
+);
 
 const navigationItems = computed(() => [
   {
-    title: "Dashboard",
+    title: t("shell.navigation.dashboard"),
     to: "/dashboard",
     icon: LayoutDashboard,
     isActive: isRouteActive("/dashboard"),
   },
   {
-    title: "Articles",
+    title: t("shell.navigation.articles"),
     to: "/articles",
     icon: Newspaper,
     isActive: isRouteActive("/articles"),
   },
   {
-    title: "Settings",
-    to: defaultSettingsHref,
+    title: t("shell.navigation.settings"),
+    to: defaultSettingsHref.value,
     icon: Settings,
     isActive: isRouteActive("/settings"),
-    items: settingsSections.map((section) => ({
+    items: settingsSections.value.map((section) => ({
       title: section.label,
       to: section.href,
       isActive: isRouteActive(section.href),
@@ -159,37 +164,37 @@ const navigationItems = computed(() => [
 
 const adminNavigationItems = computed(() => [
   {
-    title: "Operations",
+    title: t("shell.navigation.operations"),
     to: "/admin/operations",
     icon: Activity,
     isActive: isRouteActive("/admin/operations"),
   },
   {
-    title: "AI Usage",
+    title: t("shell.navigation.aiUsage"),
     to: "/admin/ai-usage",
     icon: Bot,
     isActive: isRouteActive("/admin/ai-usage"),
   },
   {
-    title: "System Ops",
+    title: t("shell.navigation.systemOps"),
     to: "/admin/system-ops",
     icon: Cog,
     isActive: isRouteActive("/admin/system-ops"),
   },
   {
-    title: "Users",
+    title: t("shell.navigation.users"),
     to: "/admin/users",
     icon: Users,
     isActive: isRouteActive("/admin/users"),
   },
   {
-    title: "Subscriptions",
+    title: t("shell.navigation.subscriptions"),
     to: "/admin/subscriptions",
     icon: CreditCard,
     isActive: isRouteActive("/admin/subscriptions"),
   },
   {
-    title: "Feeds",
+    title: t("shell.navigation.feeds"),
     to: "/admin/feeds",
     icon: Rss,
     isActive: isRouteActive("/admin/feeds"),
@@ -215,7 +220,7 @@ const addFeedMutation = useMutation(
     },
     onError: (error) => {
       addFeedError.value =
-        error instanceof Error ? error.message : "Unable to add feed.";
+        error instanceof Error ? error.message : t("shell.errors.addFeed");
     },
   })
 );
@@ -250,18 +255,18 @@ const feedNavItems = computed(() =>
     actions: [
       {
         id: "refresh",
-        label: "Refresh now",
+        label: t("shell.feed.actions.refreshNow"),
         icon: RefreshCw,
         disabled: isFeedActionPending.value,
       },
       {
         id: "manage",
-        label: "Manage feeds",
+        label: t("shell.feed.actions.manageFeeds"),
         icon: SlidersHorizontal,
       },
       {
         id: "remove",
-        label: "Remove feed",
+        label: t("shell.feed.actions.removeFeed"),
         icon: Trash2,
         variant: "destructive" as const,
         disabled: isFeedActionPending.value,
@@ -308,14 +313,16 @@ const handleFeedItemAction = async (payload: {
       await refreshFeedMutation.mutateAsync({ id: payload.item.id });
     } catch (error) {
       feedActionError.value =
-        error instanceof Error ? error.message : "Unable to refresh feed.";
+        error instanceof Error ? error.message : t("shell.errors.refreshFeed");
     }
     return;
   }
 
   if (payload.actionId === "remove") {
     if (import.meta.client) {
-      const shouldRemove = window.confirm(`Remove feed "${payload.item.title}"?`);
+      const shouldRemove = window.confirm(
+        t("shell.feed.confirm.remove", { title: payload.item.title })
+      );
       if (!shouldRemove) {
         return;
       }
@@ -325,7 +332,7 @@ const handleFeedItemAction = async (payload: {
       await deleteFeedMutation.mutateAsync({ id: payload.item.id });
     } catch (error) {
       feedActionError.value =
-        error instanceof Error ? error.message : "Unable to remove feed.";
+        error instanceof Error ? error.message : t("shell.errors.removeFeed");
     }
   }
 };
@@ -351,8 +358,8 @@ const handleSignOut = async () => {
                 <Rss class="size-4" />
               </div>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-medium">NewsFlow</span>
-                <span class="truncate text-xs">Personal AI RSS</span>
+                <span class="truncate font-medium">{{ t("app.name") }}</span>
+                <span class="truncate text-xs">{{ t("app.tagline") }}</span>
               </div>
             </NuxtLink>
           </SidebarMenuButton>
@@ -362,7 +369,7 @@ const handleSignOut = async () => {
         <Input
           v-model="addFeedUrl"
           type="url"
-          placeholder="https://example.com/rss.xml"
+          :placeholder="t('shell.feed.inputPlaceholder')"
           :disabled="addFeedMutation.isPending.value"
         />
         <Button
@@ -372,7 +379,7 @@ const handleSignOut = async () => {
           :disabled="addFeedMutation.isPending.value"
         >
           <Plus class="size-4" />
-          Add feed
+          {{ t("shell.feed.add") }}
         </Button>
         <p v-if="addFeedError" class="text-xs text-destructive">
           {{ addFeedError }}
@@ -381,12 +388,12 @@ const handleSignOut = async () => {
     </SidebarHeader>
 
     <SidebarContent>
-      <NavMain label="Navigation" :items="navigationItems" />
-      <NavMain v-if="isAdmin" label="Admin" :items="adminNavigationItems" />
+      <NavMain :label="t('shell.groups.navigation')" :items="navigationItems" />
+      <NavMain v-if="isAdmin" :label="t('shell.groups.admin')" :items="adminNavigationItems" />
 
       <template v-if="feedNavItems.length">
         <NavProjects
-          group-label="Your feeds"
+          :group-label="t('shell.groups.yourFeeds')"
           mode="link"
           :items="feedNavItems"
           @item-action="handleFeedItemAction"
@@ -396,32 +403,32 @@ const handleSignOut = async () => {
         </p>
       </template>
       <SidebarGroup v-else>
-        <SidebarGroupLabel>Your feeds</SidebarGroupLabel>
+        <SidebarGroupLabel>{{ t("shell.groups.yourFeeds") }}</SidebarGroupLabel>
         <SidebarGroupContent>
           <p
             v-if="sidebarFeedsQuery.isLoading.value"
             class="px-2 py-1 text-xs text-muted-foreground"
           >
-            Loading feeds...
+            {{ t("shell.feed.loading") }}
           </p>
           <p v-else class="px-2 py-1 text-xs text-muted-foreground">
-            No feeds yet. Add your first RSS feed above.
+            {{ t("shell.feed.empty") }}
           </p>
         </SidebarGroupContent>
       </SidebarGroup>
 
       <NavProjects
         v-if="discoverNavItems.length"
-        group-label="Discover"
+        :group-label="t('shell.groups.discover')"
         mode="action"
         :items="discoverNavItems"
         @select="handleDiscoverSelect"
       />
       <SidebarGroup v-else>
-        <SidebarGroupLabel>Discover</SidebarGroupLabel>
+        <SidebarGroupLabel>{{ t("shell.groups.discover") }}</SidebarGroupLabel>
         <SidebarGroupContent>
           <p class="px-2 py-1 text-xs text-muted-foreground">
-            All suggested feeds are already added.
+            {{ t("shell.discover.empty") }}
           </p>
         </SidebarGroupContent>
       </SidebarGroup>

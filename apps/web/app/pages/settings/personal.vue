@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 definePageMeta({
   layout: "dashboard",
@@ -111,6 +112,7 @@ if (!defaultSubscriptionPlanOption) {
 }
 
 const { $authClient, $orpc } = useNuxtApp();
+const intlLocale = useIntlLocale();
 const config = useRuntimeConfig();
 const route = useRoute();
 const authRequestHeaders = import.meta.server
@@ -311,7 +313,7 @@ const toErrorMessage = (error: unknown, fallback: string) => {
 const normalizePromotionCode = (value: string) => value.trim().toUpperCase();
 
 const formatCurrencyAmount = (amountInMinor: number, currency: string) =>
-  new Intl.NumberFormat("en-US", {
+  new Intl.NumberFormat(intlLocale.value, {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
@@ -876,7 +878,10 @@ const formatDate = (value: Date | string | null | undefined) => {
   }
 
   const date = value instanceof Date ? value : new Date(value);
-  return date.toLocaleString();
+  return new Intl.DateTimeFormat(intlLocale.value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 };
 
 const formatSessionToken = (token: string) => {

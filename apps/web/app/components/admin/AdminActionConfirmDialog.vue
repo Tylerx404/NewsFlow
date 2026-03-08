@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
+const { t } = useI18n();
+
 const props = withDefaults(
   defineProps<{
     open: boolean;
@@ -24,8 +26,8 @@ const props = withDefaults(
     isPending?: boolean;
   }>(),
   {
-    confirmPendingLabel: "Processing...",
-    cancelLabel: "Cancel",
+    confirmPendingLabel: undefined,
+    cancelLabel: undefined,
     confirmVariant: "default",
     isPending: false,
   }
@@ -47,7 +49,7 @@ const emit = defineEmits<{
 
       <AlertDialogFooter>
         <AlertDialogCancel :disabled="props.isPending">
-          {{ props.cancelLabel }}
+          {{ props.cancelLabel ?? t("common.actions.cancel") }}
         </AlertDialogCancel>
         <Button
           type="button"
@@ -55,7 +57,11 @@ const emit = defineEmits<{
           :disabled="props.isPending"
           @click="emit('confirm')"
         >
-          {{ props.isPending ? props.confirmPendingLabel : props.confirmLabel }}
+          {{
+            props.isPending
+              ? (props.confirmPendingLabel ?? t("common.actions.loading"))
+              : props.confirmLabel
+          }}
         </Button>
       </AlertDialogFooter>
     </AlertDialogContent>

@@ -26,10 +26,11 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "AI Profiles",
+  titleKey: "settings.ai.metaTitle",
 });
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
 const queryClient = useQueryClient();
 
 type Provider = "openai" | "anthropic" | "google" | "deepseek" | "groq" | "ollama";
@@ -44,44 +45,44 @@ type ConfigDraft = {
 const providerConfigs: Record<
   Provider,
   {
-    label: string;
+    labelKey: string;
     defaultBaseUrl: string;
     supportsByokBaseUrl: boolean;
     apiKeyRequired: boolean;
   }
 > = {
   openai: {
-    label: "OpenAI",
+    labelKey: "settings.ai.providers.openai",
     defaultBaseUrl: "https://api.openai.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   anthropic: {
-    label: "Anthropic",
+    labelKey: "settings.ai.providers.anthropic",
     defaultBaseUrl: "https://api.anthropic.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   google: {
-    label: "Google Gemini",
+    labelKey: "settings.ai.providers.google",
     defaultBaseUrl: "https://generativelanguage.googleapis.com",
     supportsByokBaseUrl: true,
     apiKeyRequired: true,
   },
   deepseek: {
-    label: "DeepSeek",
+    labelKey: "settings.ai.providers.deepseek",
     defaultBaseUrl: "https://api.deepseek.com",
     supportsByokBaseUrl: false,
     apiKeyRequired: true,
   },
   groq: {
-    label: "Groq",
+    labelKey: "settings.ai.providers.groq",
     defaultBaseUrl: "https://api.groq.com",
     supportsByokBaseUrl: false,
     apiKeyRequired: true,
   },
   ollama: {
-    label: "Ollama",
+    labelKey: "settings.ai.providers.ollama",
     defaultBaseUrl: "http://localhost:11434",
     supportsByokBaseUrl: false,
     apiKeyRequired: false,
@@ -92,7 +93,7 @@ const providers = Object.keys(providerConfigs) as Provider[];
 const getProviderConfig = (provider: Provider) => providerConfigs[provider];
 const isProvider = (value: string): value is Provider => value in providerConfigs;
 const getProviderLabel = (provider: string) =>
-  isProvider(provider) ? providerConfigs[provider].label : provider;
+  isProvider(provider) ? t(providerConfigs[provider].labelKey) : provider;
 const DEFAULT_CREATE_PROVIDER: Provider = "openai";
 
 const createForm = reactive({
@@ -156,7 +157,7 @@ const createMutation = useMutation(
     },
     onError: (error) => {
       createError.value =
-        error instanceof Error ? error.message : "Unable to create AI profile.";
+        error instanceof Error ? error.message : t("settings.ai.errors.create");
     },
   })
 );
@@ -309,7 +310,7 @@ const loadCreateModels = async () => {
     modelOptionsForCreate.value = [];
     createForm.model = "";
     fetchCreateModelsError.value =
-      error instanceof Error ? error.message : "Unable to fetch models.";
+      error instanceof Error ? error.message : t("settings.ai.errors.fetchModels");
   } finally {
     isLoadingCreateModels.value = false;
   }
@@ -372,7 +373,7 @@ const loadModelsForConfig = async (id: string) => {
     // Prevent stale model list from previous credentials/base URL.
     modelOptionsByConfigId[id] = [];
     rowErrorByConfigId[id] =
-      error instanceof Error ? error.message : "Unable to load models.";
+      error instanceof Error ? error.message : t("settings.ai.errors.loadModels");
   } finally {
     isLoadingModelOptionsByConfigId[id] = false;
   }
@@ -430,7 +431,7 @@ const handleSetDefault = async (id: string) => {
     });
   } catch (error) {
     rowErrorByConfigId[id] =
-      error instanceof Error ? error.message : "Unable to set default profile.";
+      error instanceof Error ? error.message : t("settings.ai.errors.setDefault");
   } finally {
     rowSettingDefaultByConfigId[id] = false;
   }
@@ -452,12 +453,12 @@ const handleSaveConfig = async (id: string) => {
   const nextApiKey = draft.apiKey.trim();
 
   if (!nextName) {
-    rowErrorByConfigId[id] = "Name is required.";
+    rowErrorByConfigId[id] = t("settings.ai.errors.nameRequired");
     return;
   }
 
   if (!nextModel) {
-    rowErrorByConfigId[id] = "Model is required.";
+    rowErrorByConfigId[id] = t("settings.ai.errors.modelRequired");
     return;
   }
 
@@ -497,7 +498,7 @@ const handleSaveConfig = async (id: string) => {
     draft.apiKey = "";
   } catch (error) {
     rowErrorByConfigId[id] =
-      error instanceof Error ? error.message : "Unable to update profile.";
+      error instanceof Error ? error.message : t("settings.ai.errors.update");
   } finally {
     rowPendingByConfigId[id] = false;
   }
@@ -527,7 +528,7 @@ const confirmDeleteConfig = async () => {
     deleteDialogConfigId.value = null;
   } catch (error) {
     rowErrorByConfigId[id] =
-      error instanceof Error ? error.message : "Unable to delete profile.";
+      error instanceof Error ? error.message : t("settings.ai.errors.delete");
   } finally {
     rowDeletingByConfigId[id] = false;
   }
@@ -558,27 +559,27 @@ watch(
         <CardHeader>
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div class="space-y-1">
-              <CardTitle>AI profiles</CardTitle>
+              <CardTitle>{{ t("settings.ai.page.title") }}</CardTitle>
               <CardDescription>
-                Manage default profile for reader summarize action.
+                {{ t("settings.ai.page.description") }}
               </CardDescription>
             </div>
 
             <Button size="sm" class="w-full sm:w-auto" @click="openCreateDialog">
-              Create profile
+              {{ t("settings.ai.actions.createProfile") }}
             </Button>
           </div>
         </CardHeader>
 
         <CardContent class="space-y-4">
           <p v-if="aiConfigsQuery.isLoading.value" class="text-sm text-muted-foreground">
-            Loading profiles...
+            {{ t("settings.ai.labels.loadingProfiles") }}
           </p>
           <p
             v-else-if="(aiConfigsQuery.data.value?.length ?? 0) === 0"
             class="text-sm text-muted-foreground"
           >
-            No profiles yet. Create one to enable AI summarize.
+            {{ t("settings.ai.labels.noProfiles") }}
           </p>
 
           <div
@@ -594,14 +595,14 @@ watch(
                     v-if="config.isDefault"
                     class="ml-2 rounded bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
                   >
-                    Default
+                    {{ t("settings.ai.labels.default") }}
                   </span>
                 </p>
                 <p class="text-sm text-muted-foreground">
                   {{ getProviderLabel(config.provider) }} / {{ config.model }}
                 </p>
                 <p class="text-xs text-muted-foreground">
-                  Current key: {{ config.apiKey }}
+                  {{ t("settings.ai.labels.currentKey") }}: {{ config.apiKey }}
                 </p>
               </div>
 
@@ -612,16 +613,16 @@ watch(
                   :disabled="config.isDefault || isRowBusy(config.id)"
                   @click="handleSetDefault(config.id)"
                 >
-                  {{ rowSettingDefaultByConfigId[config.id] ? "Setting..." : "Set default" }}
+                  {{ rowSettingDefaultByConfigId[config.id] ? t("settings.ai.actions.setting") : t("settings.ai.actions.setDefault") }}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   :disabled="isRowBusy(config.id)"
-                  :aria-label="`Delete profile ${config.name}`"
+                  :aria-label="t('settings.ai.actions.deleteAria', { name: config.name })"
                   @click="openDeleteDialog(config.id)"
                 >
-                  Delete
+                  {{ t("common.actions.delete") }}
                 </Button>
               </div>
             </div>
@@ -631,12 +632,12 @@ watch(
               class="grid gap-4 border-t pt-4 md:grid-cols-2"
             >
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`profile-name-${config.id}`">Name</label>
+                <label class="text-sm font-medium" :for="`profile-name-${config.id}`">{{ t("auth.common.name") }}</label>
                 <Input :id="`profile-name-${config.id}`" v-model="draftByConfigId[config.id].name" />
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`profile-model-${config.id}`">Model</label>
+                <label class="text-sm font-medium" :for="`profile-model-${config.id}`">{{ t("settings.ai.labels.model") }}</label>
                 <Select
                   :model-value="draftByConfigId[config.id].model"
                   @update:model-value="(value) => (draftByConfigId[config.id].model = String(value ?? ''))"
@@ -646,8 +647,8 @@ watch(
                     <SelectValue
                       :placeholder="
                         isLoadingModelOptionsByConfigId[config.id]
-                          ? 'Loading models...'
-                          : 'Select model'
+                          ? t('settings.ai.labels.loadingModels')
+                          : t('settings.ai.labels.selectModel')
                       "
                     />
                   </SelectTrigger>
@@ -664,23 +665,23 @@ watch(
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium" :for="`profile-base-url-${config.id}`">Base URL</label>
+                <label class="text-sm font-medium" :for="`profile-base-url-${config.id}`">{{ t("settings.ai.labels.baseUrl") }}</label>
                 <Input
                   :id="`profile-base-url-${config.id}`"
                   v-model="draftByConfigId[config.id].baseUrl"
-                  placeholder="Use provider default when empty"
+                  :placeholder="t('settings.ai.labels.useProviderDefault')"
                 />
               </div>
 
               <div class="space-y-2">
                 <label class="text-sm font-medium" :for="`profile-api-key-${config.id}`">
-                  New API key
+                  {{ t("settings.ai.labels.newApiKey") }}
                 </label>
                 <Input
                   :id="`profile-api-key-${config.id}`"
                   v-model="draftByConfigId[config.id].apiKey"
                   type="password"
-                  placeholder="Leave blank to keep current key"
+                  :placeholder="t('settings.ai.labels.keepCurrentKey')"
                 />
               </div>
             </div>
@@ -695,7 +696,7 @@ watch(
                 :disabled="isRowBusy(config.id)"
                 @click="handleSaveConfig(config.id)"
               >
-                {{ rowPendingByConfigId[config.id] ? "Saving..." : "Save changes" }}
+                {{ rowPendingByConfigId[config.id] ? t("settings.ai.actions.saving") : t("settings.ai.actions.saveChanges") }}
               </Button>
             </div>
           </div>
@@ -708,26 +709,26 @@ watch(
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Create profile</AlertDialogTitle>
+          <AlertDialogTitle>{{ t("settings.ai.dialogs.createTitle") }}</AlertDialogTitle>
           <AlertDialogDescription>
-            Configure your provider and model. API key is encrypted on server.
+            {{ t("settings.ai.dialogs.createDescription") }}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <div class="space-y-4">
           <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-name">Name</label>
-            <Input id="create-profile-name" v-model="createForm.name" placeholder="Main OpenAI" />
+            <label class="text-sm font-medium" for="create-profile-name">{{ t("auth.common.name") }}</label>
+            <Input id="create-profile-name" v-model="createForm.name" :placeholder="t('settings.ai.labels.mainOpenAi')" />
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-provider">Provider</label>
+            <label class="text-sm font-medium" for="create-profile-provider">{{ t("settings.ai.labels.provider") }}</label>
             <Select
               :model-value="createForm.provider"
               @update:model-value="(value) => (createForm.provider = String(value) as Provider)"
             >
               <SelectTrigger id="create-profile-provider" class="w-full">
-                <SelectValue placeholder="Select provider" />
+                <SelectValue :placeholder="t('settings.ai.labels.selectProvider')" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
@@ -735,14 +736,14 @@ watch(
                   :key="provider"
                   :value="provider"
                 >
-                  {{ getProviderConfig(provider).label }}
+                  {{ t(getProviderConfig(provider).labelKey) }}
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-model">Model</label>
+            <label class="text-sm font-medium" for="create-profile-model">{{ t("settings.ai.labels.model") }}</label>
             <Select
               :model-value="createForm.model"
               @update:model-value="(value) => (createForm.model = String(value ?? ''))"
@@ -750,7 +751,7 @@ watch(
             >
               <SelectTrigger id="create-profile-model" class="w-full">
                 <SelectValue
-                  :placeholder="isLoadingCreateModels ? 'Loading models...' : 'Select to load models'"
+                  :placeholder="isLoadingCreateModels ? t('settings.ai.labels.loadingModels') : t('settings.ai.labels.selectToLoadModels')"
                 />
               </SelectTrigger>
               <SelectContent>
@@ -767,8 +768,8 @@ watch(
 
           <div class="space-y-2">
             <label class="text-sm font-medium" for="create-profile-api-key">
-              API key
-              <span v-if="!isApiKeyRequired" class="text-muted-foreground">(optional)</span>
+              {{ t("settings.ai.labels.apiKey") }}
+              <span v-if="!isApiKeyRequired" class="text-muted-foreground">({{ t("settings.ai.labels.optional") }})</span>
             </label>
             <Input
               id="create-profile-api-key"
@@ -779,7 +780,7 @@ watch(
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-medium" for="create-profile-base-url">Base URL</label>
+            <label class="text-sm font-medium" for="create-profile-base-url">{{ t("settings.ai.labels.baseUrl") }}</label>
             <Input
               id="create-profile-base-url"
               v-model="createForm.baseUrl"
@@ -787,9 +788,9 @@ watch(
               :placeholder="currentProviderConfig.defaultBaseUrl"
             />
             <p class="text-xs text-muted-foreground">
-              Default: {{ currentProviderConfig.defaultBaseUrl }}
-              <span v-if="canCustomizeBaseUrl">(can customize for BYOK)</span>
-              <span v-else>(managed automatically)</span>
+              {{ t("settings.ai.labels.defaultPrefix") }}: {{ currentProviderConfig.defaultBaseUrl }}
+              <span v-if="canCustomizeBaseUrl">({{ t("settings.ai.labels.canCustomizeByok") }})</span>
+              <span v-else>({{ t("settings.ai.labels.managedAutomatically") }})</span>
             </p>
           </div>
 
@@ -803,10 +804,10 @@ watch(
 
         <AlertDialogFooter>
           <AlertDialogCancel :disabled="createMutation.isPending.value">
-            Cancel
+            {{ t("common.actions.cancel") }}
           </AlertDialogCancel>
           <Button :disabled="createMutation.isPending.value" @click="handleCreate">
-            {{ createMutation.isPending.value ? "Creating..." : "Create profile" }}
+            {{ createMutation.isPending.value ? t("settings.ai.actions.creating") : t("settings.ai.actions.createProfile") }}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -818,19 +819,19 @@ watch(
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete AI profile?</AlertDialogTitle>
+          <AlertDialogTitle>{{ t("settings.ai.dialogs.deleteTitle") }}</AlertDialogTitle>
           <AlertDialogDescription>
             <span v-if="selectedDeleteConfig">
-              This will remove profile "{{ selectedDeleteConfig.name }}".
+              {{ t("settings.ai.dialogs.deleteDescriptionWithName", { name: selectedDeleteConfig.name }) }}
             </span>
             <span v-else>
-              This action cannot be undone.
+              {{ t("settings.ai.dialogs.cannotUndo") }}
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel :disabled="deleteDialogConfigId ? rowDeletingByConfigId[deleteDialogConfigId] : false">
-            Cancel
+            {{ t("common.actions.cancel") }}
           </AlertDialogCancel>
           <Button
             variant="destructive"
@@ -839,8 +840,8 @@ watch(
           >
             {{
               deleteDialogConfigId && rowDeletingByConfigId[deleteDialogConfigId]
-                ? "Deleting..."
-                : "Delete profile"
+                ? t("settings.ai.actions.deleting")
+                : t("settings.ai.actions.deleteProfile")
             }}
           </Button>
         </AlertDialogFooter>

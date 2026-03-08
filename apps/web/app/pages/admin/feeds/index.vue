@@ -23,12 +23,13 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 definePageMeta({
   layout: "dashboard",
   middleware: "admin-auth",
-  title: "Admin Feeds",
+  titleKey: "admin.feeds.metaTitle",
 });
 
 type BooleanFilter = "all" | "true" | "false";
 
 const { $orpc } = useNuxtApp();
+const { t } = useI18n();
 const queryClient = useQueryClient();
 
 const searchQuery = ref("");
@@ -97,7 +98,7 @@ const feedsErrorMessage = computed(() => {
 
   return feedsQuery.error.value instanceof Error
     ? feedsQuery.error.value.message
-    : "Could not load feed sources. Refresh and try again.";
+    : t("admin.feeds.errors.list");
 });
 
 const hasMoreFeeds = computed(() => Boolean(feedsQuery.data.value?.nextCursor));
@@ -122,7 +123,7 @@ const handleToggleEnabled = async (payload: { feedSourceId: string; isEnabled: b
   try {
     await updateEnabledMutation.mutateAsync(payload);
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Could not update this feed state. Try again.";
+    actionError.value = error instanceof Error ? error.message : t("admin.feeds.errors.updateState");
   }
 };
 
@@ -132,7 +133,7 @@ const handleRetryFetch = async (feedSourceId: string) => {
   try {
     await retryFetchMutation.mutateAsync({ feedSourceId });
   } catch (error) {
-    actionError.value = error instanceof Error ? error.message : "Could not queue an RSS fetch retry. Try again.";
+    actionError.value = error instanceof Error ? error.message : t("admin.feeds.errors.retryFetch");
   }
 };
 
@@ -143,7 +144,7 @@ const handleRetryExtraction = async (feedSourceId: string) => {
     await retryFeedExtractionMutation.mutateAsync({ feedSourceId });
   } catch (error) {
     actionError.value =
-      error instanceof Error ? error.message : "Could not queue a feed extraction retry. Try again.";
+      error instanceof Error ? error.message : t("admin.feeds.errors.retryExtraction");
   }
 };
 </script>
@@ -151,77 +152,77 @@ const handleRetryExtraction = async (feedSourceId: string) => {
 <template>
   <div class="space-y-6">
     <section class="space-y-1">
-      <h1 class="text-2xl font-semibold">Admin feeds</h1>
+      <h1 class="text-2xl font-semibold">{{ t("admin.feeds.page.title") }}</h1>
       <p class="text-sm text-muted-foreground">
-        Track system-wide feed health and trigger operational queue actions.
+        {{ t("admin.feeds.page.description") }}
       </p>
     </section>
 
     <Card>
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>{{ t("admin.feeds.filters.title") }}</CardTitle>
         <CardDescription>
-          Search feed sources and focus on enabled state, errors, stale schedules, or extraction failures.
+          {{ t("admin.feeds.filters.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <div class="space-y-2 xl:col-span-2">
-          <p class="text-sm font-medium">Search</p>
-          <Input v-model="searchQuery" placeholder="Feed title or URL" />
+          <p class="text-sm font-medium">{{ t("admin.feeds.filters.search.label") }}</p>
+          <Input v-model="searchQuery" :placeholder="t('admin.feeds.filters.search.placeholder')" />
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Enabled</p>
+          <p class="text-sm font-medium">{{ t("admin.feeds.filters.enabled.label") }}</p>
           <Select :model-value="enabledFilter" @update:model-value="(value) => handleBooleanFilterChange(enabledFilter, String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All feeds" />
+              <SelectValue :placeholder="t('admin.feeds.filters.enabled.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All feeds</SelectItem>
-              <SelectItem value="true">Enabled</SelectItem>
-              <SelectItem value="false">Disabled</SelectItem>
+              <SelectItem value="all">{{ t("admin.feeds.filters.enabled.all") }}</SelectItem>
+              <SelectItem value="true">{{ t("common.states.enabled") }}</SelectItem>
+              <SelectItem value="false">{{ t("common.states.disabled") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Errors</p>
+          <p class="text-sm font-medium">{{ t("admin.feeds.filters.errors.label") }}</p>
           <Select :model-value="errorsFilter" @update:model-value="(value) => handleBooleanFilterChange(errorsFilter, String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All error states" />
+              <SelectValue :placeholder="t('admin.feeds.filters.errors.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All error states</SelectItem>
-              <SelectItem value="true">Has errors</SelectItem>
-              <SelectItem value="false">Healthy</SelectItem>
+              <SelectItem value="all">{{ t("admin.feeds.filters.errors.all") }}</SelectItem>
+              <SelectItem value="true">{{ t("admin.feeds.filters.errors.hasErrors") }}</SelectItem>
+              <SelectItem value="false">{{ t("admin.feeds.filters.errors.healthy") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Stale</p>
+          <p class="text-sm font-medium">{{ t("admin.feeds.filters.stale.label") }}</p>
           <Select :model-value="staleFilter" @update:model-value="(value) => handleBooleanFilterChange(staleFilter, String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All freshness states" />
+              <SelectValue :placeholder="t('admin.feeds.filters.stale.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All freshness states</SelectItem>
-              <SelectItem value="true">Stale</SelectItem>
-              <SelectItem value="false">Scheduled</SelectItem>
+              <SelectItem value="all">{{ t("admin.feeds.filters.stale.all") }}</SelectItem>
+              <SelectItem value="true">{{ t("admin.feeds.filters.stale.stale") }}</SelectItem>
+              <SelectItem value="false">{{ t("admin.feeds.filters.stale.scheduled") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Extraction</p>
+          <p class="text-sm font-medium">{{ t("admin.feeds.filters.extraction.label") }}</p>
           <Select :model-value="extractionFilter" @update:model-value="(value) => handleBooleanFilterChange(extractionFilter, String(value))">
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="All extraction states" />
+              <SelectValue :placeholder="t('admin.feeds.filters.extraction.all')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All extraction states</SelectItem>
-              <SelectItem value="true">Has failures</SelectItem>
-              <SelectItem value="false">Healthy</SelectItem>
+              <SelectItem value="all">{{ t("admin.feeds.filters.extraction.all") }}</SelectItem>
+              <SelectItem value="true">{{ t("admin.feeds.filters.extraction.hasFailures") }}</SelectItem>
+              <SelectItem value="false">{{ t("admin.feeds.filters.extraction.healthy") }}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -230,9 +231,9 @@ const handleRetryExtraction = async (feedSourceId: string) => {
 
     <Card>
       <CardHeader>
-        <CardTitle>Feed operations</CardTitle>
+        <CardTitle>{{ t("admin.feeds.operations.title") }}</CardTitle>
         <CardDescription>
-          Use quick actions or open a feed for detailed operational context.
+          {{ t("admin.feeds.operations.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
