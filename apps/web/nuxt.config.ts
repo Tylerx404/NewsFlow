@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     componentDir: "./app/components/ui",
   },
   i18n: {
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL,
     strategy: "no_prefix",
     defaultLocale: "en",
     lazy: true,

@@ -8,6 +8,7 @@ import { z } from "zod";
  */
 export const env = createEnv({
     client: {
+        NUXT_PUBLIC_SITE_URL: z.url(),
         NUXT_PUBLIC_SERVER_URL: z.url(),
     },
     emptyStringAsUndefined: true,
