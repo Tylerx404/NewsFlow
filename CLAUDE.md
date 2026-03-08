@@ -65,7 +65,17 @@ NewsFlow/
 - Sửa schema qua Prisma.
 - Không dùng SQL tay trừ khi có yêu cầu cụ thể.
 
-6. Security hygiene:
+6. Branch & commit discipline:
+- Mỗi phần việc phải bắt đầu trên một nhánh mới, tên nhánh ngắn gọn và bám theo chủ đề thay đổi.
+- Hoàn tất một phần việc độc lập thì commit ngay phần đó với message rõ ràng.
+- Không gộp nhiều thay đổi không liên quan vào cùng một commit.
+
+7. UI text phải đi qua i18n:
+- Mọi thay đổi liên quan text giao diện phải cập nhật qua hệ i18n.
+- Không hard-code text mới trong UI nếu module đó đã dùng i18n.
+- Khi thêm hoặc đổi key dịch, phải cập nhật đồng bộ các locale liên quan.
+
+8. Security hygiene:
 - Không commit secrets.
 - Validate toàn bộ input ở boundary.
 - Không log token/api key/credential thô.
@@ -158,6 +168,11 @@ Responsive & motion:
 - Mobile-first, tránh vỡ layout và overflow.
 - Animation chỉ dùng cho state cần thiết (sidebar/collapsible/dropdown), tránh motion dư.
 
+I18n:
+- Mọi text trên giao diện như heading, button, empty state, toast, modal, placeholder, validation message phải đi qua i18n.
+- Nếu thêm màn hình mới trong `apps/web`, chuẩn bị key dịch ngay từ đầu thay vì hard-code text tạm.
+- Nếu đổi wording hiện có, cập nhật đồng bộ key dịch và rà lại các locale liên quan.
+
 Component research:
 - Nếu cần mở rộng UI cho trang mới, ưu tiên dùng `shadcn-vue MCP` để research component/pattern trước khi tự custom.
 - Chỉ viết component mới khi không có lựa chọn phù hợp từ hệ `shadcn`.
@@ -191,6 +206,12 @@ bun run db:push
 bun run dev
 ```
 
+### Start a new task
+
+1. Tạo một nhánh mới theo chủ đề thay đổi trước khi bắt đầu.
+2. Giữ phạm vi nhánh bám sát một nhóm thay đổi rõ ràng.
+3. Sau khi hoàn tất phần việc, commit ngay phần đó với message dễ hiểu.
+
 ### Add new API endpoint
 
 1. Tạo/sửa module trong `packages/api/src/modules/*`.
@@ -219,6 +240,12 @@ bun run db:push
 cd apps/web
 bunx shadcn-vue add button card input
 ```
+
+### Update UI with i18n
+
+1. Thêm hoặc cập nhật key dịch trước khi nối text vào component.
+2. Dùng key i18n cho label, button, toast, modal, empty state, placeholder, và validation message.
+3. Đồng bộ mọi locale đang được hỗ trợ trước khi hoàn tất task.
 
 ## 11) Commands
 
@@ -264,8 +291,10 @@ Trước khi kết thúc task:
 1. `bun run check-types` pass với phần code bị tác động.
 2. Nếu đổi DB schema: đã chạy `db:generate` và `db:migrate`/`db:push`.
 3. Nếu đổi API contract: client usage liên quan đã được cập nhật.
-4. Không lộ secrets trong source/log/docs.
-5. Chỉ sửa trong phạm vi yêu cầu, không refactor lan rộng.
+4. Nếu có thay đổi UI: các key i18n và locale liên quan đã cập nhật đầy đủ, không để text mới bị hard-code sai hệ i18n.
+5. Phần việc nằm trên đúng nhánh theo chủ đề và đã được commit thành một nhóm thay đổi rõ ràng.
+6. Không lộ secrets trong source/log/docs.
+7. Chỉ sửa trong phạm vi yêu cầu, không refactor lan rộng.
 
 ## 14) Quick Troubleshooting
 
