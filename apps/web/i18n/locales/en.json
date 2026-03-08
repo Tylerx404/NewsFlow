@@ -38,10 +38,74 @@
   },
   "shell": {
     "groups": {
+      "platform": "Platform",
       "navigation": "Navigation",
       "admin": "Admin",
       "yourFeeds": "Your feeds",
       "discover": "Discover"
+    },
+    "nav": {
+      "toggle": "Toggle",
+      "moreActions": "More actions"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "articles": "Articles",
+      "settings": "Settings",
+      "operations": "Operations",
+      "aiUsage": "AI Usage",
+      "systemOps": "System Ops",
+      "users": "Users",
+      "subscriptions": "Subscriptions",
+      "feeds": "Feeds"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "Add feed",
+      "loading": "Loading feeds...",
+      "empty": "No feeds yet. Add your first RSS feed above.",
+      "actions": {
+        "refreshNow": "Refresh now",
+        "manageFeeds": "Manage feeds",
+        "removeFeed": "Remove feed"
+      },
+      "confirm": {
+        "remove": "Remove feed \"{title}\"?"
+      }
+    },
+    "discover": {
+      "empty": "All suggested feeds are already added."
+    },
+    "errors": {
+      "addFeed": "Unable to add feed.",
+      "refreshFeed": "Unable to refresh feed.",
+      "removeFeed": "Unable to remove feed."
+    },
+    "user": {
+      "defaultName": "NewsFlow User",
+      "personalSettings": "Personal Settings",
+      "appearance": "Appearance",
+      "logOut": "Log out"
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "Appearance",
+        "description": "Theme mode, reading colors, typography, and article layout preferences."
+      },
+      "personal": {
+        "label": "Personal",
+        "description": "Profile, password, active sessions, and subscription overview."
+      },
+      "ai": {
+        "label": "AI Profiles",
+        "description": "Provider, model, and default profile configuration for summarize actions."
+      },
+      "feeds": {
+        "label": "Feed Management",
+        "description": "Feed metadata, activity status, refresh actions, and cleanup."
+      }
     }
   }
 }

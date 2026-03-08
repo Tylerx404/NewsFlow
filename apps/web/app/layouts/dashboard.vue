@@ -8,25 +8,30 @@ import {
 } from "@/components/ui/sidebar";
 
 const route = useRoute();
+const { t } = useI18n();
 
 const pageTitle = computed(() => {
+  if (typeof route.meta.titleKey === "string" && route.meta.titleKey.length > 0) {
+    return t(route.meta.titleKey);
+  }
+
   if (typeof route.meta.title === "string" && route.meta.title.length > 0) {
     return route.meta.title;
   }
 
   if (route.path.startsWith("/settings")) {
-    return "Settings";
+    return t("layout.titles.settings");
   }
 
   if (route.path.startsWith("/articles")) {
-    return "Articles";
+    return t("layout.titles.articles");
   }
 
   if (route.path.startsWith("/feeds")) {
-    return "Reader";
+    return t("layout.titles.reader");
   }
 
-  return "Dashboard";
+  return t("layout.titles.dashboard");
 });
 </script>
 

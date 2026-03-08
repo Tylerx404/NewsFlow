@@ -38,10 +38,74 @@
   },
   "shell": {
     "groups": {
+      "platform": "Nền tảng",
       "navigation": "Điều hướng",
       "admin": "Quản trị",
       "yourFeeds": "Nguồn feed của bạn",
       "discover": "Khám phá"
+    },
+    "nav": {
+      "toggle": "Bật/Tắt",
+      "moreActions": "Thao tác khác"
+    },
+    "navigation": {
+      "dashboard": "Tổng quan",
+      "articles": "Bài viết",
+      "settings": "Cài đặt",
+      "operations": "Vận hành",
+      "aiUsage": "Sử dụng AI",
+      "systemOps": "Hệ thống",
+      "users": "Người dùng",
+      "subscriptions": "Gói đăng ký",
+      "feeds": "Feed"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "Thêm feed",
+      "loading": "Đang tải feed...",
+      "empty": "Chưa có feed nào. Hãy thêm feed RSS đầu tiên ở trên.",
+      "actions": {
+        "refreshNow": "Làm mới ngay",
+        "manageFeeds": "Quản lý feed",
+        "removeFeed": "Xóa feed"
+      },
+      "confirm": {
+        "remove": "Xóa feed \"{title}\"?"
+      }
+    },
+    "discover": {
+      "empty": "Bạn đã thêm tất cả feed gợi ý."
+    },
+    "errors": {
+      "addFeed": "Không thể thêm feed.",
+      "refreshFeed": "Không thể làm mới feed.",
+      "removeFeed": "Không thể xóa feed."
+    },
+    "user": {
+      "defaultName": "Người dùng NewsFlow",
+      "personalSettings": "Cài đặt cá nhân",
+      "appearance": "Giao diện",
+      "logOut": "Đăng xuất"
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "Giao diện",
+        "description": "Chế độ màu, tông đọc, kiểu chữ và bố cục bài viết."
+      },
+      "personal": {
+        "label": "Cá nhân",
+        "description": "Hồ sơ, mật khẩu, phiên đăng nhập và tổng quan gói dịch vụ."
+      },
+      "ai": {
+        "label": "Hồ sơ AI",
+        "description": "Nhà cung cấp, model và cấu hình mặc định cho tác vụ tóm tắt."
+      },
+      "feeds": {
+        "label": "Quản lý Feed",
+        "description": "Thông tin feed, trạng thái hoạt động, làm mới và dọn dẹp."
+      }
     }
   }
 }

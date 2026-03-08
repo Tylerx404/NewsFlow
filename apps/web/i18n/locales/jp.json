@@ -38,10 +38,74 @@
   },
   "shell": {
     "groups": {
+      "platform": "プラットフォーム",
       "navigation": "ナビゲーション",
       "admin": "管理",
       "yourFeeds": "あなたのフィード",
       "discover": "発見"
+    },
+    "nav": {
+      "toggle": "切り替え",
+      "moreActions": "その他の操作"
+    },
+    "navigation": {
+      "dashboard": "ダッシュボード",
+      "articles": "記事",
+      "settings": "設定",
+      "operations": "運用",
+      "aiUsage": "AI 利用状況",
+      "systemOps": "システム運用",
+      "users": "ユーザー",
+      "subscriptions": "サブスクリプション",
+      "feeds": "フィード"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "フィードを追加",
+      "loading": "フィードを読み込み中...",
+      "empty": "まだフィードがありません。上で最初の RSS フィードを追加してください。",
+      "actions": {
+        "refreshNow": "今すぐ更新",
+        "manageFeeds": "フィード管理",
+        "removeFeed": "フィードを削除"
+      },
+      "confirm": {
+        "remove": "フィード \"{title}\" を削除しますか？"
+      }
+    },
+    "discover": {
+      "empty": "提案されたフィードはすべて追加済みです。"
+    },
+    "errors": {
+      "addFeed": "フィードを追加できません。",
+      "refreshFeed": "フィードを更新できません。",
+      "removeFeed": "フィードを削除できません。"
+    },
+    "user": {
+      "defaultName": "NewsFlow ユーザー",
+      "personalSettings": "個人設定",
+      "appearance": "外観",
+      "logOut": "ログアウト"
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "外観",
+        "description": "テーマ、読書配色、文字設定、記事レイアウトの設定。"
+      },
+      "personal": {
+        "label": "個人",
+        "description": "プロフィール、パスワード、ログインセッション、契約状況。"
+      },
+      "ai": {
+        "label": "AI プロファイル",
+        "description": "要約機能で使うプロバイダー、モデル、既定プロファイル設定。"
+      },
+      "feeds": {
+        "label": "フィード管理",
+        "description": "フィード情報、状態、更新操作、整理を管理します。"
+      }
     }
   }
 }

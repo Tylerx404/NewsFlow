@@ -38,10 +38,74 @@
   },
   "shell": {
     "groups": {
+      "platform": "플랫폼",
       "navigation": "탐색",
       "admin": "관리자",
       "yourFeeds": "내 피드",
       "discover": "탐색"
+    },
+    "nav": {
+      "toggle": "토글",
+      "moreActions": "추가 작업"
+    },
+    "navigation": {
+      "dashboard": "대시보드",
+      "articles": "아티클",
+      "settings": "설정",
+      "operations": "운영",
+      "aiUsage": "AI 사용량",
+      "systemOps": "시스템 운영",
+      "users": "사용자",
+      "subscriptions": "구독",
+      "feeds": "피드"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "피드 추가",
+      "loading": "피드를 불러오는 중...",
+      "empty": "아직 피드가 없습니다. 위에서 첫 RSS 피드를 추가하세요.",
+      "actions": {
+        "refreshNow": "지금 새로고침",
+        "manageFeeds": "피드 관리",
+        "removeFeed": "피드 제거"
+      },
+      "confirm": {
+        "remove": "\"{title}\" 피드를 제거할까요?"
+      }
+    },
+    "discover": {
+      "empty": "추천 피드를 모두 추가했습니다."
+    },
+    "errors": {
+      "addFeed": "피드를 추가할 수 없습니다.",
+      "refreshFeed": "피드를 새로고침할 수 없습니다.",
+      "removeFeed": "피드를 제거할 수 없습니다."
+    },
+    "user": {
+      "defaultName": "NewsFlow 사용자",
+      "personalSettings": "개인 설정",
+      "appearance": "외형",
+      "logOut": "로그아웃"
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "외형",
+        "description": "테마 모드, 읽기 색상, 타이포그래피, 글 레이아웃 설정입니다."
+      },
+      "personal": {
+        "label": "개인",
+        "description": "프로필, 비밀번호, 활성 세션, 구독 개요를 관리합니다."
+      },
+      "ai": {
+        "label": "AI 프로필",
+        "description": "요약 작업을 위한 공급자, 모델, 기본 프로필 설정입니다."
+      },
+      "feeds": {
+        "label": "피드 관리",
+        "description": "피드 메타데이터, 상태, 새로고침 작업, 정리 기능입니다."
+      }
     }
   }
 }

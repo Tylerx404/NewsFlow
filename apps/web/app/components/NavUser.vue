@@ -52,6 +52,7 @@ const emit = defineEmits<{
 
 const { isMobile } = useSidebar()
 const readingPreferences = useReadingPreferences()
+const { locale, locales, setLocale, t } = useI18n()
 
 const avatarSrc = computed(() => {
   const raw = props.user.avatar
@@ -99,6 +100,24 @@ const handleThemeModeChange = (value: unknown) => {
   }
 
   readingPreferences.value.themeMode = value
+}
+
+const languageOptions = computed(() =>
+  locales.value.map((item) => {
+    const code = typeof item === "string" ? item : item.code
+    return {
+      code,
+      label: t(`locale.options.${code}`),
+    }
+  })
+)
+
+const handleLanguageChange = async (value: unknown) => {
+  if (typeof value !== "string") {
+    return
+  }
+
+  await setLocale(value)
 }
 </script>
 
@@ -159,14 +178,32 @@ const handleThemeModeChange = (value: unknown) => {
             <DropdownMenuItem as-child>
               <NuxtLink to="/settings/personal">
                 <UserCircle />
-                Personal Settings
+                {{ t("shell.user.personalSettings") }}
               </NuxtLink>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
-              Appearance
+              {{ t("locale.label") }}
+            </DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              :model-value="locale"
+              @update:model-value="handleLanguageChange"
+            >
+              <DropdownMenuRadioItem
+                v-for="languageOption in languageOptions"
+                :key="languageOption.code"
+                :value="languageOption.code"
+              >
+                {{ languageOption.label }}
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
+              {{ t("shell.user.appearance") }}
             </DropdownMenuLabel>
             <DropdownMenuRadioGroup
               :model-value="readingPreferences.themeMode"
@@ -188,7 +225,7 @@ const handleThemeModeChange = (value: unknown) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem @select="handleSignOut">
             <LogOut />
-            Log out
+            {{ t("shell.user.logOut") }}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

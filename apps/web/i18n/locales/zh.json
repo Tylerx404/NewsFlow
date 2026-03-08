@@ -38,10 +38,74 @@
   },
   "shell": {
     "groups": {
+      "platform": "平台",
       "navigation": "导航",
       "admin": "管理",
       "yourFeeds": "你的订阅",
       "discover": "发现"
+    },
+    "nav": {
+      "toggle": "切换",
+      "moreActions": "更多操作"
+    },
+    "navigation": {
+      "dashboard": "仪表盘",
+      "articles": "文章",
+      "settings": "设置",
+      "operations": "运维",
+      "aiUsage": "AI 使用",
+      "systemOps": "系统运维",
+      "users": "用户",
+      "subscriptions": "订阅",
+      "feeds": "订阅源"
+    },
+    "feed": {
+      "inputPlaceholder": "https://example.com/rss.xml",
+      "add": "添加订阅",
+      "loading": "正在加载订阅...",
+      "empty": "还没有订阅，请先添加第一个 RSS 订阅。",
+      "actions": {
+        "refreshNow": "立即刷新",
+        "manageFeeds": "管理订阅",
+        "removeFeed": "移除订阅"
+      },
+      "confirm": {
+        "remove": "移除订阅 \"{title}\"？"
+      }
+    },
+    "discover": {
+      "empty": "所有推荐订阅都已添加。"
+    },
+    "errors": {
+      "addFeed": "无法添加订阅。",
+      "refreshFeed": "无法刷新订阅。",
+      "removeFeed": "无法移除订阅。"
+    },
+    "user": {
+      "defaultName": "NewsFlow 用户",
+      "personalSettings": "个人设置",
+      "appearance": "外观",
+      "logOut": "退出登录"
+    }
+  },
+  "settings": {
+    "sections": {
+      "appearance": {
+        "label": "外观",
+        "description": "主题模式、阅读配色、字体排版和文章布局偏好。"
+      },
+      "personal": {
+        "label": "个人",
+        "description": "个人资料、密码、活跃会话和订阅概览。"
+      },
+      "ai": {
+        "label": "AI 配置",
+        "description": "用于摘要操作的提供商、模型和默认配置。"
+      },
+      "feeds": {
+        "label": "订阅管理",
+        "description": "订阅元数据、状态、刷新操作和清理。"
+      }
     }
   }
 }
