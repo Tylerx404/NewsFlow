@@ -11,8 +11,8 @@ import { computed } from "vue"
 
 import { useReadingPreferences } from "@/composables/use-reading-preferences"
 import {
+  getThemeModeOptions,
   isThemeMode,
-  themeModeOptions,
 } from "@/lib/reader-preferences"
 import {
   Avatar,
@@ -53,6 +53,7 @@ const emit = defineEmits<{
 const { isMobile } = useSidebar()
 const readingPreferences = useReadingPreferences()
 const { locale, locales, setLocale, t } = useI18n()
+const localizedThemeModeOptions = computed(() => getThemeModeOptions(t))
 
 const avatarSrc = computed(() => {
   const raw = props.user.avatar
@@ -210,7 +211,7 @@ const handleLanguageChange = async (value: unknown) => {
               @update:model-value="handleThemeModeChange"
             >
               <DropdownMenuRadioItem
-                v-for="modeOption in themeModeOptions"
+                v-for="modeOption in localizedThemeModeOptions"
                 :key="modeOption.value"
                 :value="modeOption.value"
                 :title="modeOption.description"

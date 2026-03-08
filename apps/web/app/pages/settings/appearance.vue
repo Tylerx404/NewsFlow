@@ -13,28 +13,36 @@ import {
 import { useReadingPreferences } from "@/composables/use-reading-preferences";
 import {
   DEFAULT_READER_PREFERENCES,
+  getReaderColorPresetOptions,
+  getReaderContentWidthOptions,
+  getReaderFontFamilyOptions,
+  getReaderFontSizeOptions,
+  getReaderLineHeightOptions,
+  getThemeModeOptions,
   isReaderColorPreset,
   isReaderContentWidth,
   isReaderFontFamily,
   isReaderFontSize,
   isReaderLineHeight,
   isThemeMode,
-  readerColorPresetOptions,
-  readerContentWidthOptions,
-  readerFontFamilyOptions,
-  readerFontSizeOptions,
-  readerLineHeightOptions,
-  themeModeOptions,
   type ReaderPreferenceOption,
 } from "@/lib/reader-preferences";
 
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Appearance Settings",
+  titleKey: "settings.appearance.metaTitle",
 });
 
 const readingPreferences = useReadingPreferences();
+const { t } = useI18n();
+
+const themeModeOptions = computed(() => getThemeModeOptions(t));
+const readerColorPresetOptions = computed(() => getReaderColorPresetOptions(t));
+const readerFontFamilyOptions = computed(() => getReaderFontFamilyOptions(t));
+const readerFontSizeOptions = computed(() => getReaderFontSizeOptions(t));
+const readerLineHeightOptions = computed(() => getReaderLineHeightOptions(t));
+const readerContentWidthOptions = computed(() => getReaderContentWidthOptions(t));
 
 const resolveDescription = <TValue extends string>(
   options: ReaderPreferenceOption<TValue>[],
@@ -42,22 +50,22 @@ const resolveDescription = <TValue extends string>(
 ): string => options.find((option) => option.value === value)?.description ?? "";
 
 const themeModeDescription = computed(() =>
-  resolveDescription(themeModeOptions, readingPreferences.value.themeMode)
+  resolveDescription(themeModeOptions.value, readingPreferences.value.themeMode)
 );
 const colorPresetDescription = computed(() =>
-  resolveDescription(readerColorPresetOptions, readingPreferences.value.colorPreset)
+  resolveDescription(readerColorPresetOptions.value, readingPreferences.value.colorPreset)
 );
 const fontFamilyDescription = computed(() =>
-  resolveDescription(readerFontFamilyOptions, readingPreferences.value.fontFamily)
+  resolveDescription(readerFontFamilyOptions.value, readingPreferences.value.fontFamily)
 );
 const fontSizeDescription = computed(() =>
-  resolveDescription(readerFontSizeOptions, readingPreferences.value.fontSize)
+  resolveDescription(readerFontSizeOptions.value, readingPreferences.value.fontSize)
 );
 const lineHeightDescription = computed(() =>
-  resolveDescription(readerLineHeightOptions, readingPreferences.value.lineHeight)
+  resolveDescription(readerLineHeightOptions.value, readingPreferences.value.lineHeight)
 );
 const contentWidthDescription = computed(() =>
-  resolveDescription(readerContentWidthOptions, readingPreferences.value.contentWidth)
+  resolveDescription(readerContentWidthOptions.value, readingPreferences.value.contentWidth)
 );
 
 const updateThemeMode = (value: unknown) => {
@@ -119,15 +127,15 @@ const resetToDefaults = () => {
   <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
     <Card>
       <CardHeader class="space-y-2">
-        <CardTitle>Reading Experience</CardTitle>
+        <CardTitle>{{ t("settings.appearance.page.readingExperience.title") }}</CardTitle>
         <CardDescription>
-          Tune appearance, typography, and layout for a reading flow that fits your preference.
+          {{ t("settings.appearance.page.readingExperience.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-6">
         <div class="grid gap-4 md:grid-cols-2">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Theme mode</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.themeMode") }}</p>
             <Select
               :model-value="readingPreferences.themeMode"
               @update:model-value="updateThemeMode"
@@ -151,7 +159,7 @@ const resetToDefaults = () => {
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Color preset</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.colorPreset") }}</p>
             <Select
               :model-value="readingPreferences.colorPreset"
               @update:model-value="updateColorPreset"
@@ -175,7 +183,7 @@ const resetToDefaults = () => {
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Font family</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.fontFamily") }}</p>
             <Select
               :model-value="readingPreferences.fontFamily"
               @update:model-value="updateFontFamily"
@@ -199,7 +207,7 @@ const resetToDefaults = () => {
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Font size</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.fontSize") }}</p>
             <Select
               :model-value="readingPreferences.fontSize"
               @update:model-value="updateFontSize"
@@ -223,7 +231,7 @@ const resetToDefaults = () => {
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Line height</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.lineHeight") }}</p>
             <Select
               :model-value="readingPreferences.lineHeight"
               @update:model-value="updateLineHeight"
@@ -247,7 +255,7 @@ const resetToDefaults = () => {
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Reading width</p>
+            <p class="text-sm font-medium">{{ t("settings.appearance.page.fields.readingWidth") }}</p>
             <Select
               :model-value="readingPreferences.contentWidth"
               @update:model-value="updateContentWidth"
@@ -273,10 +281,10 @@ const resetToDefaults = () => {
 
         <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/20 p-4">
           <p class="text-sm text-muted-foreground">
-            Preferences are saved locally in your browser and applied immediately.
+            {{ t("settings.appearance.page.savedNotice") }}
           </p>
           <Button variant="outline" @click="resetToDefaults">
-            Reset defaults
+            {{ t("settings.appearance.page.resetDefaults") }}
           </Button>
         </div>
       </CardContent>
@@ -284,34 +292,33 @@ const resetToDefaults = () => {
 
     <Card class="h-fit xl:sticky xl:top-6">
       <CardHeader>
-        <CardTitle>Live Preview</CardTitle>
+        <CardTitle>{{ t("settings.appearance.preview.title") }}</CardTitle>
         <CardDescription>
-          Preview typography and spacing before reading full articles.
+          {{ t("settings.appearance.preview.description") }}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <article class="reader-article-shell rounded-xl border p-4 md:p-5">
           <div class="reader-content">
-            <h2>Morning Briefing: Markets Open Mixed</h2>
+            <h2>{{ t("settings.appearance.preview.sample.heading") }}</h2>
             <p>
-              <strong>Highlights:</strong>
-              Global indexes opened with mixed movement while energy stocks
-              outperformed. Analysts expect volatility to remain elevated.
+              <strong>{{ t("settings.appearance.preview.sample.highlightsLabel") }}</strong>
+              {{ t("settings.appearance.preview.sample.paragraph1") }}
             </p>
             <p>
-              This paragraph shows <em>italic emphasis</em>,
-              <strong>bold segments</strong>, and normal body copy rhythm.
+              {{ t("settings.appearance.preview.sample.paragraph2Prefix") }} <em>{{ t("settings.appearance.preview.sample.italic") }}</em>,
+              <strong>{{ t("settings.appearance.preview.sample.bold") }}</strong>{{ t("settings.appearance.preview.sample.paragraph2Suffix") }}
             </p>
             <blockquote>
-              "Readers should be able to stay focused for long sessions without eye strain."
+              "{{ t("settings.appearance.preview.sample.quote") }}"
             </blockquote>
             <ul>
-              <li>More consistent text hierarchy</li>
-              <li>Improved spacing between sections</li>
-              <li>Cleaner link visibility for source tracking</li>
+              <li>{{ t("settings.appearance.preview.sample.bullet1") }}</li>
+              <li>{{ t("settings.appearance.preview.sample.bullet2") }}</li>
+              <li>{{ t("settings.appearance.preview.sample.bullet3") }}</li>
             </ul>
             <p>
-              <a href="#">Open source report</a>
+              <a href="#">{{ t("settings.appearance.preview.sample.openSourceReport") }}</a>
             </p>
           </div>
         </article>

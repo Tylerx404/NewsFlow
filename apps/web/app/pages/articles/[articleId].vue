@@ -16,14 +16,14 @@ import { useReadingPreferences } from "@/composables/use-reading-preferences";
 import { formatArticleContent } from "@/lib/article-content";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import {
+  getReaderContentWidthOptions,
+  getReaderFontFamilyOptions,
+  getReaderFontSizeOptions,
+  getReaderLineHeightOptions,
   isReaderContentWidth,
   isReaderFontFamily,
   isReaderFontSize,
   isReaderLineHeight,
-  readerContentWidthOptions,
-  readerFontFamilyOptions,
-  readerFontSizeOptions,
-  readerLineHeightOptions,
 } from "@/lib/reader-preferences";
 import { formatSummaryMarkdown } from "@/lib/summary-markdown";
 
@@ -177,6 +177,10 @@ const handleSummarize = async () => {
 const formattedArticleContent = computed(() =>
   formatArticleContent(articleQuery.data.value?.content ?? null)
 );
+const readerFontFamilyOptions = computed(() => getReaderFontFamilyOptions(t));
+const readerFontSizeOptions = computed(() => getReaderFontSizeOptions(t));
+const readerLineHeightOptions = computed(() => getReaderLineHeightOptions(t));
+const readerContentWidthOptions = computed(() => getReaderContentWidthOptions(t));
 const formattedSummaryContent = computed(() =>
   formatSummaryMarkdown(streamedSummaryText.value)
 );

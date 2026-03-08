@@ -93,7 +93,7 @@
       "name": "Name",
       "namePlaceholder": "John Doe",
       "email": "Email",
-      "emailPlaceholder": "m@example.com",
+      "emailPlaceholder": "name{'@'}example.com",
       "password": "Password",
       "orContinueWith": "Or continue with",
       "heroImageAlt": "Authentication visual",
@@ -221,6 +221,242 @@
       "feeds": {
         "label": "Feed Management",
         "description": "Feed metadata, activity status, refresh actions, and cleanup."
+      }
+    },
+    "index": {
+      "redirecting": "Redirecting to settings..."
+    },
+    "appearance": {
+      "metaTitle": "Appearance Settings",
+      "page": {
+        "readingExperience": {
+          "title": "Reading Experience",
+          "description": "Tune appearance, typography, and layout for a reading flow that fits your preference."
+        },
+        "fields": {
+          "themeMode": "Theme mode",
+          "colorPreset": "Color preset",
+          "fontFamily": "Font family",
+          "fontSize": "Font size",
+          "lineHeight": "Line height",
+          "readingWidth": "Reading width"
+        },
+        "savedNotice": "Preferences are saved locally in your browser and applied immediately.",
+        "resetDefaults": "Reset defaults"
+      },
+      "preview": {
+        "title": "Live Preview",
+        "description": "Preview typography and spacing before reading full articles.",
+        "sample": {
+          "heading": "Morning Briefing: Markets Open Mixed",
+          "highlightsLabel": "Highlights:",
+          "paragraph1": "Global indexes opened with mixed movement while energy stocks outperformed. Analysts expect volatility to remain elevated.",
+          "paragraph2Prefix": "This paragraph shows",
+          "italic": "italic emphasis",
+          "bold": "bold segments",
+          "paragraph2Suffix": ", and normal body copy rhythm.",
+          "quote": "Readers should be able to stay focused for long sessions without eye strain.",
+          "bullet1": "More consistent text hierarchy",
+          "bullet2": "Improved spacing between sections",
+          "bullet3": "Cleaner link visibility for source tracking",
+          "openSourceReport": "Open source report"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "System",
+            "description": "Follow your device appearance setting."
+          },
+          "light": {
+            "label": "Light",
+            "description": "Always use the light interface."
+          },
+          "dark": {
+            "label": "Dark",
+            "description": "Always use the dark interface."
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "Neutral",
+            "description": "Balanced contrast with neutral tones."
+          },
+          "paper": {
+            "label": "Warm paper",
+            "description": "Soft warm background for long reading."
+          },
+          "slate": {
+            "label": "Slate",
+            "description": "Cooler tones with sharper text contrast."
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "Modern sans",
+            "description": "Clean sans-serif text with high legibility."
+          },
+          "serif": {
+            "label": "Editorial serif",
+            "description": "Magazine-like serif rhythm for long-form reading."
+          },
+          "mono": {
+            "label": "Monospace",
+            "description": "Fixed-width text for dense technical content."
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "Small",
+            "description": "Compact layout that keeps more content in view."
+          },
+          "md": {
+            "label": "Medium",
+            "description": "Balanced size for everyday reading."
+          },
+          "lg": {
+            "label": "Large",
+            "description": "Larger text for easier scanning."
+          },
+          "xl": {
+            "label": "Extra large",
+            "description": "Maximum readability with larger body text."
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "Compact",
+            "description": "Tighter lines for denser reading."
+          },
+          "normal": {
+            "label": "Normal",
+            "description": "Standard spacing for most articles."
+          },
+          "relaxed": {
+            "label": "Relaxed",
+            "description": "More vertical space for slower reading."
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "Narrow",
+            "description": "Shorter lines for focused reading."
+          },
+          "normal": {
+            "label": "Normal",
+            "description": "Balanced width for mixed content."
+          },
+          "wide": {
+            "label": "Wide",
+            "description": "More horizontal room for rich media."
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "Feed Management",
+      "page": {
+        "title": "Feed Management",
+        "description": "Update feed metadata, toggle activity, refresh, or remove feeds."
+      },
+      "labels": {
+        "tableCaption": "Feed management table with metadata and feed actions.",
+        "customTitle": "Custom title",
+        "category": "Category",
+        "unread": "Unread",
+        "lastFetched": "Last fetched",
+        "errors": "Errors",
+        "active": "Active",
+        "actions": "Actions",
+        "useSourceTitle": "Use source title",
+        "loading": "Loading feeds...",
+        "empty": "No feeds available.",
+        "never": "Never"
+      },
+      "actions": {
+        "save": "Save",
+        "saving": "Saving...",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
+        "delete": "Delete",
+        "deleteAria": "Delete feed {title}",
+        "deleting": "Deleting...",
+        "deleteFeed": "Delete feed"
+      },
+      "dialogs": {
+        "deleteTitle": "Delete this feed?",
+        "deleteDescriptionWithTitle": "Feed \"{title}\" will be removed.",
+        "cannotUndo": "This action cannot be undone."
+      },
+      "errors": {
+        "update": "Unable to update feed.",
+        "refresh": "Unable to refresh feed.",
+        "delete": "Unable to delete feed."
+      }
+    },
+    "ai": {
+      "metaTitle": "AI Profiles",
+      "page": {
+        "title": "AI profiles",
+        "description": "Manage default profile for reader summarize action."
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "Loading profiles...",
+        "noProfiles": "No profiles yet. Create one to enable AI summarize.",
+        "default": "Default",
+        "currentKey": "Current key",
+        "model": "Model",
+        "loadingModels": "Loading models...",
+        "selectModel": "Select model",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "Use provider default when empty",
+        "newApiKey": "New API key",
+        "keepCurrentKey": "Leave blank to keep current key",
+        "mainOpenAi": "Main OpenAI",
+        "provider": "Provider",
+        "selectProvider": "Select provider",
+        "selectToLoadModels": "Select to load models",
+        "apiKey": "API key",
+        "optional": "optional",
+        "defaultPrefix": "Default",
+        "canCustomizeByok": "can customize for BYOK",
+        "managedAutomatically": "managed automatically"
+      },
+      "actions": {
+        "createProfile": "Create profile",
+        "setDefault": "Set default",
+        "setting": "Setting...",
+        "saveChanges": "Save changes",
+        "saving": "Saving...",
+        "deleting": "Deleting...",
+        "deleteProfile": "Delete profile",
+        "deleteAria": "Delete profile {name}",
+        "creating": "Creating..."
+      },
+      "dialogs": {
+        "createTitle": "Create profile",
+        "createDescription": "Configure your provider and model. API key is encrypted on server.",
+        "deleteTitle": "Delete AI profile?",
+        "deleteDescriptionWithName": "This will remove profile \"{name}\".",
+        "cannotUndo": "This action cannot be undone."
+      },
+      "errors": {
+        "create": "Unable to create AI profile.",
+        "fetchModels": "Unable to fetch models.",
+        "loadModels": "Unable to load models.",
+        "setDefault": "Unable to set default profile.",
+        "nameRequired": "Name is required.",
+        "modelRequired": "Model is required.",
+        "update": "Unable to update profile.",
+        "delete": "Unable to delete profile."
       }
     }
   },

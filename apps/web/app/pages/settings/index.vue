@@ -1,8 +1,10 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 definePageMeta({
   layout: "dashboard",
   middleware: "dashboard-auth",
-  title: "Settings",
+  titleKey: "layout.titles.settings",
 });
 
 await navigateTo("/settings/appearance", { replace: true });
@@ -10,6 +12,6 @@ await navigateTo("/settings/appearance", { replace: true });
 
 <template>
   <p class="text-sm text-muted-foreground">
-    Redirecting to settings...
+    {{ t("settings.index.redirecting") }}
   </p>
 </template>

@@ -93,7 +93,7 @@
       "name": "Tên",
       "namePlaceholder": "Nguyễn Văn A",
       "email": "Email",
-      "emailPlaceholder": "m@example.com",
+      "emailPlaceholder": "name{'@'}example.com",
       "password": "Mật khẩu",
       "orContinueWith": "Hoặc tiếp tục với",
       "heroImageAlt": "Hình minh họa xác thực",
@@ -221,6 +221,242 @@
       "feeds": {
         "label": "Quản lý Feed",
         "description": "Thông tin feed, trạng thái hoạt động, làm mới và dọn dẹp."
+      }
+    },
+    "index": {
+      "redirecting": "Đang chuyển đến cài đặt..."
+    },
+    "appearance": {
+      "metaTitle": "Cài đặt giao diện",
+      "page": {
+        "readingExperience": {
+          "title": "Trải nghiệm đọc",
+          "description": "Tinh chỉnh giao diện, kiểu chữ và bố cục để phù hợp với thói quen đọc của bạn."
+        },
+        "fields": {
+          "themeMode": "Chế độ giao diện",
+          "colorPreset": "Bảng màu",
+          "fontFamily": "Phông chữ",
+          "fontSize": "Cỡ chữ",
+          "lineHeight": "Giãn dòng",
+          "readingWidth": "Độ rộng đọc"
+        },
+        "savedNotice": "Thiết lập được lưu trên trình duyệt và áp dụng ngay.",
+        "resetDefaults": "Khôi phục mặc định"
+      },
+      "preview": {
+        "title": "Xem trước trực tiếp",
+        "description": "Xem trước kiểu chữ và khoảng cách trước khi đọc toàn bộ bài viết.",
+        "sample": {
+          "heading": "Bản tin sáng: Thị trường mở cửa trái chiều",
+          "highlightsLabel": "Điểm nổi bật:",
+          "paragraph1": "Các chỉ số toàn cầu mở cửa trái chiều trong khi nhóm năng lượng tăng tốt. Chuyên gia dự báo biến động vẫn ở mức cao.",
+          "paragraph2Prefix": "Đoạn này hiển thị",
+          "italic": "nhấn mạnh in nghiêng",
+          "bold": "đoạn in đậm",
+          "paragraph2Suffix": " và nhịp đọc nội dung tiêu chuẩn.",
+          "quote": "Người đọc cần giữ được sự tập trung trong thời gian dài mà không mỏi mắt.",
+          "bullet1": "Cấu trúc chữ nhất quán hơn",
+          "bullet2": "Khoảng cách giữa các phần rõ ràng hơn",
+          "bullet3": "Liên kết nguồn dễ nhìn hơn",
+          "openSourceReport": "Mở báo cáo nguồn"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "Theo hệ thống",
+            "description": "Theo cài đặt giao diện của thiết bị."
+          },
+          "light": {
+            "label": "Sáng",
+            "description": "Luôn dùng giao diện sáng."
+          },
+          "dark": {
+            "label": "Tối",
+            "description": "Luôn dùng giao diện tối."
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "Trung tính",
+            "description": "Tương phản cân bằng với tông trung tính."
+          },
+          "paper": {
+            "label": "Giấy ấm",
+            "description": "Nền ấm dịu cho đọc lâu."
+          },
+          "slate": {
+            "label": "Slate",
+            "description": "Tông lạnh với tương phản chữ sắc nét."
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "Sans hiện đại",
+            "description": "Chữ sans-serif sạch, dễ đọc."
+          },
+          "serif": {
+            "label": "Serif biên tập",
+            "description": "Nhịp serif kiểu tạp chí cho bài dài."
+          },
+          "mono": {
+            "label": "Monospace",
+            "description": "Chữ đơn cách cho nội dung kỹ thuật dày."
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "Nhỏ",
+            "description": "Bố cục gọn, hiển thị nhiều nội dung hơn."
+          },
+          "md": {
+            "label": "Vừa",
+            "description": "Kích thước cân bằng cho đọc hằng ngày."
+          },
+          "lg": {
+            "label": "Lớn",
+            "description": "Chữ lớn hơn, dễ quét nhanh."
+          },
+          "xl": {
+            "label": "Rất lớn",
+            "description": "Tối đa khả năng đọc với thân bài lớn hơn."
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "Gọn",
+            "description": "Khoảng dòng hẹp để đọc dày nội dung."
+          },
+          "normal": {
+            "label": "Chuẩn",
+            "description": "Khoảng cách chuẩn cho đa số bài viết."
+          },
+          "relaxed": {
+            "label": "Thoáng",
+            "description": "Nhiều khoảng dọc hơn cho đọc chậm."
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "Hẹp",
+            "description": "Dòng ngắn giúp tập trung."
+          },
+          "normal": {
+            "label": "Chuẩn",
+            "description": "Độ rộng cân bằng cho nội dung hỗn hợp."
+          },
+          "wide": {
+            "label": "Rộng",
+            "description": "Nhiều không gian ngang cho media phong phú."
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "Quản lý Feed",
+      "page": {
+        "title": "Quản lý Feed",
+        "description": "Cập nhật thông tin feed, bật/tắt hoạt động, làm mới hoặc xóa feed."
+      },
+      "labels": {
+        "tableCaption": "Bảng quản lý feed với metadata và thao tác feed.",
+        "customTitle": "Tiêu đề tùy chỉnh",
+        "category": "Danh mục",
+        "unread": "Chưa đọc",
+        "lastFetched": "Lần fetch gần nhất",
+        "errors": "Lỗi",
+        "active": "Hoạt động",
+        "actions": "Thao tác",
+        "useSourceTitle": "Dùng tiêu đề nguồn",
+        "loading": "Đang tải feed...",
+        "empty": "Không có feed nào.",
+        "never": "Chưa từng"
+      },
+      "actions": {
+        "save": "Lưu",
+        "saving": "Đang lưu...",
+        "refresh": "Làm mới",
+        "refreshing": "Đang làm mới...",
+        "delete": "Xóa",
+        "deleteAria": "Xóa feed {title}",
+        "deleting": "Đang xóa...",
+        "deleteFeed": "Xóa feed"
+      },
+      "dialogs": {
+        "deleteTitle": "Xóa feed này?",
+        "deleteDescriptionWithTitle": "Feed \"{title}\" sẽ bị xóa.",
+        "cannotUndo": "Hành động này không thể hoàn tác."
+      },
+      "errors": {
+        "update": "Không thể cập nhật feed.",
+        "refresh": "Không thể làm mới feed.",
+        "delete": "Không thể xóa feed."
+      }
+    },
+    "ai": {
+      "metaTitle": "Hồ sơ AI",
+      "page": {
+        "title": "Hồ sơ AI",
+        "description": "Quản lý hồ sơ mặc định cho tác vụ tóm tắt trong trình đọc."
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "Đang tải hồ sơ...",
+        "noProfiles": "Chưa có hồ sơ nào. Hãy tạo để bật tóm tắt AI.",
+        "default": "Mặc định",
+        "currentKey": "Khóa hiện tại",
+        "model": "Model",
+        "loadingModels": "Đang tải model...",
+        "selectModel": "Chọn model",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "Để trống để dùng mặc định của nhà cung cấp",
+        "newApiKey": "API key mới",
+        "keepCurrentKey": "Để trống để giữ key hiện tại",
+        "mainOpenAi": "OpenAI chính",
+        "provider": "Nhà cung cấp",
+        "selectProvider": "Chọn nhà cung cấp",
+        "selectToLoadModels": "Mở để tải model",
+        "apiKey": "API key",
+        "optional": "tùy chọn",
+        "defaultPrefix": "Mặc định",
+        "canCustomizeByok": "có thể tùy chỉnh cho BYOK",
+        "managedAutomatically": "được hệ thống quản lý"
+      },
+      "actions": {
+        "createProfile": "Tạo hồ sơ",
+        "setDefault": "Đặt mặc định",
+        "setting": "Đang đặt...",
+        "saveChanges": "Lưu thay đổi",
+        "saving": "Đang lưu...",
+        "deleting": "Đang xóa...",
+        "deleteProfile": "Xóa hồ sơ",
+        "deleteAria": "Xóa hồ sơ {name}",
+        "creating": "Đang tạo..."
+      },
+      "dialogs": {
+        "createTitle": "Tạo hồ sơ",
+        "createDescription": "Cấu hình nhà cung cấp và model. API key được mã hóa ở server.",
+        "deleteTitle": "Xóa hồ sơ AI?",
+        "deleteDescriptionWithName": "Hồ sơ \"{name}\" sẽ bị xóa.",
+        "cannotUndo": "Hành động này không thể hoàn tác."
+      },
+      "errors": {
+        "create": "Không thể tạo hồ sơ AI.",
+        "fetchModels": "Không thể tải danh sách model.",
+        "loadModels": "Không thể tải model.",
+        "setDefault": "Không thể đặt hồ sơ mặc định.",
+        "nameRequired": "Tên là bắt buộc.",
+        "modelRequired": "Model là bắt buộc.",
+        "update": "Không thể cập nhật hồ sơ.",
+        "delete": "Không thể xóa hồ sơ."
       }
     }
   },

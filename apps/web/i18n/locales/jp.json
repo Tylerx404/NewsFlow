@@ -93,7 +93,7 @@
       "name": "名前",
       "namePlaceholder": "山田 太郎",
       "email": "メール",
-      "emailPlaceholder": "m@example.com",
+      "emailPlaceholder": "name{'@'}example.com",
       "password": "パスワード",
       "orContinueWith": "または次で続行",
       "heroImageAlt": "認証ページ画像",
@@ -221,6 +221,242 @@
       "feeds": {
         "label": "フィード管理",
         "description": "フィード情報、状態、更新操作、整理を管理します。"
+      }
+    },
+    "index": {
+      "redirecting": "設定にリダイレクトしています..."
+    },
+    "appearance": {
+      "metaTitle": "外観設定",
+      "page": {
+        "readingExperience": {
+          "title": "読書体験",
+          "description": "あなたの読書スタイルに合わせて外観・文字・レイアウトを調整します。"
+        },
+        "fields": {
+          "themeMode": "テーマモード",
+          "colorPreset": "カラープリセット",
+          "fontFamily": "フォント",
+          "fontSize": "文字サイズ",
+          "lineHeight": "行間",
+          "readingWidth": "表示幅"
+        },
+        "savedNotice": "設定はブラウザに保存され、すぐに適用されます。",
+        "resetDefaults": "初期設定に戻す"
+      },
+      "preview": {
+        "title": "ライブプレビュー",
+        "description": "本文を読む前に文字と間隔を確認できます。",
+        "sample": {
+          "heading": "朝の速報: 市場はまちまちで開始",
+          "highlightsLabel": "ハイライト:",
+          "paragraph1": "世界の指数はまちまちの動きで始まり、エネルギー株が優位でした。変動性は高止まりすると見られています。",
+          "paragraph2Prefix": "この段落は",
+          "italic": "斜体強調",
+          "bold": "太字セグメント",
+          "paragraph2Suffix": "と通常本文のリズムを示します。",
+          "quote": "読者は長時間でも目の負担なく集中できるべきです。",
+          "bullet1": "より一貫した文字階層",
+          "bullet2": "セクション間隔の改善",
+          "bullet3": "ソースリンクの視認性向上",
+          "openSourceReport": "ソースレポートを開く"
+        }
+      },
+      "options": {
+        "themeMode": {
+          "system": {
+            "label": "システム",
+            "description": "デバイスの外観設定に従います。"
+          },
+          "light": {
+            "label": "ライト",
+            "description": "常にライト表示を使います。"
+          },
+          "dark": {
+            "label": "ダーク",
+            "description": "常にダーク表示を使います。"
+          }
+        },
+        "colorPreset": {
+          "default": {
+            "label": "ニュートラル",
+            "description": "中立トーンのバランス良いコントラスト。"
+          },
+          "paper": {
+            "label": "ウォームペーパー",
+            "description": "長時間読書向けの柔らかい暖色背景。"
+          },
+          "slate": {
+            "label": "スレート",
+            "description": "寒色寄りでシャープな文字コントラスト。"
+          }
+        },
+        "fontFamily": {
+          "sans": {
+            "label": "モダンサンセリフ",
+            "description": "可読性の高いサンセリフ。"
+          },
+          "serif": {
+            "label": "エディトリアルセリフ",
+            "description": "長文向けの雑誌風セリフ。"
+          },
+          "mono": {
+            "label": "等幅フォント",
+            "description": "技術コンテンツ向け固定幅テキスト。"
+          }
+        },
+        "fontSize": {
+          "sm": {
+            "label": "小",
+            "description": "多くの内容を表示するコンパクトレイアウト。"
+          },
+          "md": {
+            "label": "中",
+            "description": "日常読書向けの標準サイズ。"
+          },
+          "lg": {
+            "label": "大",
+            "description": "視認性を高める大きめ文字。"
+          },
+          "xl": {
+            "label": "特大",
+            "description": "最大の可読性を提供。"
+          }
+        },
+        "lineHeight": {
+          "compact": {
+            "label": "詰める",
+            "description": "密度の高い読書向け。"
+          },
+          "normal": {
+            "label": "標準",
+            "description": "多くの記事に最適な標準間隔。"
+          },
+          "relaxed": {
+            "label": "広め",
+            "description": "ゆったり読書向けの広い間隔。"
+          }
+        },
+        "contentWidth": {
+          "narrow": {
+            "label": "狭め",
+            "description": "集中しやすい短い行長。"
+          },
+          "normal": {
+            "label": "標準",
+            "description": "混在コンテンツ向けのバランス幅。"
+          },
+          "wide": {
+            "label": "広め",
+            "description": "リッチメディア向けの横幅拡張。"
+          }
+        }
+      }
+    },
+    "feeds": {
+      "metaTitle": "フィード管理",
+      "page": {
+        "title": "フィード管理",
+        "description": "フィード情報の更新、有効化、更新、削除を管理します。"
+      },
+      "labels": {
+        "tableCaption": "メタデータと操作を含むフィード管理テーブル。",
+        "customTitle": "カスタムタイトル",
+        "category": "カテゴリ",
+        "unread": "未読",
+        "lastFetched": "最終取得",
+        "errors": "エラー",
+        "active": "有効",
+        "actions": "操作",
+        "useSourceTitle": "元タイトルを使用",
+        "loading": "フィードを読み込み中...",
+        "empty": "利用可能なフィードがありません。",
+        "never": "なし"
+      },
+      "actions": {
+        "save": "保存",
+        "saving": "保存中...",
+        "refresh": "更新",
+        "refreshing": "更新中...",
+        "delete": "削除",
+        "deleteAria": "フィード {title} を削除",
+        "deleting": "削除中...",
+        "deleteFeed": "フィードを削除"
+      },
+      "dialogs": {
+        "deleteTitle": "このフィードを削除しますか？",
+        "deleteDescriptionWithTitle": "フィード「{title}」は削除されます。",
+        "cannotUndo": "この操作は元に戻せません。"
+      },
+      "errors": {
+        "update": "フィードを更新できません。",
+        "refresh": "フィードを更新できません。",
+        "delete": "フィードを削除できません。"
+      }
+    },
+    "ai": {
+      "metaTitle": "AI プロファイル",
+      "page": {
+        "title": "AI プロファイル",
+        "description": "リーダー要約アクションの既定プロファイルを管理します。"
+      },
+      "providers": {
+        "openai": "OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google Gemini",
+        "deepseek": "DeepSeek",
+        "groq": "Groq",
+        "ollama": "Ollama"
+      },
+      "labels": {
+        "loadingProfiles": "プロファイルを読み込み中...",
+        "noProfiles": "まだプロファイルがありません。作成すると AI 要約が利用できます。",
+        "default": "既定",
+        "currentKey": "現在のキー",
+        "model": "モデル",
+        "loadingModels": "モデルを読み込み中...",
+        "selectModel": "モデルを選択",
+        "baseUrl": "Base URL",
+        "useProviderDefault": "空の場合はプロバイダー既定を使用",
+        "newApiKey": "新しい API キー",
+        "keepCurrentKey": "空欄で現在のキーを維持",
+        "mainOpenAi": "メイン OpenAI",
+        "provider": "プロバイダー",
+        "selectProvider": "プロバイダーを選択",
+        "selectToLoadModels": "開いてモデルを読み込む",
+        "apiKey": "API キー",
+        "optional": "任意",
+        "defaultPrefix": "既定",
+        "canCustomizeByok": "BYOK 向けにカスタマイズ可能",
+        "managedAutomatically": "自動管理"
+      },
+      "actions": {
+        "createProfile": "プロファイル作成",
+        "setDefault": "既定に設定",
+        "setting": "設定中...",
+        "saveChanges": "変更を保存",
+        "saving": "保存中...",
+        "deleting": "削除中...",
+        "deleteProfile": "プロファイル削除",
+        "deleteAria": "プロファイル {name} を削除",
+        "creating": "作成中..."
+      },
+      "dialogs": {
+        "createTitle": "プロファイル作成",
+        "createDescription": "プロバイダーとモデルを設定します。API キーはサーバーで暗号化されます。",
+        "deleteTitle": "AI プロファイルを削除しますか？",
+        "deleteDescriptionWithName": "プロファイル「{name}」を削除します。",
+        "cannotUndo": "この操作は元に戻せません。"
+      },
+      "errors": {
+        "create": "AI プロファイルを作成できません。",
+        "fetchModels": "モデル一覧を取得できません。",
+        "loadModels": "モデルを読み込めません。",
+        "setDefault": "既定プロファイルを設定できません。",
+        "nameRequired": "名前は必須です。",
+        "modelRequired": "モデルは必須です。",
+        "update": "プロファイルを更新できません。",
+        "delete": "プロファイルを削除できません。"
       }
     }
   },
