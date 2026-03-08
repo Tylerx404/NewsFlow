@@ -23,6 +23,8 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Internal dependency phải dùng `workspace:*`.
 - Env phải qua schema của `@NewsFlow/env/server` hoặc `@NewsFlow/env/web`.
 - Thay đổi DB phải đi qua Prisma schema/migration, không SQL tay nếu không có yêu cầu rõ.
+- Mỗi phần việc phải bắt đầu trên một nhánh mới, tên nhánh ngắn gọn và bám theo chủ đề/phạm vi thay đổi.
+- Mỗi phần việc hoàn tất phải được commit ngay với message rõ ràng; không dồn nhiều phần không liên quan vào cùng một commit.
 - Không commit secret; dữ liệu nhạy cảm phải được xử lý an toàn (ví dụ mã hóa API key).
 
 ## 3) Quy ước tổ chức code
@@ -88,6 +90,12 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Mobile-first: collapse layout hợp lý, không để vỡ form hoặc overflow panel.
 - Animation vừa đủ cho state (dropdown/collapsible/sidebar), tránh motion nặng.
 
+### I18n cho UI
+
+- Mọi thay đổi ảnh hưởng text trên giao diện phải cập nhật đầy đủ qua hệ i18n hiện có.
+- Không hard-code text mới trong UI nếu màn hình/module đó đã dùng i18n.
+- Khi thêm hoặc đổi key dịch, phải cập nhật đồng bộ các locale liên quan để tránh thiếu bản dịch.
+
 ### Research component cho trang mới
 
 - Khi thiếu component phù hợp, ưu tiên research qua `shadcn-vue MCP` để tìm pattern/component trước khi tự viết mới.
@@ -103,30 +111,43 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 
 ## 7) Workflow theo loại thay đổi
 
-### A. API contract/business logic
+### A. Git branch và commit
+
+- Trước khi làm một phần việc mới, tạo nhánh mới theo chủ đề thay đổi.
+- Tên nhánh nên ngắn gọn, dễ nhận biết phạm vi, ví dụ: `feature/feed-management`, `fix/auth-callback`, `chore/i18n-dashboard`.
+- Khi xử lý xong một phần việc độc lập, commit ngay phần đó.
+- Mỗi commit chỉ nên chứa một nhóm thay đổi liên quan chặt chẽ để dễ review và rollback.
+
+### B. API contract/business logic
 
 - Cập nhật đồng bộ `schema -> service -> router`.
 - Nếu đổi contract, kiểm tra điểm gọi ở `apps/web`.
 - Giữ backward compatibility nếu endpoint đã dùng ở client.
 
-### B. Database
+### C. Database
 
 - Sửa schema trong `packages/db/prisma/schema`.
 - Chạy `bun run db:generate`.
 - Chạy `bun run db:migrate` (hoặc `bun run db:push` cho prototyping).
 - Không xóa migration history khi chưa có yêu cầu rõ.
 
-### C. Environment variables
+### D. Environment variables
 
 - Thêm env mới vào schema tương ứng trong `packages/env`.
 - Cập nhật `apps/server/.env.example` hoặc `apps/web/.env.example`.
 - Không truy cập env trực tiếp nếu đã có layer validate.
 
-### D. Queue/jobs
+### E. Queue/jobs
 
 - Nếu thêm job mới: cập nhật schema job, processor, scheduler/runner.
 - Nếu đổi tên queue/job: cập nhật đồng bộ tất cả nơi enqueue/dequeue.
 - Nếu đổi lifecycle queue: kiểm tra cả `apps/worker` (bootstrap) và `packages/queue` (start/stop scheduler, close queue/worker).
+
+### F. Web UI và i18n
+
+- Mọi thay đổi UI có text, label, placeholder, empty state, toast, modal, hoặc validation message phải cập nhật qua i18n.
+- Nếu thêm màn hình mới trong `apps/web`, chuẩn bị key dịch ngay từ đầu thay vì hard-code text tạm thời.
+- Nếu đổi wording hiện có, cập nhật đồng bộ key dịch và rà lại các màn hình liên quan để tránh lệch ngôn ngữ.
 
 ## 8) Lệnh chuẩn
 
@@ -157,6 +178,8 @@ Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
 - Đã sửa đúng phạm vi task, không refactor lan ngoài yêu cầu.
 - `bun run check-types` pass với phần code bị tác động.
 - Nếu có thay đổi DB/env/API contract, các phần liên quan đã cập nhật đầy đủ.
+- Nếu có thay đổi UI, các key i18n và locale liên quan đã được cập nhật đầy đủ.
+- Phần việc đã nằm trên đúng nhánh theo chủ đề và được tách commit rõ ràng.
 - Không để lộ secret trong code, logs, docs.
 - Code mới nhất quán style với module hiện hữu.
 
