@@ -24,6 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { buildAuthAvatarSrc, isSessionAvatarUrl } from "@/lib/auth-avatar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import { useIntlLocale } from "@/composables/use-intl-locale";
 
@@ -128,6 +129,7 @@ const profileError = ref("");
 const profileSuccess = ref("");
 const avatarUploadError = ref("");
 const avatarInputRef = ref<HTMLInputElement | null>(null);
+const isAvatarRemoved = ref(false);
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -226,7 +228,8 @@ watch(
     }
 
     profileForm.name = user.name ?? "";
-    profileForm.image = user.image ?? "";
+    profileForm.image = isSessionAvatarUrl(user.image) ? "" : (user.image ?? "");
+    isAvatarRemoved.value = false;
   },
   { immediate: true }
 );
@@ -252,6 +255,17 @@ const currentSession = computed(() =>
 const selectedSessionForRevoke = computed(() =>
   activeSessions.value.find((session) => session.token === sessionToRevokeToken.value) ?? null
 );
+
+const profileAvatarSrc = computed(() => {
+  if (isAvatarRemoved.value) {
+    return null;
+  }
+
+  return buildAuthAvatarSrc(
+    (profileForm.image || sessionQuery.data.value?.user?.image) ?? null,
+    sessionQuery.data.value?.user?.updatedAt ?? null
+  );
+});
 
 const avatarFallback = computed(() => {
   const trimmed = profileForm.name.trim();
@@ -625,9 +639,11 @@ const profileMutation = useMutation({
       throw new Error("Name is required.");
     }
 
+    const imagePayload = isAvatarRemoved.value ? null : (image || undefined);
+
     const { error } = await $authClient.updateUser({
       name,
-      image: image || null,
+      ...(imagePayload !== undefined ? { image: imagePayload } : {}),
     });
 
     if (error) {
@@ -638,6 +654,7 @@ const profileMutation = useMutation({
     profileError.value = "";
     profileSuccess.value = "Profile updated successfully.";
     avatarUploadError.value = "";
+    isAvatarRemoved.value = false;
     await invalidateAuthQueries();
   },
   onError: (error) => {
@@ -692,6 +709,7 @@ const handleAvatarUpload = async (event: Event) => {
 
   if (dataUrl) {
     profileForm.image = dataUrl;
+    isAvatarRemoved.value = false;
   }
 
   input.value = "";
@@ -700,6 +718,7 @@ const handleAvatarUpload = async (event: Event) => {
 const clearAvatar = () => {
   avatarUploadError.value = "";
   profileForm.image = "";
+  isAvatarRemoved.value = true;
 };
 
 const passwordMutation = useMutation({
@@ -959,7 +978,7 @@ watch(
                     @click="handleAvatarPick"
                   >
                     <Avatar class="size-full border bg-card shadow-sm">
-                      <AvatarImage v-if="profileForm.image" :src="profileForm.image" alt="Avatar preview" />
+                      <AvatarImage v-if="profileAvatarSrc" :src="profileAvatarSrc" alt="Avatar preview" />
                       <AvatarFallback class="text-lg font-semibold">
                         {{ avatarFallback }}
                       </AvatarFallback>

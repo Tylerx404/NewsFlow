@@ -27,9 +27,41 @@ import express from "express";
 const app = express();
 
 const MAX_SESSION_IMAGE_LENGTH = 4_096;
+const DATA_URL_PATTERN = /^data:([^;]+);base64,(.+)$/;
+
+function getSessionImageUrl() {
+  return `${env.BETTER_AUTH_URL}/api/auth/session-image`;
+}
+
+function isSessionImageUrl(value: string) {
+  return value.startsWith(getSessionImageUrl());
+}
+
+function decodeDataUrl(value: string) {
+  const match = value.match(DATA_URL_PATTERN);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, mimeType, base64Payload] = match;
+
+  try {
+    return {
+      mimeType,
+      buffer: Buffer.from(base64Payload, "base64"),
+    };
+  } catch {
+    return null;
+  }
+}
 
 function sanitizeSessionResponse(session: Awaited<ReturnType<typeof auth.api.getSession>>) {
   if (!session?.user?.image || session.user.image.length <= MAX_SESSION_IMAGE_LENGTH) {
+    return session;
+  }
+
+  if (!session.user.image.startsWith("data:")) {
     return session;
   }
 
@@ -37,7 +69,7 @@ function sanitizeSessionResponse(session: Awaited<ReturnType<typeof auth.api.get
     ...session,
     user: {
       ...session.user,
-      image: null,
+      image: getSessionImageUrl(),
     },
   };
 }
@@ -221,6 +253,38 @@ app.get("/api/auth/get-session", async (req, res) => {
   });
 
   res.json(sanitizeSessionResponse(session));
+});
+
+app.get("/api/auth/session-image", async (req, res) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  if (!session?.user?.image) {
+    res.status(404).end();
+    return;
+  }
+
+  if (!session.user.image.startsWith("data:")) {
+    if (isSessionImageUrl(session.user.image)) {
+      res.status(404).end();
+      return;
+    }
+
+    res.redirect(session.user.image);
+    return;
+  }
+
+  const decodedImage = decodeDataUrl(session.user.image);
+
+  if (!decodedImage) {
+    res.status(400).json({ message: "Invalid session image." });
+    return;
+  }
+
+  res.setHeader("Content-Type", decodedImage.mimeType);
+  res.setHeader("Cache-Control", "private, no-store, max-age=0");
+  res.send(decodedImage.buffer);
 });
 
 app.all("/api/auth{/*path}", toNodeHandler(auth));

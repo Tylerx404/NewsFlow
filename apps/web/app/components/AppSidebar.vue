@@ -35,11 +35,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { buildAuthAvatarSrc } from "@/lib/auth-avatar";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import { getSettingsSections } from "@/lib/settings-sections";
 
 type AdminCapableUser = {
   role?: string | null;
+  updatedAt?: string | Date | null;
 };
 
 const { $authClient, $orpc } = useNuxtApp();
@@ -65,6 +67,7 @@ const sessionQuery = useQuery({
       name: authUser.name,
       email: authUser.email,
       avatar: authUser.image,
+      avatarVersion: authUser.updatedAt ?? null,
       role: authUser.role ?? "USER",
     };
   },
@@ -75,7 +78,10 @@ const isAdmin = computed(() => user.value?.role === "ADMIN");
 const sidebarUser = computed(() => ({
   name: user.value?.name ?? t("shell.user.defaultName"),
   email: user.value?.email ?? t("common.actions.loading"),
-  avatar: user.value?.avatar ?? null,
+  avatar: buildAuthAvatarSrc(
+    user.value?.avatar ?? null,
+    user.value?.avatarVersion ?? null,
+  ),
   plan: sidebarPlan.value,
 }));
 
