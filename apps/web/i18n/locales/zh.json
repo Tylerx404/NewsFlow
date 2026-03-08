@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "个人 AI RSS"
+  },
+  "locale": {
+    "label": "语言",
+    "options": {
+      "en": "英语",
+      "vi": "越南语",
+      "zh": "中文",
+      "kr": "韩语",
+      "jp": "日语"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "添加",
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "refresh": "刷新",
+      "manage": "管理",
+      "loading": "加载中..."
+    },
+    "states": {
+      "enabled": "启用",
+      "disabled": "停用"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "仪表盘",
+      "articles": "文章",
+      "settings": "设置",
+      "reader": "阅读器"
+    }
+  },
+  "shell": {
+    "groups": {
+      "navigation": "导航",
+      "admin": "管理",
+      "yourFeeds": "你的订阅",
+      "discover": "发现"
+    }
+  }
+}

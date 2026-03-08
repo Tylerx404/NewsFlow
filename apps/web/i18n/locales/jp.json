@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "個人向け AI RSS"
+  },
+  "locale": {
+    "label": "言語",
+    "options": {
+      "en": "英語",
+      "vi": "ベトナム語",
+      "zh": "中国語",
+      "kr": "韓国語",
+      "jp": "日本語"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "追加",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "refresh": "更新",
+      "manage": "管理",
+      "loading": "読み込み中..."
+    },
+    "states": {
+      "enabled": "有効",
+      "disabled": "無効"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "ダッシュボード",
+      "articles": "記事",
+      "settings": "設定",
+      "reader": "リーダー"
+    }
+  },
+  "shell": {
+    "groups": {
+      "navigation": "ナビゲーション",
+      "admin": "管理",
+      "yourFeeds": "あなたのフィード",
+      "discover": "発見"
+    }
+  }
+}

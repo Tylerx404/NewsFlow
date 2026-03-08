@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "RSS AI cá nhân"
+  },
+  "locale": {
+    "label": "Ngôn ngữ",
+    "options": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt",
+      "zh": "Tiếng Trung",
+      "kr": "Tiếng Hàn",
+      "jp": "Tiếng Nhật"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "Thêm",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "refresh": "Làm mới",
+      "manage": "Quản lý",
+      "loading": "Đang tải..."
+    },
+    "states": {
+      "enabled": "Bật",
+      "disabled": "Tắt"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "Tổng quan",
+      "articles": "Bài viết",
+      "settings": "Cài đặt",
+      "reader": "Đọc bài"
+    }
+  },
+  "shell": {
+    "groups": {
+      "navigation": "Điều hướng",
+      "admin": "Quản trị",
+      "yourFeeds": "Nguồn feed của bạn",
+      "discover": "Khám phá"
+    }
+  }
+}

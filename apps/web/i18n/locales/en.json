@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "Personal AI RSS"
+  },
+  "locale": {
+    "label": "Language",
+    "options": {
+      "en": "English",
+      "vi": "Vietnamese",
+      "zh": "Chinese",
+      "kr": "Korean",
+      "jp": "Japanese"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "manage": "Manage",
+      "loading": "Loading..."
+    },
+    "states": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "Dashboard",
+      "articles": "Articles",
+      "settings": "Settings",
+      "reader": "Reader"
+    }
+  },
+  "shell": {
+    "groups": {
+      "navigation": "Navigation",
+      "admin": "Admin",
+      "yourFeeds": "Your feeds",
+      "discover": "Discover"
+    }
+  }
+}

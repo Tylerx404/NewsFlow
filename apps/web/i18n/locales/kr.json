@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "NewsFlow",
+    "tagline": "개인 AI RSS"
+  },
+  "locale": {
+    "label": "언어",
+    "options": {
+      "en": "영어",
+      "vi": "베트남어",
+      "zh": "중국어",
+      "kr": "한국어",
+      "jp": "일본어"
+    }
+  },
+  "common": {
+    "actions": {
+      "add": "추가",
+      "save": "저장",
+      "cancel": "취소",
+      "delete": "삭제",
+      "refresh": "새로고침",
+      "manage": "관리",
+      "loading": "불러오는 중..."
+    },
+    "states": {
+      "enabled": "사용",
+      "disabled": "사용 안 함"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "대시보드",
+      "articles": "아티클",
+      "settings": "설정",
+      "reader": "리더"
+    }
+  },
+  "shell": {
+    "groups": {
+      "navigation": "탐색",
+      "admin": "관리자",
+      "yourFeeds": "내 피드",
+      "discover": "탐색"
+    }
+  }
+}
