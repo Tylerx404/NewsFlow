@@ -6,8 +6,6 @@ dotenv.config({
   path: "../../apps/server/.env",
 });
 
-const shadowDatabaseUrl = process.env.SHADOW_DATABASE_URL;
-
 export default defineConfig({
   schema: path.join("prisma", "schema"),
   migrations: {
@@ -15,6 +13,5 @@ export default defineConfig({
   },
   datasource: {
     url: env("DATABASE_URL"),
-    ...(shadowDatabaseUrl ? { shadowDatabaseUrl } : {}),
   },
 });
