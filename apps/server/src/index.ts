@@ -26,6 +26,22 @@ import express from "express";
 
 const app = express();
 
+const MAX_SESSION_IMAGE_LENGTH = 4_096;
+
+function sanitizeSessionResponse(session: Awaited<ReturnType<typeof auth.api.getSession>>) {
+  if (!session?.user?.image || session.user.image.length <= MAX_SESSION_IMAGE_LENGTH) {
+    return session;
+  }
+
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      image: null,
+    },
+  };
+}
+
 async function requireSessionUser(req: express.Request) {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
@@ -197,6 +213,14 @@ app.post("/api/auth/subscription/restore", express.json(), async (req, res) => {
     const mapped = mapStripeBillingError(error);
     res.status(mapped.statusCode).json({ message: mapped.message });
   }
+});
+
+app.get("/api/auth/get-session", async (req, res) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  res.json(sanitizeSessionResponse(session));
 });
 
 app.all("/api/auth{/*path}", toNodeHandler(auth));
