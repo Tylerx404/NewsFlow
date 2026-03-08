@@ -9,8 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 
 const { t } = useI18n();
+const intlLocale = useIntlLocale();
 
 const props = defineProps<{
   isLoading: boolean;
@@ -58,7 +60,8 @@ const cards = computed(() => [
   },
 ]);
 
-const formatNumber = (value: number) => value.toLocaleString();
+const formatNumber = (value: number) =>
+  new Intl.NumberFormat(intlLocale.value).format(value);
 </script>
 
 <template>
