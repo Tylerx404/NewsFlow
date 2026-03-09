@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/select";
 import { useReadingPreferences } from "@/composables/use-reading-preferences";
 import { formatArticleContent } from "@/lib/article-content";
+import {
+  getArticleSummaryCache,
+  isArticleSummaryCacheIdentityEqual,
+  setArticleSummaryCache,
+  type ArticleSummaryCacheIdentity,
+} from "@/lib/article-summary-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
 import {
   getReaderContentWidthOptions,
@@ -87,6 +93,14 @@ const stopSummaryStream = () => {
   isStreamingSummary.value = false;
 };
 
+const clearSummaryState = () => {
+  stopSummaryStream();
+  summaryText.value = "";
+  streamedSummaryText.value = "";
+  summaryTokens.value = null;
+  summaryError.value = "";
+};
+
 const startSummaryStream = (value: string) => {
   stopSummaryStream();
   streamedSummaryText.value = "";
@@ -117,15 +131,106 @@ const startSummaryStream = (value: string) => {
   }, 45);
 };
 
+const toSummaryCacheIdentity = (value: {
+  articleId: string;
+  language: string;
+  aiConfigId?: string;
+}): ArticleSummaryCacheIdentity | null => {
+  if (!value.articleId || !value.language || !value.aiConfigId) {
+    return null;
+  }
+
+  return {
+    articleId: value.articleId,
+    locale: value.language,
+    aiConfigId: value.aiConfigId,
+  };
+};
+
+const currentSummaryCacheIdentity = computed(() =>
+  toSummaryCacheIdentity({
+    articleId: articleId.value,
+    language: locale.value,
+    aiConfigId: selectedAiConfigId.value,
+  })
+);
+
+const restoreSummaryFromCache = (
+  identity: ArticleSummaryCacheIdentity | null = currentSummaryCacheIdentity.value
+) => {
+  if (!identity) {
+    clearSummaryState();
+    return null;
+  }
+
+  const cachedEntry = getArticleSummaryCache(identity);
+  if (!cachedEntry) {
+    clearSummaryState();
+    return null;
+  }
+
+  stopSummaryStream();
+  summaryText.value = cachedEntry.summary;
+  streamedSummaryText.value = cachedEntry.summary;
+  summaryTokens.value = cachedEntry.tokens;
+  summaryError.value = "";
+
+  return cachedEntry;
+};
+
 const summarizeMutation = useMutation(
   $orpc.ai.summarize.mutationOptions({
-    onSuccess: (result) => {
+    onSuccess: (result, variables) => {
+      const requestIdentity = toSummaryCacheIdentity({
+        articleId: variables.articleId,
+        language: variables.language,
+        aiConfigId: variables.aiConfigId,
+      });
+
+      if (requestIdentity) {
+        setArticleSummaryCache(requestIdentity, {
+          summary: result.summary,
+          tokens: result.tokens,
+        });
+      }
+
+      if (
+        !isArticleSummaryCacheIdentityEqual(
+          requestIdentity,
+          currentSummaryCacheIdentity.value
+        )
+      ) {
+        return;
+      }
+
       summaryText.value = result.summary;
       summaryTokens.value = result.tokens;
       summaryError.value = "";
       startSummaryStream(result.summary);
     },
-    onError: (error) => {
+    onError: (error, variables) => {
+      const requestIdentity = toSummaryCacheIdentity({
+        articleId: variables.articleId,
+        language: variables.language,
+        aiConfigId: variables.aiConfigId,
+      });
+
+      if (
+        !isArticleSummaryCacheIdentityEqual(
+          requestIdentity,
+          currentSummaryCacheIdentity.value
+        )
+      ) {
+        return;
+      }
+
+      const cachedEntry = requestIdentity
+        ? restoreSummaryFromCache(requestIdentity)
+        : null;
+      if (cachedEntry) {
+        return;
+      }
+
       summaryError.value =
         error instanceof Error
           ? error.message
@@ -161,12 +266,20 @@ watch(
   { immediate: true }
 );
 
+watch(
+  [currentSummaryCacheIdentity, () => summarizeMutation.isPending.value],
+  ([identity, isPending]) => {
+    if (isPending) {
+      return;
+    }
+
+    restoreSummaryFromCache(identity);
+  },
+  { immediate: true }
+);
+
 const handleSummarize = async () => {
-  stopSummaryStream();
-  summaryError.value = "";
-  summaryText.value = "";
-  streamedSummaryText.value = "";
-  summaryTokens.value = null;
+  clearSummaryState();
 
   await summarizeMutation.mutateAsync({
     articleId: articleId.value,
