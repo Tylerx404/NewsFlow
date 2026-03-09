@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   ChevronsUpDown,
+  Languages,
   LogOut,
   MonitorCog,
   Moon,
@@ -10,6 +11,7 @@ import {
 import { computed } from "vue"
 
 import { useReadingPreferences } from "@/composables/use-reading-preferences"
+import { isAppLocale } from "@/lib/i18n"
 import {
   getThemeModeOptions,
   isThemeMode,
@@ -28,6 +30,10 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -113,8 +119,25 @@ const languageOptions = computed(() =>
   })
 )
 
+const currentLanguageLabel = computed(
+  () =>
+    languageOptions.value.find((item) => item.code === locale.value)?.label ??
+    t("locale.label")
+)
+
+const currentThemeModeLabel = computed(
+  () =>
+    localizedThemeModeOptions.value.find(
+      (item) => item.value === readingPreferences.value.themeMode
+    )?.label ?? t("shell.user.appearance")
+)
+
 const handleLanguageChange = async (value: unknown) => {
   if (typeof value !== "string") {
+    return
+  }
+
+  if (!isAppLocale(value)) {
     return
   }
 
@@ -182,46 +205,62 @@ const handleLanguageChange = async (value: unknown) => {
                 {{ t("shell.user.personalSettings") }}
               </NuxtLink>
             </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
-              {{ t("locale.label") }}
-            </DropdownMenuLabel>
-            <DropdownMenuRadioGroup
-              :model-value="locale"
-              @update:model-value="handleLanguageChange"
-            >
-              <DropdownMenuRadioItem
-                v-for="languageOption in languageOptions"
-                :key="languageOption.code"
-                :value="languageOption.code"
-              >
-                {{ languageOption.label }}
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
-              {{ t("shell.user.appearance") }}
-            </DropdownMenuLabel>
-            <DropdownMenuRadioGroup
-              :model-value="readingPreferences.themeMode"
-              @update:model-value="handleThemeModeChange"
-            >
-              <DropdownMenuRadioItem
-                v-for="modeOption in localizedThemeModeOptions"
-                :key="modeOption.value"
-                :value="modeOption.value"
-                :title="modeOption.description"
-              >
-                <MonitorCog v-if="modeOption.value === 'system'" />
-                <Sun v-else-if="modeOption.value === 'light'" />
-                <Moon v-else />
-                {{ modeOption.label }}
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Languages />
+                {{ t("locale.label") }}
+                <DropdownMenuShortcut class="max-w-[7rem] truncate normal-case tracking-normal">
+                  {{ currentLanguageLabel }}
+                </DropdownMenuShortcut>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent class="min-w-44 rounded-lg">
+                <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
+                  {{ t("locale.label") }}
+                </DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  :model-value="locale"
+                  @update:model-value="handleLanguageChange"
+                >
+                  <DropdownMenuRadioItem
+                    v-for="languageOption in languageOptions"
+                    :key="languageOption.code"
+                    :value="languageOption.code"
+                  >
+                    {{ languageOption.label }}
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <MonitorCog />
+                {{ t("shell.user.appearance") }}
+                <DropdownMenuShortcut class="max-w-[7rem] truncate normal-case tracking-normal">
+                  {{ currentThemeModeLabel }}
+                </DropdownMenuShortcut>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent class="min-w-48 rounded-lg">
+                <DropdownMenuLabel class="px-2 py-1 text-xs text-muted-foreground">
+                  {{ t("shell.user.appearance") }}
+                </DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  :model-value="readingPreferences.themeMode"
+                  @update:model-value="handleThemeModeChange"
+                >
+                  <DropdownMenuRadioItem
+                    v-for="modeOption in localizedThemeModeOptions"
+                    :key="modeOption.value"
+                    :value="modeOption.value"
+                    :title="modeOption.description"
+                  >
+                    <MonitorCog v-if="modeOption.value === 'system'" />
+                    <Sun v-else-if="modeOption.value === 'light'" />
+                    <Moon v-else />
+                    {{ modeOption.label }}
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem @select="handleSignOut">
