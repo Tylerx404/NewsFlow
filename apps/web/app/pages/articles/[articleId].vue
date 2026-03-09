@@ -59,6 +59,7 @@ const summaryError = ref("");
 const hasMarkedRead = ref(false);
 const isStreamingSummary = ref(false);
 const summaryStreamInterval = ref<ReturnType<typeof setInterval> | null>(null);
+const activeSummaryIdentity = ref<ArticleSummaryCacheIdentity | null>(null);
 
 const articleQuery = useQuery(
   computed(() =>
@@ -99,6 +100,7 @@ const clearSummaryState = () => {
   streamedSummaryText.value = "";
   summaryTokens.value = null;
   summaryError.value = "";
+  activeSummaryIdentity.value = null;
 };
 
 const startSummaryStream = (value: string) => {
@@ -174,6 +176,7 @@ const restoreSummaryFromCache = (
   streamedSummaryText.value = cachedEntry.summary;
   summaryTokens.value = cachedEntry.tokens;
   summaryError.value = "";
+  activeSummaryIdentity.value = identity;
 
   return cachedEntry;
 };
@@ -206,6 +209,7 @@ const summarizeMutation = useMutation(
       summaryText.value = result.summary;
       summaryTokens.value = result.tokens;
       summaryError.value = "";
+      activeSummaryIdentity.value = requestIdentity;
       startSummaryStream(result.summary);
     },
     onError: (error, variables) => {
@@ -270,6 +274,16 @@ watch(
   [currentSummaryCacheIdentity, () => summarizeMutation.isPending.value],
   ([identity, isPending]) => {
     if (isPending) {
+      return;
+    }
+
+    if (
+      isStreamingSummary.value
+      && isArticleSummaryCacheIdentityEqual(
+        identity,
+        activeSummaryIdentity.value
+      )
+    ) {
       return;
     }
 
