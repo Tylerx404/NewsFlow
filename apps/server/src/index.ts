@@ -28,6 +28,10 @@ const app = express();
 
 const MAX_SESSION_IMAGE_LENGTH = 4_096;
 const DATA_URL_PATTERN = /^data:([^;]+);base64,(.+)$/;
+type DecodedImage = {
+  mimeType: string;
+  buffer: Buffer;
+};
 
 function getSessionImageUrl() {
   return `${env.BETTER_AUTH_URL}/api/auth/session-image`;
@@ -37,14 +41,19 @@ function isSessionImageUrl(value: string) {
   return value.startsWith(getSessionImageUrl());
 }
 
-function decodeDataUrl(value: string) {
+function decodeDataUrl(value: string): DecodedImage | null {
   const match = value.match(DATA_URL_PATTERN);
 
   if (!match) {
     return null;
   }
 
-  const [, mimeType, base64Payload] = match;
+  const mimeType = match[1];
+  const base64Payload = match[2];
+
+  if (typeof mimeType !== "string" || typeof base64Payload !== "string") {
+    return null;
+  }
 
   try {
     return {

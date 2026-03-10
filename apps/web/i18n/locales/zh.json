@@ -143,11 +143,195 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "主页",
+      "features": "功能",
+      "pricing": "定价",
+      "about": "关于",
+      "cta": "免费开始"
+    },
     "home": {
       "subtitle": "个性化 AI 驱动的 RSS 阅读器。",
       "login": "登录",
       "signUp": "注册",
-      "pricing": "定价"
+      "pricing": "定价",
+      "hero": {
+        "title": "AI 摘要 RSS，按你的兴趣个性化",
+        "subtitle": "NewsFlow 根据兴趣筛选内容并浓缩要点，让你快速了解又不被噪音干扰。",
+        "ctaPrimary": "免费开始",
+        "ctaSecondary": "查看演示"
+      },
+      "trust": {
+        "privacy": "隐私优先",
+        "noSpam": "不发垃圾邮件",
+        "rssOpen": "开放 RSS"
+      },
+      "benefits": {
+        "title": "为何读者选择 NewsFlow",
+        "items": {
+          "personalized": {
+            "title": "按兴趣个性化",
+            "description": "只关注你在意的主题，其余自动淡出。"
+          },
+          "clear": {
+            "title": "清晰精炼的摘要",
+            "description": "用一致的重点卡片快速获取关键信息。"
+          },
+          "focus": {
+            "title": "更少噪音，更强信号",
+            "description": "过滤无关标题，把注意力放在真正重要的内容。"
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "如何运作",
+        "steps": {
+          "add": {
+            "title": "添加你的来源",
+            "description": "连接你信任的 RSS 源。"
+          },
+          "summarize": {
+            "title": "AI 摘要",
+            "description": "我们提炼关键要点并保持结构一致。"
+          },
+          "read": {
+            "title": "按优先级阅读",
+            "description": "按主题、紧急程度和兴趣快速浏览。"
+          }
+        }
+      },
+      "demo": {
+        "title": "快速预览",
+        "subtitle": "看看清爽的摘要体验。",
+        "cardTitle": "今日简报：AI 与科技",
+        "cardSource": "来自 8 个来源",
+        "summaryLabel": "摘要",
+        "highlightsLabel": "重点",
+        "chips": {
+          "topReads": "热门阅读",
+          "aiHighlights": "AI 亮点"
+        },
+        "bullets": {
+          "one": "开源模型本周热度持续上升。",
+          "two": "监管机构推动更清晰的 AI 披露规则。",
+          "three": "低功耗芯片正在成为默认选择。"
+        }
+      },
+      "useCases": {
+        "title": "适配你的节奏",
+        "items": {
+          "morning": "5 分钟晨间简报",
+          "industry": "不被信息淹没地跟踪行业",
+          "evening": "轻松完成晚间回顾"
+        }
+      },
+      "faq": {
+        "title": "常见问题",
+        "items": {
+          "rss": {
+            "q": "使用 NewsFlow 一定要 RSS 吗？",
+            "a": "RSS 效果最佳，但你也可以先从推荐来源开始。"
+          },
+          "accuracy": {
+            "q": "摘要准确吗？",
+            "a": "我们专注关键要点，随时可打开原文核对。"
+          },
+          "privacy": {
+            "q": "我的数据安全吗？",
+            "a": "我们不出售数据，尽量减少不必要的追踪。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "今天开始更聪明地阅读",
+        "subtitle": "构建你的专属信息流，节省时间，保持专注。",
+        "cta": "立即注册"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "用更聪明的方式阅读",
+        "subtitle": "NewsFlow 把嘈杂的订阅变成清晰的优先级摘要，让你几分钟内掌握重点。",
+        "cta": "免费开始"
+      },
+      "grid": {
+        "title": "专注阅读的功能",
+        "items": {
+          "personalized": {
+            "title": "按兴趣个性化",
+            "description": "只关注你在意的主题，其余自动淡出。"
+          },
+          "summaries": {
+            "title": "清晰精炼的摘要",
+            "description": "用一致的重点快速获取关键信息。"
+          },
+          "priority": {
+            "title": "按优先级阅读",
+            "description": "根据紧急度和相关度排序。"
+          },
+          "openRss": {
+            "title": "开放 RSS，不锁定",
+            "description": "继续使用你信任的来源。"
+          },
+          "privacy": {
+            "title": "隐私优先",
+            "description": "数据属于你，无广告、不出售。"
+          },
+          "speed": {
+            "title": "快速轻量",
+            "description": "任何设备上都能迅速加载。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "准备好减少噪音了吗？",
+        "subtitle": "创建你的订阅流，几分钟即可开始。",
+        "cta": "免费开始"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "让你阅读更清晰",
+        "subtitle": "NewsFlow 面向个人用户，提供可信、专注、没有噪音的新闻体验。"
+      },
+      "mission": {
+        "title": "使命",
+        "body": "让每天的新闻更简单：清晰摘要、可信来源、把时间还给你。"
+      },
+      "story": {
+        "title": "故事",
+        "body": "NewsFlow 起初是为了解决个人过多订阅的问题，我们希望用更平静的方式保持更新。"
+      },
+      "values": {
+        "title": "价值观",
+        "items": {
+          "clarity": {
+            "title": "清晰优先",
+            "description": "摘要应节省时间，而不是增加噪音。"
+          },
+          "trust": {
+            "title": "信任与透明",
+            "description": "始终显示来源，随时可查看原文。"
+          },
+          "privacy": {
+            "title": "默认隐私",
+            "description": "减少追踪，从不出售数据。"
+          },
+          "craft": {
+            "title": "精心打磨",
+            "description": "细节决定阅读体验。"
+          }
+        }
+      },
+      "trust": {
+        "title": "隐私与信任",
+        "body": "我们不出售数据，只保留产品所需的最少追踪。"
+      },
+      "finalCta": {
+        "title": "加入想要更少噪音的读者",
+        "subtitle": "免费开始，打造你的个人订阅流。",
+        "cta": "免费开始"
+      }
     },
     "pricing": {
       "badge": "定价",

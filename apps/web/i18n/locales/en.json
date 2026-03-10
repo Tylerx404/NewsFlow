@@ -143,11 +143,195 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "pricing": "Pricing",
+      "about": "About",
+      "cta": "Start free"
+    },
     "home": {
       "subtitle": "Personalized AI-powered RSS reader.",
       "login": "Login",
       "signUp": "Sign up",
-      "pricing": "Pricing"
+      "pricing": "Pricing",
+      "hero": {
+        "title": "AI summaries for RSS, personalized for you",
+        "subtitle": "NewsFlow filters by your interests and condenses the key points so you stay informed without the noise.",
+        "ctaPrimary": "Start free",
+        "ctaSecondary": "View demo"
+      },
+      "trust": {
+        "privacy": "Privacy-first",
+        "noSpam": "No spam",
+        "rssOpen": "Open RSS"
+      },
+      "benefits": {
+        "title": "Why readers choose NewsFlow",
+        "items": {
+          "personalized": {
+            "title": "Personalized by your interests",
+            "description": "Follow topics you care about and let the rest fade away."
+          },
+          "clear": {
+            "title": "Clear, compact summaries",
+            "description": "Get the key points fast with consistent, readable highlights."
+          },
+          "focus": {
+            "title": "Less noise, more signal",
+            "description": "Cut through headlines and focus on what actually matters."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "How it works",
+        "steps": {
+          "add": {
+            "title": "Add your sources",
+            "description": "Connect RSS feeds you already trust."
+          },
+          "summarize": {
+            "title": "AI summarizes",
+            "description": "We extract the main points with consistent structure."
+          },
+          "read": {
+            "title": "Read by priority",
+            "description": "Skim by topic, urgency, and interest."
+          }
+        }
+      },
+      "demo": {
+        "title": "A quick look",
+        "subtitle": "See what a clean summary feels like.",
+        "cardTitle": "Today's Brief: AI & Tech",
+        "cardSource": "From 8 sources",
+        "summaryLabel": "Summary",
+        "highlightsLabel": "Highlights",
+        "chips": {
+          "topReads": "Top reads",
+          "aiHighlights": "AI highlights"
+        },
+        "bullets": {
+          "one": "Open-source models gained new traction this week.",
+          "two": "Regulators pushed for clearer AI disclosure rules.",
+          "three": "Energy-efficient chips are becoming the default."
+        }
+      },
+      "useCases": {
+        "title": "Fits your routine",
+        "items": {
+          "morning": "Morning briefing in 5 minutes",
+          "industry": "Track your industry without overload",
+          "evening": "Catch up at the end of the day"
+        }
+      },
+      "faq": {
+        "title": "FAQ",
+        "items": {
+          "rss": {
+            "q": "Do I need RSS to use NewsFlow?",
+            "a": "RSS works best, but you can start with suggested sources."
+          },
+          "accuracy": {
+            "q": "How accurate are the summaries?",
+            "a": "We focus on key points and let you open the original anytime."
+          },
+          "privacy": {
+            "q": "Is my data private?",
+            "a": "We do not sell your data and avoid tracking beyond essentials."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Start reading smarter today",
+        "subtitle": "Build your feed, save time, and stay focused.",
+        "cta": "Sign up now"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "Everything you need to read smarter",
+        "subtitle": "NewsFlow turns noisy feeds into clear, prioritized summaries so you can stay informed in minutes.",
+        "cta": "Start free"
+      },
+      "grid": {
+        "title": "Features built for focus",
+        "items": {
+          "personalized": {
+            "title": "Personalized by your interests",
+            "description": "Follow the topics you care about and skip the rest."
+          },
+          "summaries": {
+            "title": "Clear, compact summaries",
+            "description": "Get the key points fast with consistent highlights."
+          },
+          "priority": {
+            "title": "Priority reading",
+            "description": "Sort by urgency and relevance."
+          },
+          "openRss": {
+            "title": "Open RSS, no lock-in",
+            "description": "Use the sources you already trust."
+          },
+          "privacy": {
+            "title": "Privacy-first by design",
+            "description": "Your data stays yours. No ads, no selling."
+          },
+          "speed": {
+            "title": "Fast, lightweight",
+            "description": "Loads quickly on any device."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Ready to read with less noise?",
+        "subtitle": "Build your feed and start in minutes.",
+        "cta": "Start free"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "We help you read with clarity",
+        "subtitle": "NewsFlow is built for individuals who want trustworthy, focused news without the noise."
+      },
+      "mission": {
+        "title": "Our mission",
+        "body": "Make daily news simpler: clear summaries, honest sources, and time back for you."
+      },
+      "story": {
+        "title": "Our story",
+        "body": "NewsFlow started as a personal tool to manage too many feeds. We built a calmer way to keep up without scrolling for hours."
+      },
+      "values": {
+        "title": "Our values",
+        "items": {
+          "clarity": {
+            "title": "Clarity over volume",
+            "description": "Summaries should save time, not create more noise."
+          },
+          "trust": {
+            "title": "Trust and transparency",
+            "description": "We keep sources visible and let you open the originals."
+          },
+          "privacy": {
+            "title": "Privacy by default",
+            "description": "We avoid invasive tracking and never sell your data."
+          },
+          "craft": {
+            "title": "Careful craft",
+            "description": "Small details make reading feel effortless."
+          }
+        }
+      },
+      "trust": {
+        "title": "Privacy & trust",
+        "body": "We don’t sell data. We limit tracking to what’s essential for the product."
+      },
+      "finalCta": {
+        "title": "Join readers who want less noise",
+        "subtitle": "Start free and build your personal feed.",
+        "cta": "Start free"
+      }
     },
     "pricing": {
       "badge": "Pricing",
