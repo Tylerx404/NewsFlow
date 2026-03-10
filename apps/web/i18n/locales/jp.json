@@ -198,6 +198,12 @@
         "subtitle": "すっきりした要約を体験。",
         "cardTitle": "デイリーブリーフ：AI & Tech",
         "cardSource": "8ソースから",
+        "summaryLabel": "要約",
+        "highlightsLabel": "ハイライト",
+        "chips": {
+          "topReads": "注目記事",
+          "aiHighlights": "AIハイライト"
+        },
         "bullets": {
           "one": "今週の大型資金調達はやや減速。",
           "two": "新しいOSSモデルが上位ベンチマークに到達。",

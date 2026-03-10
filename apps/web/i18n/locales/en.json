@@ -198,6 +198,12 @@
         "subtitle": "See what a clean summary feels like.",
         "cardTitle": "Daily Brief: AI & Tech",
         "cardSource": "From 8 sources",
+        "summaryLabel": "Summary",
+        "highlightsLabel": "Highlights",
+        "chips": {
+          "topReads": "Top reads",
+          "aiHighlights": "AI highlights"
+        },
         "bullets": {
           "one": "Major funding rounds slowed slightly this week.",
           "two": "Two new open-source models reached top benchmarks.",

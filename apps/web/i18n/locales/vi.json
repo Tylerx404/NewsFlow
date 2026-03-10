@@ -198,6 +198,12 @@
         "subtitle": "Cảm nhận cách đọc gọn gàng, rõ ràng.",
         "cardTitle": "Bản tin ngày: AI & Công nghệ",
         "cardSource": "Từ 8 nguồn",
+        "summaryLabel": "Tóm tắt",
+        "highlightsLabel": "Điểm nổi bật",
+        "chips": {
+          "topReads": "Đọc nhiều",
+          "aiHighlights": "Điểm nhấn AI"
+        },
         "bullets": {
           "one": "Dòng vốn đầu tư tuần này chậm lại nhẹ.",
           "two": "Hai mô hình mã nguồn mở đạt top benchmark mới.",

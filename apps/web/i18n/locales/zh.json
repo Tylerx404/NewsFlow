@@ -198,6 +198,12 @@
         "subtitle": "看看清爽的摘要体验。",
         "cardTitle": "今日简报：AI 与科技",
         "cardSource": "来自 8 个来源",
+        "summaryLabel": "摘要",
+        "highlightsLabel": "重点",
+        "chips": {
+          "topReads": "热门阅读",
+          "aiHighlights": "AI 亮点"
+        },
         "bullets": {
           "one": "本周大型融资略有放缓。",
           "two": "两款开源模型进入顶级基准。",
