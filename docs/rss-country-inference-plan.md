@@ -61,7 +61,7 @@ Commit goi y:
 - `feat(feed): implement offline language detection for rss`
 
 ## Part C - Language -> Country Heuristic
-- [ ] Tao mapping co ban:
+- [x] Tao mapping co ban:
   - `vi -> VN`
   - `th -> TH`
   - `id -> ID`
@@ -69,10 +69,10 @@ Commit goi y:
   - `de -> DE`
   - `es -> ES` (co the mo rong `ES/MX` sau)
   - `en -> GLOBAL` (khuyen nghi de trung lap)
-- [ ] Dat rule cho ngon ngu da quoc gia (`en`, `es`, `pt`, `ar`):
+- [x] Dat rule cho ngon ngu da quoc gia (`en`, `es`, `pt`, `ar`):
   - default ve `GLOBAL` trong V1.
-- [ ] Ghi ro trong docs: feed VN viet tieng Anh co the vao `GLOBAL` o V1.
-- [ ] Tao function: `mapLanguageToCountry(language, options)`.
+- [x] Ghi ro trong docs: feed VN viet tieng Anh co the vao `GLOBAL` o V1.
+- [x] Tao function: `mapLanguageToCountry(language, options)`.
 
 Acceptance:
 - Mapping don gian, de doc, de chinh sua.

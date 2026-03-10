@@ -12,6 +12,17 @@ const LANGUAGE_CODE_MAP: Record<string, string> = {
   ind: "id",
 };
 
+const LANGUAGE_COUNTRY_MAP: Record<string, string> = {
+  vi: "VN",
+  th: "TH",
+  id: "ID",
+  fr: "FR",
+  de: "DE",
+  es: "ES",
+};
+
+const GLOBAL_LANGUAGE_SET = new Set(["en", "es", "pt", "ar"]);
+
 const MIN_SAMPLE_LENGTH = 40;
 const DEFAULT_MIN_CONFIDENCE = 0.85;
 const VI_MIN_CONFIDENCE = 0.7;
@@ -50,6 +61,10 @@ export interface FeedLanguageDetectionResult {
   language: string;
   confidence: number;
   sampleSize: number;
+}
+
+export interface MapLanguageToCountryOptions {
+  defaultCountryCode?: string;
 }
 
 export function detectFeedLanguage(
@@ -99,4 +114,29 @@ export function detectFeedLanguage(
     confidence,
     sampleSize,
   };
+}
+
+export function mapLanguageToCountry(
+  language: string | null | undefined,
+  options?: MapLanguageToCountryOptions
+) {
+  const defaultCountryCode = (options?.defaultCountryCode ?? "GLOBAL")
+    .trim()
+    .toUpperCase();
+
+  if (typeof language !== "string") {
+    return defaultCountryCode;
+  }
+
+  const normalizedLanguage = language.trim().toLowerCase();
+
+  if (!normalizedLanguage) {
+    return defaultCountryCode;
+  }
+
+  if (GLOBAL_LANGUAGE_SET.has(normalizedLanguage)) {
+    return defaultCountryCode;
+  }
+
+  return LANGUAGE_COUNTRY_MAP[normalizedLanguage] ?? defaultCountryCode;
 }
