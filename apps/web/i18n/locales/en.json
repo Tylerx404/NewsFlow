@@ -147,7 +147,93 @@
       "subtitle": "Personalized AI-powered RSS reader.",
       "login": "Login",
       "signUp": "Sign up",
-      "pricing": "Pricing"
+      "pricing": "Pricing",
+      "hero": {
+        "title": "Read the right news in minutes",
+        "subtitle": "NewsFlow personalizes your RSS and summarizes what matters, so you can stay informed without the noise.",
+        "ctaPrimary": "Sign up now",
+        "ctaSecondary": "View demo"
+      },
+      "trust": {
+        "privacy": "Privacy-first",
+        "noSpam": "No spam",
+        "rssOpen": "Open RSS"
+      },
+      "benefits": {
+        "title": "Why readers choose NewsFlow",
+        "items": {
+          "personalized": {
+            "title": "Personalized by your interests",
+            "description": "Follow topics you care about and let the rest fade away."
+          },
+          "clear": {
+            "title": "Clear, compact summaries",
+            "description": "Get the key points fast with consistent, readable highlights."
+          },
+          "focus": {
+            "title": "Less noise, more signal",
+            "description": "Cut through headlines and focus on what actually matters."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "How it works",
+        "steps": {
+          "add": {
+            "title": "Add your sources",
+            "description": "Connect RSS feeds you already trust."
+          },
+          "summarize": {
+            "title": "AI summarizes",
+            "description": "We extract the main points with consistent structure."
+          },
+          "read": {
+            "title": "Read by priority",
+            "description": "Skim by topic, urgency, and interest."
+          }
+        }
+      },
+      "demo": {
+        "title": "A quick look",
+        "subtitle": "See what a clean summary feels like.",
+        "cardTitle": "Daily Brief: AI & Tech",
+        "cardSource": "From 8 sources",
+        "bullets": {
+          "one": "Major funding rounds slowed slightly this week.",
+          "two": "Two new open-source models reached top benchmarks.",
+          "three": "Regulators signaled tighter disclosure requirements."
+        }
+      },
+      "useCases": {
+        "title": "Fits your routine",
+        "items": {
+          "morning": "Morning briefing in 5 minutes",
+          "industry": "Track your industry without overload",
+          "evening": "Catch up at the end of the day"
+        }
+      },
+      "faq": {
+        "title": "FAQ",
+        "items": {
+          "rss": {
+            "q": "Do I need RSS to use NewsFlow?",
+            "a": "RSS works best, but you can start with suggested sources."
+          },
+          "accuracy": {
+            "q": "How accurate are the summaries?",
+            "a": "We focus on key points and let you open the original anytime."
+          },
+          "privacy": {
+            "q": "Is my data private?",
+            "a": "We do not sell your data and avoid tracking beyond essentials."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Start reading smarter today",
+        "subtitle": "Build your feed, save time, and stay focused.",
+        "cta": "Sign up now"
+      }
     },
     "pricing": {
       "badge": "Pricing",
