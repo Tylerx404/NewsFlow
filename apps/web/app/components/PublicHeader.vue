@@ -58,13 +58,6 @@ const currentLanguageShort = computed(() => {
 
 const localizedThemeModeOptions = computed(() => getThemeModeOptions(t));
 
-const currentThemeModeLabel = computed(
-  () =>
-    localizedThemeModeOptions.value.find(
-      (item) => item.value === readingPreferences.value.themeMode
-    )?.label ?? t("settings.appearance.page.fields.themeMode")
-);
-
 const handleLanguageChange = async (value: unknown) => {
   if (typeof value !== "string") return;
   if (!isAppLocale(value)) return;
@@ -134,12 +127,13 @@ const handleThemeModeChange = (value: unknown) => {
               <Button
                 variant="outline"
                 size="sm"
-                class="hidden items-center gap-2 md:inline-flex"
+                class="hidden items-center md:inline-flex"
+                aria-label="Theme mode"
+                title="Theme mode"
               >
                 <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                 <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                 <Moon v-else class="size-4" />
-                <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" class="min-w-48 rounded-xl">
@@ -213,11 +207,16 @@ const handleThemeModeChange = (value: unknown) => {
                 </DropdownMenu>
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
-                    <Button variant="outline" size="sm" class="justify-start gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      class="justify-start"
+                      aria-label="Theme mode"
+                      title="Theme mode"
+                    >
                       <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                       <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                       <Moon v-else class="size-4" />
-                      <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" class="min-w-48 rounded-xl">
