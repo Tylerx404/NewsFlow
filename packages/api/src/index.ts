@@ -2,6 +2,8 @@ import { ORPCError, os } from "@orpc/server";
 
 import type { AuthSession, AuthSessionUser, Context } from "./context";
 
+export { resolveUserCountry } from "./modules/discover/country-resolution.service";
+
 export const o = os.$context<Context>();
 
 export const publicProcedure = o;

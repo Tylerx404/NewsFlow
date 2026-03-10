@@ -1,5 +1,6 @@
 import { createContext } from "@NewsFlow/api/context";
 import { appRouter } from "@NewsFlow/api/routers/index";
+import { resolveUserCountry } from "@NewsFlow/api";
 import { auth } from "@NewsFlow/auth";
 import {
   cancelSubscriptionForUser,
@@ -97,6 +98,78 @@ function sanitizeSessionResponse(session: Awaited<ReturnType<typeof auth.api.get
   };
 }
 
+function getSingleHeaderValue(value: string | string[] | undefined) {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return Array.isArray(value) ? value[0] ?? null : null;
+}
+
+function resolveClientIp(req: express.Request) {
+  const forwardedFor = getSingleHeaderValue(req.headers["x-forwarded-for"]);
+
+  if (forwardedFor) {
+    const firstForwarded = forwardedFor.split(",")[0]?.trim();
+
+    if (firstForwarded) {
+      return firstForwarded;
+    }
+  }
+
+  const realIp = getSingleHeaderValue(req.headers["x-real-ip"]);
+
+  if (realIp) {
+    return realIp.trim();
+  }
+
+  if (typeof req.ip === "string" && req.ip.trim()) {
+    return req.ip.trim();
+  }
+
+  return req.socket.remoteAddress ?? null;
+}
+
+async function syncUserCountryFromRequest(req: express.Request, userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      countryCode: true,
+      countrySource: true,
+      phoneNumber: true,
+    },
+  });
+
+  if (!user) {
+    return;
+  }
+
+  const resolved = await resolveUserCountry({
+    phoneNumber: user.phoneNumber,
+    ipAddress: resolveClientIp(req),
+    acceptLanguageHeader: getSingleHeaderValue(req.headers["accept-language"]),
+    defaultCountryCode: "GLOBAL",
+  });
+
+  if (user.countryCode === resolved.countryCode && user.countrySource === resolved.source) {
+    return;
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      countryCode: resolved.countryCode,
+      countrySource: resolved.source,
+    },
+  });
+
+  console.info("[country-resolution] Updated user country", {
+    userId,
+    source: resolved.source,
+    countryCode: resolved.countryCode,
+  });
+}
+
 async function requireSessionUser(req: express.Request) {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
@@ -104,6 +177,15 @@ async function requireSessionUser(req: express.Request) {
 
   if (!session?.user?.id) {
     return null;
+  }
+
+  try {
+    await syncUserCountryFromRequest(req, session.user.id);
+  } catch (error) {
+    console.warn("[country-resolution] Failed to sync user country from request", {
+      userId: session.user.id,
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 
   return session.user;
@@ -307,6 +389,17 @@ app.get("/api/auth/get-session", async (req, res) => {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
+
+  if (session?.user?.id) {
+    try {
+      await syncUserCountryFromRequest(req, session.user.id);
+    } catch (error) {
+      console.warn("[country-resolution] Failed to sync country on get-session", {
+        userId: session.user.id,
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
 
   res.json(sanitizeSessionResponse(session));
 });

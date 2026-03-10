@@ -80,7 +80,7 @@ Commit message de xuat:
   3) accept-language
   4) default `GLOBAL`
 - [x] Tra ve ca `countryCode` va `source`.
-- [ ] Ghi vao DB khi login/mo app (chi update neu thay doi hoac chua co).
+- [x] Ghi vao DB khi login/mo app (chi update neu thay doi hoac chua co).
 
 Acceptance:
 - Uu tien phone cao nhat.
@@ -90,9 +90,9 @@ Commit message de xuat:
 - `feat(country): orchestrate country resolution with ordered fallbacks`
 
 ## Part 6 - API Integration + Safe Logging
-- [ ] Tich hop vao luong session/login hoac middleware server.
-- [ ] Khong log du lieu nhay cam day du (phone/ip raw).
-- [ ] Them log context ngan gon: userId, source, countryCode.
+- [x] Tich hop vao luong session/login hoac middleware server.
+- [x] Khong log du lieu nhay cam day du (phone/ip raw).
+- [x] Them log context ngan gon: userId, source, countryCode.
 
 Acceptance:
 - User login/mo app co cap nhat countryCode on-demand.
