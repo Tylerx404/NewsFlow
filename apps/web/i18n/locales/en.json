@@ -1402,6 +1402,39 @@
         "successSaved": "Stripe config saved.",
         "secretHint": "Secret inputs can stay empty if you only want to update price IDs."
       },
+      "oauth": {
+        "title": "OAuth providers",
+        "description": "Configure Apple and Google sign-in without using server environment variables.",
+        "status": {
+          "apple": "Apple",
+          "google": "Google",
+          "configured": "Configured",
+          "incomplete": "Incomplete",
+          "secret": "Client secret",
+          "missing": "Missing"
+        },
+        "form": {
+          "googleClientId": "Google client ID",
+          "googleClientIdPlaceholder": "xxxx.apps.googleusercontent.com",
+          "googleClientSecret": "Google client secret",
+          "appleClientId": "Apple service ID",
+          "appleClientIdPlaceholder": "com.example.service",
+          "appleClientSecret": "Apple client secret (JWT)",
+          "appleAppBundleIdentifier": "Apple app bundle identifier (optional)",
+          "appleAppBundlePlaceholder": "com.example.app",
+          "secretPlaceholder": "Leave blank to keep current secret"
+        },
+        "lastUpdated": "Last updated",
+        "restartHint": "Restart the server to apply OAuth changes.",
+        "save": "Save OAuth config",
+        "saving": "Saving...",
+        "successSaved": "OAuth config saved.",
+        "secretHint": "Leave secrets empty to keep current values.",
+        "errors": {
+          "load": "Could not load OAuth config.",
+          "save": "Could not save OAuth config."
+        }
+      },
       "manualActions": {
         "title": "Manual actions",
         "description": "Trigger one feed fetch or one content extraction by ID.",

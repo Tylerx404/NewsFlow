@@ -104,6 +104,7 @@ export const dashboardQueryKeys = {
     systemOps: {
       overview: () => ["dashboard", "admin", "system-ops", "overview"] as const,
       stripeConfig: () => ["dashboard", "admin", "system-ops", "stripe-config"] as const,
+      oauthConfig: () => ["dashboard", "admin", "system-ops", "oauth-config"] as const,
       queueJobs: (
         queueName: "all" | "rss-fetch" | "content-extract",
         states: string[],

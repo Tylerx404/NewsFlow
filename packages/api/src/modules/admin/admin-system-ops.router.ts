@@ -6,6 +6,8 @@ import { adminProcedure } from "../../index";
 import {
   adminOpsActionOutputSchema,
   adminQueueJobsOutputSchema,
+  adminOAuthConfigSchema,
+  adminOAuthConfigUpdateSchema,
   adminStripeConfigSchema,
   adminStripeConfigUpdateSchema,
   adminSystemOpsOverviewOutputSchema,
@@ -19,10 +21,12 @@ import {
 import {
   getAdminStripeConfig,
   getAdminSystemOpsOverview,
+  getAdminOAuthConfig,
   listAdminQueueJobs,
   retryAdminQueueJob,
   triggerAdminContentExtract,
   triggerAdminFeedFetch,
+  updateAdminOAuthConfig,
   updateAdminStripeConfig,
 } from "./admin-system-ops.service";
 
@@ -40,11 +44,27 @@ export const adminSystemOpsRouter = {
       return getAdminStripeConfig(prisma);
     }),
 
+  getOAuthConfig: adminProcedure
+    .output(adminOAuthConfigSchema)
+    .handler(async () => {
+      return getAdminOAuthConfig(prisma);
+    }),
+
   updateStripeConfig: adminProcedure
     .input(adminStripeConfigUpdateSchema)
     .output(adminStripeConfigSchema)
     .handler(async ({ input, context }) => {
       return updateAdminStripeConfig(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
+    }),
+
+  updateOAuthConfig: adminProcedure
+    .input(adminOAuthConfigUpdateSchema)
+    .output(adminOAuthConfigSchema)
+    .handler(async ({ input, context }) => {
+      return updateAdminOAuthConfig(prisma, {
         ...input,
         adminUserId: context.session.user.id,
       });

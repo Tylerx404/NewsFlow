@@ -108,6 +108,29 @@ export const adminStripeConfigUpdateSchema = z.object({
   priceMaxYearly: nullableTrimmedStringSchema.optional(),
 });
 
+export const adminOAuthConfigSchema = z.object({
+  googleClientId: z.string().nullable(),
+  googleClientSecretMasked: z.string().nullable(),
+  hasGoogleClientSecret: z.boolean(),
+  appleClientId: z.string().nullable(),
+  appleClientSecretMasked: z.string().nullable(),
+  hasAppleClientSecret: z.boolean(),
+  appleAppBundleIdentifier: z.string().nullable(),
+  isGoogleConfigured: z.boolean(),
+  isAppleConfigured: z.boolean(),
+  updatedByUserId: z.string().nullable(),
+  updatedAt: z.date().nullable(),
+  createdAt: z.date().nullable(),
+});
+
+export const adminOAuthConfigUpdateSchema = z.object({
+  googleClientId: nullableTrimmedStringSchema.optional(),
+  googleClientSecret: optionalSecretStringSchema,
+  appleClientId: nullableTrimmedStringSchema.optional(),
+  appleClientSecret: optionalSecretStringSchema,
+  appleAppBundleIdentifier: nullableTrimmedStringSchema.optional(),
+});
+
 export const listAdminQueueJobsSchema = z.object({
   queueName: adminQueueNameSchema.optional(),
   states: z.array(adminQueueJobStateSchema).min(1).max(5).default(["failed"]),
@@ -156,4 +179,7 @@ export type TriggerAdminContentExtractInput = z.infer<
 >;
 export type UpdateAdminStripeConfigInput = z.infer<
   typeof adminStripeConfigUpdateSchema
+>;
+export type UpdateAdminOAuthConfigInput = z.infer<
+  typeof adminOAuthConfigUpdateSchema
 >;

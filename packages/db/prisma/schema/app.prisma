@@ -179,6 +179,20 @@ model StripeConfig {
   @@map("stripe_config")
 }
 
+model AuthConfig {
+  id                        String   @id @default("default")
+  googleClientId            String?
+  googleClientSecretEncrypted String?
+  appleClientId             String?
+  appleClientSecretEncrypted String?
+  appleAppBundleIdentifier  String?
+  updatedByUserId           String?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  @@map("auth_config")
+}
+
 model AdminAuditLog {
   id          String   @id @default(cuid())
   adminUserId String

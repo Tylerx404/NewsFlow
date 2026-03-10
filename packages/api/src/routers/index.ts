@@ -6,6 +6,7 @@ import { adminFeedRouter } from "../modules/admin/admin-feed.router";
 import { adminSystemOpsRouter } from "../modules/admin/admin-system-ops.router";
 import { adminSubscriptionRouter } from "../modules/admin/admin-subscription.router";
 import { adminUserRouter } from "../modules/admin/admin-user.router";
+import { authConfigRouter } from "../modules/auth-config/auth-config.router";
 import { aiConfigRouter } from "../modules/ai-config/ai-config.router";
 import { aiRouter } from "../modules/ai/ai.router";
 import { articleRouter } from "../modules/article/article.router";
@@ -22,6 +23,7 @@ export const appRouter = {
       user: context.session?.user,
     };
   }),
+  authConfig: authConfigRouter,
   aiConfig: aiConfigRouter,
   feedSubscription: feedSubscriptionRouter,
   article: articleRouter,

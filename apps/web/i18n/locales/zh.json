@@ -1402,6 +1402,39 @@
         "successSaved": "Stripe 配置已保存。",
         "secretHint": "如果你只想更新价格 ID，可将密钥字段留空。"
       },
+      "oauth": {
+        "title": "OAuth 提供商",
+        "description": "配置 Apple 和 Google 登录，无需使用服务器环境变量。",
+        "status": {
+          "apple": "Apple",
+          "google": "Google",
+          "configured": "已配置",
+          "incomplete": "未完整",
+          "secret": "客户端密钥",
+          "missing": "缺失"
+        },
+        "form": {
+          "googleClientId": "Google 客户端 ID",
+          "googleClientIdPlaceholder": "xxxx.apps.googleusercontent.com",
+          "googleClientSecret": "Google 客户端密钥",
+          "appleClientId": "Apple 服务 ID",
+          "appleClientIdPlaceholder": "com.example.service",
+          "appleClientSecret": "Apple 客户端密钥 (JWT)",
+          "appleAppBundleIdentifier": "Apple 应用包标识符（可选）",
+          "appleAppBundlePlaceholder": "com.example.app",
+          "secretPlaceholder": "留空以保留当前密钥"
+        },
+        "lastUpdated": "最后更新",
+        "restartHint": "重启服务器以应用 OAuth 变更。",
+        "save": "保存 OAuth 配置",
+        "saving": "正在保存...",
+        "successSaved": "OAuth 配置已保存。",
+        "secretHint": "密钥留空将保留当前值。",
+        "errors": {
+          "load": "无法加载 OAuth 配置。",
+          "save": "无法保存 OAuth 配置。"
+        }
+      },
       "manualActions": {
         "title": "手动操作",
         "description": "按 ID 触发一次订阅源抓取或一次内容提取。",
