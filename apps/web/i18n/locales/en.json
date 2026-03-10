@@ -289,6 +289,50 @@
         "cta": "Start free"
       }
     },
+    "about": {
+      "hero": {
+        "title": "We help you read with clarity",
+        "subtitle": "NewsFlow is built for individuals who want trustworthy, focused news without the noise."
+      },
+      "mission": {
+        "title": "Our mission",
+        "body": "Make daily news simpler: clear summaries, honest sources, and time back for you."
+      },
+      "story": {
+        "title": "Our story",
+        "body": "NewsFlow started as a personal tool to manage too many feeds. We built a calmer way to keep up without scrolling for hours."
+      },
+      "values": {
+        "title": "Our values",
+        "items": {
+          "clarity": {
+            "title": "Clarity over volume",
+            "description": "Summaries should save time, not create more noise."
+          },
+          "trust": {
+            "title": "Trust and transparency",
+            "description": "We keep sources visible and let you open the originals."
+          },
+          "privacy": {
+            "title": "Privacy by default",
+            "description": "We avoid invasive tracking and never sell your data."
+          },
+          "craft": {
+            "title": "Careful craft",
+            "description": "Small details make reading feel effortless."
+          }
+        }
+      },
+      "trust": {
+        "title": "Privacy & trust",
+        "body": "We don’t sell data. We limit tracking to what’s essential for the product."
+      },
+      "finalCta": {
+        "title": "Join readers who want less noise",
+        "subtitle": "Start free and build your personal feed.",
+        "cta": "Start free"
+      }
+    },
     "pricing": {
       "badge": "Pricing",
       "title": "Choose Your Growth Plan",

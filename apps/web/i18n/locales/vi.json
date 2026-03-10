@@ -289,6 +289,50 @@
         "cta": "Bắt đầu miễn phí"
       }
     },
+    "about": {
+      "hero": {
+        "title": "Giúp bạn đọc rõ ràng hơn",
+        "subtitle": "NewsFlow dành cho người muốn tin tức đáng tin cậy và tập trung, không bị nhiễu."
+      },
+      "mission": {
+        "title": "Sứ mệnh",
+        "body": "Đơn giản hóa việc đọc tin hằng ngày: tóm tắt rõ ràng, nguồn minh bạch, trả lại thời gian cho bạn."
+      },
+      "story": {
+        "title": "Câu chuyện",
+        "body": "NewsFlow bắt đầu từ nhu cầu cá nhân khi có quá nhiều feed. Chúng tôi tạo cách cập nhật bình tĩnh hơn mà không phải cuộn hàng giờ."
+      },
+      "values": {
+        "title": "Giá trị cốt lõi",
+        "items": {
+          "clarity": {
+            "title": "Ưu tiên sự rõ ràng",
+            "description": "Tóm tắt phải tiết kiệm thời gian, không tạo thêm nhiễu."
+          },
+          "trust": {
+            "title": "Tin cậy và minh bạch",
+            "description": "Luôn hiển thị nguồn và cho bạn mở bài gốc."
+          },
+          "privacy": {
+            "title": "Riêng tư mặc định",
+            "description": "Hạn chế tracking và không bán dữ liệu."
+          },
+          "craft": {
+            "title": "Chăm chút trải nghiệm",
+            "description": "Tiểu tiết tốt giúp việc đọc nhẹ nhàng."
+          }
+        }
+      },
+      "trust": {
+        "title": "Riêng tư & tin cậy",
+        "body": "Chúng tôi không bán dữ liệu và chỉ tracking tối thiểu cần thiết."
+      },
+      "finalCta": {
+        "title": "Tham gia cộng đồng đọc ít nhiễu",
+        "subtitle": "Bắt đầu miễn phí và tạo feed cá nhân.",
+        "cta": "Bắt đầu miễn phí"
+      }
+    },
     "pricing": {
       "badge": "Bảng giá",
       "title": "Chọn Gói Phát Triển",

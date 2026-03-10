@@ -289,6 +289,50 @@
         "cta": "免费开始"
       }
     },
+    "about": {
+      "hero": {
+        "title": "让你阅读更清晰",
+        "subtitle": "NewsFlow 面向个人用户，提供可信、专注、没有噪音的新闻体验。"
+      },
+      "mission": {
+        "title": "使命",
+        "body": "让每天的新闻更简单：清晰摘要、可信来源、把时间还给你。"
+      },
+      "story": {
+        "title": "故事",
+        "body": "NewsFlow 起初是为了解决个人过多订阅的问题，我们希望用更平静的方式保持更新。"
+      },
+      "values": {
+        "title": "价值观",
+        "items": {
+          "clarity": {
+            "title": "清晰优先",
+            "description": "摘要应节省时间，而不是增加噪音。"
+          },
+          "trust": {
+            "title": "信任与透明",
+            "description": "始终显示来源，随时可查看原文。"
+          },
+          "privacy": {
+            "title": "默认隐私",
+            "description": "减少追踪，从不出售数据。"
+          },
+          "craft": {
+            "title": "精心打磨",
+            "description": "细节决定阅读体验。"
+          }
+        }
+      },
+      "trust": {
+        "title": "隐私与信任",
+        "body": "我们不出售数据，只保留产品所需的最少追踪。"
+      },
+      "finalCta": {
+        "title": "加入想要更少噪音的读者",
+        "subtitle": "免费开始，打造你的个人订阅流。",
+        "cta": "免费开始"
+      }
+    },
     "pricing": {
       "badge": "定价",
       "title": "选择你的成长方案",
