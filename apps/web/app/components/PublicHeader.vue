@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Languages, Menu, Moon, Sun, SunMoon } from "lucide-vue-next";
+import { Languages, Menu, MonitorCog, Moon, Sun } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
@@ -131,7 +131,7 @@ const handleThemeModeChange = (value: unknown) => {
                 aria-label="Theme mode"
                 title="Theme mode"
               >
-                <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
+                <MonitorCog v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                 <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                 <Moon v-else class="size-4" />
               </Button>
@@ -146,7 +146,7 @@ const handleThemeModeChange = (value: unknown) => {
                   :key="modeOption.value"
                   :value="modeOption.value"
                 >
-                  <SunMoon v-if="modeOption.value === 'system'" class="size-4" />
+                  <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
                   <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
                   <Moon v-else class="size-4" />
                   {{ modeOption.label }}
@@ -214,7 +214,7 @@ const handleThemeModeChange = (value: unknown) => {
                       aria-label="Theme mode"
                       title="Theme mode"
                     >
-                      <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
+                      <MonitorCog v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                       <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                       <Moon v-else class="size-4" />
                     </Button>
@@ -229,7 +229,7 @@ const handleThemeModeChange = (value: unknown) => {
                         :key="modeOption.value"
                         :value="modeOption.value"
                       >
-                        <SunMoon v-if="modeOption.value === 'system'" class="size-4" />
+                        <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
                         <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
                         <Moon v-else class="size-4" />
                         {{ modeOption.label }}
