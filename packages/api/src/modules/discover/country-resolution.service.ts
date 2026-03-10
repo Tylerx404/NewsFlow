@@ -4,11 +4,31 @@ const phoneNumberUtil = PhoneNumberUtil.getInstance();
 
 const ACCEPT_LANGUAGE_LOCALE_PATTERN = /^([a-zA-Z]{2,3})(?:[-_]([a-zA-Z]{2}))?$/;
 const COUNTRY_CODE_PATTERN = /^[A-Z]{2}$/;
+const GLOBAL_COUNTRY_CODE = "GLOBAL";
 
 const IP_LOOKUP_TIMEOUT_MS = 3_000;
 
 export interface CountryFromIpProvider {
   resolve(ipAddress: string): Promise<string | null>;
+}
+
+export type CountryResolutionSource =
+  | "PHONE"
+  | "IP"
+  | "ACCEPT_LANGUAGE"
+  | "DEFAULT";
+
+export interface ResolveUserCountryInput {
+  phoneNumber?: string | null;
+  ipAddress?: string | null;
+  acceptLanguageHeader?: string | null;
+  defaultCountryCode?: string;
+  ipProvider?: CountryFromIpProvider;
+}
+
+export interface ResolvedUserCountry {
+  countryCode: string;
+  source: CountryResolutionSource;
 }
 
 class IpApiCountryProvider implements CountryFromIpProvider {
@@ -166,4 +186,56 @@ export async function resolveCountryFromIp(
   }
 
   return provider.resolve(normalizedIp);
+}
+
+function normalizeDefaultCountryCode(value: string | null | undefined): string {
+  if (typeof value !== "string") {
+    return GLOBAL_COUNTRY_CODE;
+  }
+
+  const normalized = value.trim().toUpperCase();
+
+  if (normalized === GLOBAL_COUNTRY_CODE || COUNTRY_CODE_PATTERN.test(normalized)) {
+    return normalized;
+  }
+
+  return GLOBAL_COUNTRY_CODE;
+}
+
+export async function resolveUserCountry(
+  input: ResolveUserCountryInput
+): Promise<ResolvedUserCountry> {
+  const countryFromPhone = resolveCountryFromPhone(input.phoneNumber);
+
+  if (countryFromPhone) {
+    return {
+      countryCode: countryFromPhone,
+      source: "PHONE",
+    };
+  }
+
+  const countryFromIp = await resolveCountryFromIp(input.ipAddress, input.ipProvider);
+
+  if (countryFromIp) {
+    return {
+      countryCode: countryFromIp,
+      source: "IP",
+    };
+  }
+
+  const countryFromAcceptLanguage = resolveCountryFromAcceptLanguage(
+    input.acceptLanguageHeader
+  );
+
+  if (countryFromAcceptLanguage) {
+    return {
+      countryCode: countryFromAcceptLanguage,
+      source: "ACCEPT_LANGUAGE",
+    };
+  }
+
+  return {
+    countryCode: normalizeDefaultCountryCode(input.defaultCountryCode),
+    source: "DEFAULT",
+  };
 }

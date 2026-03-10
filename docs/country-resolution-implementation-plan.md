@@ -74,12 +74,12 @@ Commit message de xuat:
 - `feat(country): add Accept-Language country fallback`
 
 ## Part 5 - Orchestration (Priority Chain)
-- [ ] Them ham trung tam `resolveUserCountry(context)` theo dung thu tu:
+- [x] Them ham trung tam `resolveUserCountry(context)` theo dung thu tu:
   1) phone
   2) ip
   3) accept-language
   4) default `GLOBAL`
-- [ ] Tra ve ca `countryCode` va `source`.
+- [x] Tra ve ca `countryCode` va `source`.
 - [ ] Ghi vao DB khi login/mo app (chi update neu thay doi hoac chua co).
 
 Acceptance:
