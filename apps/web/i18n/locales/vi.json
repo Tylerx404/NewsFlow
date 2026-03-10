@@ -248,6 +248,47 @@
         "cta": "Đăng ký ngay"
       }
     },
+    "features": {
+      "hero": {
+        "title": "Mọi thứ bạn cần để đọc thông minh hơn",
+        "subtitle": "NewsFlow biến feed nhiễu thành bản tóm tắt ưu tiên rõ ràng để bạn cập nhật trong vài phút.",
+        "cta": "Bắt đầu miễn phí"
+      },
+      "grid": {
+        "title": "Tính năng giúp bạn tập trung",
+        "items": {
+          "personalized": {
+            "title": "Cá nhân hóa theo sở thích",
+            "description": "Theo dõi chủ đề bạn quan tâm và bỏ qua phần còn lại."
+          },
+          "summaries": {
+            "title": "Tóm tắt rõ, gọn",
+            "description": "Nắm ý chính nhanh với điểm nhấn nhất quán."
+          },
+          "priority": {
+            "title": "Đọc theo ưu tiên",
+            "description": "Sắp xếp theo độ khẩn và liên quan."
+          },
+          "openRss": {
+            "title": "RSS mở, không khóa",
+            "description": "Dùng nguồn bạn đã tin tưởng."
+          },
+          "privacy": {
+            "title": "Quyền riêng tư là ưu tiên",
+            "description": "Dữ liệu thuộc về bạn. Không quảng cáo, không bán."
+          },
+          "speed": {
+            "title": "Nhanh và nhẹ",
+            "description": "Tải nhanh trên mọi thiết bị."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Sẵn sàng đọc ít nhiễu hơn?",
+        "subtitle": "Xây feed của bạn và bắt đầu trong vài phút.",
+        "cta": "Bắt đầu miễn phí"
+      }
+    },
     "pricing": {
       "badge": "Bảng giá",
       "title": "Chọn Gói Phát Triển",

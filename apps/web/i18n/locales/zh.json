@@ -248,6 +248,47 @@
         "cta": "立即注册"
       }
     },
+    "features": {
+      "hero": {
+        "title": "用更聪明的方式阅读",
+        "subtitle": "NewsFlow 把嘈杂的订阅变成清晰的优先级摘要，让你几分钟内掌握重点。",
+        "cta": "免费开始"
+      },
+      "grid": {
+        "title": "专注阅读的功能",
+        "items": {
+          "personalized": {
+            "title": "按兴趣个性化",
+            "description": "只关注你在意的主题，其余自动淡出。"
+          },
+          "summaries": {
+            "title": "清晰精炼的摘要",
+            "description": "用一致的重点快速获取关键信息。"
+          },
+          "priority": {
+            "title": "按优先级阅读",
+            "description": "根据紧急度和相关度排序。"
+          },
+          "openRss": {
+            "title": "开放 RSS，不锁定",
+            "description": "继续使用你信任的来源。"
+          },
+          "privacy": {
+            "title": "隐私优先",
+            "description": "数据属于你，无广告、不出售。"
+          },
+          "speed": {
+            "title": "快速轻量",
+            "description": "任何设备上都能迅速加载。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "准备好减少噪音了吗？",
+        "subtitle": "创建你的订阅流，几分钟即可开始。",
+        "cta": "免费开始"
+      }
+    },
     "pricing": {
       "badge": "定价",
       "title": "选择你的成长方案",

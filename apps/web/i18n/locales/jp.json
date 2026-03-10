@@ -248,6 +248,47 @@
         "cta": "今すぐ登録"
       }
     },
+    "features": {
+      "hero": {
+        "title": "賢く読むための機能をすべて",
+        "subtitle": "NewsFlow が雑多なフィードを優先度の高い要約に変え、数分で把握できます。",
+        "cta": "無料で始める"
+      },
+      "grid": {
+        "title": "集中できる機能",
+        "items": {
+          "personalized": {
+            "title": "興味に合わせて最適化",
+            "description": "関心のあるトピックだけを追えます。"
+          },
+          "summaries": {
+            "title": "わかりやすい要約",
+            "description": "一貫したハイライトで重要点を素早く把握。"
+          },
+          "priority": {
+            "title": "優先度で読む",
+            "description": "重要度と関連度で整理。"
+          },
+          "openRss": {
+            "title": "オープンRSS、ロックインなし",
+            "description": "信頼できるソースをそのまま使えます。"
+          },
+          "privacy": {
+            "title": "プライバシー重視",
+            "description": "データはあなたのもの。広告・販売なし。"
+          },
+          "speed": {
+            "title": "軽快で高速",
+            "description": "どのデバイスでも素早く表示。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "ノイズを減らして読み始めませんか？",
+        "subtitle": "自分のフィードを作り、数分で開始。",
+        "cta": "無料で始める"
+      }
+    },
     "pricing": {
       "badge": "料金",
       "title": "成長プランを選択",

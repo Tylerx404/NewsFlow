@@ -248,6 +248,47 @@
         "cta": "Sign up now"
       }
     },
+    "features": {
+      "hero": {
+        "title": "Everything you need to read smarter",
+        "subtitle": "NewsFlow turns noisy feeds into clear, prioritized summaries so you can stay informed in minutes.",
+        "cta": "Start free"
+      },
+      "grid": {
+        "title": "Features built for focus",
+        "items": {
+          "personalized": {
+            "title": "Personalized by your interests",
+            "description": "Follow the topics you care about and skip the rest."
+          },
+          "summaries": {
+            "title": "Clear, compact summaries",
+            "description": "Get the key points fast with consistent highlights."
+          },
+          "priority": {
+            "title": "Priority reading",
+            "description": "Sort by urgency and relevance."
+          },
+          "openRss": {
+            "title": "Open RSS, no lock-in",
+            "description": "Use the sources you already trust."
+          },
+          "privacy": {
+            "title": "Privacy-first by design",
+            "description": "Your data stays yours. No ads, no selling."
+          },
+          "speed": {
+            "title": "Fast, lightweight",
+            "description": "Loads quickly on any device."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Ready to read with less noise?",
+        "subtitle": "Build your feed and start in minutes.",
+        "cta": "Start free"
+      }
+    },
     "pricing": {
       "badge": "Pricing",
       "title": "Choose Your Growth Plan",

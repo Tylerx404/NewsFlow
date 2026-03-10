@@ -248,6 +248,47 @@
         "cta": "지금 가입하기"
       }
     },
+    "features": {
+      "hero": {
+        "title": "더 똑똑하게 읽기 위한 모든 것",
+        "subtitle": "NewsFlow는 복잡한 피드를 우선순위 요약으로 바꿔 몇 분 안에 핵심을 파악하게 합니다.",
+        "cta": "무료로 시작"
+      },
+      "grid": {
+        "title": "집중을 위한 기능",
+        "items": {
+          "personalized": {
+            "title": "관심사 맞춤화",
+            "description": "관심 있는 주제만 따라갑니다."
+          },
+          "summaries": {
+            "title": "명확하고 간결한 요약",
+            "description": "일관된 하이라이트로 핵심을 빠르게 파악합니다."
+          },
+          "priority": {
+            "title": "우선순위로 읽기",
+            "description": "긴급도와 관련도로 정렬합니다."
+          },
+          "openRss": {
+            "title": "오픈 RSS, 락인 없음",
+            "description": "신뢰하는 소스를 그대로 사용합니다."
+          },
+          "privacy": {
+            "title": "프라이버시 우선",
+            "description": "데이터는 당신의 것. 광고/판매 없음."
+          },
+          "speed": {
+            "title": "빠르고 가벼움",
+            "description": "어떤 기기에서도 빠르게 로드됩니다."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "노이즈를 줄이고 시작할까요?",
+        "subtitle": "나만의 피드를 만들고 몇 분 안에 시작하세요.",
+        "cta": "무료로 시작"
+      }
+    },
     "pricing": {
       "badge": "요금제",
       "title": "성장 플랜을 선택하세요",
