@@ -27,6 +27,7 @@ const MIN_SAMPLE_LENGTH = 40;
 const DEFAULT_MIN_CONFIDENCE = 0.85;
 const VI_MIN_CONFIDENCE = 0.7;
 const MIN_CONFIDENCE_GAP = 0.05;
+const VI_MIN_CONFIDENCE_GAP = 0.02;
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ");
@@ -117,7 +118,9 @@ export function detectFeedLanguage(
 
   const threshold = language === "vi" ? VI_MIN_CONFIDENCE : DEFAULT_MIN_CONFIDENCE;
 
-  if (confidence < threshold || confidenceGap < MIN_CONFIDENCE_GAP) {
+  const confidenceGapThreshold = language === "vi" ? VI_MIN_CONFIDENCE_GAP : MIN_CONFIDENCE_GAP;
+
+  if (confidence < threshold || confidenceGap < confidenceGapThreshold) {
     return null;
   }
 

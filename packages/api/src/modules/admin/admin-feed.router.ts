@@ -4,6 +4,7 @@ import prisma from "@NewsFlow/db";
 import { adminProcedure } from "../../index";
 import {
   adminFeedDetailSchema,
+  adminFeedInferenceMetricsSchema,
   adminFeedIdSchema,
   adminFeedListOutputSchema,
   listAdminFeedsSchema,
@@ -11,14 +12,17 @@ import {
   retryAdminArticleExtractionSchema,
   retryAdminFeedExtractionOutputSchema,
   retryAdminFeedFetchOutputSchema,
+  updateAdminFeedInferenceCountrySchema,
   updateAdminFeedEnabledSchema,
 } from "./admin-feed.schema";
 import {
+  getAdminFeedInferenceMetrics,
   getAdminFeedDetail,
   listAdminFeeds,
   retryAdminArticleExtraction,
   retryAdminFeedExtraction,
   retryAdminFeedFetch,
+  updateAdminFeedInferenceCountry,
   updateAdminFeedEnabled,
 } from "./admin-feed.service";
 
@@ -61,6 +65,30 @@ export const adminFeedRouter = {
       }
 
       return feed;
+    }),
+
+  updateInferenceCountry: adminProcedure
+    .input(updateAdminFeedInferenceCountrySchema)
+    .output(adminFeedDetailSchema)
+    .handler(async ({ input, context }) => {
+      const feed = await updateAdminFeedInferenceCountry(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
+
+      if (!feed) {
+        throw new ORPCError("NOT_FOUND", {
+          message: "Feed source not found",
+        });
+      }
+
+      return feed;
+    }),
+
+  inferenceMetrics: adminProcedure
+    .output(adminFeedInferenceMetricsSchema)
+    .handler(async () => {
+      return getAdminFeedInferenceMetrics(prisma);
     }),
 
   retryFetch: adminProcedure

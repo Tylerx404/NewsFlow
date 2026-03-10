@@ -98,12 +98,12 @@ Commit goi y:
 - `feat(feed): orchestrate rss country inference pipeline`
 
 ## Part E - Worker Integration
-- [ ] Gan inference vao luc:
+- [x] Gan inference vao luc:
   - add feed moi
   - refresh feed metadata
   - batch reindex
-- [ ] Dat guard de khong lam cham pipeline fetch article.
-- [ ] Retry nhe neu loi parse XML/noi dung.
+- [x] Dat guard de khong lam cham pipeline fetch article.
+- [x] Retry nhe neu loi parse XML/noi dung.
 
 Acceptance:
 - Khong block job fetch chinh.
@@ -113,11 +113,11 @@ Commit goi y:
 - `feat(worker): integrate feed country inference into refresh jobs`
 
 ## Part F - Admin Override
-- [ ] Trong admin feed detail, cho phep set manual country.
-- [ ] Khi manual override:
+- [x] Trong admin feed detail, cho phep set manual country.
+- [x] Khi manual override:
   - `inferenceSource = MANUAL`
   - bo qua auto overwrite (hoac overwrite co flag force)
-- [ ] Hien language/country inferred de admin review.
+- [x] Hien language/country inferred de admin review.
 
 Acceptance:
 - Admin co the chinh tay khi heuristic sai.
@@ -132,7 +132,7 @@ Commit goi y:
 - [x] Sap xep uu tien:
   - exact country > global
   - trending > fresh > random diversify
-- [ ] Cache theo country:
+- [x] Cache theo country:
   - key: `discover:feeds:{country}`
   - TTL 30-60 phut (configurable theo country)
 
@@ -144,14 +144,14 @@ Commit goi y:
 - `feat(discover): use inferred feed country with global fallback`
 
 ## Part H - Quality & Monitoring
-- [ ] Them dashboard metric:
+- [x] Them dashboard metric:
   - `% feed inferred thanh cong`
   - `% feed GLOBAL`
   - `% manual override`
-- [ ] Log ngan gon khi infer:
+- [x] Log ngan gon khi infer:
   - feedId, language, country, confidence, source
-- [ ] Khong log full content feed.
-- [ ] Track rieng metric feed `en` tu domain `.vn` de xu ly o phase tiep theo.
+- [x] Khong log full content feed.
+- [x] Track rieng metric feed `en` tu domain `.vn` de xu ly o phase tiep theo.
 
 Acceptance:
 - Co so lieu de tune mapping va confidence threshold.
@@ -160,9 +160,9 @@ Commit goi y:
 - `chore(feed): add inference metrics and safe logs`
 
 ## Part I - Test Plan
-- [ ] Unit test detect language voi bo sample:
+- [x] Unit test detect language voi bo sample:
   - vi, en, fr, de, th, id
-- [ ] Unit test mapping language->country.
+- [x] Unit test mapping language->country.
 - [ ] Integration test pipeline infer + persist.
 - [ ] Regression test Discover fallback GLOBAL.
 

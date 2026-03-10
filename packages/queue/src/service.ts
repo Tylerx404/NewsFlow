@@ -110,6 +110,69 @@ const createArticleKey = (item: ParsedRssItem) => {
   return createHash("sha256").update(`title:${title}|pubDate:${pubDate}`).digest("hex");
 };
 
+const INFERENCE_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000;
+const GLOBAL_LANGUAGE_SET = new Set(["en", "es", "pt", "ar"]);
+const LANGUAGE_COUNTRY_MAP: Record<string, string> = {
+  vi: "VN",
+  th: "TH",
+  id: "ID",
+  fr: "FR",
+  de: "DE",
+  es: "ES",
+};
+
+function normalizeLanguageCode(language: string | null | undefined) {
+  if (!language) {
+    return null;
+  }
+
+  const normalized = language.trim().toLowerCase();
+
+  if (!normalized) {
+    return null;
+  }
+
+  return normalized.split(/[-_]/)[0] ?? null;
+}
+
+function mapLanguageToCountry(language: string) {
+  if (GLOBAL_LANGUAGE_SET.has(language)) {
+    return "GLOBAL";
+  }
+
+  return LANGUAGE_COUNTRY_MAP[language] ?? "GLOBAL";
+}
+
+function shouldRefreshInference(inferredAt: Date | null) {
+  if (!inferredAt) {
+    return true;
+  }
+
+  return Date.now() - inferredAt.getTime() >= INFERENCE_REFRESH_INTERVAL_MS;
+}
+
+function buildInferenceUpdate(feedLanguage: string | null | undefined) {
+  const normalizedLanguage = normalizeLanguageCode(feedLanguage);
+
+  if (!normalizedLanguage) {
+    return {
+      inferredLanguage: null,
+      inferredCountryCode: "GLOBAL",
+      inferenceConfidence: null,
+      inferenceSource: "DEFAULT" as const,
+      inferredAt: new Date(),
+    };
+  }
+
+  return {
+    inferredLanguage: normalizedLanguage,
+    inferredCountryCode: mapLanguageToCountry(normalizedLanguage),
+    inferenceConfidence: 0.5,
+    inferenceSource: "LANG_DETECTION" as const,
+    inferredAt: new Date(),
+  };
+}
+
 // Worker processors
 export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) => {
   const { feedSourceId, force = false } = job.data;
@@ -129,19 +192,31 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
 
     const feedData = await rssParser.parseURL(feedSource.url);
 
+    const updateData: Prisma.FeedSourceUpdateInput = {
+      title: feedData.title || feedSource.title,
+      description: feedData.description || feedSource.description,
+      siteUrl: feedData.link || feedSource.siteUrl,
+      language: feedData.language || feedSource.language,
+      iconUrl: feedData.image?.url || feedSource.iconUrl,
+      lastFetched: new Date(),
+      lastError: null,
+      errorCount: 0,
+      nextFetchAt: new Date(Date.now() + 30 * 60 * 1000),
+    };
+
+    if (feedSource.inferenceSource !== "MANUAL" && shouldRefreshInference(feedSource.inferredAt)) {
+      try {
+        Object.assign(updateData, buildInferenceUpdate(feedData.language || feedSource.language));
+      } catch (inferenceError) {
+        const inferenceMessage =
+          inferenceError instanceof Error ? inferenceError.message : "Unknown inference error";
+        console.warn(`Feed inference failed for ${feedSourceId}: ${inferenceMessage}`);
+      }
+    }
+
     await db.feedSource.update({
       where: { id: feedSourceId },
-      data: {
-        title: feedData.title || feedSource.title,
-        description: feedData.description || feedSource.description,
-        siteUrl: feedData.link || feedSource.siteUrl,
-        language: feedData.language || feedSource.language,
-        iconUrl: feedData.image?.url || feedSource.iconUrl,
-        lastFetched: new Date(),
-        lastError: null,
-        errorCount: 0,
-        nextFetchAt: new Date(Date.now() + 30 * 60 * 1000),
-      },
+      data: updateData,
     });
 
     const existingKeys = new Set(
