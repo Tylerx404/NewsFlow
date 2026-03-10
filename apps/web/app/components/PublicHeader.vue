@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Menu } from "lucide-vue-next";
+import { Languages, Menu, MonitorCog, Moon, Sun } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
@@ -17,11 +17,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { isAppLocale } from "@/lib/i18n";
+import { useReadingPreferences } from "@/composables/use-reading-preferences";
+import { AppLocale, isAppLocale } from "@/lib/i18n";
+import { getThemeModeOptions, isThemeMode } from "@/lib/reader-preferences";
 
 const { t, locale, locales, setLocale } = useI18n();
 defineOptions({ name: "PublicHeader" });
 const mobileOpen = ref(false);
+const readingPreferences = useReadingPreferences();
 
 const navItems = [
   { labelKey: "public.nav.home", href: "/" },
@@ -30,23 +33,48 @@ const navItems = [
   { labelKey: "public.nav.about", href: "/about" },
 ];
 
+const languageCodes: Record<AppLocale, string> = {
+  en: "US",
+  vi: "VN",
+  zh: "CN",
+  jp: "JP",
+  kr: "KR",
+};
+
 const languageOptions = computed(() =>
   locales.value.map((item) => {
     const code = typeof item === "string" ? item : item.code;
-    return { code, label: t(`locale.options.${code}`) };
+    if (!isAppLocale(code)) {
+      return { code, label: t("locale.label"), short: "--" };
+    }
+    return { code, label: t(`locale.options.${code}`), short: languageCodes[code] };
   })
 );
 
-const currentLanguageLabel = computed(
+const currentLanguageShort = computed(() => {
+  if (!isAppLocale(locale.value)) return "--";
+  return languageCodes[locale.value];
+});
+
+const localizedThemeModeOptions = computed(() => getThemeModeOptions(t));
+
+const currentThemeModeLabel = computed(
   () =>
-    languageOptions.value.find((item) => item.code === locale.value)?.label ??
-    t("locale.label")
+    localizedThemeModeOptions.value.find(
+      (item) => item.value === readingPreferences.value.themeMode
+    )?.label ?? t("settings.appearance.page.fields.themeMode")
 );
 
 const handleLanguageChange = async (value: unknown) => {
   if (typeof value !== "string") return;
   if (!isAppLocale(value)) return;
   await setLocale(value);
+};
+
+const handleThemeModeChange = (value: unknown) => {
+  if (typeof value !== "string") return;
+  if (!isThemeMode(value)) return;
+  readingPreferences.value.themeMode = value;
 };
 </script>
 
@@ -74,11 +102,18 @@ const handleLanguageChange = async (value: unknown) => {
         <div class="flex items-center gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
-              <Button variant="outline" size="sm" class="hidden md:inline-flex">
-                {{ currentLanguageLabel }}
+              <Button
+                variant="outline"
+                size="sm"
+                class="hidden items-center gap-2 md:inline-flex"
+              >
+                <Languages class="size-4" />
+                <span class="text-xs font-semibold tracking-wide">
+                  {{ currentLanguageShort }}
+                </span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" class="min-w-40 rounded-xl">
+            <DropdownMenuContent align="end" class="min-w-44 rounded-xl">
               <DropdownMenuRadioGroup
                 :model-value="locale"
                 @update:model-value="handleLanguageChange"
@@ -88,7 +123,40 @@ const handleLanguageChange = async (value: unknown) => {
                   :key="option.code"
                   :value="option.code"
                 >
+                  <span class="inline-flex w-8 text-xs font-semibold">{{ option.short }}</span>
                   {{ option.label }}
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+                class="hidden items-center gap-2 md:inline-flex"
+              >
+                <MonitorCog v-if="readingPreferences.themeMode === 'system'" class="size-4" />
+                <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
+                <Moon v-else class="size-4" />
+                <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" class="min-w-48 rounded-xl">
+              <DropdownMenuRadioGroup
+                :model-value="readingPreferences.themeMode"
+                @update:model-value="handleThemeModeChange"
+              >
+                <DropdownMenuRadioItem
+                  v-for="modeOption in localizedThemeModeOptions"
+                  :key="modeOption.value"
+                  :value="modeOption.value"
+                >
+                  <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
+                  <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
+                  <Moon v-else class="size-4" />
+                  {{ modeOption.label }}
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
@@ -122,11 +190,14 @@ const handleLanguageChange = async (value: unknown) => {
                 </NuxtLink>
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
-                    <Button variant="outline" size="sm" class="justify-start">
-                      {{ currentLanguageLabel }}
+                    <Button variant="outline" size="sm" class="justify-start gap-2">
+                      <Languages class="size-4" />
+                      <span class="text-xs font-semibold tracking-wide">
+                        {{ currentLanguageShort }}
+                      </span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" class="min-w-40 rounded-xl">
+                  <DropdownMenuContent align="start" class="min-w-44 rounded-xl">
                     <DropdownMenuRadioGroup
                       :model-value="locale"
                       @update:model-value="handleLanguageChange"
@@ -136,7 +207,40 @@ const handleLanguageChange = async (value: unknown) => {
                         :key="option.code"
                         :value="option.code"
                       >
+                        <span class="inline-flex w-8 text-xs font-semibold">
+                          {{ option.short }}
+                        </span>
                         {{ option.label }}
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger as-child>
+                    <Button variant="outline" size="sm" class="justify-start gap-2">
+                      <MonitorCog
+                        v-if="readingPreferences.themeMode === 'system'"
+                        class="size-4"
+                      />
+                      <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
+                      <Moon v-else class="size-4" />
+                      <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" class="min-w-48 rounded-xl">
+                    <DropdownMenuRadioGroup
+                      :model-value="readingPreferences.themeMode"
+                      @update:model-value="handleThemeModeChange"
+                    >
+                      <DropdownMenuRadioItem
+                        v-for="modeOption in localizedThemeModeOptions"
+                        :key="modeOption.value"
+                        :value="modeOption.value"
+                      >
+                        <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
+                        <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
+                        <Moon v-else class="size-4" />
+                        {{ modeOption.label }}
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
