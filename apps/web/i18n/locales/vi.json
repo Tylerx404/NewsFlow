@@ -147,7 +147,93 @@
       "subtitle": "Trình đọc RSS cá nhân hóa bằng AI.",
       "login": "Đăng nhập",
       "signUp": "Đăng ký",
-      "pricing": "Bảng giá"
+      "pricing": "Bảng giá",
+      "hero": {
+        "title": "Đọc đúng tin bạn cần trong vài phút",
+        "subtitle": "NewsFlow cá nhân hóa RSS và tóm tắt phần quan trọng để bạn nắm ý nhanh, không bị nhiễu.",
+        "ctaPrimary": "Đăng ký ngay",
+        "ctaSecondary": "Xem bản demo"
+      },
+      "trust": {
+        "privacy": "Tôn trọng quyền riêng tư",
+        "noSpam": "Không spam",
+        "rssOpen": "RSS mở"
+      },
+      "benefits": {
+        "title": "Vì sao người đọc chọn NewsFlow",
+        "items": {
+          "personalized": {
+            "title": "Cá nhân hóa theo sở thích",
+            "description": "Theo dõi đúng chủ đề bạn quan tâm và bỏ qua phần còn lại."
+          },
+          "clear": {
+            "title": "Tóm tắt rõ, gọn",
+            "description": "Nắm ý chính nhanh với điểm nhấn dễ đọc."
+          },
+          "focus": {
+            "title": "Giảm nhiễu, tăng tín hiệu",
+            "description": "Cắt bớt tiêu đề gây xao nhãng, tập trung vào điều quan trọng."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "Hoạt động như thế nào",
+        "steps": {
+          "add": {
+            "title": "Thêm nguồn của bạn",
+            "description": "Kết nối RSS từ các nguồn bạn tin tưởng."
+          },
+          "summarize": {
+            "title": "AI tóm tắt",
+            "description": "Chúng tôi rút ra ý chính theo cấu trúc nhất quán."
+          },
+          "read": {
+            "title": "Đọc theo ưu tiên",
+            "description": "Lướt theo chủ đề, mức độ quan tâm và độ khẩn."
+          }
+        }
+      },
+      "demo": {
+        "title": "Xem nhanh bản tóm tắt",
+        "subtitle": "Cảm nhận cách đọc gọn gàng, rõ ràng.",
+        "cardTitle": "Bản tin ngày: AI & Công nghệ",
+        "cardSource": "Từ 8 nguồn",
+        "bullets": {
+          "one": "Dòng vốn đầu tư tuần này chậm lại nhẹ.",
+          "two": "Hai mô hình mã nguồn mở đạt top benchmark mới.",
+          "three": "Cơ quan quản lý siết yêu cầu minh bạch."
+        }
+      },
+      "useCases": {
+        "title": "Hợp với nhịp sống của bạn",
+        "items": {
+          "morning": "Bản tin sáng trong 5 phút",
+          "industry": "Theo dõi ngành mà không bị quá tải",
+          "evening": "Tổng hợp cuối ngày nhanh gọn"
+        }
+      },
+      "faq": {
+        "title": "Câu hỏi thường gặp",
+        "items": {
+          "rss": {
+            "q": "Cần RSS mới dùng được NewsFlow?",
+            "a": "RSS là tối ưu nhất, nhưng bạn có thể bắt đầu từ nguồn gợi ý."
+          },
+          "accuracy": {
+            "q": "Tóm tắt có chính xác không?",
+            "a": "Chúng tôi tập trung ý chính và luôn cho bạn mở bài gốc."
+          },
+          "privacy": {
+            "q": "Dữ liệu của tôi có an toàn?",
+            "a": "Chúng tôi không bán dữ liệu và hạn chế tracking tối đa."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Bắt đầu đọc thông minh hơn hôm nay",
+        "subtitle": "Xây feed của bạn, tiết kiệm thời gian, giữ tập trung.",
+        "cta": "Đăng ký ngay"
+      }
     },
     "pricing": {
       "badge": "Bảng giá",
