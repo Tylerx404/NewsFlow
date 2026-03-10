@@ -13,6 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+definePageMeta({ layout: "public" });
+
 type BillingInterval = "monthly" | "yearly";
 type PlanKey = "basic" | "pro" | "max";
 

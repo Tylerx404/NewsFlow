@@ -2,6 +2,8 @@
 const { $authClient } = useNuxtApp();
 const { t } = useI18n();
 
+definePageMeta({ layout: "public" });
+
 const benefitItems = [
   {
     titleKey: "public.home.benefits.items.personalized.title",
