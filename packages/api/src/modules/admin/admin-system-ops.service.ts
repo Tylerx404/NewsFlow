@@ -1,6 +1,11 @@
 import { ORPCError } from "@orpc/server";
 
 import {
+  buildOAuthConfigUpdateData,
+  getOAuthConfigRecord,
+  maskOAuthConfigRecord,
+} from "@NewsFlow/auth/oauth-config";
+import {
   buildStripeConfigUpdateData,
   getStripeConfigRecord,
   maskStripeConfigRecord,
@@ -25,6 +30,7 @@ import type {
   RetryAdminQueueJobInput,
   TriggerAdminContentExtractInput,
   TriggerAdminFeedFetchInput,
+  UpdateAdminOAuthConfigInput,
   UpdateAdminStripeConfigInput,
 } from "./admin-system-ops.schema";
 
@@ -288,6 +294,13 @@ export async function getAdminStripeConfig(
   return maskStripeConfigRecord(record);
 }
 
+export async function getAdminOAuthConfig(
+  db: Pick<PrismaClient, "authConfig">
+) {
+  const record = await getOAuthConfigRecord(db);
+  return maskOAuthConfigRecord(record);
+}
+
 interface UpdateAdminStripeConfigParams extends UpdateAdminStripeConfigInput {
   adminUserId: string;
 }
@@ -355,6 +368,88 @@ export async function updateAdminStripeConfig(
   });
 
   return getAdminStripeConfig(db);
+}
+
+interface UpdateAdminOAuthConfigParams extends UpdateAdminOAuthConfigInput {
+  adminUserId: string;
+}
+
+export async function updateAdminOAuthConfig(
+  db: PrismaClient,
+  input: UpdateAdminOAuthConfigParams
+) {
+  const existing = await getOAuthConfigRecord(db);
+  const nextData = await buildOAuthConfigUpdateData({
+    ...input,
+    updatedByUserId: input.adminUserId,
+  });
+
+  const changedFields = Object.keys(nextData).filter(
+    (field) => field !== "updatedByUserId" && field !== "updatedAt"
+  );
+  const nextGoogleClientId =
+    typeof nextData.googleClientId === "string" || nextData.googleClientId === null
+      ? nextData.googleClientId
+      : existing?.googleClientId ?? null;
+  const nextAppleClientId =
+    typeof nextData.appleClientId === "string" || nextData.appleClientId === null
+      ? nextData.appleClientId
+      : existing?.appleClientId ?? null;
+  const nextAppleAppBundleIdentifier =
+    typeof nextData.appleAppBundleIdentifier === "string"
+      || nextData.appleAppBundleIdentifier === null
+      ? nextData.appleAppBundleIdentifier
+      : existing?.appleAppBundleIdentifier ?? null;
+  const nextGoogleSecretState =
+    typeof nextData.googleClientSecretEncrypted === "string"
+      ? "present"
+      : existing?.googleClientSecretEncrypted
+        ? "present"
+        : "missing";
+  const nextAppleSecretState =
+    typeof nextData.appleClientSecretEncrypted === "string"
+      ? "present"
+      : existing?.appleClientSecretEncrypted
+        ? "present"
+        : "missing";
+
+  await db.$transaction(async (tx) => {
+    await tx.authConfig.upsert({
+      where: { id: "default" },
+      update: nextData,
+      create: {
+        id: "default",
+        ...nextData,
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "SYSTEM_OPS_OAUTH_CONFIG_UPDATED",
+      targetType: "SYSTEM_CONFIG",
+      targetId: "oauth",
+      metadata: {
+        previous: {
+          changedFields: changedFields.join(",") || undefined,
+          googleClientId: existing?.googleClientId ? "present" : "missing",
+          googleClientSecret: existing?.googleClientSecretEncrypted ? "present" : "missing",
+          appleClientId: existing?.appleClientId ? "present" : "missing",
+          appleClientSecret: existing?.appleClientSecretEncrypted ? "present" : "missing",
+          appleAppBundleIdentifier: existing?.appleAppBundleIdentifier ? "present" : "missing",
+        },
+        next: {
+          changedFields: changedFields.join(",") || undefined,
+          googleClientId: nextGoogleClientId ? "present" : "missing",
+          googleClientSecret: nextGoogleSecretState,
+          appleClientId: nextAppleClientId ? "present" : "missing",
+          appleClientSecret: nextAppleSecretState,
+          appleAppBundleIdentifier: nextAppleAppBundleIdentifier ? "present" : "missing",
+        },
+      },
+    });
+  });
+
+  return getAdminOAuthConfig(db);
 }
 
 export async function listAdminQueueJobs(
