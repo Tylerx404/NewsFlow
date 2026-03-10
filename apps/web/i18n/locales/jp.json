@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "ホーム",
+      "features": "機能",
+      "pricing": "料金",
+      "about": "About",
+      "cta": "無料で始める"
+    },
     "home": {
       "subtitle": "パーソナライズされた AI 駆動 RSS リーダー。",
       "login": "ログイン",

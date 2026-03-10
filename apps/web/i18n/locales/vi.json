@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "Trang chủ",
+      "features": "Tính năng",
+      "pricing": "Bảng giá",
+      "about": "Giới thiệu",
+      "cta": "Bắt đầu miễn phí"
+    },
     "home": {
       "subtitle": "Trình đọc RSS cá nhân hóa bằng AI.",
       "login": "Đăng nhập",

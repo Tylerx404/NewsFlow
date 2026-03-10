@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "홈",
+      "features": "기능",
+      "pricing": "요금제",
+      "about": "소개",
+      "cta": "무료로 시작"
+    },
     "home": {
       "subtitle": "개인화된 AI 기반 RSS 리더입니다.",
       "login": "로그인",
