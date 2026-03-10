@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Languages, Menu, MonitorCog, Moon, Sun } from "lucide-vue-next";
+import { Languages, Menu, Moon, Sun, SunMoon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
@@ -45,9 +45,9 @@ const languageOptions = computed(() =>
   locales.value.map((item) => {
     const code = typeof item === "string" ? item : item.code;
     if (!isAppLocale(code)) {
-      return { code, label: t("locale.label"), short: "--" };
+      return { code, label: t("locale.label") };
     }
-    return { code, label: t(`locale.options.${code}`), short: languageCodes[code] };
+    return { code, label: t(`locale.options.${code}`) };
   })
 );
 
@@ -123,7 +123,6 @@ const handleThemeModeChange = (value: unknown) => {
                   :key="option.code"
                   :value="option.code"
                 >
-                  <span class="inline-flex w-8 text-xs font-semibold">{{ option.short }}</span>
                   {{ option.label }}
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -137,7 +136,7 @@ const handleThemeModeChange = (value: unknown) => {
                 size="sm"
                 class="hidden items-center gap-2 md:inline-flex"
               >
-                <MonitorCog v-if="readingPreferences.themeMode === 'system'" class="size-4" />
+                <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                 <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                 <Moon v-else class="size-4" />
                 <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
@@ -153,7 +152,7 @@ const handleThemeModeChange = (value: unknown) => {
                   :key="modeOption.value"
                   :value="modeOption.value"
                 >
-                  <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
+                  <SunMoon v-if="modeOption.value === 'system'" class="size-4" />
                   <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
                   <Moon v-else class="size-4" />
                   {{ modeOption.label }}
@@ -207,9 +206,6 @@ const handleThemeModeChange = (value: unknown) => {
                         :key="option.code"
                         :value="option.code"
                       >
-                        <span class="inline-flex w-8 text-xs font-semibold">
-                          {{ option.short }}
-                        </span>
                         {{ option.label }}
                       </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
@@ -218,10 +214,7 @@ const handleThemeModeChange = (value: unknown) => {
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
                     <Button variant="outline" size="sm" class="justify-start gap-2">
-                      <MonitorCog
-                        v-if="readingPreferences.themeMode === 'system'"
-                        class="size-4"
-                      />
+                      <SunMoon v-if="readingPreferences.themeMode === 'system'" class="size-4" />
                       <Sun v-else-if="readingPreferences.themeMode === 'light'" class="size-4" />
                       <Moon v-else class="size-4" />
                       <span class="text-xs font-semibold">{{ currentThemeModeLabel }}</span>
@@ -237,7 +230,7 @@ const handleThemeModeChange = (value: unknown) => {
                         :key="modeOption.value"
                         :value="modeOption.value"
                       >
-                        <MonitorCog v-if="modeOption.value === 'system'" class="size-4" />
+                        <SunMoon v-if="modeOption.value === 'system'" class="size-4" />
                         <Sun v-else-if="modeOption.value === 'light'" class="size-4" />
                         <Moon v-else class="size-4" />
                         {{ modeOption.label }}
