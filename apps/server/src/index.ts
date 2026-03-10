@@ -12,6 +12,7 @@ import {
   mapStripeBillingError,
   normalizeStripeBodyUrl,
   restoreSubscriptionForUser,
+  syncStripeSubscriptionsManually,
 } from "@NewsFlow/auth/stripe-billing";
 import prisma from "@NewsFlow/db";
 import { env } from "@NewsFlow/env/server";
@@ -27,7 +28,25 @@ import express from "express";
 const app = express();
 
 const MAX_SESSION_IMAGE_LENGTH = 4_096;
+const STARTUP_STRIPE_SYNC_LIMIT = 1_000;
 const DATA_URL_PATTERN = /^data:([^;]+);base64,(.+)$/;
+
+async function runStartupStripeSync() {
+  try {
+    const result = await syncStripeSubscriptionsManually(prisma, {
+      status: "all",
+      limit: STARTUP_STRIPE_SYNC_LIMIT,
+    });
+
+    console.log("[stripe-sync] Startup sync completed", result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    console.error("[stripe-sync] Startup sync failed", {
+      statusCode: mapped.statusCode,
+      message: mapped.message,
+    });
+  }
+}
 
 function getSessionImageUrl() {
   return `${env.BETTER_AUTH_URL}/api/auth/session-image`;
@@ -37,7 +56,7 @@ function isSessionImageUrl(value: string) {
   return value.startsWith(getSessionImageUrl());
 }
 
-function decodeDataUrl(value: string) {
+function decodeDataUrl(value: string): { mimeType: string; buffer: Buffer } | null {
   const match = value.match(DATA_URL_PATTERN);
 
   if (!match) {
@@ -45,6 +64,10 @@ function decodeDataUrl(value: string) {
   }
 
   const [, mimeType, base64Payload] = match;
+
+  if (!mimeType || !base64Payload) {
+    return null;
+  }
 
   try {
     return {
@@ -247,6 +270,39 @@ app.post("/api/auth/subscription/restore", express.json(), async (req, res) => {
   }
 });
 
+app.post("/api/admin/stripe/manual-sync", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
+
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  if (user.role !== "ADMIN") {
+    res.status(403).json({ message: "Forbidden" });
+    return;
+  }
+
+  const rawLimit = req.body?.limit;
+  const parsedLimit =
+    typeof rawLimit === "number" && Number.isFinite(rawLimit)
+      ? Math.trunc(rawLimit)
+      : null;
+  const limit = parsedLimit && parsedLimit > 0 ? parsedLimit : undefined;
+
+  try {
+    const result = await syncStripeSubscriptionsManually(prisma, {
+      limit,
+      status: "all",
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
+
 app.get("/api/auth/get-session", async (req, res) => {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
@@ -333,4 +389,5 @@ app.get("/", (_req, res) => {
 
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
+  void runStartupStripeSync();
 });

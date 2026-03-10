@@ -1,4 +1,11 @@
-import "@NewsFlow/env/web";
+import { z } from "zod";
+
+const webEnv = z
+  .object({
+    NUXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3001"),
+    NUXT_PUBLIC_SERVER_URL: z.url().default("http://localhost:3000"),
+  })
+  .parse(process.env);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -16,7 +23,7 @@ export default defineNuxtConfig({
     componentDir: "./app/components/ui",
   },
   i18n: {
-    baseUrl: process.env.NUXT_PUBLIC_SITE_URL,
+    baseUrl: webEnv.NUXT_PUBLIC_SITE_URL,
     strategy: "no_prefix",
     defaultLocale: "en",
     langDir: "locales",
@@ -39,7 +46,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      serverUrl: process.env.NUXT_PUBLIC_SERVER_URL,
+      serverUrl: webEnv.NUXT_PUBLIC_SERVER_URL,
     },
   },
 });
