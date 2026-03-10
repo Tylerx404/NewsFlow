@@ -285,4 +285,8 @@
     font-size: 0.84em;
     color: var(--reader-muted-text);
   }
+
+  .landing-title {
+    font-family: var(--reader-font-family);
+  }
 }
