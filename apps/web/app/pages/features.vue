@@ -14,7 +14,7 @@ const featureItems = [
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-6xl px-6 pb-16">
+  <div class="mx-auto w-full max-w-7xl px-6 pb-16">
     <section class="grid gap-8 pt-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
       <div class="space-y-5">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">

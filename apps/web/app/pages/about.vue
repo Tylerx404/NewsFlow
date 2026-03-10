@@ -12,7 +12,7 @@ const valueItems = [
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-6xl px-6 pb-16">
+  <div class="mx-auto w-full max-w-7xl px-6 pb-16">
     <section class="space-y-5 pt-12">
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
         {{ t("app.name") }}

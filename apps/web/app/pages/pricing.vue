@@ -126,7 +126,7 @@ onMounted(async () => {
   <div class="relative min-h-screen overflow-hidden bg-background">
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,hsl(var(--primary)/0.12),transparent_28%),radial-gradient(circle_at_85%_10%,hsl(var(--muted-foreground)/0.08),transparent_24%)]" />
 
-    <div class="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14">
+    <div class="relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 py-14">
       <section class="space-y-6 text-center">
         <Badge variant="outline" class="rounded-full px-4 py-1">
           {{ t("public.pricing.badge") }}
