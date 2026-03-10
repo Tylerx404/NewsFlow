@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "ホーム",
+      "features": "機能",
+      "pricing": "料金",
+      "about": "About",
+      "cta": "無料で始める"
+    },
     "home": {
       "subtitle": "パーソナライズされた AI 駆動 RSS リーダー。",
       "login": "ログイン",
@@ -239,6 +246,91 @@
         "title": "今日から賢く読む",
         "subtitle": "自分専用のフィードを作り、時間を節約し、集中を保つ。",
         "cta": "今すぐ登録"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "賢く読むための機能をすべて",
+        "subtitle": "NewsFlow が雑多なフィードを優先度の高い要約に変え、数分で把握できます。",
+        "cta": "無料で始める"
+      },
+      "grid": {
+        "title": "集中できる機能",
+        "items": {
+          "personalized": {
+            "title": "興味に合わせて最適化",
+            "description": "関心のあるトピックだけを追えます。"
+          },
+          "summaries": {
+            "title": "わかりやすい要約",
+            "description": "一貫したハイライトで重要点を素早く把握。"
+          },
+          "priority": {
+            "title": "優先度で読む",
+            "description": "重要度と関連度で整理。"
+          },
+          "openRss": {
+            "title": "オープンRSS、ロックインなし",
+            "description": "信頼できるソースをそのまま使えます。"
+          },
+          "privacy": {
+            "title": "プライバシー重視",
+            "description": "データはあなたのもの。広告・販売なし。"
+          },
+          "speed": {
+            "title": "軽快で高速",
+            "description": "どのデバイスでも素早く表示。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "ノイズを減らして読み始めませんか？",
+        "subtitle": "自分のフィードを作り、数分で開始。",
+        "cta": "無料で始める"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "読みやすさを届ける",
+        "subtitle": "NewsFlow は個人向けに、信頼できるニュース体験を提供します。"
+      },
+      "mission": {
+        "title": "ミッション",
+        "body": "毎日のニュースをシンプルに。明快な要約、透明なソース、時間を取り戻す。"
+      },
+      "story": {
+        "title": "ストーリー",
+        "body": "NewsFlow は大量のフィードに疲れた個人の課題から生まれました。落ち着いて追える体験を目指しています。"
+      },
+      "values": {
+        "title": "私たちの価値観",
+        "items": {
+          "clarity": {
+            "title": "明快さを優先",
+            "description": "要約は時間を節約し、ノイズを増やさない。"
+          },
+          "trust": {
+            "title": "信頼と透明性",
+            "description": "ソースを明示し、原文へいつでもアクセス。"
+          },
+          "privacy": {
+            "title": "プライバシーが標準",
+            "description": "追跡を最小限にし、データは販売しない。"
+          },
+          "craft": {
+            "title": "丁寧なつくり",
+            "description": "細部が読書体験を支える。"
+          }
+        }
+      },
+      "trust": {
+        "title": "プライバシーと信頼",
+        "body": "データは売らず、必要最小限の計測のみ。"
+      },
+      "finalCta": {
+        "title": "ノイズを減らしたい読者へ",
+        "subtitle": "無料で始めて、自分のフィードを作ろう。",
+        "cta": "無料で始める"
       }
     },
     "pricing": {

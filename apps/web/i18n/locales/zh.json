@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "主页",
+      "features": "功能",
+      "pricing": "定价",
+      "about": "关于",
+      "cta": "免费开始"
+    },
     "home": {
       "subtitle": "个性化 AI 驱动的 RSS 阅读器。",
       "login": "登录",
@@ -239,6 +246,91 @@
         "title": "今天开始更聪明地阅读",
         "subtitle": "构建你的专属信息流，节省时间，保持专注。",
         "cta": "立即注册"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "用更聪明的方式阅读",
+        "subtitle": "NewsFlow 把嘈杂的订阅变成清晰的优先级摘要，让你几分钟内掌握重点。",
+        "cta": "免费开始"
+      },
+      "grid": {
+        "title": "专注阅读的功能",
+        "items": {
+          "personalized": {
+            "title": "按兴趣个性化",
+            "description": "只关注你在意的主题，其余自动淡出。"
+          },
+          "summaries": {
+            "title": "清晰精炼的摘要",
+            "description": "用一致的重点快速获取关键信息。"
+          },
+          "priority": {
+            "title": "按优先级阅读",
+            "description": "根据紧急度和相关度排序。"
+          },
+          "openRss": {
+            "title": "开放 RSS，不锁定",
+            "description": "继续使用你信任的来源。"
+          },
+          "privacy": {
+            "title": "隐私优先",
+            "description": "数据属于你，无广告、不出售。"
+          },
+          "speed": {
+            "title": "快速轻量",
+            "description": "任何设备上都能迅速加载。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "准备好减少噪音了吗？",
+        "subtitle": "创建你的订阅流，几分钟即可开始。",
+        "cta": "免费开始"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "让你阅读更清晰",
+        "subtitle": "NewsFlow 面向个人用户，提供可信、专注、没有噪音的新闻体验。"
+      },
+      "mission": {
+        "title": "使命",
+        "body": "让每天的新闻更简单：清晰摘要、可信来源、把时间还给你。"
+      },
+      "story": {
+        "title": "故事",
+        "body": "NewsFlow 起初是为了解决个人过多订阅的问题，我们希望用更平静的方式保持更新。"
+      },
+      "values": {
+        "title": "价值观",
+        "items": {
+          "clarity": {
+            "title": "清晰优先",
+            "description": "摘要应节省时间，而不是增加噪音。"
+          },
+          "trust": {
+            "title": "信任与透明",
+            "description": "始终显示来源，随时可查看原文。"
+          },
+          "privacy": {
+            "title": "默认隐私",
+            "description": "减少追踪，从不出售数据。"
+          },
+          "craft": {
+            "title": "精心打磨",
+            "description": "细节决定阅读体验。"
+          }
+        }
+      },
+      "trust": {
+        "title": "隐私与信任",
+        "body": "我们不出售数据，只保留产品所需的最少追踪。"
+      },
+      "finalCta": {
+        "title": "加入想要更少噪音的读者",
+        "subtitle": "免费开始，打造你的个人订阅流。",
+        "cta": "免费开始"
       }
     },
     "pricing": {

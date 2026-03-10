@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "Trang chủ",
+      "features": "Tính năng",
+      "pricing": "Bảng giá",
+      "about": "Giới thiệu",
+      "cta": "Bắt đầu miễn phí"
+    },
     "home": {
       "subtitle": "Trình đọc RSS cá nhân hóa bằng AI.",
       "login": "Đăng nhập",
@@ -239,6 +246,91 @@
         "title": "Bắt đầu đọc thông minh hơn hôm nay",
         "subtitle": "Xây feed của bạn, tiết kiệm thời gian, giữ tập trung.",
         "cta": "Đăng ký ngay"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "Mọi thứ bạn cần để đọc thông minh hơn",
+        "subtitle": "NewsFlow biến feed nhiễu thành bản tóm tắt ưu tiên rõ ràng để bạn cập nhật trong vài phút.",
+        "cta": "Bắt đầu miễn phí"
+      },
+      "grid": {
+        "title": "Tính năng giúp bạn tập trung",
+        "items": {
+          "personalized": {
+            "title": "Cá nhân hóa theo sở thích",
+            "description": "Theo dõi chủ đề bạn quan tâm và bỏ qua phần còn lại."
+          },
+          "summaries": {
+            "title": "Tóm tắt rõ, gọn",
+            "description": "Nắm ý chính nhanh với điểm nhấn nhất quán."
+          },
+          "priority": {
+            "title": "Đọc theo ưu tiên",
+            "description": "Sắp xếp theo độ khẩn và liên quan."
+          },
+          "openRss": {
+            "title": "RSS mở, không khóa",
+            "description": "Dùng nguồn bạn đã tin tưởng."
+          },
+          "privacy": {
+            "title": "Quyền riêng tư là ưu tiên",
+            "description": "Dữ liệu thuộc về bạn. Không quảng cáo, không bán."
+          },
+          "speed": {
+            "title": "Nhanh và nhẹ",
+            "description": "Tải nhanh trên mọi thiết bị."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Sẵn sàng đọc ít nhiễu hơn?",
+        "subtitle": "Xây feed của bạn và bắt đầu trong vài phút.",
+        "cta": "Bắt đầu miễn phí"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "Giúp bạn đọc rõ ràng hơn",
+        "subtitle": "NewsFlow dành cho người muốn tin tức đáng tin cậy và tập trung, không bị nhiễu."
+      },
+      "mission": {
+        "title": "Sứ mệnh",
+        "body": "Đơn giản hóa việc đọc tin hằng ngày: tóm tắt rõ ràng, nguồn minh bạch, trả lại thời gian cho bạn."
+      },
+      "story": {
+        "title": "Câu chuyện",
+        "body": "NewsFlow bắt đầu từ nhu cầu cá nhân khi có quá nhiều feed. Chúng tôi tạo cách cập nhật bình tĩnh hơn mà không phải cuộn hàng giờ."
+      },
+      "values": {
+        "title": "Giá trị cốt lõi",
+        "items": {
+          "clarity": {
+            "title": "Ưu tiên sự rõ ràng",
+            "description": "Tóm tắt phải tiết kiệm thời gian, không tạo thêm nhiễu."
+          },
+          "trust": {
+            "title": "Tin cậy và minh bạch",
+            "description": "Luôn hiển thị nguồn và cho bạn mở bài gốc."
+          },
+          "privacy": {
+            "title": "Riêng tư mặc định",
+            "description": "Hạn chế tracking và không bán dữ liệu."
+          },
+          "craft": {
+            "title": "Chăm chút trải nghiệm",
+            "description": "Tiểu tiết tốt giúp việc đọc nhẹ nhàng."
+          }
+        }
+      },
+      "trust": {
+        "title": "Riêng tư & tin cậy",
+        "body": "Chúng tôi không bán dữ liệu và chỉ tracking tối thiểu cần thiết."
+      },
+      "finalCta": {
+        "title": "Tham gia cộng đồng đọc ít nhiễu",
+        "subtitle": "Bắt đầu miễn phí và tạo feed cá nhân.",
+        "cta": "Bắt đầu miễn phí"
       }
     },
     "pricing": {

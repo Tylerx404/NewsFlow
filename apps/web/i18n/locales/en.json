@@ -143,6 +143,13 @@
     }
   },
   "public": {
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "pricing": "Pricing",
+      "about": "About",
+      "cta": "Start free"
+    },
     "home": {
       "subtitle": "Personalized AI-powered RSS reader.",
       "login": "Login",
@@ -239,6 +246,91 @@
         "title": "Start reading smarter today",
         "subtitle": "Build your feed, save time, and stay focused.",
         "cta": "Sign up now"
+      }
+    },
+    "features": {
+      "hero": {
+        "title": "Everything you need to read smarter",
+        "subtitle": "NewsFlow turns noisy feeds into clear, prioritized summaries so you can stay informed in minutes.",
+        "cta": "Start free"
+      },
+      "grid": {
+        "title": "Features built for focus",
+        "items": {
+          "personalized": {
+            "title": "Personalized by your interests",
+            "description": "Follow the topics you care about and skip the rest."
+          },
+          "summaries": {
+            "title": "Clear, compact summaries",
+            "description": "Get the key points fast with consistent highlights."
+          },
+          "priority": {
+            "title": "Priority reading",
+            "description": "Sort by urgency and relevance."
+          },
+          "openRss": {
+            "title": "Open RSS, no lock-in",
+            "description": "Use the sources you already trust."
+          },
+          "privacy": {
+            "title": "Privacy-first by design",
+            "description": "Your data stays yours. No ads, no selling."
+          },
+          "speed": {
+            "title": "Fast, lightweight",
+            "description": "Loads quickly on any device."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Ready to read with less noise?",
+        "subtitle": "Build your feed and start in minutes.",
+        "cta": "Start free"
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "We help you read with clarity",
+        "subtitle": "NewsFlow is built for individuals who want trustworthy, focused news without the noise."
+      },
+      "mission": {
+        "title": "Our mission",
+        "body": "Make daily news simpler: clear summaries, honest sources, and time back for you."
+      },
+      "story": {
+        "title": "Our story",
+        "body": "NewsFlow started as a personal tool to manage too many feeds. We built a calmer way to keep up without scrolling for hours."
+      },
+      "values": {
+        "title": "Our values",
+        "items": {
+          "clarity": {
+            "title": "Clarity over volume",
+            "description": "Summaries should save time, not create more noise."
+          },
+          "trust": {
+            "title": "Trust and transparency",
+            "description": "We keep sources visible and let you open the originals."
+          },
+          "privacy": {
+            "title": "Privacy by default",
+            "description": "We avoid invasive tracking and never sell your data."
+          },
+          "craft": {
+            "title": "Careful craft",
+            "description": "Small details make reading feel effortless."
+          }
+        }
+      },
+      "trust": {
+        "title": "Privacy & trust",
+        "body": "We don’t sell data. We limit tracking to what’s essential for the product."
+      },
+      "finalCta": {
+        "title": "Join readers who want less noise",
+        "subtitle": "Start free and build your personal feed.",
+        "cta": "Start free"
       }
     },
     "pricing": {
