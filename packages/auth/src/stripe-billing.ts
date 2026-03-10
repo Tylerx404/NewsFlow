@@ -247,6 +247,28 @@ async function resolvePromotionCodeSessionParams(
   } satisfies Stripe.Checkout.SessionCreateParams;
 }
 
+function getSubscriptionIdFromInvoice(invoice: Stripe.Invoice) {
+  const parentSubscription = invoice.parent?.subscription_details?.subscription;
+
+  if (parentSubscription) {
+    return typeof parentSubscription === "string"
+      ? parentSubscription
+      : parentSubscription.id ?? null;
+  }
+
+  // Backwards compatibility for older Stripe API versions where `subscription` existed.
+  const legacySubscription = (invoice as { subscription?: string | Stripe.Subscription })
+    .subscription;
+
+  if (!legacySubscription) {
+    return null;
+  }
+
+  return typeof legacySubscription === "string"
+    ? legacySubscription
+    : legacySubscription.id ?? null;
+}
+
 async function ensureStripeCustomer(
   db: Pick<PrismaClient, "user">,
   stripeClient: Stripe,
@@ -630,6 +652,76 @@ export async function handleStripeWebhookEvent(
   event: Stripe.Event,
   config: StripeBillingConfig
 ) {
+  const stripeClient = createStripeClient(config);
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const subscriptionId =
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null;
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const userId =
+      typeof session.client_reference_id === "string"
+        ? session.client_reference_id
+        : null;
+    const customerId =
+      typeof session.customer === "string"
+        ? session.customer
+        : session.customer?.id ?? null;
+
+    if (userId && customerId) {
+      await db.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
+  if (event.type === "invoice.payment_succeeded" || event.type === "invoice.payment_failed") {
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionId = getSubscriptionIdFromInvoice(invoice);
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
+  if (event.type === "invoice_payment.paid") {
+    const invoicePayment = event.data.object as Stripe.InvoicePayment;
+    const invoiceId =
+      typeof invoicePayment.invoice === "string"
+        ? invoicePayment.invoice
+        : invoicePayment.invoice?.id ?? null;
+
+    if (!invoiceId) {
+      return;
+    }
+
+    const invoice = await stripeClient.invoices.retrieve(invoiceId);
+    const subscriptionId = getSubscriptionIdFromInvoice(invoice);
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
   if (event.type === "customer.subscription.created") {
     await syncStripeSubscription(db, event.data.object as Stripe.Subscription, { config });
     return;
