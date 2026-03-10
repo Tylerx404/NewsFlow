@@ -35,10 +35,10 @@ Commit message de xuat:
 - `feat(country): add user country fields and migration`
 
 ## Part 2 - Phone Parsing Layer (Highest Priority)
-- [ ] Them service `resolveCountryFromPhone(phoneNumber)`.
-- [ ] Parse E.164 bang `google-libphonenumber` (hoac thu vien tuong duong).
-- [ ] Tra ve ISO alpha-2 (VD `VN`, `US`) neu parse thanh cong.
-- [ ] Fail-safe: parse loi thi tra `null`, khong throw lam do luong chinh.
+- [x] Them service `resolveCountryFromPhone(phoneNumber)`.
+- [x] Parse E.164 bang `google-libphonenumber` (hoac thu vien tuong duong).
+- [x] Tra ve ISO alpha-2 (VD `VN`, `US`) neu parse thanh cong.
+- [x] Fail-safe: parse loi thi tra `null`, khong throw lam do luong chinh.
 
 Acceptance:
 - Input `+84987654321` -> `VN`.
