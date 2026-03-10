@@ -13,7 +13,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground">
+  <div class="flex flex-1 flex-col bg-background text-foreground">
     <section class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 pb-12 pt-16">
       <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div class="space-y-6">
