@@ -48,10 +48,10 @@ Commit message de xuat:
 - `feat(country): resolve country from E.164 phone numbers`
 
 ## Part 3 - IP Fallback Layer
-- [ ] Them provider interface: `resolveCountryFromIp(ip)`.
-- [ ] Implement provider 1 (ipapi/ipinfo/MaxMind).
-- [ ] Xu ly timeout + retry nhe + fail-safe `null`.
-- [ ] Loai bo local IP/private IP (`127.0.0.1`, `::1`, `10.*`, `192.168.*`, ...).
+- [x] Them provider interface: `resolveCountryFromIp(ip)`.
+- [x] Implement provider 1 (ipapi/ipinfo/MaxMind).
+- [x] Xu ly timeout + retry nhe + fail-safe `null`.
+- [x] Loai bo local IP/private IP (`127.0.0.1`, `::1`, `10.*`, `192.168.*`, ...).
 
 Acceptance:
 - IP public hop le tra ve ma quoc gia.
