@@ -130,13 +130,82 @@ export const feedSubscriptionRouter = {
   discover: protectedProcedure
     .input(discoverFeedSubscriptionsSchema)
     .output(discoverFeedSubscriptionItemSchema.array())
-    .handler(async ({ input }) => {
-      if (!input.category) {
+    .handler(async ({ input, context }) => {
+      const sessionCountryCode = (
+        context.session.user as { countryCode?: string | null }
+      ).countryCode;
+      const normalizedCountryCode =
+        typeof sessionCountryCode === "string" && sessionCountryCode.trim()
+          ? sessionCountryCode.trim().toUpperCase()
+          : "GLOBAL";
+      const countryCodes =
+        normalizedCountryCode === "GLOBAL"
+          ? ["GLOBAL"]
+          : [normalizedCountryCode, "GLOBAL"];
+
+      const normalizedCategory = input.category?.toLowerCase() ?? null;
+
+      const inferredFeeds = await prisma.feedSource.findMany({
+        where: {
+          isEnabled: true,
+          inferredCountryCode: { in: countryCodes },
+          ...(normalizedCategory
+            ? {
+                OR: [
+                  { title: { contains: normalizedCategory, mode: "insensitive" } },
+                  { description: { contains: normalizedCategory, mode: "insensitive" } },
+                ],
+              }
+            : {}),
+        },
+        orderBy: [
+          {
+            inferredCountryCode: "asc",
+          },
+          {
+            lastFetched: "desc",
+          },
+          {
+            updatedAt: "desc",
+          },
+        ],
+      });
+
+      if (inferredFeeds.length > 0) {
+        const countryPriority = new Map<string, number>();
+        countryCodes.forEach((countryCode, index) => {
+          countryPriority.set(countryCode, index);
+        });
+
+        return inferredFeeds
+          .sort((left, right) => {
+            const leftPriority =
+              countryPriority.get(left.inferredCountryCode ?? "GLOBAL") ?? Number.MAX_SAFE_INTEGER;
+            const rightPriority =
+              countryPriority.get(right.inferredCountryCode ?? "GLOBAL") ?? Number.MAX_SAFE_INTEGER;
+
+            if (leftPriority !== rightPriority) {
+              return leftPriority - rightPriority;
+            }
+
+            return left.title.localeCompare(right.title);
+          })
+          .map((feed) => ({
+            title: feed.title,
+            url: feed.url,
+            description: feed.description,
+            category: null,
+            language: feed.language,
+            siteUrl: feed.siteUrl,
+          }));
+      }
+
+      if (!normalizedCategory) {
         return DISCOVER_FEEDS;
       }
 
-      return DISCOVER_FEEDS.filter(
-        (item) => item.category?.toLowerCase() === input.category?.toLowerCase()
+      return DISCOVER_FEEDS.filter((item) =>
+        item.category?.toLowerCase().includes(normalizedCategory)
       );
     }),
 

@@ -126,10 +126,10 @@ Commit goi y:
 - `feat(admin): allow manual country override for inferred feeds`
 
 ## Part G - Discover Query Usage
-- [ ] Discover lay feed theo:
+- [x] Discover lay feed theo:
   - country exact match
   - union voi `GLOBAL`
-- [ ] Sap xep uu tien:
+- [x] Sap xep uu tien:
   - exact country > global
   - trending > fresh > random diversify
 - [ ] Cache theo country:
