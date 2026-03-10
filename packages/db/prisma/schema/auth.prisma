@@ -8,12 +8,22 @@ enum UserStatus {
   SUSPENDED
 }
 
+enum CountrySource {
+  PHONE
+  IP
+  ACCEPT_LANGUAGE
+  DEFAULT
+}
+
 model User {
   id                 String              @id
   name               String
   email              String
   emailVerified      Boolean             @default(false)
   image              String?
+  phoneNumber        String?
+  countryCode        String?
+  countrySource      CountrySource?
   stripeCustomerId   String?             @unique
   role               UserRole            @default(USER)
   status             UserStatus          @default(ACTIVE)

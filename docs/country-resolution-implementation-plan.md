@@ -22,10 +22,10 @@ Commit message de xuat:
 - `chore(country): define country resolution defaults and tracking`
 
 ## Part 1 - Data Model + Migration
-- [ ] Them truong `phoneNumber` (neu chua co) va `countryCode` vao user schema.
-- [ ] (Khuyen nghi) Them `countrySource` enum: `PHONE | IP | ACCEPT_LANGUAGE | DEFAULT`.
-- [ ] Tao migration Prisma.
-- [ ] Chay generate client.
+- [x] Them truong `phoneNumber` (neu chua co) va `countryCode` vao user schema.
+- [x] (Khuyen nghi) Them `countrySource` enum: `PHONE | IP | ACCEPT_LANGUAGE | DEFAULT`.
+- [x] Tao migration Prisma.
+- [x] Chay generate client.
 
 Acceptance:
 - User model co field can thiet.
