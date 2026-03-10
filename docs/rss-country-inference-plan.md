@@ -38,19 +38,19 @@ Commit goi y:
 - `feat(feed): add inferred language/country metadata fields`
 
 ## Part B - Language Detection Engine
-- [ ] Chon thu vien: `franc` (uu tien) hoac `compact-language-detector`.
-- [ ] Tao service: `detectFeedLanguage(input)`.
-- [ ] Input gom:
+- [x] Chon thu vien: `franc` (uu tien) hoac `compact-language-detector`.
+- [x] Tao service: `detectFeedLanguage(input)`.
+- [x] Input gom:
   - feed title
   - feed description
   - 3-5 item dau (title + summary)
-- [ ] Normalize text (lowercase, remove html, collapse spaces).
-- [ ] Return:
+- [x] Normalize text (lowercase, remove html, collapse spaces).
+- [x] Return:
   - `language` (ISO code, vd: `vi`, `en`, `fr`)
   - `confidence`
   - `sampleSize`
-- [ ] Neu qua ngan/nhieu ky tu noise -> `null`.
-- [ ] Them rule threshold rieng cho `vi` (neu dung `franc`) de giam false negative voi text ngan.
+- [x] Neu qua ngan/nhieu ky tu noise -> `null`.
+- [x] Them rule threshold rieng cho `vi` (neu dung `franc`) de giam false negative voi text ngan.
 
 Acceptance:
 - Feed tieng Viet detect ra `vi`.

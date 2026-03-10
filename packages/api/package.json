@@ -29,6 +29,7 @@
     "ai": "^6.0.116",
     "better-auth": "^1.5.4",
     "dotenv": "^17.3.1",
+    "franc": "^6.2.0",
     "google-libphonenumber": "^3.2.44",
     "ioredis": "^5.10.0",
     "rss-parser": "^3.13.0",
