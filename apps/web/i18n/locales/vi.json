@@ -1402,6 +1402,39 @@
         "successSaved": "Đã lưu cấu hình Stripe.",
         "secretHint": "Bạn có thể để trống các trường secret nếu chỉ muốn cập nhật price ID."
       },
+      "oauth": {
+        "title": "Nhà cung cấp OAuth",
+        "description": "Cấu hình đăng nhập Apple và Google mà không cần biến môi trường server.",
+        "status": {
+          "apple": "Apple",
+          "google": "Google",
+          "configured": "Đã cấu hình",
+          "incomplete": "Chưa đầy đủ",
+          "secret": "Client secret",
+          "missing": "Thiếu"
+        },
+        "form": {
+          "googleClientId": "Google client ID",
+          "googleClientIdPlaceholder": "xxxx.apps.googleusercontent.com",
+          "googleClientSecret": "Google client secret",
+          "appleClientId": "Apple service ID",
+          "appleClientIdPlaceholder": "com.example.service",
+          "appleClientSecret": "Apple client secret (JWT)",
+          "appleAppBundleIdentifier": "Apple app bundle identifier (tùy chọn)",
+          "appleAppBundlePlaceholder": "com.example.app",
+          "secretPlaceholder": "Để trống để giữ secret hiện tại"
+        },
+        "lastUpdated": "Cập nhật lần cuối",
+        "restartHint": "Khởi động lại server để áp dụng thay đổi OAuth.",
+        "save": "Lưu cấu hình OAuth",
+        "saving": "Đang lưu...",
+        "successSaved": "Đã lưu cấu hình OAuth.",
+        "secretHint": "Để trống secret để giữ giá trị hiện tại.",
+        "errors": {
+          "load": "Không thể tải cấu hình OAuth.",
+          "save": "Không thể lưu cấu hình OAuth."
+        }
+      },
       "manualActions": {
         "title": "Thao tác thủ công",
         "description": "Kích hoạt một lần fetch feed hoặc một lần trích xuất nội dung theo ID.",

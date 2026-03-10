@@ -1402,6 +1402,39 @@
         "successSaved": "Stripe 설정이 저장되었습니다.",
         "secretHint": "가격 ID만 업데이트하려는 경우 비밀 입력은 비워둘 수 있습니다."
       },
+      "oauth": {
+        "title": "OAuth 제공자",
+        "description": "서버 환경 변수 없이 Apple 및 Google 로그인을 구성합니다.",
+        "status": {
+          "apple": "Apple",
+          "google": "Google",
+          "configured": "구성됨",
+          "incomplete": "미완료",
+          "secret": "클라이언트 시크릿",
+          "missing": "없음"
+        },
+        "form": {
+          "googleClientId": "Google 클라이언트 ID",
+          "googleClientIdPlaceholder": "xxxx.apps.googleusercontent.com",
+          "googleClientSecret": "Google 클라이언트 시크릿",
+          "appleClientId": "Apple 서비스 ID",
+          "appleClientIdPlaceholder": "com.example.service",
+          "appleClientSecret": "Apple 클라이언트 시크릿(JWT)",
+          "appleAppBundleIdentifier": "Apple 앱 번들 식별자(선택)",
+          "appleAppBundlePlaceholder": "com.example.app",
+          "secretPlaceholder": "비워두면 기존 시크릿 유지"
+        },
+        "lastUpdated": "마지막 업데이트",
+        "restartHint": "OAuth 변경 사항을 적용하려면 서버를 재시작하세요.",
+        "save": "OAuth 설정 저장",
+        "saving": "저장 중...",
+        "successSaved": "OAuth 설정이 저장되었습니다.",
+        "secretHint": "시크릿은 비워두면 기존 값을 유지합니다.",
+        "errors": {
+          "load": "OAuth 설정을 불러올 수 없습니다.",
+          "save": "OAuth 설정을 저장할 수 없습니다."
+        }
+      },
       "manualActions": {
         "title": "수동 작업",
         "description": "ID로 단일 피드 수집 또는 콘텐츠 추출을 실행합니다.",

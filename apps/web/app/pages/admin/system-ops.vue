@@ -66,6 +66,21 @@ type AdminStripeConfig = {
   createdAt: Date | string | null;
 };
 
+type AdminOAuthConfig = {
+  googleClientId: string | null;
+  googleClientSecretMasked: string | null;
+  hasGoogleClientSecret: boolean;
+  appleClientId: string | null;
+  appleClientSecretMasked: string | null;
+  hasAppleClientSecret: boolean;
+  appleAppBundleIdentifier: string | null;
+  isGoogleConfigured: boolean;
+  isAppleConfigured: boolean;
+  updatedByUserId: string | null;
+  updatedAt: Date | string | null;
+  createdAt: Date | string | null;
+};
+
 const ALL_QUEUE_STATES: QueueJobState[] = [
   "waiting",
   "active",
@@ -87,6 +102,8 @@ const sourceArticleIdInput = ref("");
 const actionError = ref("");
 const stripeConfigError = ref("");
 const stripeConfigSuccess = ref("");
+const oauthConfigError = ref("");
+const oauthConfigSuccess = ref("");
 
 const stripeConfigForm = reactive({
   publishableKey: "",
@@ -98,6 +115,14 @@ const stripeConfigForm = reactive({
   priceProYearly: "",
   priceMaxMonthly: "",
   priceMaxYearly: "",
+});
+
+const oauthConfigForm = reactive({
+  googleClientId: "",
+  googleClientSecret: "",
+  appleClientId: "",
+  appleClientSecret: "",
+  appleAppBundleIdentifier: "",
 });
 
 const confirmState = ref<ConfirmState>(null);
@@ -126,6 +151,12 @@ const overviewQuery = useQuery(
 const stripeConfigQuery = useQuery(
   $orpc.admin.systemOps.getStripeConfig.queryOptions({
     queryKey: dashboardQueryKeys.admin.systemOps.stripeConfig(),
+  })
+);
+
+const oauthConfigQuery = useQuery(
+  $orpc.admin.systemOps.getOAuthConfig.queryOptions({
+    queryKey: dashboardQueryKeys.admin.systemOps.oauthConfig(),
   })
 );
 
@@ -181,6 +212,16 @@ const updateStripeConfigMutation = useMutation(
   })
 );
 
+const updateOAuthConfigMutation = useMutation(
+  $orpc.admin.systemOps.updateOAuthConfig.mutationOptions({
+    onSuccess: async () => {
+      oauthConfigError.value = "";
+      oauthConfigSuccess.value = t("admin.systemOps.oauth.successSaved");
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
 const isActionPending = computed(
   () =>
     retryJobMutation.isPending.value
@@ -192,8 +233,16 @@ const isStripeConfigPending = computed(
   () => updateStripeConfigMutation.isPending.value || stripeConfigQuery.isLoading.value
 );
 
+const isOAuthConfigPending = computed(
+  () => updateOAuthConfigMutation.isPending.value || oauthConfigQuery.isLoading.value
+);
+
 const currentStripeConfig = computed<AdminStripeConfig | null>(
   () => stripeConfigQuery.data.value ?? null
+);
+
+const currentOAuthConfig = computed<AdminOAuthConfig | null>(
+  () => oauthConfigQuery.data.value ?? null
 );
 
 const overviewErrorMessage = computed(() => {
@@ -226,6 +275,16 @@ const stripeConfigLoadError = computed(() => {
     : t("admin.systemOps.errors.stripeLoad");
 });
 
+const oauthConfigLoadError = computed(() => {
+  if (!oauthConfigQuery.error.value) {
+    return "";
+  }
+
+  return oauthConfigQuery.error.value instanceof Error
+    ? oauthConfigQuery.error.value.message
+    : t("admin.systemOps.oauth.errors.load");
+});
+
 watch(
   () => stripeConfigQuery.data.value,
   (config) => {
@@ -242,6 +301,22 @@ watch(
     stripeConfigForm.priceProYearly = config.priceProYearly ?? "";
     stripeConfigForm.priceMaxMonthly = config.priceMaxMonthly ?? "";
     stripeConfigForm.priceMaxYearly = config.priceMaxYearly ?? "";
+  },
+  { immediate: true }
+);
+
+watch(
+  () => oauthConfigQuery.data.value,
+  (config) => {
+    if (!config) {
+      return;
+    }
+
+    oauthConfigForm.googleClientId = config.googleClientId ?? "";
+    oauthConfigForm.googleClientSecret = "";
+    oauthConfigForm.appleClientId = config.appleClientId ?? "";
+    oauthConfigForm.appleClientSecret = "";
+    oauthConfigForm.appleAppBundleIdentifier = config.appleAppBundleIdentifier ?? "";
   },
   { immediate: true }
 );
@@ -413,6 +488,24 @@ const handleSaveStripeConfig = async () => {
       error instanceof Error ? error.message : t("admin.systemOps.errors.stripeSave");
   }
 };
+
+const handleSaveOAuthConfig = async () => {
+  oauthConfigError.value = "";
+  oauthConfigSuccess.value = "";
+
+  try {
+    await updateOAuthConfigMutation.mutateAsync({
+      googleClientId: oauthConfigForm.googleClientId,
+      googleClientSecret: oauthConfigForm.googleClientSecret,
+      appleClientId: oauthConfigForm.appleClientId,
+      appleClientSecret: oauthConfigForm.appleClientSecret,
+      appleAppBundleIdentifier: oauthConfigForm.appleAppBundleIdentifier,
+    });
+  } catch (error) {
+    oauthConfigError.value =
+      error instanceof Error ? error.message : t("admin.systemOps.oauth.errors.save");
+  }
+};
 </script>
 
 <template>
@@ -538,6 +631,118 @@ const handleSaveStripeConfig = async () => {
           </Button>
           <p class="text-xs text-muted-foreground">
             {{ t("admin.systemOps.stripe.secretHint") }}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ t("admin.systemOps.oauth.title") }}</CardTitle>
+        <CardDescription>
+          {{ t("admin.systemOps.oauth.description") }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent class="space-y-4">
+        <div class="grid gap-3 md:grid-cols-2">
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.oauth.status.apple") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentOAuthConfig?.isAppleConfigured
+                  ? t("admin.systemOps.oauth.status.configured")
+                  : t("admin.systemOps.oauth.status.incomplete")
+              }}
+            </p>
+            <p class="mt-1 text-xs text-muted-foreground">
+              {{ t("admin.systemOps.oauth.status.secret") }}:
+              {{ currentOAuthConfig?.appleClientSecretMasked || t("admin.systemOps.oauth.status.missing") }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.oauth.status.google") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentOAuthConfig?.isGoogleConfigured
+                  ? t("admin.systemOps.oauth.status.configured")
+                  : t("admin.systemOps.oauth.status.incomplete")
+              }}
+            </p>
+            <p class="mt-1 text-xs text-muted-foreground">
+              {{ t("admin.systemOps.oauth.status.secret") }}:
+              {{ currentOAuthConfig?.googleClientSecretMasked || t("admin.systemOps.oauth.status.missing") }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.oauth.form.googleClientId") }}</p>
+            <Input
+              v-model="oauthConfigForm.googleClientId"
+              :placeholder="t('admin.systemOps.oauth.form.googleClientIdPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.oauth.form.googleClientSecret") }}</p>
+            <Input
+              v-model="oauthConfigForm.googleClientSecret"
+              type="password"
+              :placeholder="t('admin.systemOps.oauth.form.secretPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.oauth.form.appleClientId") }}</p>
+            <Input
+              v-model="oauthConfigForm.appleClientId"
+              :placeholder="t('admin.systemOps.oauth.form.appleClientIdPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.oauth.form.appleClientSecret") }}</p>
+            <Input
+              v-model="oauthConfigForm.appleClientSecret"
+              type="password"
+              :placeholder="t('admin.systemOps.oauth.form.secretPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2 md:col-span-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.oauth.form.appleAppBundleIdentifier") }}</p>
+            <Input
+              v-model="oauthConfigForm.appleAppBundleIdentifier"
+              :placeholder="t('admin.systemOps.oauth.form.appleAppBundlePlaceholder')"
+            />
+          </div>
+        </div>
+
+        <div class="rounded-md border p-3 text-xs text-muted-foreground">
+          <p>
+            {{ t("admin.systemOps.oauth.lastUpdated") }}:
+            {{ formatDateTime(currentOAuthConfig?.updatedAt ?? null) }}
+          </p>
+          <p>{{ t("admin.systemOps.oauth.restartHint") }}</p>
+        </div>
+
+        <p v-if="oauthConfigLoadError" class="text-sm text-destructive">
+          {{ oauthConfigLoadError }}
+        </p>
+        <p v-else-if="oauthConfigError" class="text-sm text-destructive">
+          {{ oauthConfigError }}
+        </p>
+        <p v-else-if="oauthConfigSuccess" class="text-sm text-emerald-600 dark:text-emerald-400">
+          {{ oauthConfigSuccess }}
+        </p>
+
+        <div class="flex items-center gap-2">
+          <Button :disabled="isOAuthConfigPending" @click="handleSaveOAuthConfig">
+            {{
+              updateOAuthConfigMutation.isPending.value
+                ? t("admin.systemOps.oauth.saving")
+                : t("admin.systemOps.oauth.save")
+            }}
+          </Button>
+          <p class="text-xs text-muted-foreground">
+            {{ t("admin.systemOps.oauth.secretHint") }}
           </p>
         </div>
       </CardContent>

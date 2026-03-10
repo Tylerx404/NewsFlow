@@ -1402,6 +1402,39 @@
         "successSaved": "Stripe 設定を保存しました。",
         "secretHint": "価格 ID だけ更新する場合はシークレット入力を空のままにできます。"
       },
+      "oauth": {
+        "title": "OAuth プロバイダー",
+        "description": "サーバーの環境変数を使わずに Apple と Google のログインを設定します。",
+        "status": {
+          "apple": "Apple",
+          "google": "Google",
+          "configured": "設定済み",
+          "incomplete": "未完了",
+          "secret": "クライアントシークレット",
+          "missing": "未設定"
+        },
+        "form": {
+          "googleClientId": "Google クライアント ID",
+          "googleClientIdPlaceholder": "xxxx.apps.googleusercontent.com",
+          "googleClientSecret": "Google クライアントシークレット",
+          "appleClientId": "Apple サービス ID",
+          "appleClientIdPlaceholder": "com.example.service",
+          "appleClientSecret": "Apple クライアントシークレット (JWT)",
+          "appleAppBundleIdentifier": "Apple アプリバンドル識別子（任意）",
+          "appleAppBundlePlaceholder": "com.example.app",
+          "secretPlaceholder": "空欄の場合は現在のシークレットを保持"
+        },
+        "lastUpdated": "最終更新",
+        "restartHint": "OAuth の変更を反映するにはサーバーを再起動してください。",
+        "save": "OAuth 設定を保存",
+        "saving": "保存中...",
+        "successSaved": "OAuth 設定を保存しました。",
+        "secretHint": "シークレットを空欄にすると現在の値を保持します。",
+        "errors": {
+          "load": "OAuth 設定を読み込めません。",
+          "save": "OAuth 設定を保存できません。"
+        }
+      },
       "manualActions": {
         "title": "手動操作",
         "description": "ID を指定して 1 回のフィード取得またはコンテンツ抽出を実行します。",
