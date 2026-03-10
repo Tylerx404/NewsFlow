@@ -147,7 +147,93 @@
       "subtitle": "パーソナライズされた AI 駆動 RSS リーダー。",
       "login": "ログイン",
       "signUp": "新規登録",
-      "pricing": "料金"
+      "pricing": "料金",
+      "hero": {
+        "title": "必要なニュースだけを数分で",
+        "subtitle": "NewsFlow がRSSをパーソナライズし、要点を短くまとめて、ノイズから解放します。",
+        "ctaPrimary": "今すぐ登録",
+        "ctaSecondary": "デモを見る"
+      },
+      "trust": {
+        "privacy": "プライバシー重視",
+        "noSpam": "スパムなし",
+        "rssOpen": "オープンRSS"
+      },
+      "benefits": {
+        "title": "NewsFlowが選ばれる理由",
+        "items": {
+          "personalized": {
+            "title": "興味に合わせて最適化",
+            "description": "関心のあるトピックだけを追い、不要な情報は自動で削減。"
+          },
+          "clear": {
+            "title": "わかりやすい要約",
+            "description": "一貫したハイライトで重要点を素早く把握。"
+          },
+          "focus": {
+            "title": "ノイズを減らして集中",
+            "description": "見出しの洪水から抜け出し、本質だけに集中。"
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "使い方",
+        "steps": {
+          "add": {
+            "title": "ソースを追加",
+            "description": "信頼できるRSSを接続。"
+          },
+          "summarize": {
+            "title": "AIが要約",
+            "description": "主要ポイントを抽出し、読みやすく整理。"
+          },
+          "read": {
+            "title": "優先度で読む",
+            "description": "トピックや重要度で素早く把握。"
+          }
+        }
+      },
+      "demo": {
+        "title": "プレビュー",
+        "subtitle": "すっきりした要約を体験。",
+        "cardTitle": "デイリーブリーフ：AI & Tech",
+        "cardSource": "8ソースから",
+        "bullets": {
+          "one": "今週の大型資金調達はやや減速。",
+          "two": "新しいOSSモデルが上位ベンチマークに到達。",
+          "three": "規制当局がより厳格な開示を示唆。"
+        }
+      },
+      "useCases": {
+        "title": "あなたのルーティンにフィット",
+        "items": {
+          "morning": "5分の朝ブリーフィング",
+          "industry": "業界を追いつつ過負荷を回避",
+          "evening": "一日の終わりに素早くキャッチアップ"
+        }
+      },
+      "faq": {
+        "title": "FAQ",
+        "items": {
+          "rss": {
+            "q": "RSSは必須ですか？",
+            "a": "RSSが最適ですが、まずはおすすめソースから始められます。"
+          },
+          "accuracy": {
+            "q": "要約の精度は？",
+            "a": "要点に集中し、いつでも原文にアクセスできます。"
+          },
+          "privacy": {
+            "q": "データは安全ですか？",
+            "a": "データは販売せず、必要最小限の追跡のみです。"
+          }
+        }
+      },
+      "finalCta": {
+        "title": "今日から賢く読む",
+        "subtitle": "自分専用のフィードを作り、時間を節約し、集中を保つ。",
+        "cta": "今すぐ登録"
+      }
     },
     "pricing": {
       "badge": "料金",
