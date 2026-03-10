@@ -258,7 +258,277 @@ Expected: no matches.
 Same as Step 1 (no matches).
 
 **Step 3: Write minimal implementation**
-Add translations using the same key structure as in EN/VI. (Use concise, friendly tone; avoid AI hype.)
+Add translations using the same key structure as EN/VI.
+
+`apps/web/i18n/locales/zh.json`:
+```json
+"hero": {
+  "title": "几分钟读到你真正需要的新闻",
+  "subtitle": "NewsFlow 为你的 RSS 做个性化与要点摘要，让你远离噪音，快速掌握重点。",
+  "ctaPrimary": "立即注册",
+  "ctaSecondary": "查看演示"
+},
+"trust": {
+  "privacy": "隐私优先",
+  "noSpam": "不发垃圾邮件",
+  "rssOpen": "开放 RSS"
+},
+"benefits": {
+  "title": "为何读者选择 NewsFlow",
+  "items": {
+    "personalized": {
+      "title": "按兴趣个性化",
+      "description": "只关注你在意的主题，其余自动淡出。"
+    },
+    "clear": {
+      "title": "清晰精炼的摘要",
+      "description": "用一致的重点卡片快速获取关键信息。"
+    },
+    "focus": {
+      "title": "更少噪音，更强信号",
+      "description": "过滤无关标题，把注意力放在真正重要的内容。"
+    }
+  }
+},
+"howItWorks": {
+  "title": "如何运作",
+  "steps": {
+    "add": {
+      "title": "添加你的来源",
+      "description": "连接你信任的 RSS 源。"
+    },
+    "summarize": {
+      "title": "AI 摘要",
+      "description": "我们提炼关键要点并保持结构一致。"
+    },
+    "read": {
+      "title": "按优先级阅读",
+      "description": "按主题、紧急程度和兴趣快速浏览。"
+    }
+  }
+},
+"demo": {
+  "title": "快速预览",
+  "subtitle": "看看清爽的摘要体验。",
+  "cardTitle": "今日简报：AI 与科技",
+  "cardSource": "来自 8 个来源",
+  "bullets": {
+    "one": "本周大型融资略有放缓。",
+    "two": "两款开源模型进入顶级基准。",
+    "three": "监管方暗示更严格的披露要求。"
+  }
+},
+"useCases": {
+  "title": "适配你的节奏",
+  "items": {
+    "morning": "5 分钟晨间简报",
+    "industry": "不被信息淹没地跟踪行业",
+    "evening": "轻松完成晚间回顾"
+  }
+},
+"faq": {
+  "title": "常见问题",
+  "items": {
+    "rss": {
+      "q": "使用 NewsFlow 一定要 RSS 吗？",
+      "a": "RSS 效果最佳，但你也可以先从推荐来源开始。"
+    },
+    "accuracy": {
+      "q": "摘要准确吗？",
+      "a": "我们专注关键要点，随时可打开原文核对。"
+    },
+    "privacy": {
+      "q": "我的数据安全吗？",
+      "a": "我们不出售数据，尽量减少不必要的追踪。"
+    }
+  }
+},
+"finalCta": {
+  "title": "今天开始更聪明地阅读",
+  "subtitle": "构建你的专属信息流，节省时间，保持专注。",
+  "cta": "立即注册"
+}
+```
+
+`apps/web/i18n/locales/jp.json`:
+```json
+"hero": {
+  "title": "必要なニュースだけを数分で",
+  "subtitle": "NewsFlow がRSSをパーソナライズし、要点を短くまとめて、ノイズから解放します。",
+  "ctaPrimary": "今すぐ登録",
+  "ctaSecondary": "デモを見る"
+},
+"trust": {
+  "privacy": "プライバシー重視",
+  "noSpam": "スパムなし",
+  "rssOpen": "オープンRSS"
+},
+"benefits": {
+  "title": "NewsFlowが選ばれる理由",
+  "items": {
+    "personalized": {
+      "title": "興味に合わせて最適化",
+      "description": "関心のあるトピックだけを追い、不要な情報は自動で削減。"
+    },
+    "clear": {
+      "title": "わかりやすい要約",
+      "description": "一貫したハイライトで重要点を素早く把握。"
+    },
+    "focus": {
+      "title": "ノイズを減らして集中",
+      "description": "見出しの洪水から抜け出し、本質だけに集中。"
+    }
+  }
+},
+"howItWorks": {
+  "title": "使い方",
+  "steps": {
+    "add": {
+      "title": "ソースを追加",
+      "description": "信頼できるRSSを接続。"
+    },
+    "summarize": {
+      "title": "AIが要約",
+      "description": "主要ポイントを抽出し、読みやすく整理。"
+    },
+    "read": {
+      "title": "優先度で読む",
+      "description": "トピックや重要度で素早く把握。"
+    }
+  }
+},
+"demo": {
+  "title": "プレビュー",
+  "subtitle": "すっきりした要約を体験。",
+  "cardTitle": "デイリーブリーフ：AI & Tech",
+  "cardSource": "8ソースから",
+  "bullets": {
+    "one": "今週の大型資金調達はやや減速。",
+    "two": "新しいOSSモデルが上位ベンチマークに到達。",
+    "three": "規制当局がより厳格な開示を示唆。"
+  }
+},
+"useCases": {
+  "title": "あなたのルーティンにフィット",
+  "items": {
+    "morning": "5分の朝ブリーフィング",
+    "industry": "業界を追いつつ過負荷を回避",
+    "evening": "一日の終わりに素早くキャッチアップ"
+  }
+},
+"faq": {
+  "title": "FAQ",
+  "items": {
+    "rss": {
+      "q": "RSSは必須ですか？",
+      "a": "RSSが最適ですが、まずはおすすめソースから始められます。"
+    },
+    "accuracy": {
+      "q": "要約の精度は？",
+      "a": "要点に集中し、いつでも原文にアクセスできます。"
+    },
+    "privacy": {
+      "q": "データは安全ですか？",
+      "a": "データは販売せず、必要最小限の追跡のみです。"
+    }
+  }
+},
+"finalCta": {
+  "title": "今日から賢く読む",
+  "subtitle": "自分専用のフィードを作り、時間を節約し、集中を保つ。",
+  "cta": "今すぐ登録"
+}
+```
+
+`apps/web/i18n/locales/kr.json`:
+```json
+"hero": {
+  "title": "몇 분 안에 필요한 뉴스만",
+  "subtitle": "NewsFlow가 RSS를 개인화하고 핵심만 요약해, 노이즈 없이 빠르게 파악할 수 있게 합니다.",
+  "ctaPrimary": "지금 가입하기",
+  "ctaSecondary": "데모 보기"
+},
+"trust": {
+  "privacy": "프라이버시 우선",
+  "noSpam": "스팸 없음",
+  "rssOpen": "오픈 RSS"
+},
+"benefits": {
+  "title": "NewsFlow를 선택하는 이유",
+  "items": {
+    "personalized": {
+      "title": "관심사 맞춤화",
+      "description": "관심 있는 주제만 따라가고 나머지는 자동으로 줄입니다."
+    },
+    "clear": {
+      "title": "명확하고 간결한 요약",
+      "description": "일관된 하이라이트로 핵심을 빠르게 파악합니다."
+    },
+    "focus": {
+      "title": "노이즈는 줄이고 신호는 강화",
+      "description": "불필요한 헤드라인을 줄이고 중요한 내용에 집중합니다."
+    }
+  }
+},
+"howItWorks": {
+  "title": "작동 방식",
+  "steps": {
+    "add": {
+      "title": "소스 추가",
+      "description": "신뢰하는 RSS를 연결합니다."
+    },
+    "summarize": {
+      "title": "AI 요약",
+      "description": "주요 포인트를 추출해 구조적으로 정리합니다."
+    },
+    "read": {
+      "title": "우선순위로 읽기",
+      "description": "주제, 긴급도, 관심도 기준으로 훑어봅니다."
+    }
+  }
+},
+"demo": {
+  "title": "빠른 미리보기",
+  "subtitle": "깔끔한 요약 경험을 확인하세요.",
+  "cardTitle": "데일리 브리프: AI & 테크",
+  "cardSource": "8개 소스에서",
+  "bullets": {
+    "one": "이번 주 대형 투자 라운드가 다소 둔화되었습니다.",
+    "two": "두 개의 오픈소스 모델이 상위 벤치마크에 도달했습니다.",
+    "three": "규제 당국이 더 엄격한 공시를 시사했습니다."
+  }
+},
+"useCases": {
+  "title": "당신의 루틴에 맞게",
+  "items": {
+    "morning": "5분 아침 브리핑",
+    "industry": "과부하 없이 업계 동향 추적",
+    "evening": "하루 마무리 빠른 캐치업"
+  }
+},
+"faq": {
+  "title": "자주 묻는 질문",
+  "items": {
+    "rss": {
+      "q": "RSS가 꼭 필요하나요?",
+      "a": "RSS가 가장 좋지만 추천 소스로 시작할 수도 있습니다."
+    },
+    "accuracy": {
+      "q": "요약 정확도는 어떤가요?",
+      "a": "핵심에 집중하며 언제든 원문을 열 수 있습니다."
+    },
+    "privacy": {
+      "q": "데이터는 안전한가요?",
+      "a": "데이터를 판매하지 않으며 최소한의 추적만 합니다."
+    }
+  }
+},
+"finalCta": {
+  "title": "오늘부터 더 똑똑하게 읽기",
+  "subtitle": "나만의 피드를 만들고 시간을 절약하며 집중을 유지하세요.",
+  "cta": "지금 가입하기"
+}
+```
 
 **Step 4: Run test to verify it passes**
 Repeat Step 1 and ensure matches exist.
