@@ -156,9 +156,9 @@
       "signUp": "新規登録",
       "pricing": "料金",
       "hero": {
-        "title": "必要なニュースだけを数分で",
-        "subtitle": "NewsFlow がRSSをパーソナライズし、要点を短くまとめて、ノイズから解放します。",
-        "ctaPrimary": "今すぐ登録",
+        "title": "RSSをAIで要約、あなたに最適化",
+        "subtitle": "NewsFlowは関心に合わせて記事を絞り、要点を短くまとめてノイズなく把握できます。",
+        "ctaPrimary": "無料で始める",
         "ctaSecondary": "デモを見る"
       },
       "trust": {
@@ -203,7 +203,7 @@
       "demo": {
         "title": "プレビュー",
         "subtitle": "すっきりした要約を体験。",
-        "cardTitle": "デイリーブリーフ：AI & Tech",
+        "cardTitle": "今日のブリーフ：AI & Tech",
         "cardSource": "8ソースから",
         "summaryLabel": "要約",
         "highlightsLabel": "ハイライト",
@@ -212,9 +212,9 @@
           "aiHighlights": "AIハイライト"
         },
         "bullets": {
-          "one": "今週の大型資金調達はやや減速。",
-          "two": "新しいOSSモデルが上位ベンチマークに到達。",
-          "three": "規制当局がより厳格な開示を示唆。"
+          "one": "オープンソースモデルの勢いが強まっています。",
+          "two": "AIの開示ルールがより明確化へ。",
+          "three": "省電力チップが標準になりつつあります。"
         }
       },
       "useCases": {

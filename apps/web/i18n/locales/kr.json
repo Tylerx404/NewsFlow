@@ -156,9 +156,9 @@
       "signUp": "회원가입",
       "pricing": "요금제",
       "hero": {
-        "title": "몇 분 안에 필요한 뉴스만",
-        "subtitle": "NewsFlow가 RSS를 개인화하고 핵심만 요약해, 노이즈 없이 빠르게 파악할 수 있게 합니다.",
-        "ctaPrimary": "지금 가입하기",
+        "title": "RSS를 AI로 요약, 나에게 맞게",
+        "subtitle": "NewsFlow가 관심사에 맞춰 필터링하고 핵심만 요약해 노이즈 없이 빠르게 파악할 수 있습니다.",
+        "ctaPrimary": "무료로 시작",
         "ctaSecondary": "데모 보기"
       },
       "trust": {
@@ -203,8 +203,8 @@
       "demo": {
         "title": "빠른 미리보기",
         "subtitle": "깔끔한 요약 경험을 확인하세요.",
-        "cardTitle": "데일리 브리프: AI & 테크",
-        "cardSource": "8개 소스에서",
+        "cardTitle": "오늘의 브리프: AI & Tech",
+        "cardSource": "8개 출처",
         "summaryLabel": "요약",
         "highlightsLabel": "하이라이트",
         "chips": {
@@ -212,9 +212,9 @@
           "aiHighlights": "AI 하이라이트"
         },
         "bullets": {
-          "one": "이번 주 대형 투자 라운드가 다소 둔화되었습니다.",
-          "two": "두 개의 오픈소스 모델이 상위 벤치마크에 도달했습니다.",
-          "three": "규제 당국이 더 엄격한 공시를 시사했습니다."
+          "one": "오픈소스 모델에 대한 관심이 다시 높아졌습니다.",
+          "two": "AI 공개 규정이 더 명확해지고 있습니다.",
+          "three": "저전력 칩이 기본 선택이 되고 있습니다."
         }
       },
       "useCases": {

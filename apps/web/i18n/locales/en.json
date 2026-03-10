@@ -156,9 +156,9 @@
       "signUp": "Sign up",
       "pricing": "Pricing",
       "hero": {
-        "title": "Read the right news in minutes",
-        "subtitle": "NewsFlow personalizes your RSS and summarizes what matters, so you can stay informed without the noise.",
-        "ctaPrimary": "Sign up now",
+        "title": "AI summaries for RSS, personalized for you",
+        "subtitle": "NewsFlow filters by your interests and condenses the key points so you stay informed without the noise.",
+        "ctaPrimary": "Start free",
         "ctaSecondary": "View demo"
       },
       "trust": {
@@ -203,7 +203,7 @@
       "demo": {
         "title": "A quick look",
         "subtitle": "See what a clean summary feels like.",
-        "cardTitle": "Daily Brief: AI & Tech",
+        "cardTitle": "Today's Brief: AI & Tech",
         "cardSource": "From 8 sources",
         "summaryLabel": "Summary",
         "highlightsLabel": "Highlights",
@@ -212,9 +212,9 @@
           "aiHighlights": "AI highlights"
         },
         "bullets": {
-          "one": "Major funding rounds slowed slightly this week.",
-          "two": "Two new open-source models reached top benchmarks.",
-          "three": "Regulators signaled tighter disclosure requirements."
+          "one": "Open-source models gained new traction this week.",
+          "two": "Regulators pushed for clearer AI disclosure rules.",
+          "three": "Energy-efficient chips are becoming the default."
         }
       },
       "useCases": {

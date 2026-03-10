@@ -156,9 +156,9 @@
       "signUp": "注册",
       "pricing": "定价",
       "hero": {
-        "title": "几分钟读到你真正需要的新闻",
-        "subtitle": "NewsFlow 为你的 RSS 做个性化与要点摘要，让你远离噪音，快速掌握重点。",
-        "ctaPrimary": "立即注册",
+        "title": "AI 摘要 RSS，按你的兴趣个性化",
+        "subtitle": "NewsFlow 根据兴趣筛选内容并浓缩要点，让你快速了解又不被噪音干扰。",
+        "ctaPrimary": "免费开始",
         "ctaSecondary": "查看演示"
       },
       "trust": {
@@ -212,9 +212,9 @@
           "aiHighlights": "AI 亮点"
         },
         "bullets": {
-          "one": "本周大型融资略有放缓。",
-          "two": "两款开源模型进入顶级基准。",
-          "three": "监管方暗示更严格的披露要求。"
+          "one": "开源模型本周热度持续上升。",
+          "two": "监管机构推动更清晰的 AI 披露规则。",
+          "three": "低功耗芯片正在成为默认选择。"
         }
       },
       "useCases": {
