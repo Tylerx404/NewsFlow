@@ -67,6 +67,18 @@ export interface MapLanguageToCountryOptions {
   defaultCountryCode?: string;
 }
 
+export interface InferFeedCountryInput extends FeedLanguageDetectionInput {
+  defaultCountryCode?: string;
+}
+
+export interface FeedCountryInferenceResult {
+  inferredLanguage: string | null;
+  inferredCountryCode: string;
+  inferenceConfidence: number | null;
+  inferenceSource: "LANG_DETECTION" | "DEFAULT";
+  inferredAt: Date;
+}
+
 export function detectFeedLanguage(
   input: FeedLanguageDetectionInput
 ): FeedLanguageDetectionResult | null {
@@ -139,4 +151,31 @@ export function mapLanguageToCountry(
   }
 
   return LANGUAGE_COUNTRY_MAP[normalizedLanguage] ?? defaultCountryCode;
+}
+
+export function inferFeedCountry(
+  input: InferFeedCountryInput
+): FeedCountryInferenceResult {
+  const detected = detectFeedLanguage(input);
+  const defaultCountryCode = (input.defaultCountryCode ?? "GLOBAL").toUpperCase();
+
+  if (!detected) {
+    return {
+      inferredLanguage: null,
+      inferredCountryCode: defaultCountryCode,
+      inferenceConfidence: null,
+      inferenceSource: "DEFAULT",
+      inferredAt: new Date(),
+    };
+  }
+
+  return {
+    inferredLanguage: detected.language,
+    inferredCountryCode: mapLanguageToCountry(detected.language, {
+      defaultCountryCode,
+    }),
+    inferenceConfidence: detected.confidence,
+    inferenceSource: "LANG_DETECTION",
+    inferredAt: new Date(),
+  };
 }

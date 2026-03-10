@@ -82,12 +82,12 @@ Commit goi y:
 - `feat(feed): add language-to-country heuristic mapping`
 
 ## Part D - Inference Orchestrator
-- [ ] Tao flow `inferFeedCountry(feed)`:
+- [x] Tao flow `inferFeedCountry(feed)`:
   1) detect language
   2) map country
   3) set confidence + source
   4) fallback GLOBAL neu khong du du lieu
-- [ ] Luu ket qua vao DB.
+- [x] Luu ket qua vao DB.
 - [ ] Chi update neu ket qua thay doi hoac qua han refresh.
 
 Acceptance:
