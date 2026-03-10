@@ -61,10 +61,10 @@ Commit message de xuat:
 - `feat(country): add IP-based country fallback resolver`
 
 ## Part 4 - Accept-Language Fallback Layer
-- [ ] Them parser `resolveCountryFromAcceptLanguage(header)`.
-- [ ] Uu tien locale co region (`vi-VN` -> `VN`, `en-US` -> `US`).
-- [ ] Neu chi co language (`vi`, `en`) thi map bang bang mapping an toan (optional).
-- [ ] Khong parse duoc -> `null`.
+- [x] Them parser `resolveCountryFromAcceptLanguage(header)`.
+- [x] Uu tien locale co region (`vi-VN` -> `VN`, `en-US` -> `US`).
+- [x] Neu chi co language (`vi`, `en`) thi map bang bang mapping an toan (optional).
+- [x] Khong parse duoc -> `null`.
 
 Acceptance:
 - `vi-VN,vi;q=0.9,en;q=0.8` -> `VN`.
