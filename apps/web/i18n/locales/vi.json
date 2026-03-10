@@ -156,10 +156,10 @@
       "signUp": "Đăng ký",
       "pricing": "Bảng giá",
       "hero": {
-        "title": "Đọc đúng tin bạn cần trong vài phút",
-        "subtitle": "NewsFlow cá nhân hóa RSS và tóm tắt phần quan trọng để bạn nắm ý nhanh, không bị nhiễu.",
-        "ctaPrimary": "Đăng ký ngay",
-        "ctaSecondary": "Xem bản demo"
+        "title": "Tóm tắt AI cho RSS, cá nhân hoá theo bạn",
+        "subtitle": "NewsFlow lọc tin theo sở thích và rút gọn điểm chính, giúp bạn nắm nhanh mà không nhiễu.",
+        "ctaPrimary": "Bắt đầu miễn phí",
+        "ctaSecondary": "Xem demo"
       },
       "trust": {
         "privacy": "Tôn trọng quyền riêng tư",
@@ -203,7 +203,7 @@
       "demo": {
         "title": "Xem nhanh bản tóm tắt",
         "subtitle": "Cảm nhận cách đọc gọn gàng, rõ ràng.",
-        "cardTitle": "Bản tin ngày: AI & Công nghệ",
+        "cardTitle": "Bản tin hôm nay: AI & Tech",
         "cardSource": "Từ 8 nguồn",
         "summaryLabel": "Tóm tắt",
         "highlightsLabel": "Điểm nổi bật",
@@ -212,9 +212,9 @@
           "aiHighlights": "Điểm nhấn AI"
         },
         "bullets": {
-          "one": "Dòng vốn đầu tư tuần này chậm lại nhẹ.",
-          "two": "Hai mô hình mã nguồn mở đạt top benchmark mới.",
-          "three": "Cơ quan quản lý siết yêu cầu minh bạch."
+          "one": "Mô hình mã nguồn mở tăng tốc trong tuần qua.",
+          "two": "Quy định mới yêu cầu minh bạch AI rõ ràng hơn.",
+          "three": "Chip tiết kiệm năng lượng đang thành xu hướng."
         }
       },
       "useCases": {
