@@ -1007,6 +1007,15 @@
         "title": "订阅源运维",
         "description": "使用快捷操作或打开订阅源以查看详细运维上下文。"
       },
+      "metrics": {
+        "title": "推断指标",
+        "description": "监控国家推断覆盖率与手动覆盖情况。",
+        "totalFeeds": "订阅源总数",
+        "inferredFeeds": "已推断订阅源",
+        "globalFeeds": "GLOBAL 订阅源",
+        "manualOverrideFeeds": "手动覆盖订阅源",
+        "enFromVnDomainFeeds": ".vn 域名 EN 订阅源"
+      },
       "table": {
         "columns": {
           "feed": "订阅源",
@@ -1029,6 +1038,14 @@
         "actions": {
           "retryFetch": "重试抓取",
           "retryExtraction": "重试提取"
+        },
+        "inference": {
+          "country": "国家: {country}",
+          "source": "来源: {source}",
+          "sourceLangDetection": "语言检测",
+          "sourceManual": "手动",
+          "sourceDefault": "默认",
+          "sourceUnknown": "未知"
         },
         "confirm": {
           "defaultTitle": "确认管理操作",
@@ -1071,7 +1088,16 @@
           "rssErrors": "RSS 错误：{count}",
           "extractionFailures": "提取失败：{count}",
           "lastError": "最近错误",
-          "noRecentErrors": "最近没有 RSS 错误。"
+          "noRecentErrors": "最近没有 RSS 错误。",
+          "inferenceTitle": "国家推断",
+          "inferenceCountry": "国家",
+          "inferenceLanguage": "语言",
+          "inferenceSource": "来源",
+          "inferenceUpdatedAt": "更新时间",
+          "inferenceSourceLangDetection": "语言检测",
+          "inferenceSourceManual": "手动",
+          "inferenceSourceDefault": "默认",
+          "inferenceSourceUnknown": "未知"
         },
         "operations": {
           "title": "操作",
@@ -1079,7 +1105,12 @@
           "feedEnabled": "订阅源已启用",
           "feedEnabledHint": "被停用的订阅源会被调度器跳过，除非被强制执行。",
           "retryFetch": "重试 RSS 抓取",
-          "retryFeedExtractionQueue": "重试订阅源提取队列"
+          "retryFeedExtractionQueue": "重试订阅源提取队列",
+          "inferenceCountryLabel": "手动覆盖推断国家",
+          "inferenceCountryPlaceholder": "例如: VN 或 GLOBAL",
+          "inferenceCountryHint": "留空可清除手动国家覆盖。",
+          "saveInferenceCountry": "保存推断国家",
+          "clearInferenceCountry": "清空输入"
         },
         "recentArticles": {
           "title": "最近文章",
@@ -1149,7 +1180,8 @@
         "list": "无法加载订阅源。请刷新后重试。",
         "updateState": "无法更新此订阅源状态。请重试。",
         "retryFetch": "无法加入 RSS 抓取重试任务。请重试。",
-        "retryExtraction": "无法加入订阅源提取重试任务。请重试。"
+        "retryExtraction": "无法加入订阅源提取重试任务。请重试。",
+        "updateInferenceCountry": "无法更新推断国家。请重试。"
       }
     },
     "systemOps": {

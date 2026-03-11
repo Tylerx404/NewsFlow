@@ -46,6 +46,38 @@ describe("feed country inference", () => {
     expect(mapLanguageToCountry("es")).toBe("GLOBAL");
   });
 
+  it("maps English to ccTLD country when domain hint exists", () => {
+    expect(
+      mapLanguageToCountry("en", {
+        sourceUrl: "https://en.yna.co.kr/RSS/news.xml",
+      })
+    ).toBe("KR");
+  });
+
+  it("maps France24 English feed to FR using host hint", () => {
+    expect(
+      mapLanguageToCountry("en", {
+        sourceUrl: "https://www.france24.com/en/france/rss",
+      })
+    ).toBe("FR");
+  });
+
+  it("maps ElPais English feed to ES using host hint", () => {
+    expect(
+      mapLanguageToCountry("en", {
+        sourceUrl: "https://feeds.elpais.com/mrss-s/pages/ep/site/english.elpais.com/portada",
+      })
+    ).toBe("ES");
+  });
+
+  it("keeps GLOBAL for English when domain hint is absent", () => {
+    expect(
+      mapLanguageToCountry("en", {
+        sourceUrl: "https://example.com/rss.xml",
+      })
+    ).toBe("GLOBAL");
+  });
+
   it("maps single-country language to expected country", () => {
     expect(mapLanguageToCountry("vi")).toBe("VN");
     expect(mapLanguageToCountry("th")).toBe("TH");
@@ -62,5 +94,52 @@ describe("feed country inference", () => {
     expect(result.inferredLanguage).toBeNull();
     expect(result.inferredCountryCode).toBe("GLOBAL");
     expect(result.inferenceSource).toBe("DEFAULT");
+  });
+
+  it("uses domain country when language detection is not possible", () => {
+    const result = inferFeedCountry({
+      title: "News",
+      description: "Latest headlines",
+      items: [],
+      sourceUrl: "https://en.yna.co.kr/RSS/news.xml",
+      defaultCountryCode: "GLOBAL",
+    });
+
+    expect(result.inferredLanguage).toBeNull();
+    expect(result.inferredCountryCode).toBe("KR");
+    expect(result.inferenceSource).toBe("DEFAULT");
+  });
+
+  it("uses host hint for country resolution on France24", () => {
+    const result = inferFeedCountry({
+      title: "Latest news reports on FRANCE, French politics and culture",
+      description: "short",
+      items: [],
+      sourceUrl: "https://www.france24.com/en/france/rss",
+      defaultCountryCode: "GLOBAL",
+    });
+
+    expect(result.inferredCountryCode).toBe("FR");
+    expect(["DEFAULT", "LANG_DETECTION"]).toContain(result.inferenceSource);
+  });
+
+  it("infers KR for English feed on .kr domain", () => {
+    const result = inferFeedCountry({
+      title: "Korea news in English",
+      description:
+        "South Korea economy and politics updates from Seoul with detailed context for international readers.",
+      items: [
+        {
+          title: "Korean market update",
+          summary: "The KOSPI closed higher amid gains in chipmakers and battery producers.",
+        },
+      ],
+      sourceUrl: "https://en.yna.co.kr/RSS/news.xml",
+      defaultCountryCode: "GLOBAL",
+    });
+
+    expect(result.inferredLanguage).toBe("en");
+    expect(result.inferredCountryCode).toBe("KR");
+    expect(result.inferenceSource).toBe("LANG_DETECTION");
   });
 });

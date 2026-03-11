@@ -1007,6 +1007,15 @@
         "title": "Vận hành feed",
         "description": "Dùng thao tác nhanh hoặc mở feed để xem ngữ cảnh vận hành chi tiết."
       },
+      "metrics": {
+        "title": "Chỉ số suy luận",
+        "description": "Theo dõi độ phủ suy luận quốc gia và số lần override thủ công.",
+        "totalFeeds": "Tổng số feed",
+        "inferredFeeds": "Feed đã suy luận",
+        "globalFeeds": "Feed GLOBAL",
+        "manualOverrideFeeds": "Feed override thủ công",
+        "enFromVnDomainFeeds": "Feed EN từ domain .vn"
+      },
       "table": {
         "columns": {
           "feed": "Feed",
@@ -1029,6 +1038,14 @@
         "actions": {
           "retryFetch": "Thử fetch lại",
           "retryExtraction": "Thử trích xuất lại"
+        },
+        "inference": {
+          "country": "Quốc gia: {country}",
+          "source": "Nguồn: {source}",
+          "sourceLangDetection": "Phát hiện ngôn ngữ",
+          "sourceManual": "Thủ công",
+          "sourceDefault": "Mặc định",
+          "sourceUnknown": "Không rõ"
         },
         "confirm": {
           "defaultTitle": "Xác nhận hành động quản trị",
@@ -1071,7 +1088,16 @@
           "rssErrors": "Lỗi RSS: {count}",
           "extractionFailures": "Lỗi trích xuất: {count}",
           "lastError": "Lỗi gần nhất",
-          "noRecentErrors": "Không có lỗi RSS gần đây."
+          "noRecentErrors": "Không có lỗi RSS gần đây.",
+          "inferenceTitle": "Suy luận quốc gia",
+          "inferenceCountry": "Quốc gia",
+          "inferenceLanguage": "Ngôn ngữ",
+          "inferenceSource": "Nguồn",
+          "inferenceUpdatedAt": "Cập nhật",
+          "inferenceSourceLangDetection": "Phát hiện ngôn ngữ",
+          "inferenceSourceManual": "Thủ công",
+          "inferenceSourceDefault": "Mặc định",
+          "inferenceSourceUnknown": "Không rõ"
         },
         "operations": {
           "title": "Thao tác",
@@ -1079,7 +1105,12 @@
           "feedEnabled": "Feed đang bật",
           "feedEnabledHint": "Feed bị tắt sẽ bị scheduler bỏ qua trừ khi bị ép chạy.",
           "retryFetch": "Thử fetch RSS lại",
-          "retryFeedExtractionQueue": "Thử lại hàng đợi trích xuất feed"
+          "retryFeedExtractionQueue": "Thử lại hàng đợi trích xuất feed",
+          "inferenceCountryLabel": "Override quốc gia suy luận",
+          "inferenceCountryPlaceholder": "Ví dụ: VN hoặc GLOBAL",
+          "inferenceCountryHint": "Để trống để xóa override quốc gia thủ công.",
+          "saveInferenceCountry": "Lưu quốc gia suy luận",
+          "clearInferenceCountry": "Xóa nội dung"
         },
         "recentArticles": {
           "title": "Bài viết gần đây",
@@ -1149,7 +1180,8 @@
         "list": "Không thể tải các nguồn feed. Hãy làm mới và thử lại.",
         "updateState": "Không thể cập nhật trạng thái feed này. Hãy thử lại.",
         "retryFetch": "Không thể đưa retry RSS vào hàng đợi. Hãy thử lại.",
-        "retryExtraction": "Không thể đưa retry trích xuất feed vào hàng đợi. Hãy thử lại."
+        "retryExtraction": "Không thể đưa retry trích xuất feed vào hàng đợi. Hãy thử lại.",
+        "updateInferenceCountry": "Không thể cập nhật quốc gia suy luận. Hãy thử lại."
       }
     },
     "systemOps": {

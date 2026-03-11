@@ -120,6 +120,36 @@ const LANGUAGE_COUNTRY_MAP: Record<string, string> = {
   de: "DE",
   es: "ES",
 };
+const DOMAIN_COUNTRY_MAP: Record<string, string> = {
+  vn: "VN",
+  kr: "KR",
+  jp: "JP",
+  cn: "CN",
+  tw: "TW",
+  hk: "HK",
+  th: "TH",
+  id: "ID",
+  fr: "FR",
+  de: "DE",
+  es: "ES",
+};
+const HOST_COUNTRY_HINTS: Array<{ pattern: RegExp; countryCode: string }> = [
+  { pattern: /(^|\.)france24\./i, countryCode: "FR" },
+  { pattern: /(^|\.)elpais\./i, countryCode: "ES" },
+  { pattern: /(^|\.)yna\.co\.kr$/i, countryCode: "KR" },
+  { pattern: /(^|\.)japantimes\.co\.jp$/i, countryCode: "JP" },
+];
+const COUNTRY_KEYWORD_HINTS: Array<{ pattern: RegExp; countryCode: string }> = [
+  { pattern: /\b(france|french)\b/i, countryCode: "FR" },
+  { pattern: /\b(japan|japanese)\b/i, countryCode: "JP" },
+  { pattern: /\b(korea|korean|seoul)\b/i, countryCode: "KR" },
+  { pattern: /\b(taiwan|taipei|taiwanese)\b/i, countryCode: "TW" },
+  { pattern: /\b(vietnam|viet\s?nam|vietnamese)\b/i, countryCode: "VN" },
+  { pattern: /\b(spain|spanish|españa|espanol|español)\b/i, countryCode: "ES" },
+  { pattern: /\b(thailand|thai|bangkok)\b/i, countryCode: "TH" },
+  { pattern: /\b(indonesia|indonesian|jakarta)\b/i, countryCode: "ID" },
+  { pattern: /\b(germany|german|berlin)\b/i, countryCode: "DE" },
+];
 
 function normalizeLanguageCode(language: string | null | undefined) {
   if (!language) {
@@ -143,6 +173,63 @@ function mapLanguageToCountry(language: string) {
   return LANGUAGE_COUNTRY_MAP[language] ?? "GLOBAL";
 }
 
+function resolveHostFromUrl(value: string | null | undefined) {
+  if (!value || typeof value !== "string") {
+    return null;
+  }
+
+  try {
+    return new URL(value).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+function resolveCountryFromDomain(siteUrl: string | null | undefined, sourceUrl: string) {
+  const host = resolveHostFromUrl(siteUrl) ?? resolveHostFromUrl(sourceUrl);
+
+  if (!host) {
+    return null;
+  }
+
+  const segments = host.split(".").filter(Boolean);
+  if (segments.length === 0) {
+    return null;
+  }
+
+  const tld = segments[segments.length - 1] ?? "";
+  const fromTld = DOMAIN_COUNTRY_MAP[tld];
+  if (fromTld) {
+    return fromTld;
+  }
+
+  for (const hint of HOST_COUNTRY_HINTS) {
+    if (hint.pattern.test(host)) {
+      return hint.countryCode;
+    }
+  }
+
+  return null;
+}
+
+function resolveCountryFromKeywords(parts: Array<string | null | undefined>) {
+  const text = parts
+    .filter((value): value is string => typeof value === "string" && value.length > 0)
+    .join(" ");
+
+  if (!text) {
+    return null;
+  }
+
+  for (const hint of COUNTRY_KEYWORD_HINTS) {
+    if (hint.pattern.test(text)) {
+      return hint.countryCode;
+    }
+  }
+
+  return null;
+}
+
 function shouldRefreshInference(inferredAt: Date | null) {
   if (!inferredAt) {
     return true;
@@ -151,22 +238,36 @@ function shouldRefreshInference(inferredAt: Date | null) {
   return Date.now() - inferredAt.getTime() >= INFERENCE_REFRESH_INTERVAL_MS;
 }
 
-function buildInferenceUpdate(feedLanguage: string | null | undefined) {
+function buildInferenceUpdate(
+  feedLanguage: string | null | undefined,
+  sourceUrl: string,
+  siteUrl: string | null | undefined,
+  title: string | null | undefined,
+  description: string | null | undefined
+) {
   const normalizedLanguage = normalizeLanguageCode(feedLanguage);
 
   if (!normalizedLanguage) {
+    const domainCountry = resolveCountryFromDomain(siteUrl, sourceUrl);
+    const keywordCountry = resolveCountryFromKeywords([title, description, sourceUrl, siteUrl]);
+
     return {
       inferredLanguage: null,
-      inferredCountryCode: "GLOBAL",
+      inferredCountryCode: domainCountry ?? keywordCountry ?? "GLOBAL",
       inferenceConfidence: null,
       inferenceSource: "DEFAULT" as const,
       inferredAt: new Date(),
     };
   }
 
+  const keywordCountry = resolveCountryFromKeywords([title, description, sourceUrl, siteUrl]);
+
   return {
     inferredLanguage: normalizedLanguage,
-    inferredCountryCode: mapLanguageToCountry(normalizedLanguage),
+    inferredCountryCode:
+      GLOBAL_LANGUAGE_SET.has(normalizedLanguage)
+        ? (resolveCountryFromDomain(siteUrl, sourceUrl) ?? keywordCountry ?? "GLOBAL")
+        : mapLanguageToCountry(normalizedLanguage),
     inferenceConfidence: 0.5,
     inferenceSource: "LANG_DETECTION" as const,
     inferredAt: new Date(),
@@ -204,9 +305,21 @@ export const rssFetchProcessor: WorkerProcessor<RssFetchJobData> = async (job) =
       nextFetchAt: new Date(Date.now() + 30 * 60 * 1000),
     };
 
-    if (feedSource.inferenceSource !== "MANUAL" && shouldRefreshInference(feedSource.inferredAt)) {
+    if (
+      feedSource.inferenceSource !== "MANUAL"
+      && (shouldRefreshInference(feedSource.inferredAt) || feedSource.inferredCountryCode === "GLOBAL")
+    ) {
       try {
-        Object.assign(updateData, buildInferenceUpdate(feedData.language || feedSource.language));
+        Object.assign(
+          updateData,
+          buildInferenceUpdate(
+            feedData.language || feedSource.language,
+            feedSource.url,
+            feedData.link || feedSource.siteUrl,
+            feedData.title || feedSource.title,
+            feedData.description || feedSource.description
+          )
+        );
       } catch (inferenceError) {
         const inferenceMessage =
           inferenceError instanceof Error ? inferenceError.message : "Unknown inference error";

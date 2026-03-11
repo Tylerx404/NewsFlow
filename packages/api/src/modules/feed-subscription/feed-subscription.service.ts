@@ -115,6 +115,8 @@ export async function fetchFeedMetadata(url: string): Promise<{
         summary: item.excerpt,
       })),
       defaultCountryCode: "GLOBAL",
+      sourceUrl: normalizedUrl,
+      siteUrl: metadata.siteUrl,
     });
 
     metadata.inferredLanguage = inference.inferredLanguage;

@@ -64,6 +64,14 @@ const feedsQuery = useQuery(
   )
 );
 
+const feedMetricsQuery = useQuery(
+  computed(() =>
+    $orpc.admin.feed.inferenceMetrics.queryOptions({
+      queryKey: dashboardQueryKeys.admin.feeds.metrics(),
+    })
+  )
+);
+
 const updateEnabledMutation = useMutation(
   $orpc.admin.feed.updateEnabled.mutationOptions({
     onSuccess: async () => {
@@ -225,6 +233,47 @@ const handleRetryExtraction = async (feedSourceId: string) => {
               <SelectItem value="false">{{ t("admin.feeds.filters.extraction.healthy") }}</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ t("admin.feeds.metrics.title") }}</CardTitle>
+        <CardDescription>
+          {{ t("admin.feeds.metrics.description") }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent class="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div class="rounded-md border p-3">
+          <p class="text-xs text-muted-foreground">{{ t("admin.feeds.metrics.totalFeeds") }}</p>
+          <p class="mt-1 text-lg font-semibold">
+            {{ new Intl.NumberFormat().format(feedMetricsQuery.data.value?.totalFeeds ?? 0) }}
+          </p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-xs text-muted-foreground">{{ t("admin.feeds.metrics.inferredFeeds") }}</p>
+          <p class="mt-1 text-lg font-semibold">
+            {{ new Intl.NumberFormat().format(feedMetricsQuery.data.value?.inferredFeeds ?? 0) }}
+          </p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-xs text-muted-foreground">{{ t("admin.feeds.metrics.globalFeeds") }}</p>
+          <p class="mt-1 text-lg font-semibold">
+            {{ new Intl.NumberFormat().format(feedMetricsQuery.data.value?.globalFeeds ?? 0) }}
+          </p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-xs text-muted-foreground">{{ t("admin.feeds.metrics.manualOverrideFeeds") }}</p>
+          <p class="mt-1 text-lg font-semibold">
+            {{ new Intl.NumberFormat().format(feedMetricsQuery.data.value?.manualOverrideFeeds ?? 0) }}
+          </p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-xs text-muted-foreground">{{ t("admin.feeds.metrics.enFromVnDomainFeeds") }}</p>
+          <p class="mt-1 text-lg font-semibold">
+            {{ new Intl.NumberFormat().format(feedMetricsQuery.data.value?.enFromVnDomainFeeds ?? 0) }}
+          </p>
         </div>
       </CardContent>
     </Card>

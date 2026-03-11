@@ -1007,6 +1007,15 @@
         "title": "フィード運用",
         "description": "クイック操作を使うかフィードを開いて詳細な運用情報を確認します。"
       },
+      "metrics": {
+        "title": "推論メトリクス",
+        "description": "国推論のカバレッジと手動上書きを監視します。",
+        "totalFeeds": "総フィード数",
+        "inferredFeeds": "推論済みフィード",
+        "globalFeeds": "GLOBAL フィード",
+        "manualOverrideFeeds": "手動上書きフィード",
+        "enFromVnDomainFeeds": ".vn ドメインの EN フィード"
+      },
       "table": {
         "columns": {
           "feed": "フィード",
@@ -1029,6 +1038,14 @@
         "actions": {
           "retryFetch": "取得を再試行",
           "retryExtraction": "抽出を再試行"
+        },
+        "inference": {
+          "country": "国: {country}",
+          "source": "ソース: {source}",
+          "sourceLangDetection": "言語検出",
+          "sourceManual": "手動",
+          "sourceDefault": "デフォルト",
+          "sourceUnknown": "不明"
         },
         "confirm": {
           "defaultTitle": "管理操作を確認",
@@ -1071,7 +1088,16 @@
           "rssErrors": "RSS エラー: {count}",
           "extractionFailures": "抽出失敗: {count}",
           "lastError": "最新エラー",
-          "noRecentErrors": "最近の RSS エラーはありません。"
+          "noRecentErrors": "最近の RSS エラーはありません。",
+          "inferenceTitle": "国推論",
+          "inferenceCountry": "国",
+          "inferenceLanguage": "言語",
+          "inferenceSource": "ソース",
+          "inferenceUpdatedAt": "更新",
+          "inferenceSourceLangDetection": "言語検出",
+          "inferenceSourceManual": "手動",
+          "inferenceSourceDefault": "デフォルト",
+          "inferenceSourceUnknown": "不明"
         },
         "operations": {
           "title": "操作",
@@ -1079,7 +1105,12 @@
           "feedEnabled": "フィード有効化",
           "feedEnabledHint": "無効なフィードは強制実行しない限りスケジューラでスキップされます。",
           "retryFetch": "RSS 取得を再試行",
-          "retryFeedExtractionQueue": "フィード抽出キューを再試行"
+          "retryFeedExtractionQueue": "フィード抽出キューを再試行",
+          "inferenceCountryLabel": "推論国を手動上書き",
+          "inferenceCountryPlaceholder": "例: VN または GLOBAL",
+          "inferenceCountryHint": "空にすると手動上書きを解除します。",
+          "saveInferenceCountry": "推論国を保存",
+          "clearInferenceCountry": "入力をクリア"
         },
         "recentArticles": {
           "title": "最近の記事",
@@ -1149,7 +1180,8 @@
         "list": "フィードソースを読み込めません。更新して再試行してください。",
         "updateState": "このフィード状態を更新できません。再試行してください。",
         "retryFetch": "RSS 取得再試行をキューへ追加できません。再試行してください。",
-        "retryExtraction": "フィード抽出再試行をキューへ追加できません。再試行してください。"
+        "retryExtraction": "フィード抽出再試行をキューへ追加できません。再試行してください。",
+        "updateInferenceCountry": "推論国を更新できません。再試行してください。"
       }
     },
     "systemOps": {
