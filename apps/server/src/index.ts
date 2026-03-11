@@ -32,6 +32,11 @@ const MAX_SESSION_IMAGE_LENGTH = 4_096;
 const STARTUP_STRIPE_SYNC_LIMIT = 1_000;
 const DATA_URL_PATTERN = /^data:([^;]+);base64,(.+)$/;
 
+type DecodedImage = {
+  mimeType: string;
+  buffer: Buffer;
+};
+
 async function runStartupStripeSync() {
   try {
     const result = await syncStripeSubscriptionsManually(prisma, {
@@ -57,7 +62,7 @@ function isSessionImageUrl(value: string) {
   return value.startsWith(getSessionImageUrl());
 }
 
-function decodeDataUrl(value: string): { mimeType: string; buffer: Buffer } | null {
+function decodeDataUrl(value: string): DecodedImage | null {
   const match = value.match(DATA_URL_PATTERN);
 
   if (!match) {
