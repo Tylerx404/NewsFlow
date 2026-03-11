@@ -33,6 +33,7 @@ export const dashboardQueryKeys = {
         ] as const,
     },
     feeds: {
+      metrics: () => ["dashboard", "admin", "feeds", "metrics"] as const,
       list: (
         query: string,
         isEnabled: "all" | "true" | "false",

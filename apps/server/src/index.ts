@@ -1,5 +1,6 @@
 import { createContext } from "@NewsFlow/api/context";
 import { appRouter } from "@NewsFlow/api/routers/index";
+import { resolveUserCountry } from "@NewsFlow/api";
 import { auth } from "@NewsFlow/auth";
 import {
   cancelSubscriptionForUser,
@@ -12,6 +13,7 @@ import {
   mapStripeBillingError,
   normalizeStripeBodyUrl,
   restoreSubscriptionForUser,
+  syncStripeSubscriptionsManually,
 } from "@NewsFlow/auth/stripe-billing";
 import prisma from "@NewsFlow/db";
 import { env } from "@NewsFlow/env/server";
@@ -27,11 +29,34 @@ import express from "express";
 const app = express();
 
 const MAX_SESSION_IMAGE_LENGTH = 4_096;
+const STARTUP_STRIPE_SYNC_LIMIT = 1_000;
 const DATA_URL_PATTERN = /^data:([^;]+);base64,(.+)$/;
 type DecodedImage = {
   mimeType: string;
   buffer: Buffer;
 };
+
+type DecodedImage = {
+  mimeType: string;
+  buffer: Buffer;
+};
+
+async function runStartupStripeSync() {
+  try {
+    const result = await syncStripeSubscriptionsManually(prisma, {
+      status: "all",
+      limit: STARTUP_STRIPE_SYNC_LIMIT,
+    });
+
+    console.log("[stripe-sync] Startup sync completed", result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    console.error("[stripe-sync] Startup sync failed", {
+      statusCode: mapped.statusCode,
+      message: mapped.message,
+    });
+  }
+}
 
 function getSessionImageUrl() {
   return `${env.BETTER_AUTH_URL}/api/auth/session-image`;
@@ -52,6 +77,10 @@ function decodeDataUrl(value: string): DecodedImage | null {
   const base64Payload = match[2];
 
   if (typeof mimeType !== "string" || typeof base64Payload !== "string") {
+    return null;
+  }
+
+  if (!mimeType || !base64Payload) {
     return null;
   }
 
@@ -83,6 +112,78 @@ function sanitizeSessionResponse(session: Awaited<ReturnType<typeof auth.api.get
   };
 }
 
+function getSingleHeaderValue(value: string | string[] | undefined) {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return Array.isArray(value) ? value[0] ?? null : null;
+}
+
+function resolveClientIp(req: express.Request) {
+  const forwardedFor = getSingleHeaderValue(req.headers["x-forwarded-for"]);
+
+  if (forwardedFor) {
+    const firstForwarded = forwardedFor.split(",")[0]?.trim();
+
+    if (firstForwarded) {
+      return firstForwarded;
+    }
+  }
+
+  const realIp = getSingleHeaderValue(req.headers["x-real-ip"]);
+
+  if (realIp) {
+    return realIp.trim();
+  }
+
+  if (typeof req.ip === "string" && req.ip.trim()) {
+    return req.ip.trim();
+  }
+
+  return req.socket.remoteAddress ?? null;
+}
+
+async function syncUserCountryFromRequest(req: express.Request, userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      countryCode: true,
+      countrySource: true,
+      phoneNumber: true,
+    },
+  });
+
+  if (!user) {
+    return;
+  }
+
+  const resolved = await resolveUserCountry({
+    phoneNumber: user.phoneNumber,
+    ipAddress: resolveClientIp(req),
+    acceptLanguageHeader: getSingleHeaderValue(req.headers["accept-language"]),
+    defaultCountryCode: "GLOBAL",
+  });
+
+  if (user.countryCode === resolved.countryCode && user.countrySource === resolved.source) {
+    return;
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      countryCode: resolved.countryCode,
+      countrySource: resolved.source,
+    },
+  });
+
+  console.info("[country-resolution] Updated user country", {
+    userId,
+    source: resolved.source,
+    countryCode: resolved.countryCode,
+  });
+}
+
 async function requireSessionUser(req: express.Request) {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
@@ -90,6 +191,15 @@ async function requireSessionUser(req: express.Request) {
 
   if (!session?.user?.id) {
     return null;
+  }
+
+  try {
+    await syncUserCountryFromRequest(req, session.user.id);
+  } catch (error) {
+    console.warn("[country-resolution] Failed to sync user country from request", {
+      userId: session.user.id,
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 
   return session.user;
@@ -256,10 +366,54 @@ app.post("/api/auth/subscription/restore", express.json(), async (req, res) => {
   }
 });
 
+app.post("/api/admin/stripe/manual-sync", express.json(), async (req, res) => {
+  const user = await requireSessionUser(req);
+
+  if (!user) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  if (user.role !== "ADMIN") {
+    res.status(403).json({ message: "Forbidden" });
+    return;
+  }
+
+  const rawLimit = req.body?.limit;
+  const parsedLimit =
+    typeof rawLimit === "number" && Number.isFinite(rawLimit)
+      ? Math.trunc(rawLimit)
+      : null;
+  const limit = parsedLimit && parsedLimit > 0 ? parsedLimit : undefined;
+
+  try {
+    const result = await syncStripeSubscriptionsManually(prisma, {
+      limit,
+      status: "all",
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    const mapped = mapStripeBillingError(error);
+    res.status(mapped.statusCode).json({ message: mapped.message });
+  }
+});
+
 app.get("/api/auth/get-session", async (req, res) => {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
+
+  if (session?.user?.id) {
+    try {
+      await syncUserCountryFromRequest(req, session.user.id);
+    } catch (error) {
+      console.warn("[country-resolution] Failed to sync country on get-session", {
+        userId: session.user.id,
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
 
   res.json(sanitizeSessionResponse(session));
 });
@@ -342,4 +496,5 @@ app.get("/", (_req, res) => {
 
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
+  void runStartupStripeSync();
 });

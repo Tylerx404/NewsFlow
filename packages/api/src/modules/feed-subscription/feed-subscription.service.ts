@@ -4,6 +4,7 @@ import Parser from "rss-parser";
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 import { ORPCError } from "@orpc/server";
+import { inferFeedCountry } from "./feed-country-inference.service";
 
 type PrismaClient = typeof prisma;
 
@@ -20,6 +21,11 @@ export interface FeedSourceMetadata {
   siteUrl: string | null;
   iconUrl: string | null;
   language: string | null;
+  inferredLanguage: string | null;
+  inferredCountryCode: string;
+  inferenceConfidence: number | null;
+  inferenceSource: "LANG_DETECTION" | "DEFAULT";
+  inferredAt: Date;
 }
 
 export interface RssItem {
@@ -78,6 +84,11 @@ export async function fetchFeedMetadata(url: string): Promise<{
       siteUrl: feed.link || null,
       iconUrl: feed.image?.url || null,
       language: feed.language || null,
+      inferredLanguage: null,
+      inferredCountryCode: "GLOBAL",
+      inferenceConfidence: null,
+      inferenceSource: "DEFAULT",
+      inferredAt: new Date(),
     };
 
     const items: RssItem[] = (feed.items || []).map((item) => {
@@ -95,6 +106,24 @@ export async function fetchFeedMetadata(url: string): Promise<{
         categories: item.categories || [],
       };
     });
+
+    const inference = inferFeedCountry({
+      title: metadata.title,
+      description: metadata.description,
+      items: items.slice(0, 5).map((item) => ({
+        title: item.title,
+        summary: item.excerpt,
+      })),
+      defaultCountryCode: "GLOBAL",
+      sourceUrl: normalizedUrl,
+      siteUrl: metadata.siteUrl,
+    });
+
+    metadata.inferredLanguage = inference.inferredLanguage;
+    metadata.inferredCountryCode = inference.inferredCountryCode;
+    metadata.inferenceConfidence = inference.inferenceConfidence;
+    metadata.inferenceSource = inference.inferenceSource;
+    metadata.inferredAt = inference.inferredAt;
 
     return { normalizedUrl, metadata, items };
   } catch {

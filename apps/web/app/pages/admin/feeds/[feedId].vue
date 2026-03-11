@@ -66,6 +66,15 @@ const retryArticleExtractionMutation = useMutation(
   })
 );
 
+const updateInferenceCountryMutation = useMutation(
+  $orpc.admin.feed.updateInferenceCountry.mutationOptions({
+    onSuccess: async () => {
+      actionError.value = "";
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
 const feedErrorMessage = computed(() => {
   if (!feedDetailQuery.error.value) {
     return "";
@@ -82,6 +91,7 @@ const isActionPending = computed(
     || retryFetchMutation.isPending.value
     || retryFeedExtractionMutation.isPending.value
     || retryArticleExtractionMutation.isPending.value
+    || updateInferenceCountryMutation.isPending.value
 );
 
 const handleToggleEnabled = async (payload: { feedSourceId: string; isEnabled: boolean }) => {
@@ -125,6 +135,20 @@ const handleRetryArticleExtraction = async (sourceArticleId: string) => {
       error instanceof Error ? error.message : t("admin.feeds.detail.errors.retryArticleExtraction");
   }
 };
+
+const handleUpdateInferenceCountry = async (payload: {
+  feedSourceId: string;
+  inferredCountryCode: string | null;
+}) => {
+  actionError.value = "";
+
+  try {
+    await updateInferenceCountryMutation.mutateAsync(payload);
+  } catch (error) {
+    actionError.value =
+      error instanceof Error ? error.message : t("admin.feeds.errors.updateInferenceCountry");
+  }
+};
 </script>
 
 <template>
@@ -151,6 +175,7 @@ const handleRetryArticleExtraction = async (sourceArticleId: string) => {
       @retry-fetch="handleRetryFetch"
       @retry-feed-extraction="handleRetryFeedExtraction"
       @retry-article-extraction="handleRetryArticleExtraction"
+      @update-inference-country="handleUpdateInferenceCountry"
     />
   </div>
 </template>

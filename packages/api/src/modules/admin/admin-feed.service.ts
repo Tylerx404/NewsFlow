@@ -28,6 +28,11 @@ const adminFeedListSelect = {
   description: true,
   iconUrl: true,
   language: true,
+  inferredLanguage: true,
+  inferredCountryCode: true,
+  inferenceConfidence: true,
+  inferenceSource: true,
+  inferredAt: true,
   isEnabled: true,
   errorCount: true,
   lastError: true,
@@ -190,6 +195,11 @@ function mapAdminFeedListItem(
     description: feed.description,
     iconUrl: feed.iconUrl,
     language: feed.language,
+    inferredLanguage: feed.inferredLanguage,
+    inferredCountryCode: feed.inferredCountryCode,
+    inferenceConfidence: feed.inferenceConfidence,
+    inferenceSource: feed.inferenceSource,
+    inferredAt: feed.inferredAt,
     isEnabled: feed.isEnabled,
     errorCount: feed.errorCount,
     lastError: feed.lastError,
@@ -242,6 +252,100 @@ export async function listAdminFeeds(db: PrismaClient, input: ListAdminFeedsInpu
   };
 }
 
+export async function updateAdminFeedInferenceCountry(
+  db: PrismaClient,
+  input: UpdateAdminFeedInferenceCountryParams
+) {
+  const existingFeed = await db.feedSource.findUnique({
+    where: { id: input.feedSourceId },
+    select: {
+      id: true,
+      inferredCountryCode: true,
+      inferenceSource: true,
+    },
+  });
+
+  if (!existingFeed) {
+    return null;
+  }
+
+  const normalizedCountryCode = input.inferredCountryCode
+    ? input.inferredCountryCode.trim().toUpperCase()
+    : null;
+
+  await db.$transaction(async (tx) => {
+    await tx.feedSource.update({
+      where: { id: input.feedSourceId },
+      data: {
+        inferredCountryCode: normalizedCountryCode,
+        inferenceSource: "MANUAL",
+        inferredAt: new Date(),
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "FEED_SOURCE_INFERENCE_COUNTRY_UPDATED",
+      targetType: "FEED_SOURCE",
+      targetId: input.feedSourceId,
+      metadata: {
+        previous: {
+          inferredCountryCode: existingFeed.inferredCountryCode ?? undefined,
+          inferenceSource: existingFeed.inferenceSource ?? undefined,
+        },
+        next: {
+          inferredCountryCode: normalizedCountryCode ?? undefined,
+          inferenceSource: "MANUAL",
+        },
+      },
+    });
+  });
+
+  return getAdminFeedDetail(db, input.feedSourceId);
+}
+
+export async function getAdminFeedInferenceMetrics(db: PrismaClient) {
+  const [
+    totalFeeds,
+    inferredFeeds,
+    globalFeeds,
+    manualOverrideFeeds,
+    enFromVnDomainFeeds,
+  ] = await Promise.all([
+    db.feedSource.count(),
+    db.feedSource.count({
+      where: {
+        inferredCountryCode: {
+          not: null,
+        },
+      },
+    }),
+    db.feedSource.count({
+      where: {
+        inferredCountryCode: "GLOBAL",
+      },
+    }),
+    db.feedSource.count({
+      where: {
+        inferenceSource: "MANUAL",
+      },
+    }),
+    db.feedSource.count({
+      where: {
+        inferredLanguage: "en",
+        OR: [{ url: { contains: ".vn", mode: "insensitive" } }, { siteUrl: { contains: ".vn", mode: "insensitive" } }],
+      },
+    }),
+  ]);
+
+  return {
+    totalFeeds,
+    inferredFeeds,
+    globalFeeds,
+    manualOverrideFeeds,
+    enFromVnDomainFeeds,
+  };
+}
 export async function getAdminFeedDetail(db: PrismaClient, feedSourceId: string) {
   const feed = await db.feedSource.findUnique({
     where: { id: feedSourceId },
@@ -303,6 +407,11 @@ interface AdminFeedMutationContext {
 interface UpdateAdminFeedEnabledParams extends AdminFeedMutationContext {
   feedSourceId: string;
   isEnabled: boolean;
+}
+
+interface UpdateAdminFeedInferenceCountryParams extends AdminFeedMutationContext {
+  feedSourceId: string;
+  inferredCountryCode: string | null;
 }
 
 interface RetryAdminFeedFetchParams extends AdminFeedMutationContext {
@@ -454,9 +563,11 @@ export async function retryAdminFeedExtraction(
   });
 
   if (articles.length === 0) {
-    throw new ORPCError("BAD_REQUEST", {
-      message: "Feed source has no articles waiting for extraction.",
-    });
+    return {
+      queued: false,
+      feedSourceId: input.feedSourceId,
+      queuedCount: 0,
+    };
   }
 
   await contentQueue.addBulk(

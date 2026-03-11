@@ -24,6 +24,11 @@ export const adminFeedListItemSchema = z.object({
   description: z.string().nullable(),
   iconUrl: z.string().nullable(),
   language: z.string().nullable(),
+  inferredLanguage: z.string().nullable(),
+  inferredCountryCode: z.string().nullable(),
+  inferenceConfidence: z.number().nullable(),
+  inferenceSource: z.enum(["LANG_DETECTION", "MANUAL", "DEFAULT"]).nullable(),
+  inferredAt: z.date().nullable(),
   isEnabled: z.boolean(),
   errorCount: z.number().int(),
   lastError: z.string().nullable(),
@@ -73,6 +78,25 @@ export const adminFeedIdSchema = z.object({
 export const updateAdminFeedEnabledSchema = z.object({
   feedSourceId: z.string(),
   isEnabled: z.boolean(),
+});
+
+export const updateAdminFeedInferenceCountrySchema = z.object({
+  feedSourceId: z.string(),
+  inferredCountryCode: z
+    .string()
+    .trim()
+    .min(2)
+    .max(10)
+    .regex(/^[A-Z]+$/, "Country code must be uppercase letters.")
+    .nullable(),
+});
+
+export const adminFeedInferenceMetricsSchema = z.object({
+  totalFeeds: z.number().int(),
+  inferredFeeds: z.number().int(),
+  globalFeeds: z.number().int(),
+  manualOverrideFeeds: z.number().int(),
+  enFromVnDomainFeeds: z.number().int(),
 });
 
 export const retryAdminFeedFetchOutputSchema = z.object({

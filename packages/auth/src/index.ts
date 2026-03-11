@@ -21,6 +21,20 @@ export const auth = betterAuth({
   }),
   user: {
     additionalFields: {
+      phoneNumber: {
+        type: "string",
+        required: false,
+      },
+      countryCode: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+      countrySource: {
+        type: ["PHONE", "IP", "ACCEPT_LANGUAGE", "DEFAULT"],
+        required: false,
+        input: false,
+      },
       role: {
         type: ["USER", "ADMIN"],
         required: false,

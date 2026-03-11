@@ -1,4 +1,5 @@
 import prisma from "@NewsFlow/db";
+import { createRedisConnection } from "@NewsFlow/db";
 import { QUEUES, createQueue, type RssFetchJobData } from "@NewsFlow/queue";
 import { ORPCError } from "@orpc/server";
 import { protectedProcedure } from "../../index";
@@ -20,6 +21,63 @@ import {
 } from "./feed-subscription.service";
 
 const rssQueue = createQueue<RssFetchJobData>(QUEUES.RSS_FETCH);
+const discoverCache = createRedisConnection("api-discover-cache");
+let isDiscoverCacheReady = false;
+
+discoverCache.on("ready", () => {
+  isDiscoverCacheReady = true;
+});
+
+discoverCache.on("end", () => {
+  isDiscoverCacheReady = false;
+});
+
+void discoverCache.connect().catch((error) => {
+  const message = error instanceof Error ? error.message : "Unknown discover cache connect error";
+  console.warn(`Discover cache connect failed: ${message}`);
+});
+
+const DEFAULT_DISCOVER_CACHE_TTL_SECONDS = 45 * 60;
+const DISCOVER_CACHE_TTL_SECONDS: Partial<Record<string, number>> = {
+  GLOBAL: 30 * 60,
+};
+
+function getDiscoverCacheTtl(countryCode: string) {
+  return DISCOVER_CACHE_TTL_SECONDS[countryCode] ?? DEFAULT_DISCOVER_CACHE_TTL_SECONDS;
+}
+
+function buildDiscoverCacheKey(countryCode: string, category: string | null) {
+  return `discover:feeds:${countryCode}:${category ?? "all"}`;
+}
+
+async function tryGetDiscoverCache(cacheKey: string) {
+  if (!isDiscoverCacheReady) {
+    return null;
+  }
+
+  try {
+    return await discoverCache.get(cacheKey);
+  } catch (cacheError) {
+    const cacheMessage =
+      cacheError instanceof Error ? cacheError.message : "Unknown discover cache error";
+    console.warn(`Discover cache read failed: ${cacheMessage}`);
+    return null;
+  }
+}
+
+async function trySetDiscoverCache(cacheKey: string, ttlSeconds: number, payload: unknown) {
+  if (!isDiscoverCacheReady) {
+    return;
+  }
+
+  try {
+    await discoverCache.setex(cacheKey, ttlSeconds, JSON.stringify(payload));
+  } catch (cacheError) {
+    const cacheMessage =
+      cacheError instanceof Error ? cacheError.message : "Unknown discover cache error";
+    console.warn(`Discover cache write failed: ${cacheMessage}`);
+  }
+}
 
 export const feedSubscriptionRouter = {
   create: protectedProcedure
@@ -130,14 +188,108 @@ export const feedSubscriptionRouter = {
   discover: protectedProcedure
     .input(discoverFeedSubscriptionsSchema)
     .output(discoverFeedSubscriptionItemSchema.array())
-    .handler(async ({ input }) => {
-      if (!input.category) {
+    .handler(async ({ input, context }) => {
+      const sessionCountryCode = (
+        context.session.user as { countryCode?: string | null }
+      ).countryCode;
+      const normalizedCountryCode =
+        typeof sessionCountryCode === "string" && sessionCountryCode.trim()
+          ? sessionCountryCode.trim().toUpperCase()
+          : "GLOBAL";
+      const countryCodes =
+        normalizedCountryCode === "GLOBAL"
+          ? ["GLOBAL"]
+          : [normalizedCountryCode, "GLOBAL"];
+
+      const normalizedCategory = input.category?.toLowerCase() ?? null;
+      const cacheKey = buildDiscoverCacheKey(normalizedCountryCode, normalizedCategory);
+      const cacheTtlSeconds = getDiscoverCacheTtl(normalizedCountryCode);
+
+      const cachedPayload = await tryGetDiscoverCache(cacheKey);
+      if (cachedPayload) {
+        const parsed = JSON.parse(cachedPayload) as Array<{
+          title: string;
+          url: string;
+          description: string | null;
+          category: string | null;
+          language: string | null;
+          siteUrl: string | null;
+        }>;
+        return parsed;
+      }
+
+      const inferredFeeds = await prisma.feedSource.findMany({
+        where: {
+          isEnabled: true,
+          inferredCountryCode: { in: countryCodes },
+          ...(normalizedCategory
+            ? {
+                OR: [
+                  { title: { contains: normalizedCategory, mode: "insensitive" } },
+                  { description: { contains: normalizedCategory, mode: "insensitive" } },
+                ],
+              }
+            : {}),
+        },
+        orderBy: [
+          {
+            inferredCountryCode: "asc",
+          },
+          {
+            lastFetched: "desc",
+          },
+          {
+            updatedAt: "desc",
+          },
+        ],
+      });
+
+      if (inferredFeeds.length > 0) {
+        const countryPriority = new Map<string, number>();
+        countryCodes.forEach((countryCode, index) => {
+          countryPriority.set(countryCode, index);
+        });
+
+        const result = inferredFeeds
+          .sort((left, right) => {
+            const leftPriority =
+              countryPriority.get(left.inferredCountryCode ?? "GLOBAL") ?? Number.MAX_SAFE_INTEGER;
+            const rightPriority =
+              countryPriority.get(right.inferredCountryCode ?? "GLOBAL") ?? Number.MAX_SAFE_INTEGER;
+
+            if (leftPriority !== rightPriority) {
+              return leftPriority - rightPriority;
+            }
+
+            return left.title.localeCompare(right.title);
+          })
+          .map((feed) => ({
+            title: feed.title,
+            url: feed.url,
+            description: feed.description,
+            category: null,
+            language: feed.language,
+            siteUrl: feed.siteUrl,
+          }));
+
+        await trySetDiscoverCache(cacheKey, cacheTtlSeconds, result);
+
+        return result;
+      }
+
+      if (!normalizedCategory) {
+        await trySetDiscoverCache(cacheKey, cacheTtlSeconds, DISCOVER_FEEDS);
+
         return DISCOVER_FEEDS;
       }
 
-      return DISCOVER_FEEDS.filter(
-        (item) => item.category?.toLowerCase() === input.category?.toLowerCase()
+      const fallback = DISCOVER_FEEDS.filter((item) =>
+        item.category?.toLowerCase().includes(normalizedCategory)
       );
+
+      await trySetDiscoverCache(cacheKey, cacheTtlSeconds, fallback);
+
+      return fallback;
     }),
 
   update: protectedProcedure

@@ -247,6 +247,28 @@ async function resolvePromotionCodeSessionParams(
   } satisfies Stripe.Checkout.SessionCreateParams;
 }
 
+function getSubscriptionIdFromInvoice(invoice: Stripe.Invoice) {
+  const parentSubscription = invoice.parent?.subscription_details?.subscription;
+
+  if (parentSubscription) {
+    return typeof parentSubscription === "string"
+      ? parentSubscription
+      : parentSubscription.id ?? null;
+  }
+
+  // Backwards compatibility for older Stripe API versions where `subscription` existed.
+  const legacySubscription = (invoice as { subscription?: string | Stripe.Subscription })
+    .subscription;
+
+  if (!legacySubscription) {
+    return null;
+  }
+
+  return typeof legacySubscription === "string"
+    ? legacySubscription
+    : legacySubscription.id ?? null;
+}
+
 async function ensureStripeCustomer(
   db: Pick<PrismaClient, "user">,
   stripeClient: Stripe,
@@ -621,8 +643,151 @@ export async function constructStripeWebhookEvent(
   const { stripeClient, config } = await getStripeResources();
   return {
     config,
-    event: stripeClient.webhooks.constructEvent(payload, signature, config.webhookSecret),
+    event: await stripeClient.webhooks.constructEventAsync(
+      payload,
+      signature,
+      config.webhookSecret
+    ),
   };
+}
+
+async function tryAttachCustomerToUserByMetadata(
+  db: Pick<PrismaClient, "user">,
+  stripeCustomerId: string,
+  stripeClient: Stripe
+) {
+  const customer = await stripeClient.customers.retrieve(stripeCustomerId);
+
+  if ("deleted" in customer && customer.deleted) {
+    return null;
+  }
+
+  const metadataUserId = customer.metadata.userId;
+
+  if (!metadataUserId) {
+    return null;
+  }
+
+  const updated = await db.user.updateMany({
+    where: {
+      id: metadataUserId,
+      OR: [{ stripeCustomerId: null }, { stripeCustomerId: stripeCustomerId }],
+    },
+    data: {
+      stripeCustomerId: stripeCustomerId,
+    },
+  });
+
+  return updated.count > 0 ? metadataUserId : null;
+}
+
+export async function syncStripeSubscriptionsManually(
+  db: PrismaClient,
+  options?: {
+    limit?: number;
+    status?: Stripe.SubscriptionListParams.Status;
+  }
+) {
+  const { config, stripeClient } = await getStripeResources(db);
+  const limit = options?.limit;
+  const listParams: Stripe.SubscriptionListParams = {
+    status: options?.status ?? "all",
+    expand: ["data.customer"],
+    limit: 100,
+  };
+
+  const result = {
+    scanned: 0,
+    synced: 0,
+    recoveredOwners: 0,
+    skipped: 0,
+    failed: 0,
+    errors: [] as Array<{
+      stripeSubscriptionId: string;
+      message: string;
+    }>,
+  };
+
+  let hasMore = true;
+  let startingAfter: string | undefined;
+
+  while (hasMore) {
+    const page = await stripeClient.subscriptions.list({
+      ...listParams,
+      starting_after: startingAfter,
+    });
+
+    for (const stripeSubscription of page.data) {
+      if (typeof limit === "number" && result.scanned >= limit) {
+        hasMore = false;
+        break;
+      }
+
+      result.scanned += 1;
+
+      try {
+        await syncStripeSubscription(db, stripeSubscription, { config });
+        result.synced += 1;
+        continue;
+      } catch (error) {
+        const isOwnerError =
+          error instanceof StripeBillingError &&
+          error.statusCode === 404 &&
+          error.message === "Subscription owner could not be resolved.";
+
+        if (!isOwnerError) {
+          result.failed += 1;
+          result.errors.push({
+            stripeSubscriptionId: stripeSubscription.id,
+            message: error instanceof Error ? error.message : "Unknown error",
+          });
+          continue;
+        }
+      }
+
+      const stripeCustomerId =
+        typeof stripeSubscription.customer === "string"
+          ? stripeSubscription.customer
+          : stripeSubscription.customer?.id ?? null;
+
+      if (!stripeCustomerId) {
+        result.skipped += 1;
+        continue;
+      }
+
+      try {
+        const recoveredUserId = await tryAttachCustomerToUserByMetadata(
+          db,
+          stripeCustomerId,
+          stripeClient
+        );
+
+        if (!recoveredUserId) {
+          result.skipped += 1;
+          continue;
+        }
+
+        await syncStripeSubscription(db, stripeSubscription, { config });
+        result.synced += 1;
+        result.recoveredOwners += 1;
+      } catch (error) {
+        result.failed += 1;
+        result.errors.push({
+          stripeSubscriptionId: stripeSubscription.id,
+          message: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    }
+
+    if (!hasMore || !page.has_more || page.data.length === 0) {
+      break;
+    }
+
+    startingAfter = page.data[page.data.length - 1]?.id;
+    hasMore = Boolean(startingAfter);
+  }
+
+  return result;
 }
 
 export async function handleStripeWebhookEvent(
@@ -630,6 +795,76 @@ export async function handleStripeWebhookEvent(
   event: Stripe.Event,
   config: StripeBillingConfig
 ) {
+  const stripeClient = createStripeClient(config);
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const subscriptionId =
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null;
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const userId =
+      typeof session.client_reference_id === "string"
+        ? session.client_reference_id
+        : null;
+    const customerId =
+      typeof session.customer === "string"
+        ? session.customer
+        : session.customer?.id ?? null;
+
+    if (userId && customerId) {
+      await db.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
+  if (event.type === "invoice.payment_succeeded" || event.type === "invoice.payment_failed") {
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionId = getSubscriptionIdFromInvoice(invoice);
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
+  if (event.type === "invoice_payment.paid") {
+    const invoicePayment = event.data.object as Stripe.InvoicePayment;
+    const invoiceId =
+      typeof invoicePayment.invoice === "string"
+        ? invoicePayment.invoice
+        : invoicePayment.invoice?.id ?? null;
+
+    if (!invoiceId) {
+      return;
+    }
+
+    const invoice = await stripeClient.invoices.retrieve(invoiceId);
+    const subscriptionId = getSubscriptionIdFromInvoice(invoice);
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    const subscription = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await syncStripeSubscription(db, subscription, { config });
+    return;
+  }
+
   if (event.type === "customer.subscription.created") {
     await syncStripeSubscription(db, event.data.object as Stripe.Subscription, { config });
     return;

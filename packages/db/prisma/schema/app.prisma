@@ -1,3 +1,9 @@
+enum FeedInferenceSource {
+  LANG_DETECTION
+  MANUAL
+  DEFAULT
+}
+
 model FeedSource {
   id            String             @id @default(cuid())
   url           String
@@ -7,6 +13,11 @@ model FeedSource {
   description   String?
   iconUrl       String?
   language      String?
+  inferredLanguage String?
+  inferredCountryCode String?
+  inferenceConfidence Float?
+  inferenceSource FeedInferenceSource?
+  inferredAt    DateTime?
   lastFetched   DateTime?
   // Job tracking fields
   lastError     String? // Last RSS fetch error message
@@ -19,6 +30,7 @@ model FeedSource {
   articles      SourceArticle[]
 
   @@index([nextFetchAt]) // Index for scheduled jobs
+  @@index([inferredCountryCode])
   @@map("feed_source")
 }
 

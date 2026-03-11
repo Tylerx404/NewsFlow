@@ -25,6 +25,11 @@ type AdminFeedListItem = {
   description: string | null;
   iconUrl: string | null;
   language: string | null;
+  inferredLanguage: string | null;
+  inferredCountryCode: string | null;
+  inferenceConfidence: number | null;
+  inferenceSource: "LANG_DETECTION" | "MANUAL" | "DEFAULT" | null;
+  inferredAt: Date | string | null;
   isEnabled: boolean;
   errorCount: number;
   lastError: string | null;
@@ -82,6 +87,22 @@ const statusBadgeClass = (count: number) =>
     : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
 
 const feedLabel = (item: AdminFeedListItem) => item.title || item.normalizedUrl;
+
+const formatInferenceSource = (source: AdminFeedListItem["inferenceSource"]) => {
+  if (source === "LANG_DETECTION") {
+    return t("admin.feeds.table.inference.sourceLangDetection");
+  }
+
+  if (source === "MANUAL") {
+    return t("admin.feeds.table.inference.sourceManual");
+  }
+
+  if (source === "DEFAULT") {
+    return t("admin.feeds.table.inference.sourceDefault");
+  }
+
+  return t("admin.feeds.table.inference.sourceUnknown");
+};
 
 const confirmTitle = computed(() => {
   if (!confirmState.value) {
@@ -275,6 +296,22 @@ const handleConfirmAction = () => {
               <div class="min-w-0 space-y-1">
                 <p class="truncate font-medium">{{ feedLabel(item) }}</p>
                 <p class="truncate text-xs text-muted-foreground">{{ item.normalizedUrl }}</p>
+                <div class="flex flex-wrap gap-1 pt-1">
+                  <Badge variant="outline" class="text-[11px]">
+                    {{
+                      t("admin.feeds.table.inference.country", {
+                        country: item.inferredCountryCode || "GLOBAL",
+                      })
+                    }}
+                  </Badge>
+                  <Badge variant="outline" class="text-[11px]">
+                    {{
+                      t("admin.feeds.table.inference.source", {
+                        source: formatInferenceSource(item.inferenceSource),
+                      })
+                    }}
+                  </Badge>
+                </div>
               </div>
             </TableCell>
             <TableCell>

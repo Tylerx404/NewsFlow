@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 import AdminActionConfirmDialog from "@/components/admin/AdminActionConfirmDialog.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -32,6 +33,11 @@ type AdminFeedDetail = {
   description: string | null;
   iconUrl: string | null;
   language: string | null;
+  inferredLanguage: string | null;
+  inferredCountryCode: string | null;
+  inferenceConfidence: number | null;
+  inferenceSource: "LANG_DETECTION" | "MANUAL" | "DEFAULT" | null;
+  inferredAt: Date | string | null;
   isEnabled: boolean;
   errorCount: number;
   lastError: string | null;
@@ -85,9 +91,11 @@ const emit = defineEmits<{
   retryFetch: [feedSourceId: string];
   retryFeedExtraction: [feedSourceId: string];
   retryArticleExtraction: [sourceArticleId: string];
+  updateInferenceCountry: [payload: { feedSourceId: string; inferredCountryCode: string | null }];
 }>();
 
 const confirmState = ref<FeedConfirmState>(null);
+const inferenceCountryInput = ref("");
 const loadingRowKeys = [1, 2, 3];
 
 const formatDateTime = (value: Date | string | null) => {
@@ -109,6 +117,44 @@ const healthBadgeClass = (count: number) =>
 
 const feedLabel = computed(
   () => props.feed?.title || props.feed?.normalizedUrl || t("admin.feeds.detail.confirm.thisFeed")
+);
+
+const normalizedInferenceCountryInput = computed(() => {
+  const normalized = inferenceCountryInput.value.trim().toUpperCase();
+  return normalized || null;
+});
+
+const hasInferenceCountryPendingChange = computed(() => {
+  if (!props.feed) {
+    return false;
+  }
+
+  const current = props.feed.inferredCountryCode?.toUpperCase() ?? null;
+  return normalizedInferenceCountryInput.value !== current;
+});
+
+const formatInferenceSource = (source: AdminFeedDetail["inferenceSource"]) => {
+  if (source === "LANG_DETECTION") {
+    return t("admin.feeds.detail.summary.inferenceSourceLangDetection");
+  }
+
+  if (source === "MANUAL") {
+    return t("admin.feeds.detail.summary.inferenceSourceManual");
+  }
+
+  if (source === "DEFAULT") {
+    return t("admin.feeds.detail.summary.inferenceSourceDefault");
+  }
+
+  return t("admin.feeds.detail.summary.inferenceSourceUnknown");
+};
+
+watch(
+  () => props.feed,
+  (feed) => {
+    inferenceCountryInput.value = feed?.inferredCountryCode ?? "";
+  },
+  { immediate: true }
 );
 
 const confirmTitle = computed(() => {
@@ -248,6 +294,21 @@ const handleConfirmAction = () => {
 
   emit("retryArticleExtraction", nextAction.sourceArticleId);
 };
+
+const handleUpdateInferenceCountry = () => {
+  if (!props.feed || !hasInferenceCountryPendingChange.value) {
+    return;
+  }
+
+  emit("updateInferenceCountry", {
+    feedSourceId: props.feed.id,
+    inferredCountryCode: normalizedInferenceCountryInput.value,
+  });
+};
+
+const clearInferenceCountryInput = () => {
+  inferenceCountryInput.value = "";
+};
 </script>
 
 <template>
@@ -367,6 +428,28 @@ const handleConfirmAction = () => {
               <p class="text-xs text-muted-foreground">{{ t("admin.feeds.detail.summary.lastError") }}</p>
               <p class="mt-1 font-medium">{{ feed.lastError || t("admin.feeds.detail.summary.noRecentErrors") }}</p>
             </div>
+
+            <div class="rounded-md border p-3 text-sm">
+              <p class="text-xs text-muted-foreground">{{ t("admin.feeds.detail.summary.inferenceTitle") }}</p>
+              <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                <p>
+                  {{ t("admin.feeds.detail.summary.inferenceCountry") }}:
+                  <span class="font-medium">{{ feed.inferredCountryCode || "GLOBAL" }}</span>
+                </p>
+                <p>
+                  {{ t("admin.feeds.detail.summary.inferenceLanguage") }}:
+                  <span class="font-medium">{{ feed.inferredLanguage || "-" }}</span>
+                </p>
+                <p>
+                  {{ t("admin.feeds.detail.summary.inferenceSource") }}:
+                  <span class="font-medium">{{ formatInferenceSource(feed.inferenceSource) }}</span>
+                </p>
+                <p>
+                  {{ t("admin.feeds.detail.summary.inferenceUpdatedAt") }}:
+                  <span class="font-medium">{{ formatDateTime(feed.inferredAt) }}</span>
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -399,6 +482,35 @@ const handleConfirmAction = () => {
               <Button variant="outline" :disabled="isActionPending" @click="requestRetryFeedExtraction">
                 {{ t("admin.feeds.detail.operations.retryFeedExtractionQueue") }}
               </Button>
+            </div>
+
+            <div class="space-y-2 rounded-md border p-3">
+              <p class="text-sm font-medium">{{ t("admin.feeds.detail.operations.inferenceCountryLabel") }}</p>
+              <Input
+                v-model="inferenceCountryInput"
+                :placeholder="t('admin.feeds.detail.operations.inferenceCountryPlaceholder')"
+                maxlength="10"
+              />
+              <p class="text-xs text-muted-foreground">
+                {{ t("admin.feeds.detail.operations.inferenceCountryHint") }}
+              </p>
+              <div class="grid gap-2 sm:grid-cols-2">
+                <Button
+                  size="sm"
+                  :disabled="isActionPending || !hasInferenceCountryPendingChange"
+                  @click="handleUpdateInferenceCountry"
+                >
+                  {{ t("admin.feeds.detail.operations.saveInferenceCountry") }}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  :disabled="isActionPending"
+                  @click="clearInferenceCountryInput"
+                >
+                  {{ t("admin.feeds.detail.operations.clearInferenceCountry") }}
+                </Button>
+              </div>
             </div>
 
             <p v-if="actionError" class="text-sm text-destructive">

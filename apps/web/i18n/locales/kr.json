@@ -1191,6 +1191,15 @@
         "title": "피드 운영",
         "description": "빠른 작업을 사용하거나 피드를 열어 상세 운영 정보를 확인합니다."
       },
+      "metrics": {
+        "title": "추론 메트릭",
+        "description": "국가 추론 커버리지와 수동 오버라이드를 모니터링합니다.",
+        "totalFeeds": "전체 피드",
+        "inferredFeeds": "추론된 피드",
+        "globalFeeds": "GLOBAL 피드",
+        "manualOverrideFeeds": "수동 오버라이드 피드",
+        "enFromVnDomainFeeds": ".vn 도메인의 EN 피드"
+      },
       "table": {
         "columns": {
           "feed": "피드",
@@ -1213,6 +1222,14 @@
         "actions": {
           "retryFetch": "수집 재시도",
           "retryExtraction": "추출 재시도"
+        },
+        "inference": {
+          "country": "국가: {country}",
+          "source": "소스: {source}",
+          "sourceLangDetection": "언어 감지",
+          "sourceManual": "수동",
+          "sourceDefault": "기본값",
+          "sourceUnknown": "알 수 없음"
         },
         "confirm": {
           "defaultTitle": "관리 작업 확인",
@@ -1255,7 +1272,16 @@
           "rssErrors": "RSS 오류: {count}",
           "extractionFailures": "추출 실패: {count}",
           "lastError": "최근 오류",
-          "noRecentErrors": "최근 RSS 오류가 없습니다."
+          "noRecentErrors": "최근 RSS 오류가 없습니다.",
+          "inferenceTitle": "국가 추론",
+          "inferenceCountry": "국가",
+          "inferenceLanguage": "언어",
+          "inferenceSource": "소스",
+          "inferenceUpdatedAt": "업데이트",
+          "inferenceSourceLangDetection": "언어 감지",
+          "inferenceSourceManual": "수동",
+          "inferenceSourceDefault": "기본값",
+          "inferenceSourceUnknown": "알 수 없음"
         },
         "operations": {
           "title": "작업",
@@ -1263,7 +1289,12 @@
           "feedEnabled": "피드 활성화",
           "feedEnabledHint": "비활성화된 피드는 강제 실행하지 않는 한 스케줄러에서 건너뜁니다.",
           "retryFetch": "RSS 수집 재시도",
-          "retryFeedExtractionQueue": "피드 추출 대기열 재시도"
+          "retryFeedExtractionQueue": "피드 추출 대기열 재시도",
+          "inferenceCountryLabel": "추론 국가 수동 오버라이드",
+          "inferenceCountryPlaceholder": "예: VN 또는 GLOBAL",
+          "inferenceCountryHint": "비워두면 수동 국가 오버라이드를 제거합니다.",
+          "saveInferenceCountry": "추론 국가 저장",
+          "clearInferenceCountry": "입력 지우기"
         },
         "recentArticles": {
           "title": "최근 기사",
@@ -1333,7 +1364,8 @@
         "list": "피드 소스를 불러올 수 없습니다. 새로고침 후 다시 시도하세요.",
         "updateState": "이 피드 상태를 업데이트할 수 없습니다. 다시 시도하세요.",
         "retryFetch": "RSS 수집 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요.",
-        "retryExtraction": "피드 추출 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요."
+        "retryExtraction": "피드 추출 재시도 작업을 대기열에 추가할 수 없습니다. 다시 시도하세요.",
+        "updateInferenceCountry": "추론 국가를 업데이트할 수 없습니다. 다시 시도하세요."
       }
     },
     "systemOps": {

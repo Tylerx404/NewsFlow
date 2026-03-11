@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { AsYouTypeFormatter, PhoneNumberUtil } from "google-libphonenumber";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -116,6 +117,7 @@ const { $authClient, $orpc } = useNuxtApp();
 const intlLocale = useIntlLocale();
 const config = useRuntimeConfig();
 const route = useRoute();
+const phoneNumberUtil = PhoneNumberUtil.getInstance();
 const authRequestHeaders = import.meta.server
   ? useRequestHeaders(["cookie"])
   : undefined;
@@ -124,6 +126,7 @@ const queryClient = useQueryClient();
 const profileForm = reactive({
   name: "",
   image: "",
+  phoneNumber: "",
 });
 const profileError = ref("");
 const profileSuccess = ref("");
@@ -205,6 +208,81 @@ const selectedPlanDetails = computed(
     subscriptionPlanOptions.find((plan) => plan.key === selectedPlan.value) ??
     defaultSubscriptionPlanOption
 );
+
+const normalizePhoneNumberForStorage = (phoneNumber: string | null | undefined) => {
+  if (typeof phoneNumber !== "string") {
+    return "";
+  }
+
+  const trimmed = phoneNumber.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  const hasLeadingPlus = trimmed.startsWith("+");
+  const digitsOnly = trimmed.replace(/\D/g, "");
+
+  if (!digitsOnly) {
+    return "";
+  }
+
+  return `${hasLeadingPlus ? "+" : ""}${digitsOnly}`;
+};
+
+const formatPhoneNumberForDisplay = (phoneNumber: string | null | undefined) => {
+  if (typeof phoneNumber !== "string") {
+    return "";
+  }
+
+  const normalized = normalizePhoneNumberForStorage(phoneNumber);
+
+  if (!normalized.startsWith("+")) {
+    return phoneNumber.trim();
+  }
+
+  const formatter = new AsYouTypeFormatter("ZZ");
+  let formatted = "";
+
+  for (const char of normalized) {
+    formatted = formatter.inputDigit(char);
+  }
+
+  return formatted.replace(/-/g, " ");
+};
+
+const resolvePhoneCountryPreview = (phoneNumber: string | null | undefined) => {
+  const normalized = normalizePhoneNumberForStorage(phoneNumber);
+
+  if (!normalized || !normalized.startsWith("+")) {
+    return null;
+  }
+
+  try {
+    const parsed = phoneNumberUtil.parse(normalized);
+
+    if (!phoneNumberUtil.isValidNumber(parsed)) {
+      return null;
+    }
+
+    const regionCode = phoneNumberUtil.getRegionCodeForNumber(parsed);
+    return regionCode ? regionCode.toUpperCase() : null;
+  } catch {
+    return null;
+  }
+};
+
+const profileCountryPreview = computed(() =>
+  resolvePhoneCountryPreview(profileForm.phoneNumber)
+);
+
+const profileCountryCode = computed(() => {
+  return (
+    profileCountryPreview.value ||
+    (sessionQuery.data.value?.user as { countryCode?: string | null } | undefined)?.countryCode ||
+    "GLOBAL"
+  );
+});
 const selectedPlanBaseAmount = computed(() =>
   billingInterval.value === "yearly"
     ? Math.round(selectedPlanDetails.value.yearlyAmount * 100)
@@ -229,9 +307,23 @@ watch(
 
     profileForm.name = user.name ?? "";
     profileForm.image = isSessionAvatarUrl(user.image) ? "" : (user.image ?? "");
+    profileForm.phoneNumber = formatPhoneNumberForDisplay(
+      (user as { phoneNumber?: string | null }).phoneNumber ?? ""
+    );
     isAvatarRemoved.value = false;
   },
   { immediate: true }
+);
+
+watch(
+  () => profileForm.phoneNumber,
+  (value) => {
+    const formatted = formatPhoneNumberForDisplay(value);
+
+    if (formatted !== value) {
+      profileForm.phoneNumber = formatted;
+    }
+  }
 );
 
 const currentSessionToken = computed(
@@ -634,6 +726,7 @@ const profileMutation = useMutation({
   mutationFn: async () => {
     const name = profileForm.name.trim();
     const image = profileForm.image.trim();
+    const phoneNumber = normalizePhoneNumberForStorage(profileForm.phoneNumber);
 
     if (!name) {
       throw new Error("Name is required.");
@@ -643,6 +736,7 @@ const profileMutation = useMutation({
 
     const { error } = await $authClient.updateUser({
       name,
+      phoneNumber: phoneNumber || null,
       ...(imagePayload !== undefined ? { image: imagePayload } : {}),
     });
 
@@ -1027,6 +1121,19 @@ watch(
                 <div class="space-y-2">
                   <label class="text-sm font-medium" for="profile-name">Name</label>
                   <Input id="profile-name" v-model="profileForm.name" />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-sm font-medium" for="profile-phone">Phone number</label>
+                  <Input
+                    id="profile-phone"
+                    v-model="profileForm.phoneNumber"
+                    placeholder="+84987654321"
+                    autocomplete="tel"
+                  />
+                  <p class="text-xs text-muted-foreground">
+                    Country preview: {{ profileCountryCode }}
+                  </p>
                 </div>
 
                 <p v-if="profileError" aria-live="polite" :class="errorBannerClass">

@@ -1191,6 +1191,15 @@
         "title": "Feed operations",
         "description": "Use quick actions or open a feed for detailed operational context."
       },
+      "metrics": {
+        "title": "Inference metrics",
+        "description": "Monitor country inference coverage and manual overrides.",
+        "totalFeeds": "Total feeds",
+        "inferredFeeds": "Inferred feeds",
+        "globalFeeds": "GLOBAL feeds",
+        "manualOverrideFeeds": "Manual override feeds",
+        "enFromVnDomainFeeds": "EN feeds from .vn domains"
+      },
       "table": {
         "columns": {
           "feed": "Feed",
@@ -1213,6 +1222,14 @@
         "actions": {
           "retryFetch": "Retry fetch",
           "retryExtraction": "Retry extraction"
+        },
+        "inference": {
+          "country": "Country: {country}",
+          "source": "Source: {source}",
+          "sourceLangDetection": "Language detection",
+          "sourceManual": "Manual",
+          "sourceDefault": "Default",
+          "sourceUnknown": "Unknown"
         },
         "confirm": {
           "defaultTitle": "Confirm admin action",
@@ -1255,7 +1272,16 @@
           "rssErrors": "RSS errors: {count}",
           "extractionFailures": "Extraction failures: {count}",
           "lastError": "Last error",
-          "noRecentErrors": "No recent RSS errors."
+          "noRecentErrors": "No recent RSS errors.",
+          "inferenceTitle": "Country inference",
+          "inferenceCountry": "Country",
+          "inferenceLanguage": "Language",
+          "inferenceSource": "Source",
+          "inferenceUpdatedAt": "Updated",
+          "inferenceSourceLangDetection": "Language detection",
+          "inferenceSourceManual": "Manual",
+          "inferenceSourceDefault": "Default",
+          "inferenceSourceUnknown": "Unknown"
         },
         "operations": {
           "title": "Operations",
@@ -1263,7 +1289,12 @@
           "feedEnabled": "Feed enabled",
           "feedEnabledHint": "Disabled feeds are skipped by the scheduler unless forced.",
           "retryFetch": "Retry RSS fetch",
-          "retryFeedExtractionQueue": "Retry feed extraction queue"
+          "retryFeedExtractionQueue": "Retry feed extraction queue",
+          "inferenceCountryLabel": "Override inferred country",
+          "inferenceCountryPlaceholder": "Example: VN or GLOBAL",
+          "inferenceCountryHint": "Leave empty to clear manual country override.",
+          "saveInferenceCountry": "Save inferred country",
+          "clearInferenceCountry": "Clear input"
         },
         "recentArticles": {
           "title": "Recent articles",
@@ -1333,7 +1364,8 @@
         "list": "Could not load feed sources. Refresh and try again.",
         "updateState": "Could not update this feed state. Try again.",
         "retryFetch": "Could not queue an RSS fetch retry. Try again.",
-        "retryExtraction": "Could not queue a feed extraction retry. Try again."
+        "retryExtraction": "Could not queue a feed extraction retry. Try again.",
+        "updateInferenceCountry": "Could not update inferred country. Try again."
       }
     },
     "systemOps": {

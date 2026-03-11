@@ -6,6 +6,10 @@ import { z } from "zod";
  *   const config = useRuntimeConfig()
  *   config.public.serverUrl (NUXT_PUBLIC_SERVER_URL maps to serverUrl)
  */
+if (process.env.NODE_ENV !== "production") {
+    process.env.NUXT_PUBLIC_SITE_URL ??= "http://localhost:3001";
+    process.env.NUXT_PUBLIC_SERVER_URL ??= "http://localhost:3000";
+}
 export const env = createEnv({
     client: {
         NUXT_PUBLIC_SITE_URL: z.url(),
