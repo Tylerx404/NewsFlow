@@ -563,9 +563,11 @@ export async function retryAdminFeedExtraction(
   });
 
   if (articles.length === 0) {
-    throw new ORPCError("BAD_REQUEST", {
-      message: "Feed source has no articles waiting for extraction.",
-    });
+    return {
+      queued: false,
+      feedSourceId: input.feedSourceId,
+      queuedCount: 0,
+    };
   }
 
   await contentQueue.addBulk(
