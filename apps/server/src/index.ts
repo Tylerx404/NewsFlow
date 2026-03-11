@@ -36,11 +36,6 @@ type DecodedImage = {
   buffer: Buffer;
 };
 
-type DecodedImage = {
-  mimeType: string;
-  buffer: Buffer;
-};
-
 async function runStartupStripeSync() {
   try {
     const result = await syncStripeSubscriptionsManually(prisma, {
