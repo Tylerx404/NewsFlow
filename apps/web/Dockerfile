@@ -4,13 +4,16 @@ WORKDIR /app
 
 ARG NUXT_PUBLIC_SITE_URL=http://localhost:3001
 ARG NUXT_PUBLIC_SERVER_URL=http://localhost:3000
+ARG DATABASE_URL=postgresql://postgres:password@postgres:5432/NewsFlow
 
 ENV NUXT_PUBLIC_SITE_URL=${NUXT_PUBLIC_SITE_URL}
 ENV NUXT_PUBLIC_SERVER_URL=${NUXT_PUBLIC_SERVER_URL}
+ENV DATABASE_URL=${DATABASE_URL}
 
 COPY . .
 
 RUN bun install --frozen-lockfile
+RUN bun x turbo run db:generate --filter=@NewsFlow/db
 RUN bun x turbo run build --filter=web
 
 ENV NODE_ENV=production
