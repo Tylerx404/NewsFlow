@@ -7,7 +7,7 @@ COPY . .
 RUN bun install --frozen-lockfile
 ARG DATABASE_URL=postgresql://postgres:password@postgres:5432/NewsFlow
 ENV DATABASE_URL=${DATABASE_URL}
-RUN bun x turbo run db:generate --filter=@NewsFlow/db
+RUN bun --cwd packages/db run db:generate
 RUN bun x turbo run build --filter=worker
 
 ENV NODE_ENV=production

@@ -13,7 +13,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 COPY . .
 
 RUN bun install --frozen-lockfile
-RUN bun x turbo run db:generate --filter=@NewsFlow/db
+RUN bun --cwd packages/db run db:generate
 RUN bun x turbo run build --filter=web
 
 ENV NODE_ENV=production
