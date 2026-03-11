@@ -1,0 +1,84 @@
+name: newsflow
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: newsflow-postgres
+    environment:
+      POSTGRES_DB: NewsFlow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - newsflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: newsflow-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - newsflow_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    env_file:
+      - ./apps/server/.env.docker
+    environment:
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    env_file:
+      - ./apps/server/.env.docker
+    environment:
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-http://localhost:3001}
+        NUXT_PUBLIC_SERVER_URL: ${NUXT_PUBLIC_SERVER_URL:-http://localhost:3000}
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      NITRO_PORT: 3001
+    depends_on:
+      - server
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+volumes:
+  newsflow_postgres_data:
+  newsflow_redis_data:
