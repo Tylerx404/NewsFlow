@@ -22,7 +22,7 @@ CMD ["bun", "run", "--cwd", "/app/packages/db", "db:migrate:deploy"]
 FROM base AS prod-deps
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production --linker=hoisted
 
 FROM base AS runner
 WORKDIR /app

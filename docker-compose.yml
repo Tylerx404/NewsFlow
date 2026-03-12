@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
-      - newsflow_postgres_data:/var/lib/postgresql/data
+      - NewsFlow_postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -22,7 +22,7 @@ services:
     container_name: newsflow-redis
     command: redis-server --appendonly yes
     volumes:
-      - newsflow_redis_data:/data
+      - NewsFlow_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -103,5 +103,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  newsflow_postgres_data:
-  newsflow_redis_data:
+  NewsFlow_postgres_data:
+  NewsFlow_redis_data:
