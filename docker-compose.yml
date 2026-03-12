@@ -2,7 +2,7 @@ name: newsflow
 
 services:
   postgres:
-    image: postgres:16
+    image: postgres
     container_name: newsflow-postgres
     environment:
       POSTGRES_DB: NewsFlow
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:7
+    image: redis
     container_name: newsflow-redis
     command: redis-server --appendonly yes
     volumes:
@@ -34,9 +34,13 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    env_file:
-      - ./apps/server/.env.docker
     environment:
+      BETTER_AUTH_SECRET: "ZByBj8tsMTLazhuYNrRz2BBo1GeWv6R7"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      CORS_ORIGIN: "http://localhost:3001"
+      AI_KEY_ENCRYPTION_SECRET: "change-me-32-chars-or-more-please-5678"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      REDIS_URL: "redis://redis:6379"
       NODE_ENV: production
     depends_on:
       postgres:
@@ -47,13 +51,32 @@ services:
       - "3000:3000"
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+      target: migrator
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - migrate
+    restart: "no"
+
   worker:
     build:
       context: .
       dockerfile: apps/worker/Dockerfile
-    env_file:
-      - ./apps/server/.env.docker
     environment:
+      BETTER_AUTH_SECRET: "ZByBj8tsMTLazhuYNrRz2BBo1GeWv6R7"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      CORS_ORIGIN: "http://localhost:3001"
+      AI_KEY_ENCRYPTION_SECRET: "change-me-32-chars-or-more-please-5678"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      REDIS_URL: "redis://redis:6379"
       NODE_ENV: production
     depends_on:
       postgres:
@@ -71,7 +94,7 @@ services:
         NUXT_PUBLIC_SERVER_URL: ${NUXT_PUBLIC_SERVER_URL:-http://localhost:3000}
     environment:
       NODE_ENV: production
-      HOST: 0.0.0.0
+      NITRO_HOST: 0.0.0.0
       NITRO_PORT: 3001
     depends_on:
       - server

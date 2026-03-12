@@ -2,7 +2,7 @@ name: NewsFlow
 
 services:
   postgres:
-    image: postgres
+    image: postgres:16
     container_name: NewsFlow-postgres
     environment:
       POSTGRES_DB: NewsFlow
@@ -11,7 +11,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - NewsFlow_postgres_data:/var/lib/postgresql
+      - NewsFlow_postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis
+    image: redis:7
     container_name: NewsFlow-redis
     ports:
       - "6379:6379"
