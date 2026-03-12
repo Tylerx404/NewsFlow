@@ -47,6 +47,20 @@ services:
       - "3000:3000"
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+      target: migrator
+    env_file:
+      - ./apps/server/.env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - migrate
+    restart: "no"
+
   worker:
     build:
       context: .
@@ -71,7 +85,7 @@ services:
         NUXT_PUBLIC_SERVER_URL: ${NUXT_PUBLIC_SERVER_URL:-http://localhost:3000}
     environment:
       NODE_ENV: production
-      HOST: 0.0.0.0
+      NITRO_HOST: 0.0.0.0
       NITRO_PORT: 3001
     depends_on:
       - server
