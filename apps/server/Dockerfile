@@ -16,4 +16,4 @@ WORKDIR /app/apps/server
 
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
+CMD ["sh", "-c", "bun run --cwd /app/packages/db db:push && bun run start"]
