@@ -13,6 +13,7 @@
     "check-types": "tsc -b",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:start": "docker compose up -d",

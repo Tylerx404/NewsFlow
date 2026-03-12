@@ -1,0 +1,107 @@
+name: newsflow
+
+services:
+  postgres:
+    image: postgres
+    container_name: newsflow-postgres
+    environment:
+      POSTGRES_DB: NewsFlow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - NewsFlow_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    container_name: newsflow-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - NewsFlow_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    environment:
+      BETTER_AUTH_SECRET: "ZByBj8tsMTLazhuYNrRz2BBo1GeWv6R7"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      CORS_ORIGIN: "http://localhost:3001"
+      AI_KEY_ENCRYPTION_SECRET: "change-me-32-chars-or-more-please-5678"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      REDIS_URL: "redis://redis:6379"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+      target: migrator
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - migrate
+    restart: "no"
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    environment:
+      BETTER_AUTH_SECRET: "ZByBj8tsMTLazhuYNrRz2BBo1GeWv6R7"
+      BETTER_AUTH_URL: "http://localhost:3000"
+      CORS_ORIGIN: "http://localhost:3001"
+      AI_KEY_ENCRYPTION_SECRET: "change-me-32-chars-or-more-please-5678"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/NewsFlow"
+      REDIS_URL: "redis://redis:6379"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-http://localhost:3001}
+        NUXT_PUBLIC_SERVER_URL: ${NUXT_PUBLIC_SERVER_URL:-http://localhost:3000}
+    environment:
+      NODE_ENV: production
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: 3001
+    depends_on:
+      - server
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+volumes:
+  NewsFlow_postgres_data:
+  NewsFlow_redis_data:
