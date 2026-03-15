@@ -63,43 +63,15 @@ Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo c
 - Chỉ comment phần "vì sao", không comment điều hiển nhiên.
 - Với logic nghiệp vụ quan trọng, ghi rõ ràng constraint gần đoạn code đó.
 
-## 5) Phong cách UI Web dùng lại cho trang mới
+## 5) Định hướng UI Web (linh hoạt)
 
-Áp dụng cho các trang mới trong `apps/web` để giữ đồng nhất visual.
+Áp dụng cho các trang mới trong `apps/web` theo hướng mở để không bó buộc một style cố định.
 
-### Bố cục
-
-- Ưu tiên layout rõ hierarchy, kiểu SaaS thực dụng: header gọn, content chia khối, khoảng trắng đều.
-- Auth/form page: khung giữa màn hình, card làm trung tâm, desktop có thể split 2 cột, mobile ưu tiên 1 cột.
-- Dashboard/data page: sidebar làm trục điều hướng chính, content theo các panel/card bo góc.
-
-### Màu sắc
-
-- Dùng token màu trung tính từ `apps/web/app/assets/css/main.css` (OKLCH variables: `background`, `muted`, `card`, `sidebar`, `border`).
-- Giữ palette nhẹ, tương phản rõ, hạn chế gradient hoặc accent quá gắt nếu không có yêu cầu branding riêng.
-- Light/dark mode phải bám token hiện có, không hard-code màu rời rạc.
-
-### Component & spacing
-
-- Ưu tiên `shadcn-nuxt` components + Tailwind utility (`Card`, `Button`, `Input`, `Sidebar`, `Dropdown`, `Field`).
-- Border nhẹ, radius vừa, typography đơn giản dễ đọc; tránh trang trí dư.
-- Dùng spacing nhất quán theo cụm `p-4/p-6`, `gap-4/gap-6`; không trộn nhiều scale ngẫu nhiên trong cùng view.
-
-### Responsive & interaction
-
-- Mobile-first: collapse layout hợp lý, không để vỡ form hoặc overflow panel.
-- Animation vừa đủ cho state (dropdown/collapsible/sidebar), tránh motion nặng.
-
-### I18n cho UI
-
-- Mọi thay đổi ảnh hưởng text trên giao diện phải cập nhật đầy đủ qua hệ i18n hiện có.
-- Không hard-code text mới trong UI nếu màn hình/module đó đã dùng i18n.
-- Khi thêm hoặc đổi key dịch, phải cập nhật đồng bộ các locale liên quan để tránh thiếu bản dịch.
-
-### Research component cho trang mới
-
-- Khi thiếu component phù hợp, ưu tiên research qua `shadcn-vue MCP` để tìm pattern/component trước khi tự viết mới.
-- Chỉ custom component khi không có lựa chọn hợp lý từ hệ `shadcn`.
+- Không áp đặt một visual language bắt buộc. Mỗi màn hình có thể chọn hướng thiết kế phù hợp với mục tiêu và nội dung.
+- Ưu tiên khả năng đọc, hierarchy rõ ràng và trải nghiệm tốt trên cả mobile lẫn desktop.
+- Có thể dùng bất kỳ component library hoặc custom UI nếu hợp lý; không bắt buộc `shadcn-nuxt` hay token màu hiện hữu.
+- Nếu có thay đổi lớn về giao diện, ghi rõ lý do và hướng thiết kế trong mô tả task/PR/commit để team dễ đồng bộ.
+- Nếu màn hình đã có style cũ, ưu tiên cải tiến dần thay vì thay toàn bộ khi chưa có yêu cầu rõ.
 
 ## 6) Error handling và logging
 
