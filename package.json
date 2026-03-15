@@ -46,7 +46,7 @@
   "devDependencies": {
     "@NewsFlow/config": "workspace:*",
     "@types/bun": "^1.3.10",
-    "turbo": "^2.8.14",
+    "turbo": "^2.8.17",
     "typescript": "^5.9.3"
   },
   "packageManager": "bun@1.3.5"
