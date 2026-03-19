@@ -3,8 +3,8 @@ import type { HTMLAttributes } from "vue"
 import { computed, reactive, ref } from "vue"
 import { useQuery } from "@tanstack/vue-query"
 import { cn } from "@/lib/utils"
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
@@ -12,8 +12,8 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -31,7 +31,12 @@ const form = reactive({
 })
 const isSubmitting = ref(false)
 const isSocialSubmitting = ref(false)
+const isResendingVerification = ref(false)
 const submitError = ref("")
+const verificationNotice = ref("")
+const verificationSuccess = ref("")
+const verificationError = ref("")
+const verificationEmail = ref("")
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof Error && error.message) {
@@ -80,18 +85,70 @@ const isGoogleEnabled = computed(
 const hasSocialProviders = computed(
   () => isAppleEnabled.value || isGoogleEnabled.value
 )
+const emailVerificationConfigured = computed(
+  () => authConfigQuery.data.value?.emailVerificationConfigured ?? false
+)
+const verificationSucceeded = computed(() => {
+  const rawVerified = route.query.verified
+  const verified = Array.isArray(rawVerified) ? rawVerified[0] : rawVerified
+
+  return verified === "1" || verified === "true"
+})
+
+const getVerificationCallbackUrl = () => {
+  const params = new URLSearchParams({
+    verified: "1",
+  })
+  const redirect = getSafeRedirectPath()
+
+  if (redirect) {
+    params.set("redirect", redirect)
+  }
+
+  const callbackPath = `/login?${params.toString()}`
+
+  if (import.meta.client) {
+    return `${window.location.origin}${callbackPath}`
+  }
+
+  return callbackPath
+}
+
+const isEmailNotVerifiedError = (
+  error: { code?: string; message?: string; status?: number } | null | undefined
+) => {
+  if (!error) {
+    return false
+  }
+
+  if (error.code === "EMAIL_NOT_VERIFIED") {
+    return true
+  }
+
+  return error.status === 403 && error.message?.toLowerCase().includes("not verified")
+}
 
 const handleSubmit = async () => {
   submitError.value = ""
+  verificationNotice.value = ""
+  verificationSuccess.value = ""
+  verificationError.value = ""
   isSubmitting.value = true
 
   try {
+    const email = form.email.trim()
     const { error } = await $authClient.signIn.email({
-      email: form.email.trim(),
+      email,
       password: form.password,
     })
 
     if (error) {
+      if (isEmailNotVerifiedError(error)) {
+        verificationEmail.value = email
+        verificationNotice.value = t("auth.login.verification.pending", { email })
+        return
+      }
+
       submitError.value = error.message ?? t("auth.login.errors.invalidCredentials")
       return
     }
@@ -101,6 +158,44 @@ const handleSubmit = async () => {
     submitError.value = getErrorMessage(error)
   } finally {
     isSubmitting.value = false
+  }
+}
+
+const handleResendVerificationEmail = async () => {
+  verificationError.value = ""
+  verificationSuccess.value = ""
+
+  if (!verificationEmail.value) {
+    verificationError.value = t("auth.login.verification.resendMissingEmail")
+    return
+  }
+
+  if (!emailVerificationConfigured.value) {
+    verificationError.value = t("auth.verification.unavailable")
+    return
+  }
+
+  isResendingVerification.value = true
+
+  try {
+    const { error } = await $authClient.sendVerificationEmail({
+      email: verificationEmail.value,
+      callbackURL: getVerificationCallbackUrl(),
+    })
+
+    if (error) {
+      verificationError.value =
+        error.message ?? t("auth.login.verification.resendFailed")
+      return
+    }
+
+    verificationSuccess.value = t("auth.login.verification.resent", {
+      email: verificationEmail.value,
+    })
+  } catch (error) {
+    verificationError.value = getErrorMessage(error)
+  } finally {
+    isResendingVerification.value = false
   }
 }
 
@@ -136,16 +231,21 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
                 {{ t("auth.login.subtitle") }}
               </p>
             </div>
+            <Field v-if="verificationSucceeded">
+              <FieldDescription class="text-center text-emerald-600 dark:text-emerald-400">
+                {{ t("auth.login.verification.verifiedSuccess") }}
+              </FieldDescription>
+            </Field>
             <Field>
               <FieldLabel for="email">
                 {{ t("auth.common.email") }}
               </FieldLabel>
               <Input
                 id="email"
+                v-model="form.email"
                 type="email"
                 :placeholder="t('auth.common.emailPlaceholder')"
                 autocomplete="email"
-                v-model="form.email"
                 required
               />
             </Field>
@@ -163,14 +263,44 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
               </div>
               <Input
                 id="password"
+                v-model="form.password"
                 type="password"
                 autocomplete="current-password"
-                v-model="form.password"
                 required
               />
             </Field>
+            <Field v-if="verificationNotice">
+              <FieldDescription class="text-center">
+                {{ verificationNotice }}
+              </FieldDescription>
+            </Field>
+            <Field v-if="verificationSuccess">
+              <FieldDescription class="text-center text-emerald-600 dark:text-emerald-400">
+                {{ verificationSuccess }}
+              </FieldDescription>
+            </Field>
+            <Field v-if="verificationError">
+              <FieldError :errors="[verificationError]" />
+            </Field>
             <Field v-if="submitError">
               <FieldError :errors="[submitError]" />
+            </Field>
+            <Field
+              v-if="verificationNotice && emailVerificationConfigured"
+              class="flex justify-center"
+            >
+              <Button
+                type="button"
+                variant="outline"
+                :disabled="isResendingVerification"
+                @click="handleResendVerificationEmail"
+              >
+                {{
+                  isResendingVerification
+                    ? t("auth.login.verification.resending")
+                    : t("auth.login.verification.resend")
+                }}
+              </Button>
             </Field>
             <Field>
               <Button type="submit" :disabled="isSubmitting">

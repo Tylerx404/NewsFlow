@@ -71,6 +71,15 @@
       },
       "confirm": {
         "remove": "移除订阅 \"{title}\"？"
+      },
+      "verification": {
+        "pending": "This account has not been verified yet. Check {email} for the latest verification email.",
+        "verifiedSuccess": "Your email has been verified. You can sign in now.",
+        "resend": "Resend verification email",
+        "resending": "Sending verification email...",
+        "resent": "A fresh verification email was sent to {email}.",
+        "resendFailed": "Could not resend the verification email.",
+        "resendMissingEmail": "Enter your email first so we know where to resend the verification link."
       }
     },
     "discover": {
@@ -139,7 +148,17 @@
         "generic": "当前无法创建账户，请稍后重试。",
         "passwordConfirmationMismatch": "两次输入的密码不一致。",
         "createFailed": "无法创建你的账户。"
+      },
+      "verifyEmail": {
+        "title": "Check your email",
+        "description": "We created your account and sent a verification email to {email}.",
+        "hint": "Open the latest email, click the verification link, then come back here to sign in.",
+        "loginPrompt": "Already verified?"
       }
+    },
+    "verification": {
+      "loading": "We are still loading email verification settings. Please wait a moment and try again.",
+      "unavailable": "Email verification is not configured yet. Please contact the administrator or use a social sign-in option."
     }
   },
   "public": {
@@ -1465,6 +1484,75 @@
         "errors": {
           "load": "无法加载 OAuth 配置。",
           "save": "无法保存 OAuth 配置。"
+        }
+      },
+      "smtp": {
+        "title": "SMTP config",
+        "description": "Configure the SMTP transport used for email verification and other transactional auth emails.",
+        "status": {
+          "label": "Status",
+          "configured": "Configured",
+          "incomplete": "Incomplete",
+          "password": "Password",
+          "secure": "Secure transport",
+          "missing": "Missing"
+        },
+        "form": {
+          "host": "SMTP host",
+          "hostPlaceholder": "smtp.example.com",
+          "port": "SMTP port",
+          "portPlaceholder": "587",
+          "secure": "Use TLS / SSL",
+          "secureHint": "Enable this when your SMTP server expects a secure connection from the first byte.",
+          "username": "SMTP username",
+          "usernamePlaceholder": "mailer@example.com",
+          "password": "SMTP password",
+          "passwordPlaceholder": "Leave blank to keep the current password",
+          "fromEmail": "From email",
+          "fromEmailPlaceholder": "no-reply@example.com",
+          "fromName": "From name",
+          "fromNamePlaceholder": "NewsFlow"
+        },
+        "lastUpdated": "Last updated",
+        "runtimeHint": "SMTP changes apply to new verification emails immediately after saving.",
+        "save": "Save SMTP config",
+        "saving": "Saving...",
+        "successSaved": "SMTP config saved.",
+        "passwordHint": "Leave the password empty to keep the current encrypted value.",
+        "errors": {
+          "load": "Could not load SMTP config.",
+          "save": "Could not save SMTP config.",
+          "invalidPort": "SMTP port must be an integer between 1 and 65535."
+        }
+      },
+      "authSigningKeys": {
+        "title": "Auth signing keys",
+        "description": "Store the RSA public and private key pair for future auth token signing without enabling JWT issuance yet.",
+        "status": {
+          "label": "Status",
+          "configured": "Configured",
+          "incomplete": "Incomplete",
+          "algorithm": "Algorithm",
+          "privateKey": "Private key",
+          "fingerprint": "Public key fingerprint",
+          "missing": "Missing",
+          "notAvailable": "Not available"
+        },
+        "form": {
+          "publicKeyPem": "Public key (PEM)",
+          "publicKeyPlaceholder": "-----BEGIN PUBLIC KEY-----",
+          "privateKeyPem": "Private key (PEM)",
+          "privateKeyPlaceholder": "-----BEGIN PRIVATE KEY-----"
+        },
+        "lastUpdated": "Last updated",
+        "runtimeHint": "These keys are only stored and validated in this task. JWT and JWKS runtime changes stay disabled.",
+        "save": "Save auth signing keys",
+        "saving": "Saving...",
+        "successSaved": "Auth signing keys saved.",
+        "privateKeyHint": "Leave the private key empty to keep the current encrypted value.",
+        "errors": {
+          "load": "Could not load auth signing keys.",
+          "save": "Could not save auth signing keys."
         }
       },
       "manualActions": {

@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useIntlLocale } from "@/composables/use-intl-locale";
 import {
   Select,
   SelectContent,
@@ -21,8 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { dashboardQueryKeys } from "@/lib/dashboard-query-keys";
-import { useIntlLocale } from "@/composables/use-intl-locale";
 
 definePageMeta({
   layout: "dashboard",
@@ -81,6 +82,33 @@ type AdminOAuthConfig = {
   createdAt: Date | string | null;
 };
 
+type AdminSmtpConfig = {
+  host: string | null;
+  port: number | null;
+  secure: boolean;
+  username: string | null;
+  passwordMasked: string | null;
+  hasPassword: boolean;
+  fromEmail: string | null;
+  fromName: string | null;
+  isConfigured: boolean;
+  updatedByUserId: string | null;
+  updatedAt: Date | string | null;
+  createdAt: Date | string | null;
+};
+
+type AdminAuthSigningKeyConfig = {
+  algorithm: string;
+  publicKeyPem: string | null;
+  publicKeyFingerprint: string | null;
+  privateKeyMasked: string | null;
+  hasPrivateKey: boolean;
+  isConfigured: boolean;
+  updatedByUserId: string | null;
+  updatedAt: Date | string | null;
+  createdAt: Date | string | null;
+};
+
 const ALL_QUEUE_STATES: QueueJobState[] = [
   "waiting",
   "active",
@@ -90,6 +118,7 @@ const ALL_QUEUE_STATES: QueueJobState[] = [
 ];
 
 const { $orpc } = useNuxtApp();
+const runtimeConfig = useRuntimeConfig();
 const { t } = useI18n();
 const intlLocale = useIntlLocale();
 const queryClient = useQueryClient();
@@ -104,6 +133,10 @@ const stripeConfigError = ref("");
 const stripeConfigSuccess = ref("");
 const oauthConfigError = ref("");
 const oauthConfigSuccess = ref("");
+const smtpConfigError = ref("");
+const smtpConfigSuccess = ref("");
+const authSigningKeyConfigError = ref("");
+const authSigningKeyConfigSuccess = ref("");
 
 const stripeConfigForm = reactive({
   publishableKey: "",
@@ -123,6 +156,21 @@ const oauthConfigForm = reactive({
   appleClientId: "",
   appleClientSecret: "",
   appleAppBundleIdentifier: "",
+});
+
+const smtpConfigForm = reactive({
+  host: "",
+  port: "",
+  secure: false,
+  username: "",
+  password: "",
+  fromEmail: "",
+  fromName: "",
+});
+
+const authSigningKeyConfigForm = reactive({
+  publicKeyPem: "",
+  privateKeyPem: "",
 });
 
 const confirmState = ref<ConfirmState>(null);
@@ -157,6 +205,18 @@ const stripeConfigQuery = useQuery(
 const oauthConfigQuery = useQuery(
   $orpc.admin.systemOps.getOAuthConfig.queryOptions({
     queryKey: dashboardQueryKeys.admin.systemOps.oauthConfig(),
+  })
+);
+
+const smtpConfigQuery = useQuery(
+  $orpc.admin.systemOps.getSmtpConfig.queryOptions({
+    queryKey: dashboardQueryKeys.admin.systemOps.smtpConfig(),
+  })
+);
+
+const authSigningKeyConfigQuery = useQuery(
+  $orpc.admin.systemOps.getAuthSigningKeyConfig.queryOptions({
+    queryKey: dashboardQueryKeys.admin.systemOps.authSigningKeyConfig(),
   })
 );
 
@@ -222,6 +282,28 @@ const updateOAuthConfigMutation = useMutation(
   })
 );
 
+const updateSmtpConfigMutation = useMutation(
+  $orpc.admin.systemOps.updateSmtpConfig.mutationOptions({
+    onSuccess: async () => {
+      smtpConfigError.value = "";
+      smtpConfigSuccess.value = t("admin.systemOps.smtp.successSaved");
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const updateAuthSigningKeyConfigMutation = useMutation(
+  $orpc.admin.systemOps.updateAuthSigningKeyConfig.mutationOptions({
+    onSuccess: async () => {
+      authSigningKeyConfigError.value = "";
+      authSigningKeyConfigSuccess.value = t(
+        "admin.systemOps.authSigningKeys.successSaved"
+      );
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
 const isActionPending = computed(
   () =>
     retryJobMutation.isPending.value
@@ -237,6 +319,16 @@ const isOAuthConfigPending = computed(
   () => updateOAuthConfigMutation.isPending.value || oauthConfigQuery.isLoading.value
 );
 
+const isSmtpConfigPending = computed(
+  () => updateSmtpConfigMutation.isPending.value || smtpConfigQuery.isLoading.value
+);
+
+const isAuthSigningKeyConfigPending = computed(
+  () =>
+    updateAuthSigningKeyConfigMutation.isPending.value
+    || authSigningKeyConfigQuery.isLoading.value
+);
+
 const currentStripeConfig = computed<AdminStripeConfig | null>(
   () => stripeConfigQuery.data.value ?? null
 );
@@ -244,6 +336,25 @@ const currentStripeConfig = computed<AdminStripeConfig | null>(
 const currentOAuthConfig = computed<AdminOAuthConfig | null>(
   () => oauthConfigQuery.data.value ?? null
 );
+
+const currentSmtpConfig = computed<AdminSmtpConfig | null>(
+  () => smtpConfigQuery.data.value ?? null
+);
+
+const currentAuthSigningKeyConfig = computed<AdminAuthSigningKeyConfig | null>(
+  () => authSigningKeyConfigQuery.data.value ?? null
+);
+
+const stripeWebhookEndpoint = computed(() => {
+  const serverUrl =
+    typeof runtimeConfig.public.serverUrl === "string"
+      ? runtimeConfig.public.serverUrl.trim().replace(/\/$/, "")
+      : "";
+
+  return serverUrl
+    ? `${serverUrl}/api/auth/stripe/webhook`
+    : "/api/auth/stripe/webhook";
+});
 
 const overviewErrorMessage = computed(() => {
   if (!overviewQuery.error.value) {
@@ -285,6 +396,26 @@ const oauthConfigLoadError = computed(() => {
     : t("admin.systemOps.oauth.errors.load");
 });
 
+const smtpConfigLoadError = computed(() => {
+  if (!smtpConfigQuery.error.value) {
+    return "";
+  }
+
+  return smtpConfigQuery.error.value instanceof Error
+    ? smtpConfigQuery.error.value.message
+    : t("admin.systemOps.smtp.errors.load");
+});
+
+const authSigningKeyConfigLoadError = computed(() => {
+  if (!authSigningKeyConfigQuery.error.value) {
+    return "";
+  }
+
+  return authSigningKeyConfigQuery.error.value instanceof Error
+    ? authSigningKeyConfigQuery.error.value.message
+    : t("admin.systemOps.authSigningKeys.errors.load");
+});
+
 watch(
   () => stripeConfigQuery.data.value,
   (config) => {
@@ -317,6 +448,37 @@ watch(
     oauthConfigForm.appleClientId = config.appleClientId ?? "";
     oauthConfigForm.appleClientSecret = "";
     oauthConfigForm.appleAppBundleIdentifier = config.appleAppBundleIdentifier ?? "";
+  },
+  { immediate: true }
+);
+
+watch(
+  () => smtpConfigQuery.data.value,
+  (config) => {
+    if (!config) {
+      return;
+    }
+
+    smtpConfigForm.host = config.host ?? "";
+    smtpConfigForm.port = config.port === null ? "" : String(config.port);
+    smtpConfigForm.secure = config.secure;
+    smtpConfigForm.username = config.username ?? "";
+    smtpConfigForm.password = "";
+    smtpConfigForm.fromEmail = config.fromEmail ?? "";
+    smtpConfigForm.fromName = config.fromName ?? "";
+  },
+  { immediate: true }
+);
+
+watch(
+  () => authSigningKeyConfigQuery.data.value,
+  (config) => {
+    if (!config) {
+      return;
+    }
+
+    authSigningKeyConfigForm.publicKeyPem = config.publicKeyPem ?? "";
+    authSigningKeyConfigForm.privateKeyPem = "";
   },
   { immediate: true }
 );
@@ -506,6 +668,55 @@ const handleSaveOAuthConfig = async () => {
       error instanceof Error ? error.message : t("admin.systemOps.oauth.errors.save");
   }
 };
+
+const handleSaveSmtpConfig = async () => {
+  smtpConfigError.value = "";
+  smtpConfigSuccess.value = "";
+
+  const portValue = smtpConfigForm.port.trim();
+  let parsedPort: number | null = null;
+
+  if (portValue.length > 0) {
+    parsedPort = Number.parseInt(portValue, 10);
+
+    if (!Number.isInteger(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
+      smtpConfigError.value = t("admin.systemOps.smtp.errors.invalidPort");
+      return;
+    }
+  }
+
+  try {
+    await updateSmtpConfigMutation.mutateAsync({
+      host: smtpConfigForm.host,
+      port: parsedPort,
+      secure: smtpConfigForm.secure,
+      username: smtpConfigForm.username,
+      password: smtpConfigForm.password,
+      fromEmail: smtpConfigForm.fromEmail,
+      fromName: smtpConfigForm.fromName,
+    });
+  } catch (error) {
+    smtpConfigError.value =
+      error instanceof Error ? error.message : t("admin.systemOps.smtp.errors.save");
+  }
+};
+
+const handleSaveAuthSigningKeyConfig = async () => {
+  authSigningKeyConfigError.value = "";
+  authSigningKeyConfigSuccess.value = "";
+
+  try {
+    await updateAuthSigningKeyConfigMutation.mutateAsync({
+      publicKeyPem: authSigningKeyConfigForm.publicKeyPem,
+      privateKeyPem: authSigningKeyConfigForm.privateKeyPem,
+    });
+  } catch (error) {
+    authSigningKeyConfigError.value =
+      error instanceof Error
+        ? error.message
+        : t("admin.systemOps.authSigningKeys.errors.save");
+  }
+};
 </script>
 
 <template>
@@ -608,7 +819,7 @@ const handleSaveOAuthConfig = async () => {
             {{ t("admin.systemOps.stripe.lastUpdated") }}:
             {{ formatDateTime(currentStripeConfig?.updatedAt ?? null) }}
           </p>
-          <p>{{ t("admin.systemOps.stripe.webhookEndpoint") }}: `http://localhost:3000/api/auth/stripe/webhook`</p>
+          <p>{{ t("admin.systemOps.stripe.webhookEndpoint") }}: `{{ stripeWebhookEndpoint }}`</p>
         </div>
 
         <p v-if="stripeConfigLoadError" class="text-sm text-destructive">
@@ -743,6 +954,251 @@ const handleSaveOAuthConfig = async () => {
           </Button>
           <p class="text-xs text-muted-foreground">
             {{ t("admin.systemOps.oauth.secretHint") }}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ t("admin.systemOps.smtp.title") }}</CardTitle>
+        <CardDescription>
+          {{ t("admin.systemOps.smtp.description") }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent class="space-y-4">
+        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.smtp.status.label") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentSmtpConfig?.isConfigured
+                  ? t("admin.systemOps.smtp.status.configured")
+                  : t("admin.systemOps.smtp.status.incomplete")
+              }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.smtp.status.password") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{ currentSmtpConfig?.passwordMasked || t("admin.systemOps.smtp.status.missing") }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.smtp.status.secure") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentSmtpConfig?.secure
+                  ? t("common.states.enabled")
+                  : t("common.states.disabled")
+              }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.host") }}</p>
+            <Input
+              v-model="smtpConfigForm.host"
+              :placeholder="t('admin.systemOps.smtp.form.hostPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.port") }}</p>
+            <Input
+              v-model="smtpConfigForm.port"
+              inputmode="numeric"
+              :placeholder="t('admin.systemOps.smtp.form.portPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between rounded-md border p-3">
+              <div class="space-y-1">
+                <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.secure") }}</p>
+                <p class="text-xs text-muted-foreground">
+                  {{ t("admin.systemOps.smtp.form.secureHint") }}
+                </p>
+              </div>
+              <Switch
+                :model-value="smtpConfigForm.secure"
+                :disabled="isSmtpConfigPending"
+                @update:model-value="(value) => smtpConfigForm.secure = Boolean(value)"
+              />
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.username") }}</p>
+            <Input
+              v-model="smtpConfigForm.username"
+              :placeholder="t('admin.systemOps.smtp.form.usernamePlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.password") }}</p>
+            <Input
+              v-model="smtpConfigForm.password"
+              type="password"
+              :placeholder="t('admin.systemOps.smtp.form.passwordPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.fromEmail") }}</p>
+            <Input
+              v-model="smtpConfigForm.fromEmail"
+              :placeholder="t('admin.systemOps.smtp.form.fromEmailPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2 md:col-span-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.form.fromName") }}</p>
+            <Input
+              v-model="smtpConfigForm.fromName"
+              :placeholder="t('admin.systemOps.smtp.form.fromNamePlaceholder')"
+            />
+          </div>
+        </div>
+
+        <div class="rounded-md border p-3 text-xs text-muted-foreground">
+          <p>
+            {{ t("admin.systemOps.smtp.lastUpdated") }}:
+            {{ formatDateTime(currentSmtpConfig?.updatedAt ?? null) }}
+          </p>
+          <p>{{ t("admin.systemOps.smtp.runtimeHint") }}</p>
+        </div>
+
+        <p v-if="smtpConfigLoadError" class="text-sm text-destructive">
+          {{ smtpConfigLoadError }}
+        </p>
+        <p v-else-if="smtpConfigError" class="text-sm text-destructive">
+          {{ smtpConfigError }}
+        </p>
+        <p v-else-if="smtpConfigSuccess" class="text-sm text-emerald-600 dark:text-emerald-400">
+          {{ smtpConfigSuccess }}
+        </p>
+
+        <div class="flex items-center gap-2">
+          <Button :disabled="isSmtpConfigPending" @click="handleSaveSmtpConfig">
+            {{
+              updateSmtpConfigMutation.isPending.value
+                ? t("admin.systemOps.smtp.saving")
+                : t("admin.systemOps.smtp.save")
+            }}
+          </Button>
+          <p class="text-xs text-muted-foreground">
+            {{ t("admin.systemOps.smtp.passwordHint") }}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ t("admin.systemOps.authSigningKeys.title") }}</CardTitle>
+        <CardDescription>
+          {{ t("admin.systemOps.authSigningKeys.description") }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent class="space-y-4">
+        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.systemOps.authSigningKeys.status.label") }}
+            </p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentAuthSigningKeyConfig?.isConfigured
+                  ? t("admin.systemOps.authSigningKeys.status.configured")
+                  : t("admin.systemOps.authSigningKeys.status.incomplete")
+              }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.systemOps.authSigningKeys.status.algorithm") }}
+            </p>
+            <p class="mt-1 text-sm font-medium">
+              {{ currentAuthSigningKeyConfig?.algorithm || "RS256" }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.systemOps.authSigningKeys.status.privateKey") }}
+            </p>
+            <p class="mt-1 text-sm font-medium">
+              {{
+                currentAuthSigningKeyConfig?.privateKeyMasked
+                  || t("admin.systemOps.authSigningKeys.status.missing")
+              }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">
+              {{ t("admin.systemOps.authSigningKeys.status.fingerprint") }}
+            </p>
+            <p class="mt-1 break-all text-sm font-medium">
+              {{
+                currentAuthSigningKeyConfig?.publicKeyFingerprint
+                  || t("admin.systemOps.authSigningKeys.status.notAvailable")
+              }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid gap-4">
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.authSigningKeys.form.publicKeyPem") }}</p>
+            <textarea
+              v-model="authSigningKeyConfigForm.publicKeyPem"
+              rows="8"
+              class="min-h-40 w-full rounded-md border bg-background px-3 py-2 text-sm shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring"
+              :placeholder="t('admin.systemOps.authSigningKeys.form.publicKeyPlaceholder')"
+            />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.authSigningKeys.form.privateKeyPem") }}</p>
+            <textarea
+              v-model="authSigningKeyConfigForm.privateKeyPem"
+              rows="10"
+              class="min-h-48 w-full rounded-md border bg-background px-3 py-2 text-sm shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring"
+              :placeholder="t('admin.systemOps.authSigningKeys.form.privateKeyPlaceholder')"
+            />
+          </div>
+        </div>
+
+        <div class="rounded-md border p-3 text-xs text-muted-foreground">
+          <p>
+            {{ t("admin.systemOps.authSigningKeys.lastUpdated") }}:
+            {{ formatDateTime(currentAuthSigningKeyConfig?.updatedAt ?? null) }}
+          </p>
+          <p>{{ t("admin.systemOps.authSigningKeys.runtimeHint") }}</p>
+        </div>
+
+        <p v-if="authSigningKeyConfigLoadError" class="text-sm text-destructive">
+          {{ authSigningKeyConfigLoadError }}
+        </p>
+        <p v-else-if="authSigningKeyConfigError" class="text-sm text-destructive">
+          {{ authSigningKeyConfigError }}
+        </p>
+        <p
+          v-else-if="authSigningKeyConfigSuccess"
+          class="text-sm text-emerald-600 dark:text-emerald-400"
+        >
+          {{ authSigningKeyConfigSuccess }}
+        </p>
+
+        <div class="flex items-center gap-2">
+          <Button
+            :disabled="isAuthSigningKeyConfigPending"
+            @click="handleSaveAuthSigningKeyConfig"
+          >
+            {{
+              updateAuthSigningKeyConfigMutation.isPending.value
+                ? t("admin.systemOps.authSigningKeys.saving")
+                : t("admin.systemOps.authSigningKeys.save")
+            }}
+          </Button>
+          <p class="text-xs text-muted-foreground">
+            {{ t("admin.systemOps.authSigningKeys.privateKeyHint") }}
           </p>
         </div>
       </CardContent>

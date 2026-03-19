@@ -2,9 +2,9 @@
 import type { HTMLAttributes } from "vue"
 import { computed, reactive, ref } from "vue"
 import { useQuery } from "@tanstack/vue-query"
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
@@ -12,8 +12,8 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -22,8 +22,6 @@ const props = defineProps<{
 const { $authClient, $orpc } = useNuxtApp()
 const route = useRoute()
 const { t } = useI18n()
-
-const DEFAULT_REDIRECT_PATH = "/dashboard"
 
 const form = reactive({
   name: "",
@@ -34,6 +32,7 @@ const form = reactive({
 const isSubmitting = ref(false)
 const isSocialSubmitting = ref(false)
 const submitError = ref("")
+const pendingVerificationEmail = ref("")
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof Error && error.message) {
@@ -58,10 +57,6 @@ const getSafeRedirectPath = () => {
   return redirect
 }
 
-const postAuthRedirectPath = computed(
-  () => getSafeRedirectPath() || DEFAULT_REDIRECT_PATH
-)
-
 const authSwitchQuery = computed(() => {
   const redirect = getSafeRedirectPath()
   return redirect ? { redirect } : {}
@@ -82,9 +77,42 @@ const isGoogleEnabled = computed(
 const hasSocialProviders = computed(
   () => isAppleEnabled.value || isGoogleEnabled.value
 )
+const emailVerificationConfigured = computed(() => {
+  if (!authConfigQuery.data.value) {
+    return null
+  }
+
+  return authConfigQuery.data.value.emailVerificationConfigured
+})
+
+const getVerificationCallbackUrl = () => {
+  const params = new URLSearchParams({
+    verified: "1",
+  })
+  const redirect = getSafeRedirectPath()
+
+  if (redirect) {
+    params.set("redirect", redirect)
+  }
+
+  const callbackPath = `/login?${params.toString()}`
+
+  if (import.meta.client) {
+    return `${window.location.origin}${callbackPath}`
+  }
+
+  return callbackPath
+}
 
 const handleSubmit = async () => {
   submitError.value = ""
+
+  if (emailVerificationConfigured.value !== true) {
+    submitError.value = authConfigQuery.isLoading.value
+      ? t("auth.verification.loading")
+      : t("auth.verification.unavailable")
+    return
+  }
 
   if (form.password !== form.confirmPassword) {
     submitError.value = t("auth.signup.errors.passwordConfirmationMismatch")
@@ -94,10 +122,12 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
+    const email = form.email.trim()
     const { error } = await $authClient.signUp.email({
       name: form.name.trim(),
-      email: form.email.trim(),
+      email,
       password: form.password,
+      callbackURL: getVerificationCallbackUrl(),
     })
 
     if (error) {
@@ -105,13 +135,13 @@ const handleSubmit = async () => {
       return
     }
 
-    const { data: session } = await $authClient.getSession()
-    if (session) {
-      await navigateTo(postAuthRedirectPath.value)
-      return
-    }
+    try {
+      await $authClient.signOut()
+    } catch {}
 
-    await navigateTo({ path: "/login", query: authSwitchQuery.value })
+    pendingVerificationEmail.value = email
+    form.password = ""
+    form.confirmPassword = ""
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {
@@ -142,7 +172,27 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
     <Card class="overflow-hidden p-0">
       <CardContent class="grid p-0 md:grid-cols-2">
         <form class="p-6 md:p-8" @submit.prevent="handleSubmit">
-          <FieldGroup>
+          <FieldGroup v-if="pendingVerificationEmail">
+            <div class="flex flex-col items-center gap-2 text-center">
+              <h1 class="text-2xl font-bold">
+                {{ t("auth.signup.verifyEmail.title") }}
+              </h1>
+              <p class="text-muted-foreground text-sm text-balance">
+                {{ t("auth.signup.verifyEmail.description", { email: pendingVerificationEmail }) }}
+              </p>
+            </div>
+            <FieldDescription class="text-center">
+              {{ t("auth.signup.verifyEmail.hint") }}
+            </FieldDescription>
+            <FieldDescription class="text-center">
+              {{ t("auth.signup.verifyEmail.loginPrompt") }}
+              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">
+                {{ t("auth.signup.signIn") }}
+              </NuxtLink>
+            </FieldDescription>
+          </FieldGroup>
+
+          <FieldGroup v-else>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
                 {{ t("auth.signup.title") }}
@@ -157,10 +207,10 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
               </FieldLabel>
               <Input
                 id="name"
+                v-model="form.name"
                 type="text"
                 autocomplete="name"
                 :placeholder="t('auth.common.namePlaceholder')"
-                v-model="form.name"
                 required
               />
             </Field>
@@ -170,10 +220,10 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
               </FieldLabel>
               <Input
                 id="email"
+                v-model="form.email"
                 type="email"
                 :placeholder="t('auth.common.emailPlaceholder')"
                 autocomplete="email"
-                v-model="form.email"
                 required
               />
               <FieldDescription>
@@ -188,9 +238,9 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
                   </FieldLabel>
                   <Input
                     id="password"
+                    v-model="form.password"
                     type="password"
                     autocomplete="new-password"
-                    v-model="form.password"
                     required
                   />
                 </Field>
@@ -200,9 +250,9 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
                   </FieldLabel>
                   <Input
                     id="confirm-password"
+                    v-model="form.confirmPassword"
                     type="password"
                     autocomplete="new-password"
-                    v-model="form.confirmPassword"
                     required
                   />
                 </Field>
@@ -211,11 +261,19 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
                 {{ t("auth.signup.passwordHint") }}
               </FieldDescription>
             </Field>
+            <Field v-if="emailVerificationConfigured === false">
+              <FieldDescription class="text-destructive">
+                {{ t("auth.verification.unavailable") }}
+              </FieldDescription>
+            </Field>
             <Field v-if="submitError">
               <FieldError :errors="[submitError]" />
             </Field>
             <Field>
-              <Button type="submit" :disabled="isSubmitting">
+              <Button
+                type="submit"
+                :disabled="isSubmitting || emailVerificationConfigured !== true"
+              >
                 {{ isSubmitting ? t("auth.signup.submitting") : t("auth.signup.submit") }}
               </Button>
             </Field>
@@ -259,7 +317,9 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
             </Field>
             <FieldDescription class="text-center">
               {{ t("auth.signup.haveAccount") }}
-              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">{{ t("auth.signup.signIn") }}</NuxtLink>
+              <NuxtLink :to="{ path: '/login', query: authSwitchQuery }">
+                {{ t("auth.signup.signIn") }}
+              </NuxtLink>
             </FieldDescription>
           </FieldGroup>
         </form>
