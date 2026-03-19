@@ -131,6 +131,48 @@ export const adminOAuthConfigUpdateSchema = z.object({
   appleAppBundleIdentifier: nullableTrimmedStringSchema.optional(),
 });
 
+export const adminSmtpConfigSchema = z.object({
+  host: z.string().nullable(),
+  port: z.number().int().nullable(),
+  secure: z.boolean(),
+  username: z.string().nullable(),
+  passwordMasked: z.string().nullable(),
+  hasPassword: z.boolean(),
+  fromEmail: z.string().nullable(),
+  fromName: z.string().nullable(),
+  isConfigured: z.boolean(),
+  updatedByUserId: z.string().nullable(),
+  updatedAt: z.date().nullable(),
+  createdAt: z.date().nullable(),
+});
+
+export const adminSmtpConfigUpdateSchema = z.object({
+  host: nullableTrimmedStringSchema.optional(),
+  port: z.number().int().min(1).max(65535).nullable().optional(),
+  secure: z.boolean().optional(),
+  username: nullableTrimmedStringSchema.optional(),
+  password: optionalSecretStringSchema,
+  fromEmail: nullableTrimmedStringSchema.optional(),
+  fromName: nullableTrimmedStringSchema.optional(),
+});
+
+export const adminAuthSigningKeyConfigSchema = z.object({
+  algorithm: z.string(),
+  publicKeyPem: z.string().nullable(),
+  publicKeyFingerprint: z.string().nullable(),
+  privateKeyMasked: z.string().nullable(),
+  hasPrivateKey: z.boolean(),
+  isConfigured: z.boolean(),
+  updatedByUserId: z.string().nullable(),
+  updatedAt: z.date().nullable(),
+  createdAt: z.date().nullable(),
+});
+
+export const adminAuthSigningKeyConfigUpdateSchema = z.object({
+  publicKeyPem: nullableTrimmedStringSchema.optional(),
+  privateKeyPem: optionalSecretStringSchema,
+});
+
 export const listAdminQueueJobsSchema = z.object({
   queueName: adminQueueNameSchema.optional(),
   states: z.array(adminQueueJobStateSchema).min(1).max(5).default(["failed"]),
@@ -182,4 +224,10 @@ export type UpdateAdminStripeConfigInput = z.infer<
 >;
 export type UpdateAdminOAuthConfigInput = z.infer<
   typeof adminOAuthConfigUpdateSchema
+>;
+export type UpdateAdminSmtpConfigInput = z.infer<
+  typeof adminSmtpConfigUpdateSchema
+>;
+export type UpdateAdminAuthSigningKeyConfigInput = z.infer<
+  typeof adminAuthSigningKeyConfigUpdateSchema
 >;

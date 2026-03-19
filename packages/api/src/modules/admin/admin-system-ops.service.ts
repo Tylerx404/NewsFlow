@@ -1,10 +1,22 @@
 import { ORPCError } from "@orpc/server";
 
 import {
+  AuthSigningKeyConfigError,
+  buildAuthSigningKeyConfigUpdateData,
+  getAuthSigningKeyConfigRecord,
+  getAuthSigningKeyFingerprint,
+  maskAuthSigningKeyConfigRecord,
+} from "@NewsFlow/auth/auth-signing-key-config";
+import {
   buildOAuthConfigUpdateData,
   getOAuthConfigRecord,
   maskOAuthConfigRecord,
 } from "@NewsFlow/auth/oauth-config";
+import {
+  buildSmtpConfigUpdateData,
+  getSmtpConfigRecord,
+  maskSmtpConfigRecord,
+} from "@NewsFlow/auth/smtp-config";
 import {
   buildStripeConfigUpdateData,
   getStripeConfigRecord,
@@ -30,7 +42,9 @@ import type {
   RetryAdminQueueJobInput,
   TriggerAdminContentExtractInput,
   TriggerAdminFeedFetchInput,
+  UpdateAdminAuthSigningKeyConfigInput,
   UpdateAdminOAuthConfigInput,
+  UpdateAdminSmtpConfigInput,
   UpdateAdminStripeConfigInput,
 } from "./admin-system-ops.schema";
 
@@ -301,6 +315,20 @@ export async function getAdminOAuthConfig(
   return maskOAuthConfigRecord(record);
 }
 
+export async function getAdminSmtpConfig(
+  db: Pick<PrismaClient, "smtpConfig">
+) {
+  const record = await getSmtpConfigRecord(db);
+  return maskSmtpConfigRecord(record);
+}
+
+export async function getAdminAuthSigningKeyConfig(
+  db: Pick<PrismaClient, "authSigningKeyConfig">
+) {
+  const record = await getAuthSigningKeyConfigRecord(db);
+  return maskAuthSigningKeyConfigRecord(record);
+}
+
 interface UpdateAdminStripeConfigParams extends UpdateAdminStripeConfigInput {
   adminUserId: string;
 }
@@ -450,6 +478,173 @@ export async function updateAdminOAuthConfig(
   });
 
   return getAdminOAuthConfig(db);
+}
+
+interface UpdateAdminSmtpConfigParams extends UpdateAdminSmtpConfigInput {
+  adminUserId: string;
+}
+
+export async function updateAdminSmtpConfig(
+  db: PrismaClient,
+  input: UpdateAdminSmtpConfigParams
+) {
+  const existing = await getSmtpConfigRecord(db);
+  const nextData = await buildSmtpConfigUpdateData({
+    ...input,
+    updatedByUserId: input.adminUserId,
+  });
+
+  const changedFields = Object.keys(nextData).filter(
+    (field) => field !== "updatedByUserId" && field !== "updatedAt"
+  );
+  const nextHost =
+    typeof nextData.host === "string" || nextData.host === null
+      ? nextData.host
+      : existing?.host ?? null;
+  const nextPort =
+    typeof nextData.port === "number" || nextData.port === null
+      ? nextData.port
+      : existing?.port ?? null;
+  const nextUsername =
+    typeof nextData.username === "string" || nextData.username === null
+      ? nextData.username
+      : existing?.username ?? null;
+  const nextFromEmail =
+    typeof nextData.fromEmail === "string" || nextData.fromEmail === null
+      ? nextData.fromEmail
+      : existing?.fromEmail ?? null;
+  const nextPasswordState =
+    typeof nextData.passwordEncrypted === "string"
+      ? "present"
+      : existing?.passwordEncrypted
+        ? "present"
+        : "missing";
+
+  await db.$transaction(async (tx) => {
+    await tx.smtpConfig.upsert({
+      where: { id: "default" },
+      update: nextData,
+      create: {
+        id: "default",
+        ...nextData,
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "SYSTEM_OPS_SMTP_CONFIG_UPDATED",
+      targetType: "SYSTEM_CONFIG",
+      targetId: "smtp",
+      metadata: {
+        previous: {
+          changedFields: changedFields.join(",") || undefined,
+          host: existing?.host ? "present" : "missing",
+          port: existing?.port ? "present" : "missing",
+          username: existing?.username ? "present" : "missing",
+          password: existing?.passwordEncrypted ? "present" : "missing",
+          fromEmail: existing?.fromEmail ? "present" : "missing",
+        },
+        next: {
+          changedFields: changedFields.join(",") || undefined,
+          host: nextHost ? "present" : "missing",
+          port: nextPort ? "present" : "missing",
+          username: nextUsername ? "present" : "missing",
+          password: nextPasswordState,
+          fromEmail: nextFromEmail ? "present" : "missing",
+        },
+      },
+    });
+  });
+
+  return getAdminSmtpConfig(db);
+}
+
+interface UpdateAdminAuthSigningKeyConfigParams
+  extends UpdateAdminAuthSigningKeyConfigInput {
+  adminUserId: string;
+}
+
+export async function updateAdminAuthSigningKeyConfig(
+  db: PrismaClient,
+  input: UpdateAdminAuthSigningKeyConfigParams
+) {
+  const existing = await getAuthSigningKeyConfigRecord(db);
+  let nextData: Awaited<
+    ReturnType<typeof buildAuthSigningKeyConfigUpdateData>
+  >;
+
+  try {
+    nextData = await buildAuthSigningKeyConfigUpdateData(
+      {
+        ...input,
+        updatedByUserId: input.adminUserId,
+      },
+      existing
+    );
+  } catch (error) {
+    if (error instanceof AuthSigningKeyConfigError) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: error.message,
+      });
+    }
+
+    throw error;
+  }
+
+  const changedFields = Object.keys(nextData).filter(
+    (field) =>
+      field !== "updatedByUserId" && field !== "updatedAt" && field !== "algorithm"
+  );
+  const nextPublicKeyPem =
+    typeof nextData.publicKeyPem === "string" || nextData.publicKeyPem === null
+      ? nextData.publicKeyPem
+      : existing?.publicKeyPem ?? null;
+  const nextPrivateKeyState =
+    typeof nextData.privateKeyPemEncrypted === "string"
+      ? "present"
+      : nextData.privateKeyPemEncrypted === null
+        ? "missing"
+        : existing?.privateKeyPemEncrypted
+          ? "present"
+          : "missing";
+
+  await db.$transaction(async (tx) => {
+    await tx.authSigningKeyConfig.upsert({
+      where: { id: "default" },
+      update: nextData,
+      create: {
+        id: "default",
+        ...nextData,
+      },
+    });
+
+    await createAdminAuditLog(tx, {
+      adminUserId: input.adminUserId,
+      action: "SYSTEM_OPS_AUTH_SIGNING_KEY_CONFIG_UPDATED",
+      targetType: "SYSTEM_CONFIG",
+      targetId: "auth-signing-key",
+      metadata: {
+        previous: {
+          changedFields: changedFields.join(",") || undefined,
+          publicKey: existing?.publicKeyPem ? "present" : "missing",
+          privateKey: existing?.privateKeyPemEncrypted ? "present" : "missing",
+          fingerprint: existing?.publicKeyPem
+            ? getAuthSigningKeyFingerprint(existing.publicKeyPem)
+            : undefined,
+        },
+        next: {
+          changedFields: changedFields.join(",") || undefined,
+          publicKey: nextPublicKeyPem ? "present" : "missing",
+          privateKey: nextPrivateKeyState,
+          fingerprint: nextPublicKeyPem
+            ? getAuthSigningKeyFingerprint(nextPublicKeyPem)
+            : undefined,
+        },
+      },
+    });
+  });
+
+  return getAdminAuthSigningKeyConfig(db);
 }
 
 export async function listAdminQueueJobs(

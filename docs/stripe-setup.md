@@ -1,28 +1,48 @@
-# Stripe Setup (Admin System Ops)
+# Stripe Setup
 
-Tai lieu nay mo ta cach cau hinh Stripe cho NewsFlow tu admin UI.
+This document explains how to configure Stripe from Admin System Ops.
 
-## 1) Tao key va price trong Stripe
+## 1. Create Stripe keys and prices
 
-1. Dang nhap Stripe Dashboard.
-2. Chon dung environment sandbox/test.
-3. Vao `Developers > API keys` va copy:
-   - `Publishable key` (`pk_test_...`)
-   - `Secret key` (`sk_test_...`)
-4. Tao webhook secret `whsec_...` cho endpoint:
-   - `http://localhost:3000/api/auth/stripe/webhook`
-5. Tao 3 product va recurring price:
-   - Basic: monthly + yearly
-   - Pro: monthly + yearly
-   - Max: monthly + yearly
+1. Sign in to the Stripe Dashboard.
+2. Choose the correct environment for your setup, usually test mode first.
+3. Open `Developers > API keys` and copy:
+   - `Publishable key` as `pk_test_...` or `pk_live_...`
+   - `Secret key` as `sk_test_...` or `sk_live_...`
+4. Create recurring prices for all supported plans:
+   - Basic monthly
+   - Basic yearly
+   - Pro monthly
+   - Pro yearly
+   - Max monthly
+   - Max yearly
 
-## 2) Vao admin system ops de save config
+## 2. Use the webhook endpoint from Admin System Ops
 
-Dang nhap bang tai khoan `ADMIN`, mo:
+Do not hard-code the webhook URL in docs, local notes, or admin screenshots.
+
+Open Admin System Ops and copy the `Webhook endpoint` shown in the Stripe card. The value is built from the current server configuration, for example:
+
+- `http://localhost:3000/api/auth/stripe/webhook`
+- `https://api.example.com/api/auth/stripe/webhook`
+
+Register this endpoint in Stripe and subscribe at minimum to these events:
+
+- `checkout.session.completed`
+- `invoice.paid`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+
+The app also understands `invoice.payment_succeeded`, `invoice.payment_failed`, and `invoice_payment.paid` for compatibility, but `checkout.session.completed` and `invoice.paid` are the key events for reliable subscription sync after payment.
+
+## 3. Save Stripe config in admin
+
+Sign in as an `ADMIN` user and open:
 
 - `http://localhost:3001/admin/system-ops`
 
-Tai card `Stripe config`, nhap:
+In the `Stripe config` card, save:
 
 - `Publishable key`
 - `Secret key`
@@ -34,13 +54,17 @@ Tai card `Stripe config`, nhap:
 - `Max monthly price`
 - `Max yearly price`
 
-Sau do bam `Save Stripe config`.
+Notes:
 
-## 3) Env khong con chua STRIPE_*
+- `Publishable key` stays in plaintext because it is public.
+- `Secret key` and `Webhook secret` are encrypted at rest.
+- Leaving a secret field blank keeps the currently stored secret.
 
-NewsFlow khong doc `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, hay `STRIPE_PRICE_*` tu `apps/server/.env` nua.
+## 4. Environment expectations
 
-Chi con cac env he thong nhu:
+NewsFlow no longer reads `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, or `STRIPE_PRICE_*` from `apps/server/.env`.
+
+The system still needs core runtime env values such as:
 
 - `DATABASE_URL`
 - `BETTER_AUTH_SECRET`
@@ -49,15 +73,12 @@ Chi con cac env he thong nhu:
 - `AI_KEY_ENCRYPTION_SECRET`
 - `REDIS_URL`
 
-## 4) Kiem tra nhanh
+## 5. Quick verification
 
-1. Mo `http://localhost:3001/admin/system-ops`
-2. Xac nhan `Stripe config` hien `Configured`
-3. Dang nhap user thuong va mo `http://localhost:3001/settings/personal`
-4. Thu tao checkout session hoac mo billing portal
-
-## 5) Promotion code (voucher)
-
-- Voucher code van duoc nhap o man hinh subscription trong `settings/personal`
-- App se preview gia qua Stripe va ap vao checkout neu code hop le
-- Nguoi dung nhap text code (vi du `SUMMER26`), khong nhap `promo_...`
+1. Open Admin System Ops and confirm Stripe status is configured.
+2. Run a checkout flow and complete payment.
+3. Confirm the user subscription syncs after:
+   - `checkout.session.completed`
+   - `invoice.paid`
+4. Refresh Admin System Ops and verify secrets remain masked.
+5. Open the Stripe webhook delivery logs and confirm the configured endpoint receives the expected events.

@@ -4,7 +4,11 @@ import prisma from "@NewsFlow/db";
 
 import { adminProcedure } from "../../index";
 import {
+  adminAuthSigningKeyConfigSchema,
+  adminAuthSigningKeyConfigUpdateSchema,
   adminOpsActionOutputSchema,
+  adminSmtpConfigSchema,
+  adminSmtpConfigUpdateSchema,
   adminQueueJobsOutputSchema,
   adminOAuthConfigSchema,
   adminOAuthConfigUpdateSchema,
@@ -19,6 +23,8 @@ import {
   triggerAdminFeedFetchSchema,
 } from "./admin-system-ops.schema";
 import {
+  getAdminAuthSigningKeyConfig,
+  getAdminSmtpConfig,
   getAdminStripeConfig,
   getAdminSystemOpsOverview,
   getAdminOAuthConfig,
@@ -26,7 +32,9 @@ import {
   retryAdminQueueJob,
   triggerAdminContentExtract,
   triggerAdminFeedFetch,
+  updateAdminAuthSigningKeyConfig,
   updateAdminOAuthConfig,
+  updateAdminSmtpConfig,
   updateAdminStripeConfig,
 } from "./admin-system-ops.service";
 
@@ -50,6 +58,18 @@ export const adminSystemOpsRouter = {
       return getAdminOAuthConfig(prisma);
     }),
 
+  getSmtpConfig: adminProcedure
+    .output(adminSmtpConfigSchema)
+    .handler(async () => {
+      return getAdminSmtpConfig(prisma);
+    }),
+
+  getAuthSigningKeyConfig: adminProcedure
+    .output(adminAuthSigningKeyConfigSchema)
+    .handler(async () => {
+      return getAdminAuthSigningKeyConfig(prisma);
+    }),
+
   updateStripeConfig: adminProcedure
     .input(adminStripeConfigUpdateSchema)
     .output(adminStripeConfigSchema)
@@ -65,6 +85,26 @@ export const adminSystemOpsRouter = {
     .output(adminOAuthConfigSchema)
     .handler(async ({ input, context }) => {
       return updateAdminOAuthConfig(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
+    }),
+
+  updateSmtpConfig: adminProcedure
+    .input(adminSmtpConfigUpdateSchema)
+    .output(adminSmtpConfigSchema)
+    .handler(async ({ input, context }) => {
+      return updateAdminSmtpConfig(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
+    }),
+
+  updateAuthSigningKeyConfig: adminProcedure
+    .input(adminAuthSigningKeyConfigUpdateSchema)
+    .output(adminAuthSigningKeyConfigSchema)
+    .handler(async ({ input, context }) => {
+      return updateAdminAuthSigningKeyConfig(prisma, {
         ...input,
         adminUserId: context.session.user.id,
       });

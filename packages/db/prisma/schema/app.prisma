@@ -205,6 +205,34 @@ model AuthConfig {
   @@map("auth_config")
 }
 
+model SmtpConfig {
+  id                String   @id @default("default")
+  host              String?
+  port              Int?
+  secure            Boolean  @default(false)
+  username          String?
+  passwordEncrypted String?
+  fromEmail         String?
+  fromName          String?
+  updatedByUserId   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("smtp_config")
+}
+
+model AuthSigningKeyConfig {
+  id                     String   @id @default("default")
+  algorithm              String   @default("RS256")
+  publicKeyPem           String?
+  privateKeyPemEncrypted String?
+  updatedByUserId        String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("auth_signing_key_config")
+}
+
 model AdminAuditLog {
   id          String   @id @default(cuid())
   adminUserId String

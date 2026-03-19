@@ -21,6 +21,17 @@ const ACTIVE_SUBSCRIPTION_STATUSES = new Set([
   "unpaid",
 ]);
 
+export const STRIPE_SUBSCRIPTION_SYNC_EVENT_TYPES = [
+  "checkout.session.completed",
+  "invoice.paid",
+  "invoice.payment_succeeded",
+  "invoice.payment_failed",
+  "invoice_payment.paid",
+  "customer.subscription.created",
+  "customer.subscription.updated",
+  "customer.subscription.deleted",
+] as const;
+
 export class StripeBillingError extends Error {
   constructor(
     message: string,
@@ -829,7 +840,11 @@ export async function handleStripeWebhookEvent(
     return;
   }
 
-  if (event.type === "invoice.payment_succeeded" || event.type === "invoice.payment_failed") {
+  if (
+    event.type === "invoice.paid" ||
+    event.type === "invoice.payment_succeeded" ||
+    event.type === "invoice.payment_failed"
+  ) {
     const invoice = event.data.object as Stripe.Invoice;
     const subscriptionId = getSubscriptionIdFromInvoice(invoice);
 
@@ -881,6 +896,14 @@ export async function handleStripeWebhookEvent(
       deleted: true,
     });
   }
+}
+
+export function shouldSyncStripeSubscriptionFromWebhookEvent(
+  eventType: string
+) {
+  return STRIPE_SUBSCRIPTION_SYNC_EVENT_TYPES.includes(
+    eventType as (typeof STRIPE_SUBSCRIPTION_SYNC_EVENT_TYPES)[number]
+  );
 }
 
 export function isStripeBillingPlan(value: string): value is StripePlanName {

@@ -36,11 +36,6 @@ type DecodedImage = {
   buffer: Buffer;
 };
 
-type DecodedImage = {
-  mimeType: string;
-  buffer: Buffer;
-};
-
 async function runStartupStripeSync() {
   try {
     const result = await syncStripeSubscriptionsManually(prisma, {
@@ -205,6 +200,41 @@ async function requireSessionUser(req: express.Request) {
   return session.user;
 }
 
+function getStripeWebhookContext(event: { type: string; data: { object: unknown } }) {
+  const object = event.data.object as Record<string, unknown>;
+  const subscriptionField = object.subscription;
+  const customerField = object.customer;
+
+  const subscriptionId =
+    typeof subscriptionField === "string"
+      ? subscriptionField
+      : subscriptionField &&
+          typeof subscriptionField === "object" &&
+          "id" in subscriptionField &&
+          typeof subscriptionField.id === "string"
+        ? subscriptionField.id
+        : typeof object.id === "string" &&
+            event.type.startsWith("customer.subscription.")
+          ? object.id
+          : null;
+
+  const customerId =
+    typeof customerField === "string"
+      ? customerField
+      : customerField &&
+          typeof customerField === "object" &&
+          "id" in customerField &&
+          typeof customerField.id === "string"
+        ? customerField.id
+        : null;
+
+  return {
+    eventType: event.type,
+    subscriptionId,
+    customerId,
+  };
+}
+
 app.use(
   cors({
     origin: env.CORS_ORIGIN,
@@ -232,10 +262,25 @@ app.post(
 
     try {
       const { config, event } = await constructStripeWebhookEvent(req.body, signature);
-      await handleStripeWebhookEvent(prisma, event, config);
-      res.status(200).json({ received: true });
+      try {
+        await handleStripeWebhookEvent(prisma, event, config);
+        console.info("[stripe-webhook] Processed event", getStripeWebhookContext(event));
+        res.status(200).json({ received: true });
+      } catch (error) {
+        const mapped = mapStripeBillingError(error);
+        console.error("[stripe-webhook] Failed to process event", {
+          ...getStripeWebhookContext(event),
+          statusCode: mapped.statusCode,
+          message: mapped.message,
+        });
+        res.status(mapped.statusCode).json({ message: mapped.message });
+      }
     } catch (error) {
       const mapped = mapStripeBillingError(error);
+      console.error("[stripe-webhook] Failed to construct event", {
+        statusCode: mapped.statusCode,
+        message: mapped.message,
+      });
       res.status(mapped.statusCode).json({ message: mapped.message });
     }
   }

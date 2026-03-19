@@ -4,6 +4,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
 import { getOAuthProviderConfig } from "./oauth-config";
+import { sendVerificationEmailWithSmtp } from "./smtp-mailer";
 
 const isProduction = env.NODE_ENV === "production";
 
@@ -51,6 +52,15 @@ export const auth = betterAuth({
   trustedOrigins,
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    autoSignInAfterVerification: false,
+    async sendVerificationEmail(data) {
+      await sendVerificationEmailWithSmtp(data, prisma);
+    },
   },
   socialProviders: hasSocialProviders ? oauthProviders : undefined,
   advanced: {
