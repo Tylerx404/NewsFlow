@@ -1,163 +1,81 @@
-# AGENTS Guide for NewsFlow
+# AGENTS.md for NewsFlow
 
-Tài liệu này định nghĩa cách coding agents làm việc trong repo `NewsFlow`.
-Mục tiêu: thay đổi đúng phạm vi, giữ type safety, và đảm bảo code dễ maintain.
+Agent guide for working in this repo. Keep changes scoped, type-safe, and aligned with the existing monorepo boundaries.
 
-## 1) Kiến trúc repo
+## Project map
 
-- `apps/web`: Nuxt 4 frontend.
-- `apps/server`: Express 5 server, mount oRPC và OpenAPI reference.
-- `apps/worker`: tiến trình worker riêng để chạy BullMQ runner/scheduler.
-- `packages/api`: business logic và router/procedure cho API.
-- `packages/auth`: cấu hình Better Auth.
-- `packages/db`: Prisma client, schema/migrations, kết nối Postgres/Redis.
-- `packages/env`: validate env cho server/web.
-- `packages/queue`: BullMQ scheduler/worker cho RSS và content extraction.
-- `packages/config`: shared TypeScript config.
+- `apps/web`: Nuxt 4 frontend
+- `apps/server`: Express 5 server, auth routes, oRPC, API reference
+- `apps/worker`: separate worker process for BullMQ runner/scheduler
+- `packages/api`: API modules, schemas, services, routers
+- `packages/auth`: Better Auth setup and related helpers
+- `packages/db`: Prisma schema, migrations, Postgres/Redis access
+- `packages/env`: validated env for server and web
+- `packages/queue`: queue schemas, processors, scheduler, runner
+- `packages/config`: shared TypeScript config
 
-## 2) Nguyên tắc cốt lõi
+## Core rules
 
-- Type-safe mặc định: dùng TypeScript + Zod, hạn chế tối đa `any`.
-- Đúng boundary package: auth ở `packages/auth`, data ở `packages/db`, API ở `packages/api`, queue ở `packages/queue`.
-- Server và worker tách process: `apps/server` không tự khởi động queue runner.
-- Internal dependency phải dùng `workspace:*`.
-- Env phải qua schema của `@NewsFlow/env/server` hoặc `@NewsFlow/env/web`.
-- Thay đổi DB phải đi qua Prisma schema/migration, không SQL tay nếu không có yêu cầu rõ.
-- Mỗi phần việc phải bắt đầu trên một nhánh mới, tên nhánh ngắn gọn và bám theo chủ đề/phạm vi thay đổi.
-- Mỗi phần việc hoàn tất phải được commit ngay với message rõ ràng; không dồn nhiều phần không liên quan vào cùng một commit.
-- Không commit secret; dữ liệu nhạy cảm phải được xử lý an toàn (ví dụ mã hóa API key).
+- Use `bun` commands. Do not switch the repo to `npm` or `yarn`.
+- Keep logic in the package that owns it. Avoid crossing boundaries casually.
+- Internal package dependencies should use `workspace:*`.
+- Read environment variables through `@NewsFlow/env/server` or `@NewsFlow/env/web`.
+- Do not move queue runner startup into `apps/server`; worker runtime stays separate.
+- Avoid `any` unless there is a clear reason. Prefer Zod schemas and inferred types.
+- Do not commit secrets or log raw tokens, API keys, or credentials.
 
-## 3) Quy ước tổ chức code
+## Change patterns
 
-### API module structure
+### API
 
-- Mỗi module trong `packages/api/src/modules/*` nên có:
-- `*.schema.ts`: Zod schemas + types (`z.infer`).
-- `*.service.ts`: business logic tái sử dụng.
-- `*.router.ts`: procedure wiring, auth, gọi service.
-- Router tổng nằm ở `packages/api/src/routers/index.ts`.
-- Ưu tiên router theo namespace (`aiConfig`, `feed`, `article`, `ai`); nếu giữ alias flat cho legacy client thì phải ghi rõ là tạm thời.
-- Route public dùng `publicProcedure`, route auth dùng `protectedProcedure`.
-- Lỗi nghiệp vụ trả về bằng `ORPCError`.
+- API modules usually follow `*.schema.ts`, `*.service.ts`, `*.router.ts`.
+- Wire module routers through `packages/api/src/routers/index.ts`.
+- Use `publicProcedure` for public routes and `protectedProcedure` for authenticated routes.
+- Convert business-facing API errors to `ORPCError` at the boundary.
 
-### Naming conventions
+### Database
 
-- TS files: `kebab-case.ts`.
-- Vue components: `PascalCase.vue`.
-- Schema names: hậu tố `Schema` (ví dụ `createAiConfigSchema`).
-- Type/interface: `PascalCase`.
-- Constant: `UPPER_SNAKE_CASE`.
-- Variable/function: `camelCase`, dùng tên theo domain, tránh tên mơ hồ.
+- Change Prisma models under `packages/db/prisma/schema`.
+- After schema changes, run `bun run db:generate`.
+- Use `bun run db:migrate` for real migrations and `bun run db:push` only for prototyping.
+- Do not delete migration history unless the task explicitly calls for it.
 
-### Import và dependency
+### Queue
 
-- Ưu tiên tái sử dụng qua `@NewsFlow/*`.
-- Thứ tự import: external -> workspace packages -> local files.
-- Tránh circular dependencies giữa packages.
+- Update job schema, processor, and enqueue/dequeue call sites together.
+- Worker bootstrap lives in `apps/worker/src/index.ts` via `startJobRunner()`.
 
-## 4) Phong cách trình bày code
+### Web
 
-- Ưu tiên early return để giảm nesting.
-- Hàm nên ngắn, mỗi hàm xử lý một mục tiêu rõ ràng.
-- Tên hàm theo mẫu action + target (ví dụ `encryptApiKey`, `setDefaultConfig`).
-- Chỉ comment phần "vì sao", không comment điều hiển nhiên.
-- Với logic nghiệp vụ quan trọng, ghi rõ ràng constraint gần đoạn code đó.
+- Preserve the current UI language unless the task asks for a redesign.
+- Any new or changed user-facing text should go through i18n and update the locale files in `apps/web/i18n/locales`.
 
-## 5) Định hướng UI Web (linh hoạt)
-
-Áp dụng cho các trang mới trong `apps/web` theo hướng mở để không bó buộc một style cố định.
-
-- Không áp đặt một visual language bắt buộc. Mỗi màn hình có thể chọn hướng thiết kế phù hợp với mục tiêu và nội dung.
-- Ưu tiên khả năng đọc, hierarchy rõ ràng và trải nghiệm tốt trên cả mobile lẫn desktop.
-- Có thể dùng bất kỳ component library hoặc custom UI nếu hợp lý; không bắt buộc `shadcn-nuxt` hay token màu hiện hữu.
-- Nếu có thay đổi lớn về giao diện, ghi rõ lý do và hướng thiết kế trong mô tả task/PR/commit để team dễ đồng bộ.
-- Nếu màn hình đã có style cũ, ưu tiên cải tiến dần thay vì thay toàn bộ khi chưa có yêu cầu rõ.
-
-## 6) Error handling và logging
-
-- Không dùng `catch` rỗng, không nuốt lỗi.
-- Convert lỗi thành `ORPCError` ở boundary API khi phù hợp.
-- Không log secrets (token, apiKey, raw credential).
-- Log theo context thực thi (ví dụ `userId`, `feedId`, `jobId`) để dễ trace.
-- Tránh log trùng nhiều tầng cho cùng một lỗi.
-
-## 7) Workflow theo loại thay đổi
-
-### A. Git branch và commit
-
-- Trước khi làm một phần việc mới, tạo nhánh mới theo chủ đề thay đổi.
-- Tên nhánh nên ngắn gọn, dễ nhận biết phạm vi, ví dụ: `feature/feed-management`, `fix/auth-callback`, `chore/i18n-dashboard`.
-- Khi xử lý xong một phần việc độc lập, commit ngay phần đó.
-- Mỗi commit chỉ nên chứa một nhóm thay đổi liên quan chặt chẽ để dễ review và rollback.
-
-### B. API contract/business logic
-
-- Cập nhật đồng bộ `schema -> service -> router`.
-- Nếu đổi contract, kiểm tra điểm gọi ở `apps/web`.
-- Giữ backward compatibility nếu endpoint đã dùng ở client.
-
-### C. Database
-
-- Sửa schema trong `packages/db/prisma/schema`.
-- Chạy `bun run db:generate`.
-- Chạy `bun run db:migrate` (hoặc `bun run db:push` cho prototyping).
-- Không xóa migration history khi chưa có yêu cầu rõ.
-
-### D. Environment variables
-
-- Thêm env mới vào schema tương ứng trong `packages/env`.
-- Cập nhật `apps/server/.env.example` hoặc `apps/web/.env.example`.
-- Không truy cập env trực tiếp nếu đã có layer validate.
-
-### E. Queue/jobs
-
-- Nếu thêm job mới: cập nhật schema job, processor, scheduler/runner.
-- Nếu đổi tên queue/job: cập nhật đồng bộ tất cả nơi enqueue/dequeue.
-- Nếu đổi lifecycle queue: kiểm tra cả `apps/worker` (bootstrap) và `packages/queue` (start/stop scheduler, close queue/worker).
-
-### F. Web UI và i18n
-
-- Mọi thay đổi UI có text, label, placeholder, empty state, toast, modal, hoặc validation message phải cập nhật qua i18n.
-- Nếu thêm màn hình mới trong `apps/web`, chuẩn bị key dịch ngay từ đầu thay vì hard-code text tạm thời.
-- Nếu đổi wording hiện có, cập nhật đồng bộ key dịch và rà lại các màn hình liên quan để tránh lệch ngôn ngữ.
-
-## 8) Lệnh chuẩn
+## Common commands
 
 ```bash
 bun install
 bun run db:start
-bun run db:push
 bun run dev
-```
-
-```bash
 bun run dev:web
 bun run dev:server
 bun run dev:worker
-bun run build
 bun run check-types
-bun run db:migrate
+bun run build
 bun run db:generate
-bun run db:studio
-bun run db:stop
-bun run db:down
+bun run db:migrate
+bun run db:push
 ```
 
-Quy ước: dùng `bun`, không dùng `npm`/`yarn`.
+## Working style
 
-## 9) Definition of Done
+- Prefer focused branches and grouped commits for independent work.
+- Use clear names and early returns.
+- Add comments for constraints or intent, not for obvious mechanics.
+- Avoid broad refactors, mass formatting, or dependency churn unless requested.
 
-- Đã sửa đúng phạm vi task, không refactor lan ngoài yêu cầu.
-- `bun run check-types` pass với phần code bị tác động.
-- Nếu có thay đổi DB/env/API contract, các phần liên quan đã cập nhật đầy đủ.
-- Nếu có thay đổi UI, các key i18n và locale liên quan đã được cập nhật đầy đủ.
-- Phần việc đã nằm trên đúng nhánh theo chủ đề và được tách commit rõ ràng.
-- Không để lộ secret trong code, logs, docs.
-- Code mới nhất quán style với module hiện hữu.
+## Done checklist
 
-## 10) Không làm
-
-- Không thêm dependency trùng vai trò khi đã có package nội bộ.
-- Không đổi cấu trúc monorepo hoặc rename package nếu chưa được yêu cầu.
-- Không format/chỉnh style hàng loạt ngoài phạm vi task.
-- Không tự ý xóa dữ liệu/migration/history.
+- The change stays within task scope.
+- Relevant type/build checks pass for the affected area.
+- DB, env, API contract, queue, or i18n follow-up changes are updated when applicable.
+- No secrets or sensitive logs were introduced.
