@@ -269,6 +269,17 @@ function getSubscriptionIdFromInvoice(invoice: Stripe.Invoice) {
     : legacySubscription.id ?? null;
 }
 
+function getInvoicePeriod(invoice: Stripe.Invoice) {
+  const firstLineWithPeriod =
+    invoice.lines.data.find((line) => line.period?.start && line.period?.end) ??
+    invoice.lines.data[0];
+
+  return {
+    periodStart: toDate(firstLineWithPeriod?.period?.start),
+    periodEnd: toDate(firstLineWithPeriod?.period?.end),
+  };
+}
+
 async function ensureStripeCustomer(
   db: Pick<PrismaClient, "user">,
   stripeClient: Stripe,
@@ -575,6 +586,84 @@ export async function createBillingPortalSessionForUser(
 
   return {
     url: session.url,
+  };
+}
+
+export async function listBillingHistoryForUser(
+  db: PrismaClient,
+  input: {
+    userId: string;
+    cursor?: string;
+    limit: number;
+  }
+) {
+  const config = await getStripeBillingConfig(db);
+
+  if (!config) {
+    return {
+      items: [],
+      nextCursor: undefined,
+      hasMore: false,
+      isStripeConfigured: false,
+    };
+  }
+
+  const stripeClient = createStripeClient(config);
+  const user = await db.user.findUnique({
+    where: { id: input.userId },
+    select: {
+      stripeCustomerId: true,
+    },
+  });
+
+  if (!user) {
+    throw new StripeBillingError("User not found.", 404);
+  }
+
+  if (!user.stripeCustomerId) {
+    return {
+      items: [],
+      nextCursor: undefined,
+      hasMore: false,
+      isStripeConfigured: true,
+    };
+  }
+
+  const invoicePage = await stripeClient.invoices.list({
+    customer: user.stripeCustomerId,
+    limit: input.limit,
+    ...(input.cursor ? { starting_after: input.cursor } : {}),
+  });
+
+  const items = invoicePage.data.map((invoice) => {
+    const { periodStart, periodEnd } = getInvoicePeriod(invoice);
+    const totalAmount = invoice.total ?? 0;
+    const amountPaid = invoice.amount_paid ?? 0;
+
+    return {
+      invoiceId: invoice.id,
+      invoiceNumber: invoice.number ?? null,
+      createdAt: toDate(invoice.created) ?? new Date(0),
+      currency: invoice.currency.toUpperCase(),
+      displayAmount: amountPaid > 0 ? amountPaid : totalAmount,
+      amountPaid,
+      totalAmount,
+      status: invoice.status ?? "open",
+      billingReason: invoice.billing_reason ?? null,
+      periodStart,
+      periodEnd,
+      hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+      invoicePdfUrl: invoice.invoice_pdf ?? null,
+    };
+  });
+
+  const lastInvoice = invoicePage.data[invoicePage.data.length - 1];
+
+  return {
+    items,
+    nextCursor: invoicePage.has_more ? lastInvoice?.id : undefined,
+    hasMore: invoicePage.has_more,
+    isStripeConfigured: true,
   };
 }
 
