@@ -760,6 +760,40 @@
     "title": "결제",
     "description": "구독, 쿠폰 코드, Stripe 결제 작업을 한 곳에서 관리하세요."
   },
+  "billingHistory": {
+    "title": "결제 내역",
+    "description": "최근 청구서와 지출을 확인하고 Stripe에서 상세 정보를 바로 열어보세요.",
+    "limitLabel": "페이지당 청구서 수",
+    "limitOption": "청구서 {count}건",
+    "loading": "청구서를 불러오는 중...",
+    "loadingMore": "더 불러오는 중...",
+    "empty": "이 계정에는 아직 청구서가 없습니다.",
+    "unavailable": "Stripe 결제가 구성되면 결제 내역이 여기에 표시됩니다.",
+    "errorFallback": "결제 내역을 불러올 수 없습니다.",
+    "columns": {
+      "date": "날짜",
+      "amount": "금액",
+      "status": "상태",
+      "period": "청구 기간",
+      "invoice": "청구서 번호",
+      "actions": "작업"
+    },
+    "actions": {
+      "viewStripe": "Stripe에서 보기",
+      "downloadPdf": "PDF 다운로드",
+      "loadMore": "더 보기"
+    },
+    "periods": {
+      "manual": "수동 청구서",
+      "subscription": "구독",
+      "subscriptionCreate": "구독 시작",
+      "subscriptionCycle": "구독 주기",
+      "subscriptionThreshold": "사용량 임계값",
+      "subscriptionUpdate": "구독 변경",
+      "upcoming": "예정 청구서",
+      "default": "정보 없음"
+    }
+  },
   "admin": {
     "common": {
       "action": "작업",

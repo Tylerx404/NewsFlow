@@ -760,6 +760,40 @@
     "title": "Billing",
     "description": "Manage your subscription, voucher, and Stripe billing actions in one place."
   },
+  "billingHistory": {
+    "title": "Billing history",
+    "description": "Review recent invoices, spending, and open details directly in Stripe.",
+    "limitLabel": "Invoices per page",
+    "limitOption": "{count} invoices",
+    "loading": "Loading invoices...",
+    "loadingMore": "Loading more...",
+    "empty": "No invoices found for this account yet.",
+    "unavailable": "Billing history will appear here after Stripe billing is configured.",
+    "errorFallback": "Unable to load billing history.",
+    "columns": {
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "period": "Billing period",
+      "invoice": "Invoice",
+      "actions": "Actions"
+    },
+    "actions": {
+      "viewStripe": "View on Stripe",
+      "downloadPdf": "Download PDF",
+      "loadMore": "Load more"
+    },
+    "periods": {
+      "manual": "Manual invoice",
+      "subscription": "Subscription",
+      "subscriptionCreate": "Subscription start",
+      "subscriptionCycle": "Subscription cycle",
+      "subscriptionThreshold": "Usage threshold",
+      "subscriptionUpdate": "Subscription update",
+      "upcoming": "Upcoming invoice",
+      "default": "Not available"
+    }
+  },
   "admin": {
     "common": {
       "action": "Action",

@@ -760,6 +760,40 @@
     "title": "账单",
     "description": "在一个页面中管理订阅、优惠码和 Stripe 账单操作。"
   },
+  "billingHistory": {
+    "title": "账单历史",
+    "description": "查看最近发票、支出，并直接在 Stripe 中打开详情。",
+    "limitLabel": "每页发票数",
+    "limitOption": "{count} 张发票",
+    "loading": "正在加载发票...",
+    "loadingMore": "正在加载更多...",
+    "empty": "该账户暂时没有发票。",
+    "unavailable": "Stripe 账单配置完成后，账单历史会显示在这里。",
+    "errorFallback": "无法加载账单历史。",
+    "columns": {
+      "date": "日期",
+      "amount": "金额",
+      "status": "状态",
+      "period": "账单周期",
+      "invoice": "发票编号",
+      "actions": "操作"
+    },
+    "actions": {
+      "viewStripe": "在 Stripe 中查看",
+      "downloadPdf": "下载 PDF",
+      "loadMore": "加载更多"
+    },
+    "periods": {
+      "manual": "手动发票",
+      "subscription": "订阅",
+      "subscriptionCreate": "订阅开始",
+      "subscriptionCycle": "订阅周期",
+      "subscriptionThreshold": "用量阈值",
+      "subscriptionUpdate": "订阅更新",
+      "upcoming": "即将到来的发票",
+      "default": "暂无数据"
+    }
+  },
   "admin": {
     "common": {
       "action": "操作",
