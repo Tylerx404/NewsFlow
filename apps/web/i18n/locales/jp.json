@@ -33,6 +33,7 @@
       "dashboard": "ダッシュボード",
       "articles": "記事",
       "settings": "設定",
+      "billing": "請求",
       "reader": "リーダー"
     }
   },
@@ -84,6 +85,7 @@
     "user": {
       "defaultName": "NewsFlow ユーザー",
       "personalSettings": "個人設定",
+      "billing": "請求",
       "appearance": "外観",
       "logOut": "ログアウト"
     }
@@ -396,7 +398,7 @@
       },
       "personal": {
         "label": "個人",
-        "description": "プロフィール、パスワード、ログインセッション、契約状況。"
+        "description": "プロフィール、パスワード、ログインセッション、アカウントの安全管理。"
       },
       "ai": {
         "label": "AI プロファイル",
@@ -752,6 +754,44 @@
       "feedsWithErrors": "エラーのあるフィード",
       "staleActiveFeeds": "古い有効フィード",
       "totalConfiguredFeeds": "設定済みフィード総数"
+    }
+  },
+  "billingPage": {
+    "title": "請求",
+    "description": "サブスクリプション、クーポンコード、Stripe の請求操作をまとめて管理します。"
+  },
+  "billingHistory": {
+    "title": "請求履歴",
+    "description": "最近の請求書と支出を確認し、Stripe で詳細を直接開けます。",
+    "limitLabel": "1ページの請求書数",
+    "limitOption": "{count} 件の請求書",
+    "loading": "請求書を読み込み中...",
+    "loadingMore": "さらに読み込み中...",
+    "empty": "このアカウントにはまだ請求書がありません。",
+    "unavailable": "Stripe の請求設定が完了すると、ここに請求履歴が表示されます。",
+    "errorFallback": "請求履歴を読み込めません。",
+    "columns": {
+      "date": "日付",
+      "amount": "金額",
+      "status": "状態",
+      "period": "請求期間",
+      "invoice": "請求書番号",
+      "actions": "操作"
+    },
+    "actions": {
+      "viewStripe": "Stripe で表示",
+      "downloadPdf": "PDF をダウンロード",
+      "loadMore": "さらに表示"
+    },
+    "periods": {
+      "manual": "手動請求",
+      "subscription": "サブスクリプション",
+      "subscriptionCreate": "契約開始",
+      "subscriptionCycle": "契約周期",
+      "subscriptionThreshold": "利用量しきい値",
+      "subscriptionUpdate": "契約更新",
+      "upcoming": "今後の請求",
+      "default": "データなし"
     }
   },
   "admin": {

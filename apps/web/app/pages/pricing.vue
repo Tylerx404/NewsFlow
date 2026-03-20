@@ -101,7 +101,7 @@ const displayedPlans = computed(() =>
 
 const resolvePlanHref = (planKey: PlanKey) =>
   hasSession.value
-    ? `/settings/personal?plan=${planKey}&interval=${billingInterval.value}`
+    ? `/billing?plan=${planKey}&interval=${billingInterval.value}`
     : "/signup";
 
 const resolvePlanActionLabel = () =>

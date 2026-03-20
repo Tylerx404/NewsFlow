@@ -157,5 +157,7 @@ export const dashboardQueryKeys = {
   },
   subscription: {
     current: () => ["dashboard", "subscription", "current"] as const,
+    billingHistory: (limit: number) =>
+      ["dashboard", "subscription", "billing-history", limit] as const,
   },
 };

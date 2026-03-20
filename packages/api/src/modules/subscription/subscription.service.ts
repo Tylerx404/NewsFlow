@@ -1,11 +1,17 @@
+import { listBillingHistoryForUser } from "@NewsFlow/auth/stripe-billing";
 import prisma from "@NewsFlow/db";
+import type { z } from "zod";
 
 import {
+  subscriptionBillingHistoryInputSchema,
   subscriptionBillingIntervalSchema,
   subscriptionTierSchema,
 } from "./subscription.schema";
 
 type PrismaClient = typeof prisma;
+type SubscriptionBillingHistoryInput = z.infer<
+  typeof subscriptionBillingHistoryInputSchema
+>;
 
 function normalizeSubscription<T extends {
   tier: string;
@@ -57,4 +63,16 @@ export async function getOrCreateSubscription(
   });
 
   return normalizeSubscription(created);
+}
+
+export async function listSubscriptionBillingHistory(
+  db: PrismaClient,
+  userId: string,
+  input: SubscriptionBillingHistoryInput
+) {
+  return listBillingHistoryForUser(db, {
+    userId,
+    cursor: input.cursor,
+    limit: input.limit,
+  });
 }

@@ -25,3 +25,31 @@ export const subscriptionSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const subscriptionBillingHistoryInputSchema = z.object({
+  cursor: z.string().optional(),
+  limit: z.number().int().min(1).max(50).default(10),
+});
+
+export const subscriptionBillingHistoryItemSchema = z.object({
+  invoiceId: z.string(),
+  invoiceNumber: z.string().nullable(),
+  createdAt: z.date(),
+  currency: z.string(),
+  displayAmount: z.number().int(),
+  amountPaid: z.number().int(),
+  totalAmount: z.number().int(),
+  status: z.string(),
+  billingReason: z.string().nullable(),
+  periodStart: z.date().nullable(),
+  periodEnd: z.date().nullable(),
+  hostedInvoiceUrl: z.string().nullable(),
+  invoicePdfUrl: z.string().nullable(),
+});
+
+export const subscriptionBillingHistoryOutputSchema = z.object({
+  items: z.array(subscriptionBillingHistoryItemSchema),
+  nextCursor: z.string().optional(),
+  hasMore: z.boolean(),
+  isStripeConfigured: z.boolean(),
+});

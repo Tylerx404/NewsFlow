@@ -33,6 +33,7 @@
       "dashboard": "Tổng quan",
       "articles": "Bài viết",
       "settings": "Cài đặt",
+      "billing": "Thanh toán",
       "reader": "Đọc bài"
     }
   },
@@ -84,6 +85,7 @@
     "user": {
       "defaultName": "Người dùng NewsFlow",
       "personalSettings": "Cài đặt cá nhân",
+      "billing": "Thanh toán",
       "appearance": "Giao diện",
       "logOut": "Đăng xuất"
     }
@@ -396,7 +398,7 @@
       },
       "personal": {
         "label": "Cá nhân",
-        "description": "Hồ sơ, mật khẩu, phiên đăng nhập và tổng quan gói dịch vụ."
+        "description": "Hồ sơ, mật khẩu, phiên đăng nhập và bảo mật tài khoản."
       },
       "ai": {
         "label": "Hồ sơ AI",
@@ -752,6 +754,44 @@
       "feedsWithErrors": "Feed có lỗi",
       "staleActiveFeeds": "Feed hoạt động bị cũ",
       "totalConfiguredFeeds": "Tổng feed đã cấu hình"
+    }
+  },
+  "billingPage": {
+    "title": "Thanh toán",
+    "description": "Quản lý gói dịch vụ, mã ưu đãi và các thao tác Stripe tại một nơi."
+  },
+  "billingHistory": {
+    "title": "Lịch sử thanh toán",
+    "description": "Xem các hóa đơn gần đây, chi tiêu và mở chi tiết trực tiếp trên Stripe.",
+    "limitLabel": "Số hóa đơn mỗi trang",
+    "limitOption": "{count} hóa đơn",
+    "loading": "Đang tải hóa đơn...",
+    "loadingMore": "Đang tải thêm...",
+    "empty": "Chưa có hóa đơn nào cho tài khoản này.",
+    "unavailable": "Lịch sử thanh toán sẽ hiển thị ở đây sau khi Stripe được cấu hình.",
+    "errorFallback": "Không thể tải lịch sử thanh toán.",
+    "columns": {
+      "date": "Ngày",
+      "amount": "Số tiền",
+      "status": "Trạng thái",
+      "period": "Kỳ thanh toán",
+      "invoice": "Mã hóa đơn",
+      "actions": "Thao tác"
+    },
+    "actions": {
+      "viewStripe": "Xem trên Stripe",
+      "downloadPdf": "Tải PDF",
+      "loadMore": "Tải thêm"
+    },
+    "periods": {
+      "manual": "Hóa đơn thủ công",
+      "subscription": "Gói đăng ký",
+      "subscriptionCreate": "Bắt đầu gói",
+      "subscriptionCycle": "Chu kỳ gói",
+      "subscriptionThreshold": "Ngưỡng sử dụng",
+      "subscriptionUpdate": "Cập nhật gói",
+      "upcoming": "Hóa đơn sắp tới",
+      "default": "Chưa có dữ liệu"
     }
   },
   "admin": {
