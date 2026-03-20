@@ -33,6 +33,7 @@
       "dashboard": "대시보드",
       "articles": "아티클",
       "settings": "설정",
+      "billing": "결제",
       "reader": "리더"
     }
   },
@@ -84,6 +85,7 @@
     "user": {
       "defaultName": "NewsFlow 사용자",
       "personalSettings": "개인 설정",
+      "billing": "결제",
       "appearance": "외형",
       "logOut": "로그아웃"
     }
@@ -396,7 +398,7 @@
       },
       "personal": {
         "label": "개인",
-        "description": "프로필, 비밀번호, 활성 세션, 구독 개요를 관리합니다."
+        "description": "프로필, 비밀번호, 활성 세션, 계정 보안을 관리합니다."
       },
       "ai": {
         "label": "AI 프로필",
@@ -753,6 +755,10 @@
       "staleActiveFeeds": "오래된 활성 피드",
       "totalConfiguredFeeds": "구성된 전체 피드"
     }
+  },
+  "billingPage": {
+    "title": "결제",
+    "description": "구독, 쿠폰 코드, Stripe 결제 작업을 한 곳에서 관리하세요."
   },
   "admin": {
     "common": {

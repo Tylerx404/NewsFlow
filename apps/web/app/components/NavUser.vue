@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   ChevronsUpDown,
+  CreditCard,
   Languages,
   LogOut,
   MonitorCog,
@@ -203,6 +204,12 @@ const handleLanguageChange = async (value: unknown) => {
               <NuxtLink to="/settings/personal">
                 <UserCircle />
                 {{ t("shell.user.personalSettings") }}
+              </NuxtLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem as-child>
+              <NuxtLink to="/billing">
+                <CreditCard />
+                {{ t("shell.user.billing") }}
               </NuxtLink>
             </DropdownMenuItem>
             <DropdownMenuSub>

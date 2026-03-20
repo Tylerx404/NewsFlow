@@ -33,6 +33,7 @@
       "dashboard": "仪表盘",
       "articles": "文章",
       "settings": "设置",
+      "billing": "账单",
       "reader": "阅读器"
     }
   },
@@ -84,6 +85,7 @@
     "user": {
       "defaultName": "NewsFlow 用户",
       "personalSettings": "个人设置",
+      "billing": "账单",
       "appearance": "外观",
       "logOut": "退出登录"
     }
@@ -396,7 +398,7 @@
       },
       "personal": {
         "label": "个人",
-        "description": "个人资料、密码、活跃会话和订阅概览。"
+        "description": "个人资料、密码、活跃会话和账户安全。"
       },
       "ai": {
         "label": "AI 配置",
@@ -753,6 +755,10 @@
       "staleActiveFeeds": "过期活跃订阅",
       "totalConfiguredFeeds": "已配置订阅总数"
     }
+  },
+  "billingPage": {
+    "title": "账单",
+    "description": "在一个页面中管理订阅、优惠码和 Stripe 账单操作。"
   },
   "admin": {
     "common": {
