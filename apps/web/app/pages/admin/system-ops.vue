@@ -135,6 +135,9 @@ const oauthConfigError = ref("");
 const oauthConfigSuccess = ref("");
 const smtpConfigError = ref("");
 const smtpConfigSuccess = ref("");
+const smtpTestEmail = ref("");
+const smtpTestError = ref("");
+const smtpTestSuccess = ref("");
 const authSigningKeyConfigError = ref("");
 const authSigningKeyConfigSuccess = ref("");
 
@@ -287,7 +290,22 @@ const updateSmtpConfigMutation = useMutation(
     onSuccess: async () => {
       smtpConfigError.value = "";
       smtpConfigSuccess.value = t("admin.systemOps.smtp.successSaved");
+      smtpTestError.value = "";
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const sendSmtpTestEmailMutation = useMutation(
+  $orpc.admin.systemOps.sendSmtpTestEmail.mutationOptions({
+    onSuccess: async (result) => {
+      smtpTestError.value = "";
+      smtpTestSuccess.value = t("admin.systemOps.smtp.test.success", {
+        email: result.toEmail,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.admin.systemOps.smtpConfig(),
+      });
     },
   })
 );
@@ -323,6 +341,10 @@ const isSmtpConfigPending = computed(
   () => updateSmtpConfigMutation.isPending.value || smtpConfigQuery.isLoading.value
 );
 
+const isSmtpTestPending = computed(
+  () => sendSmtpTestEmailMutation.isPending.value
+);
+
 const isAuthSigningKeyConfigPending = computed(
   () =>
     updateAuthSigningKeyConfigMutation.isPending.value
@@ -339,6 +361,10 @@ const currentOAuthConfig = computed<AdminOAuthConfig | null>(
 
 const currentSmtpConfig = computed<AdminSmtpConfig | null>(
   () => smtpConfigQuery.data.value ?? null
+);
+
+const isSmtpReadyForTest = computed(
+  () => currentSmtpConfig.value?.isConfigured ?? false
 );
 
 const currentAuthSigningKeyConfig = computed<AdminAuthSigningKeyConfig | null>(
@@ -672,6 +698,7 @@ const handleSaveOAuthConfig = async () => {
 const handleSaveSmtpConfig = async () => {
   smtpConfigError.value = "";
   smtpConfigSuccess.value = "";
+  smtpTestSuccess.value = "";
 
   const portValue = smtpConfigForm.port.trim();
   let parsedPort: number | null = null;
@@ -698,6 +725,32 @@ const handleSaveSmtpConfig = async () => {
   } catch (error) {
     smtpConfigError.value =
       error instanceof Error ? error.message : t("admin.systemOps.smtp.errors.save");
+  }
+};
+
+const handleSendSmtpTestEmail = async () => {
+  smtpTestError.value = "";
+  smtpTestSuccess.value = "";
+
+  const toEmail = smtpTestEmail.value.trim();
+
+  if (!toEmail) {
+    smtpTestError.value = t("admin.systemOps.smtp.test.errors.emailRequired");
+    return;
+  }
+
+  if (!isSmtpReadyForTest.value) {
+    smtpTestError.value = t("admin.systemOps.smtp.test.errors.incomplete");
+    return;
+  }
+
+  try {
+    await sendSmtpTestEmailMutation.mutateAsync({
+      toEmail,
+    });
+  } catch (error) {
+    smtpTestError.value =
+      error instanceof Error ? error.message : t("admin.systemOps.smtp.test.errors.send");
   }
 };
 
@@ -1058,12 +1111,55 @@ const handleSaveAuthSigningKeyConfig = async () => {
           </div>
         </div>
 
+        <div class="rounded-md border border-dashed p-3 text-xs text-muted-foreground">
+          <p class="font-medium text-foreground">
+            {{ t("admin.systemOps.smtp.brevo.title") }}
+          </p>
+          <p>{{ t("admin.systemOps.smtp.brevo.host") }}</p>
+          <p>{{ t("admin.systemOps.smtp.brevo.port") }}</p>
+          <p>{{ t("admin.systemOps.smtp.brevo.secure") }}</p>
+          <p>{{ t("admin.systemOps.smtp.brevo.username") }}</p>
+          <p>{{ t("admin.systemOps.smtp.brevo.password") }}</p>
+          <p>{{ t("admin.systemOps.smtp.brevo.fromEmail") }}</p>
+        </div>
+
         <div class="rounded-md border p-3 text-xs text-muted-foreground">
           <p>
             {{ t("admin.systemOps.smtp.lastUpdated") }}:
             {{ formatDateTime(currentSmtpConfig?.updatedAt ?? null) }}
           </p>
           <p>{{ t("admin.systemOps.smtp.runtimeHint") }}</p>
+        </div>
+
+        <div class="grid gap-3 rounded-md border p-3 md:grid-cols-[minmax(0,1fr)_auto]">
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.test.label") }}</p>
+            <Input
+              v-model="smtpTestEmail"
+              type="email"
+              :placeholder="t('admin.systemOps.smtp.test.placeholder')"
+            />
+            <p class="text-xs text-muted-foreground">
+              {{
+                isSmtpReadyForTest
+                  ? t("admin.systemOps.smtp.test.hintReady")
+                  : t("admin.systemOps.smtp.test.hintIncomplete")
+              }}
+            </p>
+          </div>
+          <div class="flex items-end">
+            <Button
+              variant="outline"
+              :disabled="!isSmtpReadyForTest || isSmtpTestPending"
+              @click="handleSendSmtpTestEmail"
+            >
+              {{
+                isSmtpTestPending
+                  ? t("admin.systemOps.smtp.test.sending")
+                  : t("admin.systemOps.smtp.test.send")
+              }}
+            </Button>
+          </div>
         </div>
 
         <p v-if="smtpConfigLoadError" class="text-sm text-destructive">
@@ -1074,6 +1170,13 @@ const handleSaveAuthSigningKeyConfig = async () => {
         </p>
         <p v-else-if="smtpConfigSuccess" class="text-sm text-emerald-600 dark:text-emerald-400">
           {{ smtpConfigSuccess }}
+        </p>
+
+        <p v-if="smtpTestError" class="text-sm text-destructive">
+          {{ smtpTestError }}
+        </p>
+        <p v-else-if="smtpTestSuccess" class="text-sm text-emerald-600 dark:text-emerald-400">
+          {{ smtpTestSuccess }}
         </p>
 
         <div class="flex items-center gap-2">

@@ -33,6 +33,7 @@ const isSubmitting = ref(false)
 const isSocialSubmitting = ref(false)
 const submitError = ref("")
 const pendingVerificationEmail = ref("")
+const DEFAULT_REDIRECT_PATH = "/dashboard"
 
 const getErrorMessage = (error: unknown) => {
   if (error instanceof Error && error.message) {
@@ -61,6 +62,9 @@ const authSwitchQuery = computed(() => {
   const redirect = getSafeRedirectPath()
   return redirect ? { redirect } : {}
 })
+const postAuthRedirectPath = computed(
+  () => getSafeRedirectPath() || DEFAULT_REDIRECT_PATH
+)
 
 const authConfigQuery = useQuery(
   $orpc.authConfig.get.queryOptions({
@@ -77,6 +81,13 @@ const isGoogleEnabled = computed(
 const hasSocialProviders = computed(
   () => isAppleEnabled.value || isGoogleEnabled.value
 )
+const emailVerificationRequired = computed(() => {
+  if (!authConfigQuery.data.value) {
+    return null
+  }
+
+  return authConfigQuery.data.value.emailVerificationRequired
+})
 const emailVerificationConfigured = computed(() => {
   if (!authConfigQuery.data.value) {
     return null
@@ -107,10 +118,22 @@ const getVerificationCallbackUrl = () => {
 const handleSubmit = async () => {
   submitError.value = ""
 
-  if (emailVerificationConfigured.value !== true) {
+  if (
+    authConfigQuery.isLoading.value
+    || emailVerificationRequired.value === null
+    || emailVerificationConfigured.value === null
+  ) {
     submitError.value = authConfigQuery.isLoading.value
       ? t("auth.verification.loading")
       : t("auth.verification.unavailable")
+    return
+  }
+
+  if (
+    emailVerificationRequired.value
+    && emailVerificationConfigured.value !== true
+  ) {
+    submitError.value = t("auth.verification.unavailable")
     return
   }
 
@@ -135,13 +158,18 @@ const handleSubmit = async () => {
       return
     }
 
-    try {
-      await $authClient.signOut()
-    } catch {}
+    if (emailVerificationRequired.value) {
+      try {
+        await $authClient.signOut()
+      } catch {}
 
-    pendingVerificationEmail.value = email
-    form.password = ""
-    form.confirmPassword = ""
+      pendingVerificationEmail.value = email
+      form.password = ""
+      form.confirmPassword = ""
+      return
+    }
+
+    await navigateTo(postAuthRedirectPath.value)
   } catch (error) {
     submitError.value = getErrorMessage(error)
   } finally {
@@ -261,7 +289,12 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
                 {{ t("auth.signup.passwordHint") }}
               </FieldDescription>
             </Field>
-            <Field v-if="emailVerificationConfigured === false">
+            <Field
+              v-if="
+                emailVerificationRequired === true
+                  && emailVerificationConfigured === false
+              "
+            >
               <FieldDescription class="text-destructive">
                 {{ t("auth.verification.unavailable") }}
               </FieldDescription>
@@ -272,7 +305,14 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
             <Field>
               <Button
                 type="submit"
-                :disabled="isSubmitting || emailVerificationConfigured !== true"
+                :disabled="
+                  isSubmitting
+                    || authConfigQuery.isLoading.value
+                    || (
+                      emailVerificationRequired === true
+                        && emailVerificationConfigured !== true
+                    )
+                "
               >
                 {{ isSubmitting ? t("auth.signup.submitting") : t("auth.signup.submit") }}
               </Button>

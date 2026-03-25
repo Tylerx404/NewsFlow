@@ -8,6 +8,7 @@ import {
   getSmtpConfigRecord,
   isSmtpConfigComplete,
 } from "@NewsFlow/auth/smtp-config";
+import { isEmailVerificationRequired } from "@NewsFlow/auth/email-verification-policy";
 
 type PrismaClient = typeof prisma;
 
@@ -22,6 +23,7 @@ export async function getPublicAuthConfig(
   return {
     appleEnabled: isAppleOAuthConfigured(oauthRecord),
     googleEnabled: isGoogleOAuthConfigured(oauthRecord),
+    emailVerificationRequired: isEmailVerificationRequired(),
     emailVerificationConfigured: isSmtpConfigComplete(smtpRecord),
   };
 }

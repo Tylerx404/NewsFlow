@@ -156,6 +156,15 @@ export const adminSmtpConfigUpdateSchema = z.object({
   fromName: nullableTrimmedStringSchema.optional(),
 });
 
+export const sendAdminSmtpTestEmailSchema = z.object({
+  toEmail: z.email(),
+});
+
+export const sendAdminSmtpTestEmailOutputSchema = z.object({
+  sent: z.boolean(),
+  toEmail: z.email(),
+});
+
 export const adminAuthSigningKeyConfigSchema = z.object({
   algorithm: z.string(),
   publicKeyPem: z.string().nullable(),
@@ -227,6 +236,9 @@ export type UpdateAdminOAuthConfigInput = z.infer<
 >;
 export type UpdateAdminSmtpConfigInput = z.infer<
   typeof adminSmtpConfigUpdateSchema
+>;
+export type SendAdminSmtpTestEmailInput = z.infer<
+  typeof sendAdminSmtpTestEmailSchema
 >;
 export type UpdateAdminAuthSigningKeyConfigInput = z.infer<
   typeof adminAuthSigningKeyConfigUpdateSchema

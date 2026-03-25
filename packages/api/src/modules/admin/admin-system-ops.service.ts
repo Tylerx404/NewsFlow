@@ -15,8 +15,10 @@ import {
 import {
   buildSmtpConfigUpdateData,
   getSmtpConfigRecord,
+  isSmtpConfigComplete,
   maskSmtpConfigRecord,
 } from "@NewsFlow/auth/smtp-config";
+import { sendSmtpMail } from "@NewsFlow/auth/smtp-mailer";
 import {
   buildStripeConfigUpdateData,
   getStripeConfigRecord,
@@ -42,6 +44,7 @@ import type {
   RetryAdminQueueJobInput,
   TriggerAdminContentExtractInput,
   TriggerAdminFeedFetchInput,
+  SendAdminSmtpTestEmailInput,
   UpdateAdminAuthSigningKeyConfigInput,
   UpdateAdminOAuthConfigInput,
   UpdateAdminSmtpConfigInput,
@@ -557,6 +560,60 @@ export async function updateAdminSmtpConfig(
   });
 
   return getAdminSmtpConfig(db);
+}
+
+interface SendAdminSmtpTestEmailParams extends SendAdminSmtpTestEmailInput {
+  adminUserId: string;
+}
+
+export async function sendAdminSmtpTestEmail(
+  db: PrismaClient,
+  input: SendAdminSmtpTestEmailParams
+) {
+  const smtpRecord = await getSmtpConfigRecord(db);
+
+  if (!isSmtpConfigComplete(smtpRecord)) {
+    throw new ORPCError("BAD_REQUEST", {
+      message:
+        "SMTP is incomplete. Save host, port, username, password, and from email before sending a test email.",
+    });
+  }
+
+  await sendSmtpMail(
+    {
+      to: input.toEmail,
+      subject: "NewsFlow SMTP test email",
+      text: [
+        "This is a test email from NewsFlow Admin System Ops.",
+        "",
+        "If you received this message, the saved SMTP configuration is working.",
+      ].join("\n"),
+      html: [
+        "<p>This is a test email from NewsFlow Admin System Ops.</p>",
+        "<p>If you received this message, the saved SMTP configuration is working.</p>",
+      ].join(""),
+    },
+    db
+  );
+
+  await createAdminAuditLog(db, {
+    adminUserId: input.adminUserId,
+    action: "SYSTEM_OPS_SMTP_TEST_EMAIL_SENT",
+    targetType: "SYSTEM_CONFIG",
+    targetId: "smtp",
+    metadata: {
+      next: {
+        toEmail: input.toEmail,
+        host: "present",
+        fromEmail: "present",
+      },
+    },
+  });
+
+  return {
+    sent: true,
+    toEmail: input.toEmail,
+  };
 }
 
 interface UpdateAdminAuthSigningKeyConfigParams

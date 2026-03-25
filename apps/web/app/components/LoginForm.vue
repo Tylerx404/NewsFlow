@@ -85,6 +85,9 @@ const isGoogleEnabled = computed(
 const hasSocialProviders = computed(
   () => isAppleEnabled.value || isGoogleEnabled.value
 )
+const emailVerificationRequired = computed(
+  () => authConfigQuery.data.value?.emailVerificationRequired ?? false
+)
 const emailVerificationConfigured = computed(
   () => authConfigQuery.data.value?.emailVerificationConfigured ?? false
 )
@@ -144,8 +147,13 @@ const handleSubmit = async () => {
 
     if (error) {
       if (isEmailNotVerifiedError(error)) {
-        verificationEmail.value = email
-        verificationNotice.value = t("auth.login.verification.pending", { email })
+        if (emailVerificationRequired.value) {
+          verificationEmail.value = email
+          verificationNotice.value = t("auth.login.verification.pending", { email })
+          return
+        }
+
+        submitError.value = error.message ?? t("auth.login.errors.invalidCredentials")
         return
       }
 
@@ -286,7 +294,11 @@ const handleSocialSignIn = async (provider: "apple" | "google") => {
               <FieldError :errors="[submitError]" />
             </Field>
             <Field
-              v-if="verificationNotice && emailVerificationConfigured"
+              v-if="
+                verificationNotice
+                  && emailVerificationRequired
+                  && emailVerificationConfigured
+              "
               class="flex justify-center"
             >
               <Button

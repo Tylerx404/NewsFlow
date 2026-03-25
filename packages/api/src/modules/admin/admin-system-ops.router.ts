@@ -9,6 +9,8 @@ import {
   adminOpsActionOutputSchema,
   adminSmtpConfigSchema,
   adminSmtpConfigUpdateSchema,
+  sendAdminSmtpTestEmailOutputSchema,
+  sendAdminSmtpTestEmailSchema,
   adminQueueJobsOutputSchema,
   adminOAuthConfigSchema,
   adminOAuthConfigUpdateSchema,
@@ -30,6 +32,7 @@ import {
   getAdminOAuthConfig,
   listAdminQueueJobs,
   retryAdminQueueJob,
+  sendAdminSmtpTestEmail,
   triggerAdminContentExtract,
   triggerAdminFeedFetch,
   updateAdminAuthSigningKeyConfig,
@@ -95,6 +98,16 @@ export const adminSystemOpsRouter = {
     .output(adminSmtpConfigSchema)
     .handler(async ({ input, context }) => {
       return updateAdminSmtpConfig(prisma, {
+        ...input,
+        adminUserId: context.session.user.id,
+      });
+    }),
+
+  sendSmtpTestEmail: adminProcedure
+    .input(sendAdminSmtpTestEmailSchema)
+    .output(sendAdminSmtpTestEmailOutputSchema)
+    .handler(async ({ input, context }) => {
+      return sendAdminSmtpTestEmail(prisma, {
         ...input,
         adminUserId: context.session.user.id,
       });
