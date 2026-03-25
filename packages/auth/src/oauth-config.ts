@@ -1,6 +1,7 @@
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
+import { isMissingConfigTableError } from "./config-table-fallback";
 import { decryptSecret, encryptSecret, maskSecret } from "./secret-crypto";
 
 const DEFAULT_OAUTH_CONFIG_ID = "default";
@@ -48,10 +49,18 @@ export type OAuthProviderConfig = {
 export async function getOAuthConfigRecord(
   db: Pick<PrismaClient, "authConfig"> = prisma
 ) {
-  return db.authConfig.findUnique({
-    where: { id: DEFAULT_OAUTH_CONFIG_ID },
-    select: oauthConfigSelect,
-  });
+  try {
+    return await db.authConfig.findUnique({
+      where: { id: DEFAULT_OAUTH_CONFIG_ID },
+      select: oauthConfigSelect,
+    });
+  } catch (error) {
+    if (isMissingConfigTableError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export function isGoogleOAuthConfigured(

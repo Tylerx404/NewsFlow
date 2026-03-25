@@ -3,6 +3,7 @@ import { createHash, createPrivateKey, createPublicKey } from "node:crypto";
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
+import { isMissingConfigTableError } from "./config-table-fallback";
 import { decryptSecret, encryptSecret } from "./secret-crypto";
 
 const DEFAULT_AUTH_SIGNING_KEY_CONFIG_ID = "default";
@@ -126,10 +127,18 @@ export function validateAuthSigningKeyPair(
 export async function getAuthSigningKeyConfigRecord(
   db: Pick<PrismaClient, "authSigningKeyConfig"> = prisma
 ) {
-  return db.authSigningKeyConfig.findUnique({
-    where: { id: DEFAULT_AUTH_SIGNING_KEY_CONFIG_ID },
-    select: authSigningKeyConfigSelect,
-  });
+  try {
+    return await db.authSigningKeyConfig.findUnique({
+      where: { id: DEFAULT_AUTH_SIGNING_KEY_CONFIG_ID },
+      select: authSigningKeyConfigSelect,
+    });
+  } catch (error) {
+    if (isMissingConfigTableError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export function isAuthSigningKeyConfigComplete(

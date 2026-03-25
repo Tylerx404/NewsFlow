@@ -1,6 +1,7 @@
 import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 
+import { isMissingConfigTableError } from "./config-table-fallback";
 import { encryptSecret, decryptSecret } from "./secret-crypto";
 
 const DEFAULT_SMTP_CONFIG_ID = "default";
@@ -54,10 +55,18 @@ export const smtpConfigSelect = {
 export async function getSmtpConfigRecord(
   db: Pick<PrismaClient, "smtpConfig"> = prisma
 ) {
-  return db.smtpConfig.findUnique({
-    where: { id: DEFAULT_SMTP_CONFIG_ID },
-    select: smtpConfigSelect,
-  });
+  try {
+    return await db.smtpConfig.findUnique({
+      where: { id: DEFAULT_SMTP_CONFIG_ID },
+      select: smtpConfigSelect,
+    });
+  } catch (error) {
+    if (isMissingConfigTableError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export function isSmtpConfigComplete(

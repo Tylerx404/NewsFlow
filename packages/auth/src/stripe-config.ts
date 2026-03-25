@@ -2,6 +2,7 @@ import prisma from "@NewsFlow/db";
 import type { Prisma } from "@NewsFlow/db";
 import Stripe from "stripe";
 
+import { isMissingConfigTableError } from "./config-table-fallback";
 import { decryptSecret, encryptSecret, maskSecret } from "./secret-crypto";
 
 const DEFAULT_STRIPE_CONFIG_ID = "default";
@@ -60,10 +61,18 @@ export const stripeConfigSelect = {
 export async function getStripeConfigRecord(
   db: Pick<PrismaClient, "stripeConfig"> = prisma
 ) {
-  return db.stripeConfig.findUnique({
-    where: { id: DEFAULT_STRIPE_CONFIG_ID },
-    select: stripeConfigSelect,
-  });
+  try {
+    return await db.stripeConfig.findUnique({
+      where: { id: DEFAULT_STRIPE_CONFIG_ID },
+      select: stripeConfigSelect,
+    });
+  } catch (error) {
+    if (isMissingConfigTableError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export function isStripeConfigComplete(
