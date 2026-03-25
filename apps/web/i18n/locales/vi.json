@@ -159,6 +159,25 @@
     "verification": {
       "loading": "We are still loading email verification settings. Please wait a moment and try again.",
       "unavailable": "Khu vực này đang yêu cầu xác minh email nhưng SMTP chưa được cấu hình. Vui lòng liên hệ quản trị viên hoặc dùng đăng nhập mạng xã hội."
+    },
+    "verifyPage": {
+      "successTitle": "Xac thuc email thanh cong",
+      "successDescription": "Dia chi email cua ban da duoc xac thuc thanh cong. Ban co the dang nhap va tiep tuc su dung NewsFlow.",
+      "successHint": "Dung nut ben duoi de dang nhap voi tai khoan da duoc xac thuc.",
+      "errorTitle": "Lien ket xac thuc co van de",
+      "errorHint": "Mo trang dang nhap de gui lai email xac thuc moi neu can.",
+      "errors": {
+        "tokenExpired": "Lien ket xac thuc nay da het han. Hay yeu cau email xac thuc moi va thu lai.",
+        "invalidToken": "Lien ket xac thuc nay khong hop le. Hay yeu cau email xac thuc moi va thu lai.",
+        "userNotFound": "Khong tim thay tai khoan phu hop voi lien ket xac thuc nay.",
+        "alreadyVerified": "Email nay da duoc xac thuc truoc do. Ban co the dang nhap ngay bay gio.",
+        "generic": "Khong the hoan tat viec xac thuc email bang lien ket nay."
+      },
+      "actions": {
+        "login": "Di den dang nhap",
+        "continue": "Tiep tuc",
+        "home": "Ve trang chu"
+      }
     }
   },
   "public": {
@@ -1493,6 +1512,10 @@
           "label": "Status",
           "configured": "Configured",
           "incomplete": "Incomplete",
+          "connection": "Kiểm tra kết nối",
+          "verified": "Đã xác nhận",
+          "notChecked": "Chưa kiểm tra",
+          "failed": "Cần kiểm tra lại",
           "password": "Password",
           "secure": "Secure transport",
           "missing": "Missing"
@@ -1523,6 +1546,18 @@
           "username": "Username: email đăng nhập SMTP của Brevo",
           "password": "Password: SMTP key của Brevo",
           "fromEmail": "From email: dùng sender hoặc domain đã xác minh trên Brevo"
+        },
+        "verify": {
+          "label": "Xác nhận kết nối SMTP",
+          "hintReady": "Xác nhận rằng host, port, secure và tài khoản SMTP đang lưu có thể đăng nhập thành công.",
+          "hintIncomplete": "Hãy hoàn tất và lưu cấu hình SMTP trước khi xác nhận kết nối.",
+          "action": "Xác nhận kết nối",
+          "verifying": "Đang xác nhận kết nối...",
+          "success": "Đã xác nhận kết nối SMTP thành công.",
+          "errors": {
+            "incomplete": "Hãy lưu một cấu hình SMTP đầy đủ trước khi xác nhận kết nối.",
+            "verify": "Không thể xác nhận kết nối SMTP."
+          }
         },
         "test": {
           "label": "Email nhận thử",

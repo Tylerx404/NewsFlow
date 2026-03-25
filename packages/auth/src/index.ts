@@ -3,12 +3,13 @@ import { env } from "@NewsFlow/env/server";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
-import { adminEmailVerificationBypassPlugin } from "./admin-email-verification-bypass";
 import { isEmailVerificationRequired } from "./email-verification-policy";
 import { getOAuthProviderConfig } from "./oauth-config";
 import { sendVerificationEmailWithSmtp } from "./smtp-mailer";
 
 const requireEmailVerification = isEmailVerificationRequired();
+const useSecureAuthCookies =
+  env.NODE_ENV === "production" || env.BETTER_AUTH_URL.startsWith("https://");
 
 const oauthProviders = await getOAuthProviderConfig(prisma);
 const hasSocialProviders = Object.keys(oauthProviders).length > 0;
@@ -65,11 +66,10 @@ export const auth = betterAuth({
     },
   },
   socialProviders: hasSocialProviders ? oauthProviders : undefined,
-  plugins: [adminEmailVerificationBypassPlugin()],
   advanced: {
     defaultCookieAttributes: {
-      sameSite: requireEmailVerification ? "none" : "lax",
-      secure: requireEmailVerification,
+      sameSite: useSecureAuthCookies ? "none" : "lax",
+      secure: useSecureAuthCookies,
       httpOnly: true,
     },
   },

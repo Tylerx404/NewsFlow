@@ -97,16 +97,15 @@ const emailVerificationConfigured = computed(() => {
 })
 
 const getVerificationCallbackUrl = () => {
-  const params = new URLSearchParams({
-    verified: "1",
-  })
+  const params = new URLSearchParams()
   const redirect = getSafeRedirectPath()
 
   if (redirect) {
     params.set("redirect", redirect)
   }
 
-  const callbackPath = `/login?${params.toString()}`
+  const queryString = params.toString()
+  const callbackPath = queryString ? `/verify-email?${queryString}` : "/verify-email"
 
   if (import.meta.client) {
     return `${window.location.origin}${callbackPath}`

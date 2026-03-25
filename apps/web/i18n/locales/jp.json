@@ -159,6 +159,25 @@
     "verification": {
       "loading": "We are still loading email verification settings. Please wait a moment and try again.",
       "unavailable": "Email verification is required here, but SMTP is not configured yet. Please contact the administrator or use a social sign-in option."
+    },
+    "verifyPage": {
+      "successTitle": "Email verified",
+      "successDescription": "Your email address has been verified successfully. You can sign in and continue with NewsFlow.",
+      "successHint": "Use the button below to sign in with your verified account.",
+      "errorTitle": "Verification link issue",
+      "errorHint": "Open the login page to request a fresh verification email if needed.",
+      "errors": {
+        "tokenExpired": "This verification link has expired. Request a new verification email and try again.",
+        "invalidToken": "This verification link is invalid. Request a new verification email and try again.",
+        "userNotFound": "We could not find an account for this verification link.",
+        "alreadyVerified": "This email address has already been verified. You can sign in now.",
+        "generic": "We could not complete email verification with this link."
+      },
+      "actions": {
+        "login": "Go to login",
+        "continue": "Continue",
+        "home": "Back to home"
+      }
     }
   },
   "public": {
@@ -1493,6 +1512,10 @@
           "label": "Status",
           "configured": "Configured",
           "incomplete": "Incomplete",
+          "connection": "Connection check",
+          "verified": "Verified",
+          "notChecked": "Not checked yet",
+          "failed": "Needs attention",
           "password": "Password",
           "secure": "Secure transport",
           "missing": "Missing"
@@ -1523,6 +1546,18 @@
           "username": "Username: your Brevo SMTP login email",
           "password": "Password: your Brevo SMTP key",
           "fromEmail": "From email: use a sender or domain already verified in Brevo"
+        },
+        "verify": {
+          "label": "Verify SMTP connection",
+          "hintReady": "Confirm that the saved SMTP host, port, secure setting, and login credentials can authenticate successfully.",
+          "hintIncomplete": "Complete and save the SMTP config before verifying the connection.",
+          "action": "Verify connection",
+          "verifying": "Verifying connection...",
+          "success": "SMTP connection verified successfully.",
+          "errors": {
+            "incomplete": "Save a complete SMTP config before verifying the connection.",
+            "verify": "Could not verify the SMTP connection."
+          }
         },
         "test": {
           "label": "Test recipient email",

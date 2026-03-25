@@ -19,6 +19,7 @@ declare module "nodemailer" {
 
   interface Transporter {
     sendMail(options: SendMailOptions): Promise<unknown>;
+    verify(): Promise<unknown>;
   }
 
   function createTransport(options: CreateTransportOptions): Transporter;

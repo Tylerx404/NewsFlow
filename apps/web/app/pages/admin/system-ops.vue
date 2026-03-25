@@ -135,6 +135,8 @@ const oauthConfigError = ref("");
 const oauthConfigSuccess = ref("");
 const smtpConfigError = ref("");
 const smtpConfigSuccess = ref("");
+const smtpVerificationError = ref("");
+const smtpVerificationSuccess = ref("");
 const smtpTestEmail = ref("");
 const smtpTestError = ref("");
 const smtpTestSuccess = ref("");
@@ -290,8 +292,23 @@ const updateSmtpConfigMutation = useMutation(
     onSuccess: async () => {
       smtpConfigError.value = "";
       smtpConfigSuccess.value = t("admin.systemOps.smtp.successSaved");
+      smtpVerificationError.value = "";
+      smtpVerificationSuccess.value = "";
       smtpTestError.value = "";
+      smtpTestSuccess.value = "";
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.root() });
+    },
+  })
+);
+
+const verifySmtpConnectionMutation = useMutation(
+  $orpc.admin.systemOps.verifySmtpConnection.mutationOptions({
+    onSuccess: async () => {
+      smtpVerificationError.value = "";
+      smtpVerificationSuccess.value = t("admin.systemOps.smtp.verify.success");
+      await queryClient.invalidateQueries({
+        queryKey: dashboardQueryKeys.admin.systemOps.smtpConfig(),
+      });
     },
   })
 );
@@ -299,6 +316,8 @@ const updateSmtpConfigMutation = useMutation(
 const sendSmtpTestEmailMutation = useMutation(
   $orpc.admin.systemOps.sendSmtpTestEmail.mutationOptions({
     onSuccess: async (result) => {
+      smtpVerificationError.value = "";
+      smtpVerificationSuccess.value = t("admin.systemOps.smtp.verify.success");
       smtpTestError.value = "";
       smtpTestSuccess.value = t("admin.systemOps.smtp.test.success", {
         email: result.toEmail,
@@ -345,6 +364,10 @@ const isSmtpTestPending = computed(
   () => sendSmtpTestEmailMutation.isPending.value
 );
 
+const isSmtpVerificationPending = computed(
+  () => verifySmtpConnectionMutation.isPending.value
+);
+
 const isAuthSigningKeyConfigPending = computed(
   () =>
     updateAuthSigningKeyConfigMutation.isPending.value
@@ -366,6 +389,18 @@ const currentSmtpConfig = computed<AdminSmtpConfig | null>(
 const isSmtpReadyForTest = computed(
   () => currentSmtpConfig.value?.isConfigured ?? false
 );
+
+const smtpVerificationStatusKey = computed(() => {
+  if (smtpVerificationSuccess.value) {
+    return "admin.systemOps.smtp.status.verified";
+  }
+
+  if (smtpVerificationError.value) {
+    return "admin.systemOps.smtp.status.failed";
+  }
+
+  return "admin.systemOps.smtp.status.notChecked";
+});
 
 const currentAuthSigningKeyConfig = computed<AdminAuthSigningKeyConfig | null>(
   () => authSigningKeyConfigQuery.data.value ?? null
@@ -754,6 +789,25 @@ const handleSendSmtpTestEmail = async () => {
   }
 };
 
+const handleVerifySmtpConnection = async () => {
+  smtpVerificationError.value = "";
+  smtpVerificationSuccess.value = "";
+
+  if (!isSmtpReadyForTest.value) {
+    smtpVerificationError.value = t("admin.systemOps.smtp.verify.errors.incomplete");
+    return;
+  }
+
+  try {
+    await verifySmtpConnectionMutation.mutateAsync({});
+  } catch (error) {
+    smtpVerificationError.value =
+      error instanceof Error
+        ? error.message
+        : t("admin.systemOps.smtp.verify.errors.verify");
+  }
+};
+
 const handleSaveAuthSigningKeyConfig = async () => {
   authSigningKeyConfigError.value = "";
   authSigningKeyConfigSuccess.value = "";
@@ -1020,7 +1074,7 @@ const handleSaveAuthSigningKeyConfig = async () => {
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
-        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <div class="rounded-md border p-3">
             <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.smtp.status.label") }}</p>
             <p class="mt-1 text-sm font-medium">
@@ -1045,6 +1099,12 @@ const handleSaveAuthSigningKeyConfig = async () => {
                   ? t("common.states.enabled")
                   : t("common.states.disabled")
               }}
+            </p>
+          </div>
+          <div class="rounded-md border p-3">
+            <p class="text-xs text-muted-foreground">{{ t("admin.systemOps.smtp.status.connection") }}</p>
+            <p class="mt-1 text-sm font-medium">
+              {{ t(smtpVerificationStatusKey) }}
             </p>
           </div>
         </div>
@@ -1133,6 +1193,32 @@ const handleSaveAuthSigningKeyConfig = async () => {
 
         <div class="grid gap-3 rounded-md border p-3 md:grid-cols-[minmax(0,1fr)_auto]">
           <div class="space-y-2">
+            <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.verify.label") }}</p>
+            <p class="text-xs text-muted-foreground">
+              {{
+                isSmtpReadyForTest
+                  ? t("admin.systemOps.smtp.verify.hintReady")
+                  : t("admin.systemOps.smtp.verify.hintIncomplete")
+              }}
+            </p>
+          </div>
+          <div class="flex items-end">
+            <Button
+              variant="outline"
+              :disabled="!isSmtpReadyForTest || isSmtpVerificationPending"
+              @click="handleVerifySmtpConnection"
+            >
+              {{
+                isSmtpVerificationPending
+                  ? t("admin.systemOps.smtp.verify.verifying")
+                  : t("admin.systemOps.smtp.verify.action")
+              }}
+            </Button>
+          </div>
+        </div>
+
+        <div class="grid gap-3 rounded-md border p-3 md:grid-cols-[minmax(0,1fr)_auto]">
+          <div class="space-y-2">
             <p class="text-sm font-medium">{{ t("admin.systemOps.smtp.test.label") }}</p>
             <Input
               v-model="smtpTestEmail"
@@ -1161,6 +1247,16 @@ const handleSaveAuthSigningKeyConfig = async () => {
             </Button>
           </div>
         </div>
+
+        <p v-if="smtpVerificationError" class="text-sm text-destructive">
+          {{ smtpVerificationError }}
+        </p>
+        <p
+          v-else-if="smtpVerificationSuccess"
+          class="text-sm text-emerald-600 dark:text-emerald-400"
+        >
+          {{ smtpVerificationSuccess }}
+        </p>
 
         <p v-if="smtpConfigLoadError" class="text-sm text-destructive">
           {{ smtpConfigLoadError }}

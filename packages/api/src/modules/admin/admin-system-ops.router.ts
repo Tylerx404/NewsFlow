@@ -11,6 +11,8 @@ import {
   adminSmtpConfigUpdateSchema,
   sendAdminSmtpTestEmailOutputSchema,
   sendAdminSmtpTestEmailSchema,
+  verifyAdminSmtpConnectionOutputSchema,
+  verifyAdminSmtpConnectionSchema,
   adminQueueJobsOutputSchema,
   adminOAuthConfigSchema,
   adminOAuthConfigUpdateSchema,
@@ -39,6 +41,7 @@ import {
   updateAdminOAuthConfig,
   updateAdminSmtpConfig,
   updateAdminStripeConfig,
+  verifyAdminSmtpConnection,
 } from "./admin-system-ops.service";
 
 export const adminSystemOpsRouter = {
@@ -109,6 +112,15 @@ export const adminSystemOpsRouter = {
     .handler(async ({ input, context }) => {
       return sendAdminSmtpTestEmail(prisma, {
         ...input,
+        adminUserId: context.session.user.id,
+      });
+    }),
+
+  verifySmtpConnection: adminProcedure
+    .input(verifyAdminSmtpConnectionSchema)
+    .output(verifyAdminSmtpConnectionOutputSchema)
+    .handler(async ({ context }) => {
+      return verifyAdminSmtpConnection(prisma, {
         adminUserId: context.session.user.id,
       });
     }),

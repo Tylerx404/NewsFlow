@@ -160,6 +160,12 @@ export const sendAdminSmtpTestEmailSchema = z.object({
   toEmail: z.email(),
 });
 
+export const verifyAdminSmtpConnectionSchema = z.object({});
+
+export const verifyAdminSmtpConnectionOutputSchema = z.object({
+  verified: z.boolean(),
+});
+
 export const sendAdminSmtpTestEmailOutputSchema = z.object({
   sent: z.boolean(),
   toEmail: z.email(),
@@ -239,6 +245,9 @@ export type UpdateAdminSmtpConfigInput = z.infer<
 >;
 export type SendAdminSmtpTestEmailInput = z.infer<
   typeof sendAdminSmtpTestEmailSchema
+>;
+export type VerifyAdminSmtpConnectionInput = z.infer<
+  typeof verifyAdminSmtpConnectionSchema
 >;
 export type UpdateAdminAuthSigningKeyConfigInput = z.infer<
   typeof adminAuthSigningKeyConfigUpdateSchema

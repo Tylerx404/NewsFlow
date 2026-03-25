@@ -17,8 +17,12 @@ import {
   getSmtpConfigRecord,
   isSmtpConfigComplete,
   maskSmtpConfigRecord,
+  SmtpConfigError,
 } from "@NewsFlow/auth/smtp-config";
-import { sendSmtpMail } from "@NewsFlow/auth/smtp-mailer";
+import {
+  sendSmtpMail,
+  verifySmtpConnection as verifySavedSmtpConnection,
+} from "@NewsFlow/auth/smtp-mailer";
 import {
   buildStripeConfigUpdateData,
   getStripeConfigRecord,
@@ -171,6 +175,61 @@ function mapQueueJob(
     finishedOn: mapTimestamp(job.finishedOn),
     payload: sanitizeQueueJobPayload(queueName, job.data),
   };
+}
+
+function mapSmtpOperationError(error: unknown, fallbackMessage: string) {
+  if (error instanceof SmtpConfigError) {
+    return new ORPCError("BAD_REQUEST", {
+      message: error.message,
+    });
+  }
+
+  if (!error || typeof error !== "object") {
+    return new ORPCError("INTERNAL_SERVER_ERROR", {
+      message: fallbackMessage,
+    });
+  }
+
+  const smtpError = error as {
+    code?: unknown;
+    responseCode?: unknown;
+    response?: unknown;
+    message?: unknown;
+  };
+  const code = typeof smtpError.code === "string" ? smtpError.code : null;
+  const responseCode =
+    typeof smtpError.responseCode === "number" ? smtpError.responseCode : null;
+  const response =
+    typeof smtpError.response === "string" ? smtpError.response : null;
+  const message =
+    typeof smtpError.message === "string" ? smtpError.message : null;
+
+  if (code === "EAUTH" || responseCode === 535) {
+    return new ORPCError("BAD_REQUEST", {
+      message:
+        response
+        ?? "SMTP authentication failed. Check the SMTP username, password, port, and secure setting.",
+    });
+  }
+
+  if (code === "EENVELOPE" || responseCode === 550 || responseCode === 553) {
+    return new ORPCError("BAD_REQUEST", {
+      message:
+        response
+        ?? "SMTP rejected the sender or recipient address. Check the from email and test recipient email.",
+    });
+  }
+
+  if (code === "ESOCKET" || code === "ECONNECTION" || code === "ETIMEDOUT") {
+    return new ORPCError("BAD_REQUEST", {
+      message:
+        "Unable to connect to the SMTP server. Check the SMTP host, port, and secure setting.",
+    });
+  }
+
+  return new ORPCError("INTERNAL_SERVER_ERROR", {
+    message: message ?? fallbackMessage,
+  });
 }
 
 async function listQueueJobsInternal(input: ListAdminQueueJobsInput) {
@@ -566,6 +625,50 @@ interface SendAdminSmtpTestEmailParams extends SendAdminSmtpTestEmailInput {
   adminUserId: string;
 }
 
+interface VerifyAdminSmtpConnectionParams {
+  adminUserId: string;
+}
+
+export async function verifyAdminSmtpConnection(
+  db: PrismaClient,
+  input: VerifyAdminSmtpConnectionParams
+) {
+  const smtpRecord = await getSmtpConfigRecord(db);
+
+  if (!isSmtpConfigComplete(smtpRecord)) {
+    throw new ORPCError("BAD_REQUEST", {
+      message:
+        "SMTP is incomplete. Save host, port, username, password, and from email before verifying the connection.",
+    });
+  }
+
+  try {
+    await verifySavedSmtpConnection(db);
+  } catch (error) {
+    throw mapSmtpOperationError(
+      error,
+      "Failed to verify the SMTP connection."
+    );
+  }
+
+  await createAdminAuditLog(db, {
+    adminUserId: input.adminUserId,
+    action: "SYSTEM_OPS_SMTP_CONNECTION_VERIFIED",
+    targetType: "SYSTEM_CONFIG",
+    targetId: "smtp",
+    metadata: {
+      next: {
+        host: "present",
+        username: "present",
+      },
+    },
+  });
+
+  return {
+    verified: true,
+  };
+}
+
 export async function sendAdminSmtpTestEmail(
   db: PrismaClient,
   input: SendAdminSmtpTestEmailParams
@@ -579,22 +682,26 @@ export async function sendAdminSmtpTestEmail(
     });
   }
 
-  await sendSmtpMail(
-    {
-      to: input.toEmail,
-      subject: "NewsFlow SMTP test email",
-      text: [
-        "This is a test email from NewsFlow Admin System Ops.",
-        "",
-        "If you received this message, the saved SMTP configuration is working.",
-      ].join("\n"),
-      html: [
-        "<p>This is a test email from NewsFlow Admin System Ops.</p>",
-        "<p>If you received this message, the saved SMTP configuration is working.</p>",
-      ].join(""),
-    },
-    db
-  );
+  try {
+    await sendSmtpMail(
+      {
+        to: input.toEmail,
+        subject: "NewsFlow SMTP test email",
+        text: [
+          "This is a test email from NewsFlow Admin System Ops.",
+          "",
+          "If you received this message, the saved SMTP configuration is working.",
+        ].join("\n"),
+        html: [
+          "<p>This is a test email from NewsFlow Admin System Ops.</p>",
+          "<p>If you received this message, the saved SMTP configuration is working.</p>",
+        ].join(""),
+      },
+      db
+    );
+  } catch (error) {
+    throw mapSmtpOperationError(error, "Failed to send the SMTP test email.");
+  }
 
   await createAdminAuditLog(db, {
     adminUserId: input.adminUserId,

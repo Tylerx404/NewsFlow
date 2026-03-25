@@ -34,6 +34,33 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+function createSmtpTransport(config: SmtpTransportConfig) {
+  return nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    auth: {
+      user: config.username,
+      pass: config.password,
+    },
+  });
+}
+
+export async function verifySmtpConnection(
+  db: Pick<PrismaClient, "smtpConfig"> = prisma
+) {
+  const config = await getSmtpTransportConfig(db);
+
+  if (!config) {
+    throw new SmtpConfigError(
+      "SMTP is not configured yet. Open Admin System Ops to finish SMTP setup."
+    );
+  }
+
+  const transporter = createSmtpTransport(config);
+  await transporter.verify();
+}
+
 export async function sendSmtpMail(
   input: SendSmtpMailInput,
   db: Pick<PrismaClient, "smtpConfig"> = prisma
@@ -46,15 +73,7 @@ export async function sendSmtpMail(
     );
   }
 
-  const transporter = nodemailer.createTransport({
-    host: config.host,
-    port: config.port,
-    secure: config.secure,
-    auth: {
-      user: config.username,
-      pass: config.password,
-    },
-  });
+  const transporter = createSmtpTransport(config);
 
   await transporter.sendMail({
     from: getFromAddress(config),
